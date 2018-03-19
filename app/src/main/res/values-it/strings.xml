@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Daily Money</string>
-	<string name="app_surface">daily-money-core</string>
     <string name="defacc_bank1">Banca.A</string>
     <string name="defacc_bank2">Banca.B</string>
     <string name="defacc_cash">Contanti</string>

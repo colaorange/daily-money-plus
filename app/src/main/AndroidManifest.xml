@@ -2,20 +2,65 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.colaorange.dailymoney">
 
+    <!--backup-restore-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!--remote backup-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--ga-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".TplEmptyActivity">
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name">
+        <!--android:supportsRtl="true">-->
+        <!--android:theme="@style/AppTheme">-->
+
+        <!--<activity android:name=".TplEmptyActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <activity android:name=".ui.DesktopActivity"
+            android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.BookMgntActivity" android:label="@string/title_bookmgnt" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.BookEditorActivity"/>
+
+        <activity android:name=".ui.DetailListActivity" android:label="@string/title_detlist" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.DetailEditorActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"></action>
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.AccountMgntActivity" android:label="@string/title_accmgnt" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.AccountEditorActivity"/>
+        <activity android:name=".ui.AccountDetailListActivity" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.PrefsActivity" android:label="@string/title_prefs" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.DataMaintenanceActivity" android:label="@string/title_datamain" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".ui.PasswordProtectionActivity" android:theme="@style/Theme.Password" android:label="@string/title_pdprotection"/>
+        <activity android:name=".ui.report.BalanceActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity android:name=".ui.AboutActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity android:name=".ui.LocalWebViewActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        <activity android:name=".ui.LocalWebViewDlg" android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".ui.DummyActivity" android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <activity android:name=".calculator2.Calculator" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+
+
+
+        <activity android:name="org.achartengine.GraphicalActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+
+        <!-- receiver android:name=".context.ScheduleReceiver" android:process=":dmbackup"/--> <!-- dennis, need to confirm the use -->
+        <activity android:name=".ui.report.SearchActivity" />
     </application>
 
 </manifest>
