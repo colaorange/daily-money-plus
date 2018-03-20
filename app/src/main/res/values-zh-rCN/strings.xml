@@ -178,6 +178,9 @@
     <string name="label_prefs_csv_encoding_sum">勿任意更改,将影响导入导出CSV</string>
     <string name="label_prefcat_csv">CSV</string>
     <string name="label_prefcat_others">其他</string>
+    <string name="dtitem_detlist_day">日明細列表</string>
+    <string name="clabel_default">预设</string>
+    <string name="label_day_details">%1$s (%2$s笔</string>
     <!-- above are verified -->
     
     

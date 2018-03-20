@@ -1,28 +1,32 @@
 package com.colaorange.dailymoney.context;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.colaorange.commons.util.Files;
+import com.colaorange.dailymoney.data.BackupRestorer;
 import com.colaorange.dailymoney.ui.Constants;
 
+/**
+ * needs re-implementation
+ */
 public class ScheduleReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Calendar now = Calendar.getInstance();
+        long now = System.currentTimeMillis();
         if (Constants.BACKUP_JOB.equals(intent.getAction())) {
+            //TODO ctxs is possible not ok if no ui been called
+            //needs to check again.
             Contexts ctxs = Contexts.instance();
             try {
                 int count = 0;
-                count += Files.copyDatabases(ctxs.getDbFolder(), ctxs.getSdFolder(), now.getTime());
-                count += Files.copyPrefFile(ctxs.getPrefFolder(), ctxs.getSdFolder(), now.getTime());
+                count += BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getStorageFolder(), now);
+                count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getStorageFolder(), now);
                 if (count > 0) {
-                    ctxs.setLastBackup(context, now.getTime());
+                    ctxs.setPrefLastBackup(now);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);

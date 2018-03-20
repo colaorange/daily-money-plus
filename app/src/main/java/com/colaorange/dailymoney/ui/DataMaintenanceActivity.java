@@ -8,16 +8,15 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
@@ -27,6 +26,7 @@ import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
+import com.colaorange.dailymoney.data.BackupRestorer;
 import com.colaorange.dailymoney.data.DataCreator;
 import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.data.IDataProvider;
@@ -40,8 +40,8 @@ import com.csvreader.CsvWriter;
 public class DataMaintenanceActivity extends ContextsActivity implements OnClickListener {
 
     String csvEncoding;
-    
-    String workingFolder;
+
+    File workingFolder;
     
     boolean backupcsv = false;
     
@@ -58,8 +58,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         workingFolder = getContexts().getWorkingFolder();
         backupcsv = getContexts().isPrefBackupCSV();
         
-        vercode = getContexts().getApplicationVersionCode();
+        vercode = getContexts().getAppVerCode();
         csvEncoding = getContexts().getPrefCSVEncoding();
+        ((TextView)findViewById(R.id.datamain_workingfolder)).setText(workingFolder.getAbsolutePath());
         initialListener();
 
     }
@@ -68,10 +69,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         findViewById(R.id.datamain_import_csv).setOnClickListener(this);
         findViewById(R.id.datamain_export_csv).setOnClickListener(this);
         findViewById(R.id.datamain_share_csv).setOnClickListener(this);
-        findViewById(R.id.datamain_reset).setOnClickListener(this);
-        findViewById(R.id.datamain_create_default).setOnClickListener(this);
-        findViewById(R.id.datamain_clear_folder).setOnClickListener(this);
-        findViewById(R.id.datamain_backup_db2sd).setOnClickListener(this);
+        findViewById(R.id.datamain_backup_db).setOnClickListener(this);
     }
 
     @Override
@@ -82,22 +80,15 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doExportCSV();
         } else if (v.getId() == R.id.datamain_share_csv) {
             doShareCSV();
-        } else if (v.getId() == R.id.datamain_reset) {
-            doReset();
-        } else if (v.getId() == R.id.datamain_create_default) {
-            doCreateDefault();
-        } else if (v.getId() == R.id.datamain_clear_folder) {
-            doClearFolder();
-        } else if (v.getId() == R.id.datamain_backup_db2sd) {
-            doBackupDbToSD();
+        } else if (v.getId() == R.id.datamain_backup_db) {
+            doBackupDbToStorage();
         }
     }
 
-    private void doBackupDbToSD() {
-        final Calendar now = Calendar.getInstance();
-        getContexts().setLastBackup(now.getTime());
+    private void doBackupDbToStorage() {
+        final long now = System.currentTimeMillis();
         final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-            int count = -1;
+            int count;
             
             public void onBusyError(Throwable t) {
                 GUIs.error(DataMaintenanceActivity.this, t);
@@ -106,6 +97,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void onBusyFinish() {
                 if (count > 0) {
                     String msg = i18n.string(R.string.msg_db_backuped, Integer.toString(count), workingFolder);
+                    getContexts().setPrefLastBackup(now);
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                 } else {
                     GUIs.alert(DataMaintenanceActivity.this, R.string.msg_no_db);
@@ -116,49 +108,14 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void run() {
                 try {
                     Contexts ctxs = getContexts();
-                    count = Files.copyDatabases(ctxs.getDbFolder(), ctxs.getSdFolder(), now.getTime());
-                    count += Files.copyPrefFile(ctxs.getPrefFolder(), ctxs.getSdFolder(), now.getTime());
+                    count = BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getStorageFolder(), now);
+                    count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getStorageFolder(), now);
                 } catch (Exception e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
-    }
-
-    private void doClearFolder() {
-        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-            @Override
-            public void onBusyFinish() {
-                GUIs.alert(DataMaintenanceActivity.this, i18n.string(R.string.msg_folder_cleared,workingFolder));
-            }
-
-            @Override
-            public void run() {
-                File sd = Environment.getExternalStorageDirectory();
-                File folder = new File(sd, workingFolder);
-                if (!folder.exists()) {
-                    return;
-                }
-                for(File f: folder.listFiles()){
-                   String fnm = f.getName().toLowerCase();
-                   if(f.isFile() && (fnm.endsWith(".csv")||fnm.endsWith(".bak"))){
-                       f.delete();
-                   }
-                }
-            }
-        };
-
-        GUIs.confirm(this, i18n.string(R.string.qmsg_clear_folder,workingFolder), new GUIs.OnFinishListener() {
-            @Override
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
-                    GUIs.doBusy(DataMaintenanceActivity.this, job);
-                }
-                return true;
-            }
-        });
-        
     }
 
     private void doCreateDefault() {
@@ -185,32 +142,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 return true;
             }
         });
-    }
-
-    private void doReset() {
-
-        
-        
-        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_reset))
-        .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, final int which) {
-                final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-                    public void onBusyError(Throwable t) {
-                        GUIs.error(DataMaintenanceActivity.this, t);
-                    }
-                    @Override
-                    public void run() {
-                        try {
-                            _resetDate(which);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e.getMessage(),e);
-                        }
-                    }
-                };
-                GUIs.doBusy(DataMaintenanceActivity.this, job);
-            }
-        }).show();
     }
 
     private void doExportCSV() {
@@ -311,12 +242,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     
 
     private File getWorkingFile(String name) throws IOException {
-        File sd = Environment.getExternalStorageDirectory();
-        File folder = new File(sd, workingFolder);
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-        File file = new File(folder, name);
+        File file = new File(workingFolder, name);
         return file;
     }
     

@@ -27,7 +27,6 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.commons.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
@@ -35,6 +34,7 @@ import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.AccountType;
+import com.colaorange.dailymoney.data.BackupRestorer;
 import com.colaorange.dailymoney.data.BalanceHelper;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.DataCreator;
@@ -145,13 +145,13 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initialApplicationInfo() {
         appinfo = i18n.string(R.string.app_name);
-        String ver = getContexts().getApplicationVersionName();
+        String ver = getContexts().getAppVerName();
         appinfo += " ver : "+ver;
     }
     
     private void doTheFisrtTime(){
-        if(Contexts.instance().hasSDBackup()){
-            restoreFromSD();
+        if(BackupRestorer.hasBackup()){
+            restoreFromBackup();
         }else{
             IDataProvider idp = getContexts().getDataProvider();
             if(idp.listAccount(null).size()==0){
@@ -162,7 +162,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         }
     }
     
-    private void restoreFromSD() {
+    private void restoreFromBackup() {
         // restore db & pref
         final Contexts ctxs = Contexts.instance();
         final GUIs.IBusyRunnable restorejob = new GUIs.BusyAdapter() {
@@ -179,8 +179,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             @Override
             public void run() {
                 try {
-                    Files.copyDatabases(ctxs.getSdFolder(), ctxs.getDbFolder(), null);
-                    Files.copyPrefFile(ctxs.getSdFolder(), ctxs.getPrefFolder(), null);
+                    BackupRestorer.copyDatabases(ctxs.getStorageFolder(), ctxs.getAppDbFolder(), null);
+                    BackupRestorer.copyPrefFile(ctxs.getStorageFolder(), ctxs.getAppPrefFolder(), null);
                     Contexts.instance().setPreferenceDirty();//since we reload it.
                 } catch (IOException e) {
                     Logger.e(e.getMessage(), e);

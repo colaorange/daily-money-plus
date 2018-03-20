@@ -4,14 +4,12 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,53 +48,54 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 public class Contexts {
 
     private static Contexts instance;
-    
+
     private Object appInitialObject;
     private Context appContext;
+    private String appId;
+    private String appVerName;
+    private int appVerCode;
     private Activity uiActivity;
-    
+
     private IDataProvider dataProvider;
     private IMasterDataProvider masterDataProvider;
     private I18N i18n;
-    private File sdFolder;
-    private File dbFolder;
-    private File prefFolder;
-    
+
     int pref_workingBookId = 0;//the book user selected
     int pref_detailListLayout = 2;
     int pref_maxRecords = -1;//-1 is no limit
     int pref_firstdayWeek = 1;//sunday
     int pref_startdayMonth = 1;//
     boolean pref_openTestsDesktop = false;
-    final String workingFolder = "bwDailyMoney";//readonly since 0.9.8
     boolean pref_backupCSV = true;
     String pref_password = "";
     boolean pref_allowAnalytics = true;
     String pref_csvEncoding = "UTF8";
     boolean pref_hierarachicalReport = true;
     String pref_lastbackup = "Unknown";
-    
-    SimpleDateFormat lastBakFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
+
     private CalendarHelper calendarHelper = new CalendarHelper();
-    
+
     private static final ExecutorService trackSingleExecutor = Executors.newSingleThreadExecutor();
-    
+
     //analytics code
     private static final String ANALYTICS_CDOE = "UA-20850113-1";
     private static final int ANALYTICS_DISPATH_DELAY = 60;// dispatch queue at least 60s
-    
+
     private GoogleAnalyticsTracker tracker;
-    
+
     private String currencySymbol = "$";
-    
+
     private boolean prefsDirty = true;
-    
-    public static final boolean DEBUG = true; 
-    
+
+    public static final boolean DEBUG = true;
+
     private Contexts(){
     }
-    
+
+//    private DateFormat getLastBackupFormat(){
+//        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//    }
+
     /** get a Contexts instance for activity use **/
     static public Contexts instance(){
         if(instance == null){
@@ -109,7 +108,7 @@ public class Contexts {
         return instance;
     }
 
-    
+
     boolean initActivity(Activity activity){
         if(appContext==null){
             initApplication(activity,activity);
@@ -123,12 +122,12 @@ public class Contexts {
             }
             initMasterDataProvider(uiActivity);
             initDataProvider(uiActivity);
-            
+
             return true;
         }
         return false;
     }
-    
+
     boolean cleanActivity(Activity activity){
         if(this.uiActivity == activity){
             this.uiActivity = null;
@@ -139,27 +138,23 @@ public class Contexts {
         }
         return false;
     }
-    
+
     synchronized boolean initApplication(Object appInitialObject,Context context){
         if(appContext==null){
-            Logger.d(">>initialial application context with:"+appInitialObject);
-            
-            File sd = Environment.getExternalStorageDirectory();
-            sdFolder = new File(sd, workingFolder);
-            if(!sdFolder.exists()){
-                sdFolder.mkdirs();
-            }
-            
-            dbFolder = new File(Environment.getDataDirectory(),"/data/com.bottleworks.dailymoney/databases");
-            prefFolder = new File(Environment.getDataDirectory(),"/data/com.bottleworks.dailymoney/shared_prefs");
-            if(!prefFolder.exists()){//this folder is not existed in my current i9000 (it is was last year)
-                //try another one
-//                File fdir = context.getFilesDir();
-//                prefFolder = new File(fdir,"../shared_prefs");
-            }
-            
-            this.appInitialObject = appInitialObject;
+
+            appInitialObject = appInitialObject;
             appContext = context.getApplicationContext();
+            appId = appContext.getPackageName();
+            PackageInfo pi;
+            try {
+                pi = appContext.getPackageManager().getPackageInfo(appId,0);
+                appVerName =  pi.versionName;
+                appVerCode = pi.versionCode;
+            } catch (NameNotFoundException e) {
+            }
+            Logger.d(">>initialial application context "+appId+","+ appVerName +","+ appVerCode);
+
+
             this.i18n = new I18N(appContext);
             initTracker(appContext);
             return true;
@@ -168,7 +163,7 @@ public class Contexts {
         }
         return false;
     }
-    
+
     synchronized boolean destroyApplication(Object appInitialObject){
         if(this.appInitialObject!=null && this.appInitialObject.equals(appInitialObject)){
             cleanTracker();
@@ -179,7 +174,7 @@ public class Contexts {
         }
         return false;
     }
-    
+
     private void initTracker(final Context context) {
         if (isPrefAllowAnalytics()) {
             trackSingleExecutor.submit(new Runnable() {
@@ -187,9 +182,9 @@ public class Contexts {
                     try {
                         Logger.d("initial google tracker");
                         tracker = GoogleAnalyticsTracker.getInstance();
-                        tracker.setProductVersion(i18n.string(R.string.app_code), getApplicationVersionName());
+                        tracker.setProductVersion(i18n.string(R.string.app_code), getAppVerName());
                         tracker.start(ANALYTICS_CDOE, ANALYTICS_DISPATH_DELAY, context);
-                        
+
                     } catch (Throwable t) {
                         Logger.e(t.getMessage(), t);
                     }
@@ -198,7 +193,7 @@ public class Contexts {
         }
     }
 
-    
+
     private void cleanTracker() {
      // Stop the tracker when it is no longer needed.
         try {
@@ -213,7 +208,7 @@ public class Contexts {
             Logger.e(t.getMessage(), t);
         }
     }
-    
+
     protected void trackEvent(final String category,final String action,final String label,final int value) {
         if (tracker != null) {
             trackSingleExecutor.submit(new Runnable() {
@@ -253,20 +248,20 @@ public class Contexts {
     public boolean shareHtmlContent(String subject,String html,List<File> attachments){
         return shareContent(subject,html,true,attachments);
     }
-    
-    
+
+
     public boolean shareTextContent(String subject,String text){
         return shareTextContent(subject,text,null);
     }
     public boolean shareTextContent(String subject,String text,List<File> attachments){
         return shareContent(subject,text,false,attachments);
     }
-    
+
     public String getCurrencySymbol(){
         return currencySymbol;
     }
 
-    
+
     public boolean shareContent(String subject,String content,boolean htmlContent,List<File> attachments){
         if(uiActivity == null){
             return false;
@@ -286,7 +281,7 @@ public class Contexts {
             intent.setType("text/plain");
             intent.putExtra(android.content.Intent.EXTRA_TEXT, content);
         }
-        
+
         ArrayList<Parcelable> parcels = new ArrayList<Parcelable>();
         if (attachments != null) {
             for (File f : attachments) {
@@ -307,16 +302,17 @@ public class Contexts {
         }
         return true;
     }
-    
-    
-    public boolean hasSDBackup(){
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) && sdFolder.exists()) {
-            List<String> dbs = Arrays.asList(sdFolder.list());
-            return dbs.contains("dm_master.db") && dbs.contains("dm.db");
-        }
-        return false;
-    }
+
+
+//    public boolean hasSDBackup(){
+//        /FIX ME
+//        String state = Environment.getExternalStorageState();
+//        if (Environment.MEDIA_MOUNTED.equals(state) && sdFolder.exists()) {
+//            List<String> dbs = Arrays.asList(sdFolder.list());
+//            return dbs.contains("dm_master.db") && dbs.contains("dm.db");
+//        }
+//        return false;
+//    }
     /**
      * return true is this is first time you call this api in this application.
      * note that, when calling this twice, it returns false. see {@link DesktopActivity#initialApplicationInfo}
@@ -333,12 +329,12 @@ public class Contexts {
         }catch(Exception x){}
         return false;
     }
-    
+
     /**
      * return true is this is first time you call this api in this application and current version
      */
     public boolean isFirstVersionTime(){
-        int curr = getApplicationVersionCode();
+        int curr = getAppVerCode();
         try{
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
             int last = prefs.getInt("app_lastver",-1);
@@ -351,53 +347,33 @@ public class Contexts {
         }catch(Exception x){}
         return false;
     }
-    
+
+    public String getAppId(){
+        return appId;
+    }
+
+    public String getAppVerName(){
+        return appVerName;
+    }
+
     /**
      * for ui context only
      * @return
      */
-    public String getApplicationVersionName(){
-        if(uiActivity!=null){
-            Application app = (uiActivity).getApplication();
-            String name = app.getPackageName();
-            PackageInfo pi;
-            try {
-                pi = app.getPackageManager().getPackageInfo(name,0);
-                return pi.versionName;
-            } catch (NameNotFoundException e) {
-            }
-        }
-        return "";
+    public int getAppVerCode(){
+        return appVerCode;
     }
-    
-    /**
-     * for ui context only
-     * @return
-     */
-    public int getApplicationVersionCode(){
-        if(uiActivity!=null){
-            Application app = (uiActivity).getApplication();
-            String name = app.getPackageName();
-            PackageInfo pi;
-            try {
-                pi = app.getPackageManager().getPackageInfo(name,0);
-                return pi.versionCode;
-            } catch (NameNotFoundException e) {
-            }
-        }
-        return 0;
-    }
-    
+
     private void reloadPreference() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
-        
+
         try{
             pref_workingBookId = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, pref_workingBookId);
         }catch(Exception x){Logger.e(x.getMessage());}
         if(pref_workingBookId<0){
             pref_workingBookId = 0;
         }
-        
+
         try{
             String pd1  = prefs.getString(Constants.PREFS_PASSWORD, pref_password);
             String pd2  = prefs.getString(Constants.PREFS_PASSWORDVD, pref_password);
@@ -407,8 +383,8 @@ public class Contexts {
                 pref_password = "";
             }
         }catch(Exception x){Logger.e(x.getMessage());}
-        
-        
+
+
         try{
             pref_detailListLayout = Integer.parseInt(prefs.getString(Constants.PREFS_DETAIL_LIST_LAYOUT, String.valueOf(pref_detailListLayout)));
         }catch(Exception x){Logger.e(x.getMessage());}
@@ -434,16 +410,17 @@ public class Contexts {
         try{
             pref_csvEncoding = prefs.getString(Constants.PREFS_CSV_ENCODING, pref_csvEncoding);
         }catch(Exception x){Logger.e(x.getMessage());}
-        
+
         try{
             pref_hierarachicalReport = prefs.getBoolean(Constants.PREFS_HIERARCHICAL_REPORT, pref_hierarachicalReport);
         }catch(Exception x){Logger.e(x.getMessage());}
-        
+
         try {
             pref_lastbackup = prefs.getString(Constants.PREFS_LAST_BACKUP, pref_lastbackup);
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
+
         if(DEBUG){
             Logger.d("preference : working book "+pref_workingBookId);
             Logger.d("preference : detail layout "+pref_detailListLayout);
@@ -454,17 +431,15 @@ public class Contexts {
             Logger.d("preference : backup csv "+pref_backupCSV);
             Logger.d("preference : csv encoding "+pref_csvEncoding);
             Logger.d("preference : last backup " + pref_lastbackup);
-            
-            Logger.d("working_folder "+workingFolder);
         }
         calendarHelper.setFirstDayOfWeek(getPrefFirstdayWeek());
         calendarHelper.setStartDayOfMonth(getPrefStartdayMonth());
     }
-    
+
     public int getWorkingBookId(){
         return pref_workingBookId;
     }
-    
+
     public void setWorkingBookId(int id){
         if(id<0){
             id = 0;
@@ -475,31 +450,27 @@ public class Contexts {
         editor.putInt(Constants.PREFS_WORKING_BOOK_ID,id);
         editor.commit();
     }
-    
+
     public String getPrefPassword(){
         return pref_password;
     }
-    
+
     public boolean isPrefAllowAnalytics(){
         return pref_allowAnalytics;
     }
-    
+
     public String getPrefCSVEncoding(){
         return pref_csvEncoding;
     }
-    
-    public String getWorkingFolder(){
-        return workingFolder;
-    }
-    
+
     public boolean isPrefBackupCSV(){
         return pref_backupCSV;
     }
-    
+
     public boolean isPrefHierarachicalReport(){
         return pref_hierarachicalReport;
     }
-    
+
     public void setPrefHierarachicalReport(boolean hierarachicalReport){
         pref_hierarachicalReport = hierarachicalReport;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
@@ -507,26 +478,26 @@ public class Contexts {
         editor.putBoolean(Constants.PREFS_HIERARCHICAL_REPORT,pref_hierarachicalReport);
         editor.commit();
     }
-    
+
     public int getPrefDetailListLayout(){
         return pref_detailListLayout;
     }
-    
+
     public int getPrefMaxRecords(){
         return pref_maxRecords;
     }
-    
+
     public int getPrefFirstdayWeek(){
         return pref_firstdayWeek;
     }
     public int getPrefStartdayMonth(){
         return pref_startdayMonth>28?28:(pref_startdayMonth<1?1:pref_startdayMonth);
     }
-    
+
     public boolean isPrefOpenTestsDesktop(){
         return pref_openTestsDesktop;
     }
-    
+
     public CalendarHelper getCalendarHelper(){
         return calendarHelper;
     }
@@ -547,7 +518,7 @@ public class Contexts {
             Logger.d("initDataProvider :"+dataProvider);
         }
     }
-    
+
     /** to reset a deat provider for a book **/
     public boolean deleteData(Book book){
         if(book.getId()==0 || book.getId()==pref_workingBookId){
@@ -557,8 +528,8 @@ public class Contexts {
         boolean r = appContext.deleteDatabase(dbname);
         return r;
     }
-    
-    
+
+
     public void cleanDataProvider(Context context){
         if(dataProvider!=null){
             if(DEBUG){
@@ -568,7 +539,7 @@ public class Contexts {
             dataProvider = null;
         }
     }
-    
+
     private void initMasterDataProvider(Context context) {
         String dbname = "dm_master.db";
         masterDataProvider = new SQLiteMasterDataProvider(new SQLiteMasterDataHelper(context,dbname),calendarHelper);
@@ -595,21 +566,21 @@ public class Contexts {
             masterDataProvider = null;
         }
     }
-    
+
     public int getOrientation(){
         if(appContext==null){
             return Configuration.ORIENTATION_UNDEFINED;
         }
         return appContext.getResources().getConfiguration().orientation;
     }
-    
+
     public IDataProvider getDataProvider(){
         if(dataProvider==null){
             throw new IllegalStateException("no available dataProvider, di you get data provider out of life cycle");
         }
         return dataProvider;
     }
-    
+
     public IMasterDataProvider getMasterDataProvider(){
         if(masterDataProvider==null){
             throw new IllegalStateException("no available dataProvider, di you get data provider out of life cycle");
@@ -620,73 +591,92 @@ public class Contexts {
     public void setPreferenceDirty() {
         prefsDirty = true;
     }
-    
+
     public DateFormat getDateFormat(){
         return android.text.format.DateFormat.getDateFormat(appContext);
     }
-    
+
     public DateFormat getLongDateFormat(){
         return android.text.format.DateFormat.getLongDateFormat(appContext);
     }
-    
+
     public DateFormat getMediumDateFormat(){
         return android.text.format.DateFormat.getMediumDateFormat(appContext);
     }
-    
+
     public DateFormat getTimeFormat(){
         return android.text.format.DateFormat.getTimeFormat(appContext);
     }
     public Drawable getDrawable(int id){
         return appContext.getResources().getDrawable(id);
     }
-    
+
     public String toFormattedMoneyString(double money){
         IMasterDataProvider imdp = getMasterDataProvider();
         Book book = imdp.findBook(getWorkingBookId());
         return Formats.money2String(money, book.getSymbol(), book.getSymbolPosition());
     }
 
-    /**
-     * get sd card folder
-     * @return
-     */
-    public File getSdFolder() {
-        return sdFolder;
+
+    public File getStorageFolder() {
+        File f = null;
+
+        if (hasExternalStoragePermission()) {
+            f = Environment.getExternalStorageDirectory();
+            Logger.d("storage:external storage "+f);
+        }else{
+            f = appContext.getFilesDir();
+            Logger.d("storage:local storage "+f);
+        }
+
+        if(f!=null && !f.exists()){
+            Logger.w("app storage folder "+f+" doest not exist");
+        }
+        return f;
     }
 
-    /**
-     * get database folder
-     * @return
-     */
-    public File getDbFolder() {
-        return dbFolder;
+    public boolean hasExternalStoragePermission(){
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    /**
-     * get preference folder
-     * @return
-     */
-    public File getPrefFolder() {
-        return prefFolder;
+    public File getWorkingFolder(){
+        File f = new File(getStorageFolder(), "bwDailyMoney");
+        if(!f.exists()){
+            if(f.mkdir()){
+                Logger.w("create working folder "+f+" got false result");
+            }
+        }
+        return f;
     }
 
-    /**
-     * set last backup date
-     * @param date
-     */
-    public void setLastBackup(Date date) {
-        setLastBackup(appContext, date);
+    public File getAppDbFolder() {
+        File f= new File(Environment.getDataDirectory(),"/data/"+appId+"/databases");
+        if(!f.exists()){
+            Logger.w("app db folder "+f+" doest not exist");
+        }
+        return f;
+
     }
 
-    /**
-     * set last backup date
-     * @param date
-     */
-    public void setLastBackup(Context context, Date date) {
-        pref_lastbackup = lastBakFmt.format(date);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    public File getAppPrefFolder() {
+        File f = new File(Environment.getDataDirectory(),"/data/"+appId+"/shared_prefs");
+        if(!f.exists()){
+            Logger.w("app pref folder "+f+" doest not exist");
+        }
+        return f;
+    }
+
+    public void setPrefLastBackup(long date) {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        pref_lastbackup = fmt.format(date);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.PREFS_LAST_BACKUP, pref_lastbackup);
         editor.commit();
+    }
+
+    public String getPrefLastBackup(){
+        return pref_lastbackup;
     }
 }

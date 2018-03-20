@@ -20,7 +20,6 @@
     <string name="dtitem_detlist_year">Ежегодный список</string>
     <string name="dtitem_prefs">Настройки</string>
     <string name="label_all_details">Все подробности (%1$s записей)</string>
-    <string name="label_Активы">Активы</string>
     <string name="label_date">Дата</string>
     <string name="label_liability">Обязательство</string>
     <string name="label_detlayout_type1">К - деньги</string>
@@ -28,7 +27,7 @@
     <string name="label_detlist_from">&lt; %1$s</string>
     <string name="label_detlist_sum_income">Доход %1$s</string>
     <string name="label_detlist_sum_expense">Счет %1$s</string>
-    <string name="label_detlist_sum_Активы">Активы %1$s </string>
+    <string name="label_detlist_sum_asset">Активы %1$s </string>
     <string name="label_detlist_sum_liability">Обязательство %1$s</string>
     <string name="label_detlist_sum_other">Другие %1$s</string>
     <string name="label_detlist_to">%1$s</string>
@@ -129,7 +128,7 @@
     
     <string name="label_balance_tincome">Баланс доходов</string>
     <string name="label_balance_texpense">Расходы баланса</string>
-    <string name="label_balance_tАктивы">Активы баланса</string>
+    <string name="label_balance_tasset">Активы баланса</string>
     <string name="label_balance_tliability">Обязательство баланса</string>
     <string name="label_balance_tother">Другое в балансе</string>
     
@@ -180,8 +179,9 @@
     <string name="label_prefs_csv_encoding">CSV Кодировка</string>
     <string name="label_prefs_csv_encoding_sum">Не изменяйте это, если вы не знаете что это такое</string>
     <string name="label_prefcat_csv">CSV</string>
-    <string name="label_prefcat_others">Другие</string>   
-<!-- above are verified -->    
+    <string name="label_prefcat_others">Другие</string>
+    <string name="label_asset">Активы</string>
+    <!-- above are verified -->
    
 
 </resources>

@@ -24,8 +24,6 @@ import android.os.Environment;
  */
 public class Files {
 
-    static private SimpleDateFormat backupDateFmt = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-    
     static public long copyFileTo(File src, File dest) throws IOException {
         if (!src.exists() || src.isDirectory()) {
             throw new IllegalArgumentException("not a file : " + src); //$NON-NLS-1$
@@ -217,79 +215,6 @@ public class Files {
                 }
             }
         }
-    }
-    
-    /**
-     * Copy database files which include dm_master.db, dm.db and dm_<i>bookid<i>.db
-     * 
-     * @param sourceFolder source folder
-     * @param targetFolder target folder
-     * @param date
-     *            Copy date. If date is not null, it will make another copy named with '.yyyyMMdd_HHmmss' as suffix. 
-     *            It is also used to identify copy from SD to DB when date is null 
-     * @return Number of files copied.
-     * @throws IOException
-     */
-    public static int copyDatabases(File sourceFolder, File targetFolder, Date date) throws IOException {
-        int count = 0;
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) && sourceFolder.exists() && targetFolder.exists()) {
-            String[] filenames = sourceFolder.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String filename) {
-                    //dm db files only
-                    if (filename.startsWith("dm") && filename.endsWith(".db")) {
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            String bakDate = date == null? null:backupDateFmt.format(date)+".bak";
-            if (filenames != null && filenames.length != 0) {
-                List<String> dbs = Arrays.asList(filenames);
-                //only when there are master and default book db.
-                if (dbs.contains("dm_master.db") && dbs.contains("dm.db")) {
-                    for (String db : dbs) {
-                        Files.copyFileTo(new File(sourceFolder, db), new File(targetFolder, db));
-                        count++;
-                        if (bakDate != null) {
-                            Files.copyFileTo(new File(sourceFolder, db),
-                                    new File(targetFolder, db + "." + bakDate));
-                        }
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
-    /**
-     * Copy preference file.
-     * 
-     * @param sourceFolder source folder
-     * @param targetFolder target folder
-     * @param date
-     *            Copy date. If date is not null, it will make another copy named with '.yyyyMMdd_HHmmss' as suffix.
-     *            It is also used to identify copy from SD to DB when date is null 
-     * @return Number of files copied.
-     * @throws IOException
-     */
-    public static int copyPrefFile(File sourceFolder, File targetFolder, Date date) throws IOException {
-        int count = 0;
-        final String prefName = "com.bottleworks.dailymoney_preferences.xml";
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) && sourceFolder.exists() && targetFolder.exists()) {
-            File pref = new File(sourceFolder, prefName);
-            String bakDate = date == null? null:backupDateFmt.format(date)+".bak";
-            if (pref.exists()) {
-                count++;
-                Files.copyFileTo(pref, new File(targetFolder, "com.bottleworks.dailymoney_preferences.xml"));
-                if (date != null) {
-                    Files.copyFileTo(pref, new File(targetFolder, prefName + "." + bakDate));
-                }
-            }
-        }
-        return count;
     }
 
 }
