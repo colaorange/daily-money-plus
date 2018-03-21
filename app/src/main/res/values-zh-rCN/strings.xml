@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cact_cancel">取消</string>
+    <string name="cact_close">关闭</string>
+    <string name="cact_copy">複製</string>
+    <string name="cact_create">建立</string>
+    <string name="cact_delete">删除</string>
+    <string name="cact_edit">编辑</string>
+    <string name="cact_new">新增</string>
+    <string name="cact_ok">OK</string>
+    <string name="cact_stop">停止</string>
+    <string name="cact_update">更新</string>
+    <string name="clabel_alert">警告</string>
+    <string name="clabel_share">分享Share</string>
+    <string name="clabel_busy">忙碌</string>
+    <string name="clabel_error">错误</string>
+    <string name="clabel_info">资讯</string>
+    <string name="clabel_name">名称</string>
+    <string name="clabel_type">类型</string>
+    <string name="clabel_unknow">未知</string>
+    <string name="clabel_warn">警告</string>
+    <string name="cmsg_busy">程式忙碌中，请等一下</string>
+    <string name="cmsg_error">错误 : %1$s</string>
+    <string name="cmsg_field_empty">%1$s 是空的</string>
+    <string name="cmsg_field_zero">%1$s 是零</string>
 	<string name="app_name">每日记账本</string>
     <string name="defacc_bank1">银行.台湾</string>
     <string name="defacc_bank2">银行.HSBC</string>
@@ -108,7 +131,7 @@
     <string name="label_prefs_workingfolder_sum">设定sdcard中的工作目录的名称，CSV將导出到这个目录</string>
     <string name="label_prefs_backupcsv">备份CSV</string>
     <string name="label_prefs_backupcsv_sum">导出备份CSV</string>
-    <string name="qmsg_clear_folder">您想要清除工作目录%1$s吗?所有的CSV档案將被移除</string>
+    <string name="qmsg_clear_folder">您想要清除工作目录%1$s吗?所有目录內的档案將被移除</string>
     <string name="defacc_creditcard">信用卡</string>
     
     <string name="label_account">账户</string>

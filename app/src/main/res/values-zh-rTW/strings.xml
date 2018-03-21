@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cact_cancel">取消</string>
+    <string name="cact_close">關閉</string>
+    <string name="cact_copy">複製</string>
+    <string name="cact_create">建立</string>
+    <string name="cact_delete">刪除</string>
+    <string name="cact_edit">編輯</string>
+    <string name="cact_new">新增</string>
+    <string name="cact_ok">OK</string>
+    <string name="cact_stop">停止</string>
+    <string name="cact_update">更新</string>
+    <string name="clabel_alert">警告</string>
+    <string name="clabel_share">分享Share</string>
+    <string name="clabel_busy">忙碌</string>
+    <string name="clabel_error">錯誤</string>
+    <string name="clabel_info">資訊</string>
+    <string name="clabel_name">名稱</string>
+    <string name="clabel_type">類型</string>
+    <string name="clabel_unknow">未知</string>
+    <string name="clabel_warn">警告</string>
+    <string name="cmsg_busy">程式忙碌中，請等一下</string>
+    <string name="cmsg_error">錯誤 : %1$s</string>
+    <string name="cmsg_field_empty">%1$s 是空的</string>
+    <string name="cmsg_field_zero">%1$s 是零</string>
 	<string name="app_name">每日記帳本</string>
     <string name="defacc_bank1">銀行.台灣</string>
     <string name="defacc_bank2">銀行.HSBC</string>
@@ -110,7 +133,7 @@
     <string name="label_prefs_workingfolder_sum">設定sdcard中的工作目錄的名稱，CSV將匯出到這個目錄</string>
     <string name="label_prefs_backupcsv">備份CSV</string>
     <string name="label_prefs_backupcsv_sum">當匯出時備份舊的CSV</string>
-    <string name="qmsg_clear_folder">您想要清除工作目錄%1$s嗎?所有的CSV跟BAK將被移除</string>
+    <string name="qmsg_clear_folder">您想要清除工作目錄%1$s嗎?所有的目錄內的檔案將被移除</string>
     <string name="defacc_creditcard">信用卡</string>
     
     <string name="label_account">帳戶</string>
@@ -226,7 +249,7 @@
     
     <!-- from 2012802 by dennis-->
     <string name="msg_db_retored">資料已經回復成功, 請繼續使用</string>
-    <string name="qmsg_retore_db">你的SD卡裏有舊的每日記帳本備份, 你想回用這些備份資料嗎(目前的資料將被取代)?</string>
+    <string name="qmsg_retore_db">你的儲存裏有舊的每日記帳本備份, 你想回用這些備份資料嗎(目前的資料將被取代)?</string>
     
     <!-- from 20130513 by Lancelot -->
     <string name="dtitem_report_search">搜尋</string>

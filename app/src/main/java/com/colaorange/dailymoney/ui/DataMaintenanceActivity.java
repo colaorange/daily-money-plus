@@ -70,6 +70,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         findViewById(R.id.datamain_export_csv).setOnClickListener(this);
         findViewById(R.id.datamain_share_csv).setOnClickListener(this);
         findViewById(R.id.datamain_backup_db).setOnClickListener(this);
+
+        //TODO move to developer
+        findViewById(R.id.datamain_reset).setOnClickListener(this);
+        findViewById(R.id.datamain_clear_folder).setOnClickListener(this);
+        findViewById(R.id.datamain_create_default).setOnClickListener(this);
     }
 
     @Override
@@ -82,6 +87,12 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doShareCSV();
         } else if (v.getId() == R.id.datamain_backup_db) {
             doBackupDbToStorage();
+        } else if (v.getId() == R.id.datamain_reset) {
+            doReset();
+        } else if (v.getId() == R.id.datamain_create_default) {
+            doCreateDefault();
+        } else if (v.getId() == R.id.datamain_clear_folder) {
+            doClearFolder();
         }
     }
 
@@ -108,14 +119,68 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void run() {
                 try {
                     Contexts ctxs = getContexts();
-                    count = BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getStorageFolder(), now);
-                    count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getStorageFolder(), now);
+                    count = BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getWorkingFolder(), now);
+                    count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getWorkingFolder(), now);
                 } catch (Exception e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
+    }
+
+    private void doReset() {
+        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_reset))
+                .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+                        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
+                            public void onBusyError(Throwable t) {
+                                GUIs.error(DataMaintenanceActivity.this, t);
+                            }
+                            @Override
+                            public void run() {
+                                try {
+                                    _resetDate(which);
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e.getMessage(),e);
+                                }
+                            }
+                        };
+                        GUIs.doBusy(DataMaintenanceActivity.this, job);
+                    }
+                }).show();
+    }
+
+    private void doClearFolder() {
+        //TODO move to devlope
+        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
+            @Override
+            public void onBusyFinish() {
+                GUIs.alert(DataMaintenanceActivity.this, i18n.string(R.string.msg_folder_cleared,workingFolder));
+            }
+
+            @Override
+            public void run() {
+                for(File f: workingFolder.listFiles()){
+                    String fnm = f.getName().toLowerCase();
+                    if(f.isFile()){
+                        f.delete();
+                    }
+                }
+            }
+        };
+
+        GUIs.confirm(this, i18n.string(R.string.qmsg_clear_folder,workingFolder), new GUIs.OnFinishListener() {
+            @Override
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    GUIs.doBusy(DataMaintenanceActivity.this, job);
+                }
+                return true;
+            }
+        });
+
     }
 
     private void doCreateDefault() {

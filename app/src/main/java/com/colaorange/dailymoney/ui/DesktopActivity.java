@@ -179,8 +179,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             @Override
             public void run() {
                 try {
-                    BackupRestorer.copyDatabases(ctxs.getStorageFolder(), ctxs.getAppDbFolder(), null);
-                    BackupRestorer.copyPrefFile(ctxs.getStorageFolder(), ctxs.getAppPrefFolder(), null);
+                    BackupRestorer.copyDatabases(ctxs.getWorkingFolder(), ctxs.getAppDbFolder(), null);
+                    BackupRestorer.copyPrefFile(ctxs.getWorkingFolder(), ctxs.getAppPrefFolder(), null);
                     Contexts.instance().setPreferenceDirty();//since we reload it.
                 } catch (IOException e) {
                     Logger.e(e.getMessage(), e);

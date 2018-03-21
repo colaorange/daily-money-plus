@@ -1,0 +1,5 @@
+* No SD in emulator
+    https://www.chrisblunt.com/fix-missing-sdcard-android-emulator/
+* Locale
+    https://stackoverflow.com/questions/7973023/what-is-the-list-of-supported-languages-locales-on-android
+    http://blog.30sparks.com/android-7-0-locales-chinese-problem/

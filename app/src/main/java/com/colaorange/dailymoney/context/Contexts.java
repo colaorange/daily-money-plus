@@ -623,10 +623,10 @@ public class Contexts {
 
         if (hasExternalStoragePermission()) {
             f = Environment.getExternalStorageDirectory();
-            Logger.d("storage:external storage "+f);
+            Logger.d("storage:external "+f);
         }else{
             f = appContext.getFilesDir();
-            Logger.d("storage:local storage "+f);
+            Logger.d("storage:default "+f);
         }
 
         if(f!=null && !f.exists()){
@@ -636,6 +636,7 @@ public class Contexts {
     }
 
     public boolean hasExternalStoragePermission(){
+        //TODO need to care more
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }

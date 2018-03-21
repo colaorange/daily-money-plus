@@ -23,8 +23,8 @@ public class ScheduleReceiver extends BroadcastReceiver {
             Contexts ctxs = Contexts.instance();
             try {
                 int count = 0;
-                count += BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getStorageFolder(), now);
-                count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getStorageFolder(), now);
+                count += BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getWorkingFolder(), now);
+                count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getWorkingFolder(), now);
                 if (count > 0) {
                     ctxs.setPrefLastBackup(now);
                 }

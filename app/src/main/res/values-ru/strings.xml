@@ -111,7 +111,7 @@
     <string name="label_prefs_backupcsv">Резервная копия CSV</string>
     <string name="label_prefs_backupcsv_sum">Резервная копия старых CSV при экспорте</string>
     
-    <string name="qmsg_clear_folder">Вы действительно хотите очистить каталог %1$s? все CSV будут удалены</string>
+    <string name="qmsg_clear_folder">Вы действительно хотите очистить каталог %1$s?</string>
     <string name="defacc_creditcard">Кредитная карта</string>
     
     <string name="label_account">Счет</string>
