@@ -18,6 +18,12 @@ public class I18N {
     }
     
     public String string(int id,Object... args){
-        return context.getString(id,args);
+        try {
+            return context.getString(id, args);
+        }catch(Exception x){
+            Logger.e(x.getMessage());
+            return context.getString(id);
+        }
+
     }
 }

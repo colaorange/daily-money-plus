@@ -3,3 +3,5 @@
 * Locale
     https://stackoverflow.com/questions/7973023/what-is-the-list-of-supported-languages-locales-on-android
     http://blog.30sparks.com/android-7-0-locales-chinese-problem/
+* Context
+    http://blog.csdn.net/lmj623565791/article/details/40481055

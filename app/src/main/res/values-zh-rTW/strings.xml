@@ -256,5 +256,7 @@
     <string name="label_from_date">起日</string>
     <string name="label_to_date">迄日</string>
     <string name="search_reset">重設</string>
+
+    <string name="msg_working_folder_no_access">工作目錄 %1$s 無法存取, 請到系統設定開啟存取權限</string>
 </resources>
 
