@@ -5,7 +5,6 @@ import com.colaorange.commons.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -81,7 +80,16 @@ public class BackupRestorer {
     }
 
     public static boolean hasBackup() {
-        List<String> dbs = Arrays.asList(contexts().getWorkingFolder().list());
-        return dbs.contains(DB) && dbs.contains(DB_MASTER);
+        try {
+            if (contexts().hasWorkingFolderPermission()) {
+                List<String> dbs = Arrays.asList(contexts().getWorkingFolder().list());
+                return dbs.contains(DB) && dbs.contains(DB_MASTER);
+            } else {
+                return false;
+            }
+        }catch(Exception x){
+            Logger.w(x.getMessage(),x);
+            return false;
+        }
     }
 }

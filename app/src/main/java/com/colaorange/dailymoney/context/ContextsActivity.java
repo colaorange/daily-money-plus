@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.context;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.I18N;
@@ -13,7 +14,7 @@ import com.colaorange.commons.util.Logger;
  * @author dennis
  * 
  */
-public class ContextsActivity extends Activity {
+public class ContextsActivity extends AppCompatActivity {
 
     protected I18N i18n;
     protected CalendarHelper calHelper;

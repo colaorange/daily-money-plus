@@ -5,3 +5,6 @@
     http://blog.30sparks.com/android-7-0-locales-chinese-problem/
 * Context
     http://blog.csdn.net/lmj623565791/article/details/40481055
+* Menu
+    https://stackoverflow.com/questions/40867621/contextmenu-position-is-messed-up-in-android-7
+    https://stackoverflow.com/questions/27277050/android-default-theme

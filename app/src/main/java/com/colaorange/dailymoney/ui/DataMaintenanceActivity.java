@@ -77,15 +77,12 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         //working fodler accessibility
         TextView workingFolderText = ((TextView)findViewById(R.id.datamain_workingfolder));
         //test accessable
-        try{
-            File touch = new File(workingFolder,"touch");
-            Files.saveString("",touch,"utf-8");
-            touch.delete();
-            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info),null,null,null);
+        if (getContexts().hasWorkingFolderPermission()) {
+            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info), null, null, null);
             workingFolderText.setText(workingFolder.getAbsolutePath());
-        }catch(Exception x){
-            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_alert),null,null,null);
-            workingFolderText.setText(i18n.string(R.string.msg_working_folder_no_access,workingFolder.getAbsolutePath()));
+        } else {
+            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_alert), null, null, null);
+            workingFolderText.setText(i18n.string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
         }
     }
 
@@ -188,6 +185,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void run() {
                 for(File f: workingFolder.listFiles()){
                     String fnm = f.getName().toLowerCase();
+                    //don't delete sub folder
                     if(f.isFile()){
                         f.delete();
                     }

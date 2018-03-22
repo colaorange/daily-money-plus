@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<style name="AppTheme" parent="Theme.AppCompat">
 
-    <!-- 
-    refer to /core/res/res/values/ themes.xml
-     -->
-	<style name="Theme.Password" parent="@android:style/Theme.Dialog">
 	</style>
+
+	<style name="AppTheme.DayNight" parent="Theme.AppCompat.DayNight">
+
+	</style>
+
+	<style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+
+	</style>
+
 </resources>

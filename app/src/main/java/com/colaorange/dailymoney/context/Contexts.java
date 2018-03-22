@@ -24,9 +24,11 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.I18N;
 import com.colaorange.commons.util.Logger;
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.IDataProvider;
@@ -326,7 +328,9 @@ public class Contexts {
                 editor.commit();
                 return true;
             }
-        }catch(Exception x){}
+        }catch(Exception x){
+            Logger.w(x.getMessage(),x);
+        }
         return false;
     }
 
@@ -344,7 +348,9 @@ public class Contexts {
                 editor.commit();
                 return true;
             }
-        }catch(Exception x){}
+        }catch(Exception x){
+            Logger.w(x.getMessage(),x);
+        }
         return false;
     }
 
@@ -618,10 +624,10 @@ public class Contexts {
     }
 
 
-    public File getStorageFolder() {
+    private File getStorageFolder() {
         File f = null;
 
-        if (hasExternalStoragePermission()) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             f = Environment.getExternalStorageDirectory();
             Logger.d("storage:external "+f);
         }else{
@@ -635,18 +641,21 @@ public class Contexts {
         return f;
     }
 
-    public boolean hasExternalStoragePermission(){
-        //TODO need to care more
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
+    public boolean hasWorkingFolderPermission(){
+        try {
+            File touch = new File(getWorkingFolder(), Strings.randomName(10)+".touch");
+            Files.saveString("", touch, "utf-8");
+            touch.delete();
+            return true;
+        }catch(Exception x){
+            return false;
+        }
     }
 
     public File getWorkingFolder(){
         File f = new File(getStorageFolder(), "bwDailyMoney");
         if(!f.exists()){
-            if(f.mkdir()){
-                Logger.w("create working folder "+f+" got false result");
-            }
+            f.mkdir();
         }
         return f;
     }
