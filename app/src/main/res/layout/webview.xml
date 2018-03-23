@@ -3,8 +3,6 @@
 	android:layout_height="fill_parent" android:orientation="vertical">
 	<ScrollView android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-		<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
-			<WebView android:id="@+id/webview" android:layout_width="fill_parent" android:layout_height="wrap_content" />
-		</LinearLayout>
+		<WebView android:id="@+id/webview" android:layout_width="fill_parent" android:layout_height="wrap_content" />
 	</ScrollView>
 </LinearLayout>

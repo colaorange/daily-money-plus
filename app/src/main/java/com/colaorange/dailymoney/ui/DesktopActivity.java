@@ -178,7 +178,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 try {
                     BackupRestorer.copyDatabases(ctxs.getWorkingFolder(), ctxs.getAppDbFolder(), null);
                     BackupRestorer.copyPrefFile(ctxs.getWorkingFolder(), ctxs.getAppPrefFolder(), null);
-                    Contexts.instance().setPreferenceDirty();//since we reload it.
+                    Contexts.instance().refreshDataProvider();//since we reload it.
                 } catch (IOException e) {
                     Logger.e(e.getMessage(), e);
                 }

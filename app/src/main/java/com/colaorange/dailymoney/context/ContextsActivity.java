@@ -8,6 +8,8 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.I18N;
 import com.colaorange.commons.util.Logger;
 
+import java.lang.ref.WeakReference;
+
 /**
  * provide life cycle and easy access to contexts
  * 
@@ -21,21 +23,13 @@ public class ContextsActivity extends AppCompatActivity {
     protected I18N i18n;
     protected CalendarHelper calHelper;
 
-    private static Activity firstActivity;
-
-
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Logger.d("activity created:"+this);
         Contexts ctxs = Contexts.instance();
-        if(firstActivity==null){
-            firstActivity = this;
-            ctxs.initApplication(firstActivity, firstActivity);
-        }
 
-        ctxs.initActivity(this);
         refreshUtil(ctxs);
 
         Bundle b = getIntentExtras();
@@ -69,9 +63,6 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(firstActivity==this){
-            Contexts.instance().destroyApplication(firstActivity);
-        }
         Logger.d("activity destroyed:"+this);
     }
 
@@ -94,15 +85,9 @@ public class ContextsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Contexts ctxs = Contexts.instance();
-        ctxs.initActivity(this);
         refreshUtil(ctxs);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Contexts.instance().cleanActivity(this);
-    }
 
     Bundle fakeExtra;
 

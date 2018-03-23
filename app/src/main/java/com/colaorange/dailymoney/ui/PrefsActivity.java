@@ -33,7 +33,7 @@ public class PrefsActivity extends PreferenceActivity implements OnSharedPrefere
     protected void onPause(){
         super.onPause();
         if(dirty){
-            Contexts.instance().setPreferenceDirty();
+            Contexts.instance().reloadPreference();
         }
         dirty = false;
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);

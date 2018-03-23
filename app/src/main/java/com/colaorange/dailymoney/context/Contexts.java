@@ -51,18 +51,16 @@ public class Contexts {
 
     private static Contexts instance;
 
-    private Object appInitialObject;
-    private Context appContext;
+    private ContextsApp contextsApp;
     private String appId;
     private String appVerName;
     private int appVerCode;
-    private Activity uiActivity;
 
     private IDataProvider dataProvider;
     private IMasterDataProvider masterDataProvider;
     private I18N i18n;
 
-    int pref_workingBookId = 0;//the book user selected
+    int pref_workingBookId = 0;//the book user selected, default is 0
     int pref_detailListLayout = 2;
     int pref_maxRecords = -1;//-1 is no limit
     int pref_firstdayWeek = 1;//sunday
@@ -77,8 +75,6 @@ public class Contexts {
 
     private CalendarHelper calendarHelper = new CalendarHelper();
 
-    private static final ExecutorService trackSingleExecutor = Executors.newSingleThreadExecutor();
-
     //analytics code
     //"UA-20850113-1"; old 0.9.8
     private static final String ANALYTICS_CDOE = "UA-20850113-2";
@@ -91,8 +87,6 @@ public class Contexts {
     public static final String TRACKER_EVT_DELETE = "D";
 
     private String currencySymbol = "$";
-
-    private boolean prefsDirty = true;
 
     public static final boolean DEBUG = true;
 
@@ -115,46 +109,14 @@ public class Contexts {
         return instance;
     }
 
+    synchronized boolean initApplication(ContextsApp contextsApp){
 
-    boolean initActivity(Activity activity){
-        if(appContext==null){
-            initApplication(activity,activity);
-        }
-        if(this.uiActivity != activity){
-            Logger.d(">>>initial activity "+activity);
-            this.uiActivity = activity;
-            if(prefsDirty){
-                reloadPreference();
-                prefsDirty = false;
-            }
-            initMasterDataProvider(uiActivity);
-            initDataProvider(uiActivity);
-
-            return true;
-        }
-        return false;
-    }
-
-    boolean cleanActivity(Activity activity){
-        if(this.uiActivity == activity){
-            this.uiActivity = null;
-            cleanDataProvider(uiActivity);
-            cleanMasterDataProvider(uiActivity);
-            Logger.d(">>>cleanup activity "+activity);
-            return true;
-        }
-        return false;
-    }
-
-    synchronized boolean initApplication(Object appInitialObject,Context context){
-        if(appContext==null){
-
-            appInitialObject = appInitialObject;
-            appContext = context.getApplicationContext();
-            appId = appContext.getPackageName();
+        if(this.contextsApp==null){
+            this.contextsApp = contextsApp;
+            appId = contextsApp.getPackageName();
             PackageInfo pi;
             try {
-                pi = appContext.getPackageManager().getPackageInfo(appId,0);
+                pi = contextsApp.getPackageManager().getPackageInfo(appId,0);
                 appVerName =  pi.versionName;
                 appVerCode = pi.versionCode;
             } catch (NameNotFoundException e) {
@@ -162,50 +124,45 @@ public class Contexts {
             Logger.d(">>initialial application context "+appId+","+ appVerName +","+ appVerCode);
 
 
-            this.i18n = new I18N(appContext);
-            initTracker(appContext);
+            this.i18n = new I18N(contextsApp);
+            initDataProvider();
+            initTracker();
             return true;
         }else{
-            Logger.w("application context was initialized :"+appInitialObject);
+            Logger.w("application context was initialized :"+contextsApp);
         }
         return false;
     }
 
-    synchronized boolean destroyApplication(Object appInitialObject){
-        if(this.appInitialObject!=null && this.appInitialObject.equals(appInitialObject)){
+    synchronized boolean destroyApplication(ContextsApp contextsApp){
+        if(this.contextsApp!=null && this.contextsApp.equals(contextsApp)){
             cleanTracker();
-            Logger.d(">>destroyed application context :"+appInitialObject);
-            appContext = null;
-            appInitialObject = null;
+            cleanDataProvider();
+            Logger.d(">>destroyed application context :"+contextsApp);
+            this.contextsApp = null;
             return true;
         }
         return false;
     }
 
-    private void initTracker(final Context context) {
-        if (isPrefAllowAnalytics()) {
-            trackSingleExecutor.submit(new Runnable() {
-                public void run() {
-                    try {
-                        Logger.d("initial google tracker");
-                        tracker = GoogleAnalyticsTracker.getInstance();
-                        tracker.setProductVersion(i18n.string(R.string.app_code), getAppVerName());
-                        tracker.start(ANALYTICS_CDOE, ANALYTICS_DISPATH_DELAY, context);
 
-                    } catch (Throwable t) {
-                        Logger.e(t.getMessage(), t);
-                    }
-                }
-            });
+    private void initTracker() {
+        try {
+            if(tracker==null) {
+                tracker = GoogleAnalyticsTracker.getInstance();
+                tracker.setProductVersion(i18n.string(R.string.app_code), getAppVerName());
+                tracker.start(ANALYTICS_CDOE, ANALYTICS_DISPATH_DELAY, contextsApp);
+            }
+        } catch (Throwable t) {
+            Logger.e(t.getMessage(), t);
         }
     }
 
-
     private void cleanTracker() {
-     // Stop the tracker when it is no longer needed.
+        // Stop the tracker when it is no longer needed.
         try {
             if (tracker != null) {
-                //don't dispatch, let the queue do it next time to reduce network
+                //just leave it.
                 tracker.dispatch();
                 tracker.stop();
                 tracker = null;
@@ -217,35 +174,24 @@ public class Contexts {
     }
 
     protected void trackEvent(final String category,final String action,final String label,final int value) {
-        if (tracker != null) {
-            trackSingleExecutor.submit(new Runnable() {
-                public void run() {
-                    try {
-                        if (tracker != null) {
-                            tracker.trackEvent(category, action, label, value);
-                        }
-                    } catch (Throwable t) {
-                        Logger.e(t.getMessage(), t);
-                    }
-                }
-            });
+        if (isPrefAllowAnalytics() && tracker != null) {
+            try{
+                Logger.d("track event " + category +", "+action);
+                tracker.trackEvent(category, action, label, value);
+            } catch (Throwable t) {
+                Logger.e(t.getMessage(), t);
+            }
         }
     }
 
     protected void trackPageView(final String path) {
-        if (tracker != null) {
-            trackSingleExecutor.submit(new Runnable() {
-                public void run() {
-                    try {
-                        if (tracker != null) {
-                            Logger.d("track "+path);
-                            tracker.trackPageView(path);
-                        }
-                    } catch (Throwable t) {
-                        Logger.e(t.getMessage(), t);
-                    }
-                }
-            });
+        if (isPrefAllowAnalytics() && tracker != null) {
+            try {
+                Logger.d("track " + path);
+                tracker.trackPageView(path);
+            } catch (Throwable t) {
+                Logger.e(t.getMessage(), t);
+            }
         }
     }
 
@@ -270,10 +216,6 @@ public class Contexts {
 
 
     public boolean shareContent(String subject,String content,boolean htmlContent,List<File> attachments){
-        if(uiActivity == null){
-            return false;
-        }
-
         Intent intent;
         if(attachments == null || attachments.size()<=1){
             intent = new Intent(Intent.ACTION_SEND);
@@ -302,7 +244,7 @@ public class Contexts {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, parcels);
         }
         try{
-            uiActivity.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
+            contextsApp.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
         }catch(Exception x){
             Logger.e(x.getMessage(),x);
             return false;
@@ -310,23 +252,13 @@ public class Contexts {
         return true;
     }
 
-
-//    public boolean hasSDBackup(){
-//        /FIX ME
-//        String state = Environment.getExternalStorageState();
-//        if (Environment.MEDIA_MOUNTED.equals(state) && sdFolder.exists()) {
-//            List<String> dbs = Arrays.asList(sdFolder.list());
-//            return dbs.contains("dm_master.db") && dbs.contains("dm.db");
-//        }
-//        return false;
-//    }
     /**
      * return true is this is first time you call this api in this application.
      * note that, when calling this twice, it returns false. see {@link DesktopActivity#initialApplicationInfo}
      */
     public boolean isFirstTime(){
         try{
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
             if(!prefs.contains("app_firsttime")){
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("app_firsttime",Formats.normalizeDate2String(new Date()));
@@ -345,7 +277,7 @@ public class Contexts {
     public boolean isFirstVersionTime(){
         int curr = getAppVerCode();
         try{
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
             int last = prefs.getInt("app_lastver",-1);
             if(curr!=last){
                 SharedPreferences.Editor editor = prefs.edit();
@@ -375,14 +307,15 @@ public class Contexts {
         return appVerCode;
     }
 
-    private void reloadPreference() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+    public void reloadPreference() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
 
+        int bookid = 0;
         try{
-            pref_workingBookId = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, pref_workingBookId);
+            bookid = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, pref_workingBookId);
         }catch(Exception x){Logger.e(x.getMessage());}
-        if(pref_workingBookId<0){
-            pref_workingBookId = 0;
+        if(bookid<0){
+            bookid = 0;
         }
 
         try{
@@ -432,6 +365,12 @@ public class Contexts {
             Logger.e(x.getMessage());
         }
 
+
+        if(pref_workingBookId!=bookid){
+            pref_workingBookId = bookid;
+            refreshDataProvider();
+        }
+
         if(DEBUG){
             Logger.d("preference : working book "+pref_workingBookId);
             Logger.d("preference : detail layout "+pref_detailListLayout);
@@ -455,11 +394,15 @@ public class Contexts {
         if(id<0){
             id = 0;
         }
-        pref_workingBookId = id;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(Constants.PREFS_WORKING_BOOK_ID,id);
-        editor.commit();
+        if(pref_workingBookId!=id) {
+            pref_workingBookId = id;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(Constants.PREFS_WORKING_BOOK_ID, id);
+            editor.commit();
+
+            refreshDataProvider();
+        }
     }
 
     public String getPrefPassword(){
@@ -484,7 +427,7 @@ public class Contexts {
 
     public void setPrefHierarachicalReport(boolean hierarachicalReport){
         pref_hierarachicalReport = hierarachicalReport;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(Constants.PREFS_HIERARCHICAL_REPORT,pref_hierarachicalReport);
         editor.commit();
@@ -518,42 +461,38 @@ public class Contexts {
         return i18n;
     }
 
-    private void initDataProvider(Context context) {
-        String dbname = "dm.db";
-        if(pref_workingBookId>0){
-            dbname = "dm_"+pref_workingBookId+".db";
-        }
-        dataProvider = new SQLiteDataProvider(new SQLiteDataHelper(context,dbname),calendarHelper);
-        dataProvider.init();
-        if(DEBUG){
-            Logger.d("initDataProvider :"+dataProvider);
-        }
-    }
+
 
     /** to reset a deat provider for a book **/
     public boolean deleteData(Book book){
+        //can't delete default(0) and working book
         if(book.getId()==0 || book.getId()==pref_workingBookId){
             return false;
         }
         String dbname = "dm_"+book.getId()+".db";
-        boolean r = appContext.deleteDatabase(dbname);
+        boolean r = contextsApp.deleteDatabase(dbname);
         return r;
     }
 
-
-    public void cleanDataProvider(Context context){
-        if(dataProvider!=null){
-            if(DEBUG){
-                Logger.d("cleanDataProvider :"+dataProvider);
-            }
-            dataProvider.destroyed();
-            dataProvider = null;
-        }
+    public void refreshDataProvider(){
+        cleanDataProvider();
+        initDataProvider();
     }
 
-    private void initMasterDataProvider(Context context) {
-        String dbname = "dm_master.db";
-        masterDataProvider = new SQLiteMasterDataProvider(new SQLiteMasterDataHelper(context,dbname),calendarHelper);
+
+    private void initDataProvider() {
+        String dbname = "dm.db";
+        if(pref_workingBookId>0){
+            dbname = "dm_"+pref_workingBookId+".db";
+        }
+        dataProvider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp,dbname),calendarHelper);
+        dataProvider.init();
+        if(DEBUG){
+            Logger.d("initDataProvider :"+dataProvider);
+        }
+
+        dbname = "dm_master.db";
+        masterDataProvider = new SQLiteMasterDataProvider(new SQLiteMasterDataHelper(contextsApp,dbname),calendarHelper);
         masterDataProvider.init();
         if(DEBUG){
             Logger.d("masterDataProvider :"+masterDataProvider);
@@ -568,10 +507,20 @@ public class Contexts {
         }
         currencySymbol = book.getSymbol();
     }
-    public void cleanMasterDataProvider(Context context){
+
+
+    private void cleanDataProvider(){
+        if(dataProvider!=null){
+            if(DEBUG){
+                Logger.d("cleanDataProvider :"+dataProvider);
+            }
+            dataProvider.destroyed();
+            dataProvider = null;
+        }
+
         if(masterDataProvider!=null){
             if(DEBUG){
-                Logger.d("cleanmasterDataProvider :"+masterDataProvider);
+                Logger.d("cleanMasterDataProvider :"+masterDataProvider);
             }
             masterDataProvider.destroyed();
             masterDataProvider = null;
@@ -579,47 +528,43 @@ public class Contexts {
     }
 
     public int getOrientation(){
-        if(appContext==null){
+        if(contextsApp==null){
             return Configuration.ORIENTATION_UNDEFINED;
         }
-        return appContext.getResources().getConfiguration().orientation;
+        return contextsApp.getResources().getConfiguration().orientation;
     }
 
     public IDataProvider getDataProvider(){
         if(dataProvider==null){
-            throw new IllegalStateException("no available dataProvider, di you get data provider out of life cycle");
+            throw new IllegalStateException("no available dataProvider, did you get data provider out of life cycle");
         }
         return dataProvider;
     }
 
     public IMasterDataProvider getMasterDataProvider(){
         if(masterDataProvider==null){
-            throw new IllegalStateException("no available dataProvider, di you get data provider out of life cycle");
+            throw new IllegalStateException("no available dataProvider, did you get data provider out of life cycle");
         }
         return masterDataProvider;
     }
 
-    public void setPreferenceDirty() {
-        prefsDirty = true;
-    }
-
     public DateFormat getDateFormat(){
-        return android.text.format.DateFormat.getDateFormat(appContext);
+        return android.text.format.DateFormat.getDateFormat(contextsApp);
     }
 
     public DateFormat getLongDateFormat(){
-        return android.text.format.DateFormat.getLongDateFormat(appContext);
+        return android.text.format.DateFormat.getLongDateFormat(contextsApp);
     }
 
     public DateFormat getMediumDateFormat(){
-        return android.text.format.DateFormat.getMediumDateFormat(appContext);
+        return android.text.format.DateFormat.getMediumDateFormat(contextsApp);
     }
 
     public DateFormat getTimeFormat(){
-        return android.text.format.DateFormat.getTimeFormat(appContext);
+        return android.text.format.DateFormat.getTimeFormat(contextsApp);
     }
     public Drawable getDrawable(int id){
-        return appContext.getResources().getDrawable(id);
+        return contextsApp.getResources().getDrawable(id);
     }
 
     public String toFormattedMoneyString(double money){
@@ -636,7 +581,7 @@ public class Contexts {
             f = Environment.getExternalStorageDirectory();
             Logger.d("storage:external "+f);
         }else{
-            f = appContext.getFilesDir();
+            f = contextsApp.getFilesDir();
             Logger.d("storage:default "+f);
         }
 
@@ -685,7 +630,7 @@ public class Contexts {
     public void setPrefLastBackup(long date) {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         pref_lastbackup = fmt.format(date);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(appContext);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.PREFS_LAST_BACKUP, pref_lastbackup);
         editor.commit();
