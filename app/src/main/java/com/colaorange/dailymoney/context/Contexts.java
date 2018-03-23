@@ -80,10 +80,15 @@ public class Contexts {
     private static final ExecutorService trackSingleExecutor = Executors.newSingleThreadExecutor();
 
     //analytics code
-    private static final String ANALYTICS_CDOE = "UA-20850113-1";
+    //"UA-20850113-1"; old 0.9.8
+    private static final String ANALYTICS_CDOE = "UA-20850113-2";
     private static final int ANALYTICS_DISPATH_DELAY = 60;// dispatch queue at least 60s
 
     private GoogleAnalyticsTracker tracker;
+
+    public static final String TRACKER_EVT_CREATE = "C";
+    public static final String TRACKER_EVT_UPDATE = "U";
+    public static final String TRACKER_EVT_DELETE = "D";
 
     private String currencySymbol = "$";
 

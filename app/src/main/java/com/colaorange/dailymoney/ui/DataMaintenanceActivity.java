@@ -145,6 +145,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 } catch (Exception e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
+                trackEvent("backup");
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -257,6 +258,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(),e);
                                 }
+                                trackEvent("export_csv");
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -290,6 +292,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(),e);
                                 }
+                                trackEvent("import_csv");
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -319,6 +322,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(),e);
                                 }
+                                trackEvent("share_csv");
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);

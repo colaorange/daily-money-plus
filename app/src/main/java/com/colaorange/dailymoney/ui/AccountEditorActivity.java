@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.dailymoney.calculator2.Calculator;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
@@ -243,7 +244,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             okBtn.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
             cancelBtn.setVisibility(Button.GONE);
             closeBtn.setVisibility(Button.VISIBLE);
-            
+            trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
             if (namedAcc != null && !namedAcc.getId().equals(account.getId())) {
                 GUIs.alert(this,i18n.string(R.string.msg_account_existed, name,
@@ -256,6 +257,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             
             setResult(RESULT_OK);
             finish();
+            trackEvent(Contexts.TRACKER_EVT_UPDATE);
         }
         
     }
@@ -293,17 +295,17 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             }
             if(Constants.DISPLAY.equals(name)){
                 if(AccountType.INCOME == at){
-                   ((TextView)view).setTextColor(getResources().getColor(R.color.income_fgd));
+                   ((TextView)view).setTextColor(getResources().getColor(R.color.income_fgl));
                 }else if(AccountType.ASSET == at){
-                    ((TextView)view).setTextColor(getResources().getColor(R.color.asset_fgd)); 
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.asset_fgl));
                 }else if(AccountType.EXPENSE == at){
-                    ((TextView)view).setTextColor(getResources().getColor(R.color.expense_fgd));
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.expense_fgl));
                 }else if(AccountType.LIABILITY == at){
-                    ((TextView)view).setTextColor(getResources().getColor(R.color.liability_fgd)); 
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.liability_fgl));
                 }else if(AccountType.OTHER == at){
-                    ((TextView)view).setTextColor(getResources().getColor(R.color.other_fgd)); 
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.other_fgl));
                 }else{
-                    ((TextView)view).setTextColor(getResources().getColor(R.color.unknow_fgd));
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.unknow_fgl));
                 }
                 ((TextView)view).setText(item.getToString());
                 return true;

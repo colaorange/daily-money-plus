@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.AccountType;
@@ -109,6 +110,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
             public void onDetailDeleted(Detail detail) {
                 GUIs.shortToast(DetailListActivity.this, i18n.string(R.string.msg_detail_deleted));
                 reloadData();
+                trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
         

@@ -61,6 +61,8 @@
     <color name="unknow_fgl">#CC555555</color>
     <color name="unknow_fgd">#FF555555</color>
     <color name="unknow_fg">#FF000000</color>
+
+    <color name="symbolpos_fgl">#CCFFFFFF</color>
     
     <color name="dt_info_bg">#FF383838</color>
 

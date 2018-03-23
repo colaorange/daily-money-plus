@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.ui.report.BalanceActivity;
 import com.colaorange.dailymoney.ui.report.SearchActivity;
 /**

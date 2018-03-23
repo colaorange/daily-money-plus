@@ -63,9 +63,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     private static boolean protectionPassed = false;
     private static boolean protectionInfront = false;
     
-    
-    private TextView infoBook;
-    
     private TextView infoWeeklyExpense;
     private TextView infoMonthlyExpense;
     private TextView infoCumulativeCash;
@@ -85,7 +82,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         initialContent();
         initPasswordProtection();
         loadDesktop();
-        loadInfo();
         loadWhatisNew();
         
         if(getContexts().isFirstTime()){
@@ -159,6 +155,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 new DataCreator(idp,i18n).createDefaultAccount();
             }
             GUIs.longToast(this,R.string.msg_firsttime_use_hint);
+            trackEvent("default_first");
         }
     }
     
@@ -185,6 +182,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 } catch (IOException e) {
                     Logger.e(e.getMessage(), e);
                 }
+                trackEvent("restore_firsttime");
             }
         };
         GUIs.confirm(this, i18n.string(R.string.qmsg_retore_db), new GUIs.OnFinishListener() {
@@ -199,6 +197,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                         new DataCreator(idp,i18n).createDefaultAccount();
                     }
                     GUIs.longToast(DesktopActivity.this,R.string.msg_firsttime_use_hint);
+                    trackEvent("default_first_bak");
                 }
                 return true;
             }
@@ -243,8 +242,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initialContent() {
         
-        infoBook = (TextView)findViewById(R.id.dt_info_book);
-        
         infoWeeklyExpense = (TextView)findViewById(R.id.dt_info_weekly_expense);
         infoMonthlyExpense = (TextView)findViewById(R.id.dt_info_monthly_expense);
         infoCumulativeCash = (TextView)findViewById(R.id.dt_info_cumulative_cash);
@@ -285,12 +282,12 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Book book = imdp.findBook(Contexts.instance().getWorkingBookId());
         String symbol = book.getSymbol();
         if(symbol==null || "".equals(symbol)){
-            infoBook.setText(book.getName());
+            setTitle(i18n.string(R.string.title_book)+" : "+book.getName());
         }else{
-            infoBook.setText(book.getName()+" ( "+symbol+" )");
+            setTitle(i18n.string(R.string.title_book)+" : "+book.getName()+" ( "+symbol+" )");
         }
-        
-        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
+
+//        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
         
         Date now = new Date();
         Date start = calHelper.weekStartDate(now);

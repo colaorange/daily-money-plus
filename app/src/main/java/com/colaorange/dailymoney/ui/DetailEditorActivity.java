@@ -26,6 +26,7 @@ import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.commons.util.Logger;
 import com.colaorange.dailymoney.calculator2.Calculator;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
@@ -470,6 +471,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             okBtn.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
             cancelBtn.setVisibility(Button.GONE);
             closeBtn.setVisibility(Button.VISIBLE);
+            trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
             
             idp.updateDetail(detail.getId(),workingDetail);
@@ -477,6 +479,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             GUIs.shortToast(this, i18n.string(R.string.msg_detail_updated));
             setResult(RESULT_OK);
             finish();
+
+            trackEvent(Contexts.TRACKER_EVT_UPDATE);
         }
     }
 
@@ -551,17 +555,17 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
                 int tcolor;
                 tv.setBackgroundDrawable(null);
                 if(AccountType.INCOME == at){
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.income_fgd);
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.income_fgl);
                 }else if(AccountType.ASSET == at){
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.asset_fgd); 
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.asset_fgl);
                 }else if(AccountType.EXPENSE == at){
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.expense_fgd);
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.expense_fgl);
                 }else if(AccountType.LIABILITY == at){
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.liability_fgd); 
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.liability_fgl);
                 }else if(AccountType.OTHER == at){
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.other_fgd); 
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.other_fgl);
                 }else{
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.unknow_fgd);
+                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.unknow_fgl);
                 }
                 tv.setTextColor(tcolor);
                 StringBuilder display = new StringBuilder();

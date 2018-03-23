@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
@@ -234,6 +235,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         getContexts().getDataProvider().deleteAccount(acc.getId());
         reloadData();
         GUIs.shortToast(this, i18n.string(R.string.msg_account_deleted, name));
+        trackEvent(Contexts.TRACKER_EVT_DELETE);
 
     }
 

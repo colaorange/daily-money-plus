@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
@@ -172,11 +173,13 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         if (modeCreate) {
             idp.newBook(workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_created, name));
+            trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
             idp.updateBook(book.getId(),workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_updated, name));
             setResult(RESULT_OK);
             finish();
+            trackEvent(Contexts.TRACKER_EVT_UPDATE);
         }
         setResult(RESULT_OK);
         finish();
@@ -198,7 +201,9 @@ public class BookEditorActivity extends ContextsActivity implements android.view
                return false;
             }
             if(Constants.DISPLAY.equals(name)){
-                ((TextView)view).setText(item.getToString());
+                TextView tv = (TextView)view;
+                tv.setTextColor(getResources().getColor(R.color.symbolpos_fgl));
+                tv.setText(item.getToString());
                 return true;
             }
             return false;

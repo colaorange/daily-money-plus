@@ -14,6 +14,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
@@ -56,6 +57,7 @@ public class BookMgntActivity extends ContextsActivity {
             public void onBookDeleted(Book book) {
                 GUIs.shortToast(BookMgntActivity.this, i18n.string(R.string.msg_book_deleted,book.getName()));
                 reloadData();
+                trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
         
