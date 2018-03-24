@@ -238,5 +238,6 @@
     <string name="label_shared_all">Alles freigegeben</string>
     <string name="label_shared_account_only">Nur das freigebene Konto</string>
     <string name="label_shared_detail_only">Nur der freigebene Eintrag</string>
+    <string name="label_balance">Bilanz</string>
 </resources>
 

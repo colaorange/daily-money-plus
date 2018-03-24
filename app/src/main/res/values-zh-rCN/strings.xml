@@ -204,6 +204,7 @@
     <string name="dtitem_detlist_day">日明細列表</string>
     <string name="clabel_default">预设</string>
     <string name="label_day_details">%1$s (%2$s笔</string>
+    <string name="label_balance">结算</string>
     <!-- above are verified -->
     
     

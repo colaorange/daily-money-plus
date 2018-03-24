@@ -69,7 +69,8 @@ class ColorButton extends Button implements OnClickListener {
         
         mAnimStart = -1;
 
-        calc.adjustFontSize(this);
+        //this is old, doesn't need to call it in new android
+//        calc.adjustFontSize(this);
     }
 
 

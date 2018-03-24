@@ -205,6 +205,7 @@
     <string name="label_prefs_csv_encoding_sum">Da non cambiare se non si ha idea di cosa questo sia</string>
     <string name="label_prefcat_csv">CSV</string>
     <string name="label_prefcat_others">Altri</string>
+    <string name="label_balance">Bilancio</string>
     <!-- above are verified -->
    
 

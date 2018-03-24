@@ -151,7 +151,7 @@ public class BackupRestorer {
         Result r = new Result();
         Contexts ctxs = contexts();
         if(!contexts().hasWorkingFolderPermission() && !hasBackup()){
-            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access);
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, contexts().getWorkingFolder());
             return r;
         }
         try {
@@ -186,6 +186,7 @@ public class BackupRestorer {
             r.err = x.getMessage();
             r.success = false;
         }
+        contexts().setWorkingBookId(Contexts.WORKING_BOOK_DEFAULT);
         return r;
     }
 }

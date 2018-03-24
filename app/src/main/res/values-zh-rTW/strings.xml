@@ -261,5 +261,7 @@
     <string name="label_restore_data">還原資料</string>
     <string name="msg_db_restored">%1$s 個檔案從 %2$s 還原</string>
     <string name="qmsg_restore_data">警告: 現行資料將被取代, 你依然想要還原資料嗎?</string>
+    <string name="label_balance">结算</string>
+    <string name="label_request_storage_permission">請求讀取權限</string>
 </resources>
 

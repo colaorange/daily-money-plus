@@ -40,7 +40,9 @@ import com.colaorange.dailymoney.data.SQLiteMasterDataProvider;
 import com.colaorange.dailymoney.data.SymbolPosition;
 import com.colaorange.dailymoney.ui.Constants;
 import com.colaorange.dailymoney.ui.DesktopActivity;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 /**
  * Helps me to do some quick access in context/ui thread
@@ -48,6 +50,9 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  *
  */
 public class Contexts {
+
+    //shold't not modify it, code has some assumption.
+    public static int WORKING_BOOK_DEFAULT = 0;
 
     private static Contexts instance;
 
@@ -60,7 +65,7 @@ public class Contexts {
     private IMasterDataProvider masterDataProvider;
     private I18N i18n;
 
-    int pref_workingBookId = 0;//the book user selected, default is 0
+    int pref_workingBookId = WORKING_BOOK_DEFAULT;//the book user selected, default is 0
     int pref_detailListLayout = 2;
     int pref_maxRecords = -1;//-1 is no limit
     int pref_firstdayWeek = 1;//sunday
@@ -77,8 +82,10 @@ public class Contexts {
 
     private static final int ANALYTICS_DISPATH_DELAY = 60;// dispatch queue at least 60s
 
-    private GoogleAnalyticsTracker tracker;
+    private GoogleAnalytics sAnalytics;
+    private Tracker sTracker;
 
+    public static final String TRACKER_EVT_VIEW = "V";
     public static final String TRACKER_EVT_CREATE = "C";
     public static final String TRACKER_EVT_UPDATE = "U";
     public static final String TRACKER_EVT_DELETE = "D";
@@ -146,10 +153,12 @@ public class Contexts {
 
     private void initTracker() {
         try {
-            if(tracker==null) {
-                tracker = GoogleAnalyticsTracker.getInstance();
-                tracker.setProductVersion(i18n.string(R.string.app_code), getAppVerName());
-                tracker.start(i18n.string(R.string.ga_code), ANALYTICS_DISPATH_DELAY, contextsApp);
+            if(sTracker==null) {
+                sAnalytics = GoogleAnalytics.getInstance(contextsApp);
+                sTracker = sAnalytics.newTracker(R.xml.ga_tracker);
+                sTracker.setAppId(getAppId());
+                sTracker.setAppName(i18n.string(R.string.app_code));
+                sTracker.setAppVersion(getAppVerName());
             }
         } catch (Throwable t) {
             Logger.e(t.getMessage(), t);
@@ -159,23 +168,22 @@ public class Contexts {
     private void cleanTracker() {
         // Stop the tracker when it is no longer needed.
         try {
-            if (tracker != null) {
-                //just leave it.
-                tracker.dispatch();
-                tracker.stop();
-                tracker = null;
+            if (sTracker != null) {
                 Logger.d("clean google tracker");
+                //just leave it.
+                sTracker= null;
+                sAnalytics = null;
             }
         } catch (Throwable t) {
             Logger.e(t.getMessage(), t);
         }
     }
 
-    protected void trackEvent(final String category,final String action,final String label,final int value) {
-        if (isPrefAllowAnalytics() && tracker != null) {
+    protected void trackEvent(final String category,final String action,final String label,final long value) {
+        if (isPrefAllowAnalytics() && sTracker != null) {
             try{
                 Logger.d("track event " + category +", "+action);
-                tracker.trackEvent(category, action, label, value);
+                sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
@@ -183,10 +191,11 @@ public class Contexts {
     }
 
     protected void trackPageView(final String path) {
-        if (isPrefAllowAnalytics() && tracker != null) {
+        if (isPrefAllowAnalytics() && sTracker != null) {
             try {
                 Logger.d("track " + path);
-                tracker.trackPageView(path);
+                sTracker.setScreenName(path);
+                sTracker.send(new HitBuilders.ScreenViewBuilder().build());
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
@@ -297,10 +306,6 @@ public class Contexts {
         return appVerName;
     }
 
-    /**
-     * for ui context only
-     * @return
-     */
     public int getAppVerCode(){
         return appVerCode;
     }
@@ -390,7 +395,7 @@ public class Contexts {
 
     public void setWorkingBookId(int id){
         if(id<0){
-            id = 0;
+            id = WORKING_BOOK_DEFAULT;
         }
         if(pref_workingBookId!=id) {
             pref_workingBookId = id;
@@ -464,7 +469,7 @@ public class Contexts {
     /** to reset a deat provider for a book **/
     public boolean deleteData(Book book){
         //can't delete default(0) and working book
-        if(book.getId()==0 || book.getId()==pref_workingBookId){
+        if(book.getId()==WORKING_BOOK_DEFAULT || book.getId()==pref_workingBookId){
             return false;
         }
         String dbname = "dm_"+book.getId()+".db";
@@ -480,7 +485,7 @@ public class Contexts {
 
     private void initDataProvider() {
         String dbname = "dm.db";
-        if(pref_workingBookId>0){
+        if(pref_workingBookId>WORKING_BOOK_DEFAULT){
             dbname = "dm_"+pref_workingBookId+".db";
         }
         dataProvider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp,dbname),calendarHelper);

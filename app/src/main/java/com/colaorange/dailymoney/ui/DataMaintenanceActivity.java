@@ -11,11 +11,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Files;
@@ -74,6 +78,14 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void refreshUI() {
 
+        Button requestPermissionBtn = (Button)findViewById(R.id.datamain_request_permission);
+        //only for 6.0(23+)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !getContexts().hasWorkingFolderPermission()){
+            requestPermissionBtn.setVisibility(View.VISIBLE);
+        }else{
+            requestPermissionBtn.setVisibility(View.GONE);
+        }
+
         //working fodler accessibility
         TextView workingFolderText = ((TextView)findViewById(R.id.datamain_workingfolder));
         //test accessable
@@ -84,9 +96,16 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_alert), null, null, null);
             workingFolderText.setText(i18n.string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
         }
+
+        TextView lastBackupText = ((TextView)findViewById(R.id.datamain_lastbackup));
+
+        if(getContexts().getPrefLastBackup()!=null) {
+            lastBackupText.setText(getContexts().getPrefLastBackup());
+        }
     }
 
     private void initialListener() {
+        findViewById(R.id.datamain_request_permission).setOnClickListener(this);
         findViewById(R.id.datamain_backup).setOnClickListener(this);
         findViewById(R.id.datamain_export_csv).setOnClickListener(this);
         findViewById(R.id.datamain_share_csv).setOnClickListener(this);
@@ -102,7 +121,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.datamain_import_csv) {
+        if (v.getId() == R.id.datamain_request_permission) {
+            doRequestPermission();
+        } else if (v.getId() == R.id.datamain_import_csv) {
             doImportCSV();
         } else if (v.getId() == R.id.datamain_export_csv) {
             doExportCSV();
@@ -121,6 +142,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    private void doRequestPermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+    }
+
     private void doBackup() {
         final long now = System.currentTimeMillis();
         final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
@@ -136,6 +162,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     String msg = i18n.string(R.string.msg_db_backuped, count, workingFolder);
                     getContexts().setPrefLastBackupTime(now);
                     GUIs.alert(DataMaintenanceActivity.this, msg);
+                    refreshUI();
                 } else {
                     GUIs.alert(DataMaintenanceActivity.this, result.getErr());
                 }
@@ -163,7 +190,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 if (result.isSuccess()) {
                     String count = ""+(result.getDb()+result.getPref());
                     String msg = i18n.string(R.string.msg_db_restored, count, workingFolder);
-                    getContexts().setPrefLastBackupTime(lastBakcup);
+                    if(lastBakcup!=null){
+                        getContexts().setPrefLastBackupTime(lastBakcup);
+                    }
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                 } else {
                     GUIs.alert(DataMaintenanceActivity.this, result.getErr());

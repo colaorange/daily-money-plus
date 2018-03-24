@@ -260,9 +260,12 @@
     <string name="label_to_date">to Date</string>
     <string name="search_reset">Reset</string>
 
-    <string name="msg_working_folder_no_access">Working folder %1$s is not accessable, please open the access right in system setting</string>
+    <!-- from 20180310 by dennis -->
+    <string name="msg_working_folder_no_access">Working folder %1$s is not accessable, please allow the access right in system setting</string>
     <string name="label_restore_data">Restore Data</string>
     <string name="msg_db_restored">%1$s files restored to %2$s</string>
     <string name="qmsg_restore_data">WARN: Current data will be replaced, do you still want to restore?</string>
+    <string name="label_balance">Balance</string>
+    <string name="label_request_storage_permission">Request storage permission</string>
 </resources>
 

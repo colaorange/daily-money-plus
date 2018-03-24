@@ -1,6 +1,5 @@
 package com.colaorange.dailymoney.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +27,6 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.GUIs;
-import com.colaorange.commons.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -158,11 +156,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 }else{
                     GUIs.longToast(DesktopActivity.this, result.getErr());
                 }
-                
-                //push a dummy to trigger resume/reload
-                Intent intent = null;
-                intent = new Intent(DesktopActivity.this,DummyActivity.class);
-                startActivity(intent);
+
+                //ui should be changed, restart this
+                makeRestart();
             }
 
             @Override

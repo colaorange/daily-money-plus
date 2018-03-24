@@ -59,8 +59,10 @@ class CalculatorDisplay extends ViewSwitcher {
     protected void onFinishInflate() {
         super.onFinishInflate();
         Calculator calc = (Calculator) getContext();
-        calc.adjustFontSize((TextView)getChildAt(0));
-        calc.adjustFontSize((TextView)getChildAt(1));
+
+        //this is old, doesn't need to call it in new android
+//        calc.adjustFontSize((TextView)getChildAt(0));
+//        calc.adjustFontSize((TextView)getChildAt(1));
     }
 
     @Override

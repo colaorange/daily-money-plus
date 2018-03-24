@@ -1,14 +1,14 @@
 package com.colaorange.dailymoney.context;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.I18N;
 import com.colaorange.commons.util.Logger;
-
-import java.lang.ref.WeakReference;
 
 /**
  * provide life cycle and easy access to contexts
@@ -45,8 +45,25 @@ public class ContextsActivity extends AppCompatActivity {
         super.onStart();
 
         Contexts ctxs = Contexts.instance();
-        ctxs.trackPageView(getTrackerPath());
+        String path = getTrackerPath();
+        ctxs.trackPageView(path);
+    }
 
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults){
+        for(int g:grantResults){
+            if(g== PackageManager.PERMISSION_GRANTED){
+                //simply reload this activie
+                makeRestart();
+                break;
+            }
+        }
+    }
+
+    protected void makeRestart(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     protected void trackEvent(String action){

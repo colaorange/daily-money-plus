@@ -25,7 +25,40 @@
                 android:drawableLeft="@android:drawable/ic_dialog_info"
                 android:drawablePadding="10sp"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="@string/label_prefs_workingfolder" />
+
+            <Button
+                android:id="@+id/datamain_request_permission"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/btn_edit"
+                android:gravity="center"
+                android:text="@string/label_request_storage_permission" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:paddingRight="5sp"
+                    android:text="@string/label_prefs_lastbackup" />
+                <TextView
+                    android:id="@+id/datamain_lastbackup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="@string/clabel_unknow" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/datamain_backup"
@@ -70,7 +103,7 @@
                 android:layout_marginBottom="10dp"
                 android:drawableLeft="@drawable/btn_import"
                 android:gravity="center"
-                android:text="@string/label_import_csv"/>
+                android:text="@string/label_import_csv" />
 
             <!--TODO should move to developer-->
             <Button

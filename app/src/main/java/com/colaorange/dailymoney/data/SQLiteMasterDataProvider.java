@@ -42,7 +42,7 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
     public void reset() {
         SQLiteDatabase db = helper.getWritableDatabase();
         helper.onUpgrade(db, -1, db.getVersion());
-        bookId = 0;
+        bookId = Contexts.WORKING_BOOK_DEFAULT;
         bookId_set = false;
     }
 
@@ -91,7 +91,7 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
         return book;
     }
     
-    static int bookId = 0;
+    static int bookId = Contexts.WORKING_BOOK_DEFAULT;
     static boolean bookId_set;
     
     public synchronized int nextBookId(){
