@@ -87,10 +87,12 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void initialListener() {
-        findViewById(R.id.datamain_import_csv).setOnClickListener(this);
+        findViewById(R.id.datamain_backup).setOnClickListener(this);
         findViewById(R.id.datamain_export_csv).setOnClickListener(this);
         findViewById(R.id.datamain_share_csv).setOnClickListener(this);
-        findViewById(R.id.datamain_backup_db).setOnClickListener(this);
+
+        findViewById(R.id.datamain_restore).setOnClickListener(this);
+        findViewById(R.id.datamain_import_csv).setOnClickListener(this);
 
         //TODO move to developer
         findViewById(R.id.datamain_reset).setOnClickListener(this);
@@ -106,8 +108,10 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doExportCSV();
         } else if (v.getId() == R.id.datamain_share_csv) {
             doShareCSV();
-        } else if (v.getId() == R.id.datamain_backup_db) {
-            doBackupDbToStorage();
+        } else if (v.getId() == R.id.datamain_backup) {
+            doBackup();
+        } else if (v.getId() == R.id.datamain_restore) {
+            doRestore();
         } else if (v.getId() == R.id.datamain_reset) {
             doReset();
         } else if (v.getId() == R.id.datamain_create_default) {
@@ -117,38 +121,73 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
     }
 
-    private void doBackupDbToStorage() {
+    private void doBackup() {
         final long now = System.currentTimeMillis();
         final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-            int count;
+            BackupRestorer.Result result;
             
             public void onBusyError(Throwable t) {
                 GUIs.error(DataMaintenanceActivity.this, t);
             }
 
             public void onBusyFinish() {
-                if (count > 0) {
-                    String msg = i18n.string(R.string.msg_db_backuped, Integer.toString(count), workingFolder);
-                    getContexts().setPrefLastBackup(now);
+                if (result.isSuccess()) {
+                    String count = ""+(result.getDb()+result.getPref());
+                    String msg = i18n.string(R.string.msg_db_backuped, count, workingFolder);
+                    getContexts().setPrefLastBackupTime(now);
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                 } else {
-                    GUIs.alert(DataMaintenanceActivity.this, R.string.msg_no_db);
+                    GUIs.alert(DataMaintenanceActivity.this, result.getErr());
                 }
             }
 
             @Override
             public void run() {
-                try {
-                    Contexts ctxs = getContexts();
-                    count = BackupRestorer.copyDatabases(ctxs.getAppDbFolder(), ctxs.getWorkingFolder(), now);
-                    count += BackupRestorer.copyPrefFile(ctxs.getAppPrefFolder(), ctxs.getWorkingFolder(), now);
-                } catch (Exception e) {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
+                result = BackupRestorer.backup();
                 trackEvent("backup");
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
+    }
+
+    private void doRestore() {
+        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
+            BackupRestorer.Result result;
+            Long lastBakcup;
+
+            public void onBusyError(Throwable t) {
+                GUIs.error(DataMaintenanceActivity.this, t);
+            }
+
+            public void onBusyFinish() {
+                if (result.isSuccess()) {
+                    String count = ""+(result.getDb()+result.getPref());
+                    String msg = i18n.string(R.string.msg_db_restored, count, workingFolder);
+                    getContexts().setPrefLastBackupTime(lastBakcup);
+                    GUIs.alert(DataMaintenanceActivity.this, msg);
+                } else {
+                    GUIs.alert(DataMaintenanceActivity.this, result.getErr());
+                }
+            }
+
+            @Override
+            public void run() {
+                lastBakcup = getContexts().getPrefLastBackupTime();
+                result = BackupRestorer.restore();
+                trackEvent("restore");
+            }
+        };
+
+
+        GUIs.confirm(this, i18n.string(R.string.qmsg_restore_data), new GUIs.OnFinishListener() {
+            @Override
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    GUIs.doBusy(DataMaintenanceActivity.this, job);
+                }
+                return true;
+            }
+        });
     }
 
     private void doReset() {

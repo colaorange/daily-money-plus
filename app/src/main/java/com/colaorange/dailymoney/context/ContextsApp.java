@@ -20,6 +20,7 @@ public class ContextsApp extends Application{
     @Override
     public void onTerminate() {
         super.onTerminate();
+        //this method is not always been called
         Logger.d("===============Application Terminated");
         Contexts.instance().destroyApplication(this);
     }

@@ -242,7 +242,7 @@
     <string name="label_firstday_sat">星期六</string>
     
     <!-- from 20120427 by Lancelot Liu -->
-    <string name="label_backup_db">備份資料庫</string>
+    <string name="label_backup_data">備份資料</string>
     <string name="msg_db_backuped">%1$s 個檔案備份至 %2$s</string>
     <string name="msg_no_db">沒有資料可供備份</string>
     <string name="label_prefs_lastbackup">最後資料備份時間</string>
@@ -258,5 +258,8 @@
     <string name="search_reset">重設</string>
 
     <string name="msg_working_folder_no_access">工作目錄 %1$s 無法存取, 請到系統設定開啟存取權限</string>
+    <string name="label_restore_data">還原資料</string>
+    <string name="msg_db_restored">%1$s 個檔案從 %2$s 還原</string>
+    <string name="qmsg_restore_data">警告: 現行資料將被取代, 你依然想要還原資料嗎?</string>
 </resources>
 

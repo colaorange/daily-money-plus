@@ -51,9 +51,6 @@
         <activity android:name=".ui.DummyActivity" android:theme="@style/AppTheme.NoTitle"/>
         <activity android:name=".calculator2.Calculator" android:theme="@style/AppTheme.NoTitle"/>
         <activity android:name="org.achartengine.GraphicalActivity" android:theme="@style/AppTheme.NoTitle"/>
-
-        <!-- receiver android:name=".context.ScheduleReceiver" android:process=":dmbackup"/--> <!-- dennis, need to confirm the use -->
-        <activity android:name=".ui.report.SearchActivity" />
     </application>
 
 </manifest>

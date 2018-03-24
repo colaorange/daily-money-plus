@@ -87,20 +87,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         if(getContexts().isFirstTime()){
             doTheFisrtTime();
         }
-        //Dennis: need to confirm the use of AlarmManager in initSchedule for scheduled jobs
-//        initSchedule();
     }
-    
-//    private void initSchedule() {
-//        ScheduleJob backupJob = new ScheduleJob();
-//        backupJob.setRepeat(Long.valueOf(1000 * 60 * 60 * 24));
-//        Intent intent = new Intent(this, ScheduleReceiver.class);
-//        intent.setAction(Constants.BACKUP_JOB);
-//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
-//        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        am.set(AlarmManager.RTC_WAKEUP, backupJob.getInitDate().getTimeInMillis(), pi);
-//        am.setRepeating(AlarmManager.RTC_WAKEUP, backupJob.getInitDate().getTimeInMillis(), backupJob.getRepeat(), pi);
-//    }
     
     @Override
     protected void onResume(){
@@ -163,9 +150,14 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         // restore db & pref
         final Contexts ctxs = Contexts.instance();
         final GUIs.IBusyRunnable restorejob = new GUIs.BusyAdapter() {
+            BackupRestorer.Result result;
             @Override
             public void onBusyFinish() {
-                GUIs.longToast(DesktopActivity.this, i18n.string(R.string.msg_db_retored));
+                if(result.isSuccess()) {
+                    GUIs.longToast(DesktopActivity.this, i18n.string(R.string.msg_db_retored));
+                }else{
+                    GUIs.longToast(DesktopActivity.this, result.getErr());
+                }
                 
                 //push a dummy to trigger resume/reload
                 Intent intent = null;
@@ -175,13 +167,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
             @Override
             public void run() {
-                try {
-                    BackupRestorer.copyDatabases(ctxs.getWorkingFolder(), ctxs.getAppDbFolder(), null);
-                    BackupRestorer.copyPrefFile(ctxs.getWorkingFolder(), ctxs.getAppPrefFolder(), null);
-                    Contexts.instance().refreshDataProvider();//since we reload it.
-                } catch (IOException e) {
-                    Logger.e(e.getMessage(), e);
-                }
+
+                result = BackupRestorer.restore();
+                Contexts.instance().refreshDataProvider();//since we reload it.
                 trackEvent("restore_firsttime");
             }
         };

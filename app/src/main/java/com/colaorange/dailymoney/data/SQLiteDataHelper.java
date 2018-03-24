@@ -16,7 +16,7 @@ import static com.colaorange.dailymoney.data.DataMeta.*;
 public class SQLiteDataHelper extends SQLiteOpenHelper{
     /** maintain this field carefully*/
 //    private static final int VERSION = 4;//0.9.1-0.9.3
-    private static final int VERSION = 5;//0.9.4-0.9.5
+    private static final int VERSION = 5;//0.9.4-0.9.9
     
     private static final String ACC_CREATE_SQL = "CREATE TABLE " + TB_ACC + " (" 
             + COL_ACC_ID + " TEXT PRIMARY KEY, "

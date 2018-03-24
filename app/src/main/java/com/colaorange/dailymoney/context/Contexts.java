@@ -75,9 +75,6 @@ public class Contexts {
 
     private CalendarHelper calendarHelper = new CalendarHelper();
 
-    //analytics code
-    //"UA-20850113-1"; old 0.9.8
-    private static final String ANALYTICS_CDOE = "UA-20850113-2";
     private static final int ANALYTICS_DISPATH_DELAY = 60;// dispatch queue at least 60s
 
     private GoogleAnalyticsTracker tracker;
@@ -123,6 +120,7 @@ public class Contexts {
             }
             Logger.d(">>initialial application context "+appId+","+ appVerName +","+ appVerCode);
 
+            reloadPreference();
 
             this.i18n = new I18N(contextsApp);
             initDataProvider();
@@ -151,7 +149,7 @@ public class Contexts {
             if(tracker==null) {
                 tracker = GoogleAnalyticsTracker.getInstance();
                 tracker.setProductVersion(i18n.string(R.string.app_code), getAppVerName());
-                tracker.start(ANALYTICS_CDOE, ANALYTICS_DISPATH_DELAY, contextsApp);
+                tracker.start(i18n.string(R.string.ga_code), ANALYTICS_DISPATH_DELAY, contextsApp);
             }
         } catch (Throwable t) {
             Logger.e(t.getMessage(), t);
@@ -627,8 +625,12 @@ public class Contexts {
         return f;
     }
 
-    public void setPrefLastBackup(long date) {
-        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private DateFormat getLastBackupFormat(){
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public void setPrefLastBackupTime(long date) {
+        DateFormat fmt = getLastBackupFormat();
         pref_lastbackup = fmt.format(date);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
@@ -638,5 +640,13 @@ public class Contexts {
 
     public String getPrefLastBackup(){
         return pref_lastbackup;
+    }
+
+    public Long getPrefLastBackupTime(){
+        DateFormat fmt = getLastBackupFormat();
+        try{
+            return fmt.parse(pref_lastbackup).getTime();
+        }catch(Exception x){}
+        return null;
     }
 }

@@ -2,9 +2,12 @@ package com.colaorange.dailymoney.data;
 
 import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +23,8 @@ import java.util.List;
 public class BackupRestorer {
 
     private static final String DB = "dm.db";
-    private static final String DB_MASTER = "dm_master.db";
+    private static final String DB_PRE = "dm_";
+    private static final String DB_POS = ".db";
 
     private static Contexts contexts() {
         return Contexts.instance();
@@ -30,60 +34,34 @@ public class BackupRestorer {
         return new SimpleDateFormat("yyyy-MM-dd_HHmmss");
     }
 
-    /**
-     */
-    public static int copyDatabases(File sourceFolder, File targetFolder, Long timedup) throws IOException {
+    public static class Result {
+        boolean success = false;
+        int db = 0;
+        int pref = 0;
+        String err;
 
-        int count = 0;
-
-        File db = new File(sourceFolder, DB);
-        File dbmaster = new File(sourceFolder, DB_MASTER);
-        if (db.exists() && dbmaster.exists()) {
-            Files.copyFileTo(db, new File(targetFolder, DB));
-            Files.copyFileTo(dbmaster, new File(targetFolder, DB_MASTER));
-            count += 2;
-            if (timedup != null) {
-                String duppost = "." + getBackupDateFormat().format(System.currentTimeMillis()) + ".bak";
-                Files.copyFileTo(db, new File(targetFolder, DB + duppost));
-                Files.copyFileTo(dbmaster, new File(targetFolder, DB_MASTER + duppost));
-                count += 2;
-            }
-        } else {
-            if (!db.exists()) {
-                Logger.w("no db file " + db);
-            }
-            if (!dbmaster.exists()) {
-                Logger.w("no dbmaster file " + dbmaster);
-            }
+        public boolean isSuccess() {
+            return success;
         }
-        return count;
-    }
 
-
-    public static int copyPrefFile(File sourceFolder, File targetFolder, Long timedup) throws IOException {
-        int count = 0;
-        final String prefName = contexts().getAppId() + "_preferences.xml";
-
-        File pref = new File(sourceFolder, prefName);
-        if (pref.exists()) {
-            Files.copyFileTo(pref, new File(targetFolder, prefName));
-            count++;
-            if (timedup != null) {
-                String dupname = prefName + "." + getBackupDateFormat().format(System.currentTimeMillis()) + ".bak";
-                Files.copyFileTo(pref, new File(targetFolder, dupname));
-                count++;
-            }
-        } else {
-            Logger.w("no preference file " + pref);
+        public int getDb() {
+            return db;
         }
-        return count;
+
+        public int getPref() {
+            return pref;
+        }
+
+        public String getErr(){
+            return err;
+        }
     }
 
     public static boolean hasBackup() {
         try {
             if (contexts().hasWorkingFolderPermission()) {
                 List<String> dbs = Arrays.asList(contexts().getWorkingFolder().list());
-                return dbs.contains(DB) && dbs.contains(DB_MASTER);
+                return dbs.contains(DB);
             } else {
                 return false;
             }
@@ -91,5 +69,123 @@ public class BackupRestorer {
             Logger.w(x.getMessage(),x);
             return false;
         }
+    }
+
+    private static class DBFileFilter implements FileFilter{
+
+        @Override
+        public boolean accept(File file) {
+            String nm = file.getName();
+            if(file.isFile() && (nm.equals(DB) || (nm.startsWith(DB_PRE) && nm.endsWith(DB_POS)))){
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private static class PrefFileFilter implements FileFilter{
+
+        @Override
+        public boolean accept(File file) {
+            String nm = file.getName();
+            if(file.isFile() && (nm.equals(contexts().getAppId() + "_preferences.xml"))){
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public static Result backup(){
+        Result r = new Result();
+        Contexts ctxs = contexts();
+        if(!contexts().hasWorkingFolderPermission()){
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access);
+            return r;
+        }
+        try {
+            File workingFolder = ctxs.getWorkingFolder();
+            File dbFolder = ctxs.getAppDbFolder();
+            File prefFolder = ctxs.getAppPrefFolder();
+
+            File timeFolder = new File(workingFolder,"by-time");
+            if(!timeFolder.exists()){
+                timeFolder.mkdir();
+            }
+            String ts = getBackupDateFormat().format(System.currentTimeMillis());
+
+            //backup db
+            File[] dbfs = dbFolder.listFiles(new DBFileFilter());
+            if(dbfs!=null){//just in case
+                for(File dbf:dbfs){
+                    File tf;
+                    Files.copyFileTo(dbf, tf = new File(workingFolder, dbf.getName()));
+                    Logger.d("backup "+dbf +" to "+tf);
+                    Files.copyFileTo(dbf, tf = new File(timeFolder, dbf.getName()+"."+ts));
+                    Logger.d("backup "+dbf +" to "+tf);
+                    r.db+=2;
+                }
+            }
+
+            //backup preference
+            File[] prefs = prefFolder.listFiles(new PrefFileFilter());
+            if(prefs!=null){//just in case
+                for(File pref:prefs){
+                    File tf;
+                    Files.copyFileTo(pref, tf = new File(workingFolder, pref.getName()));
+                    Logger.d("backup "+pref +" to "+tf);
+                    Files.copyFileTo(pref, tf = new File(timeFolder, pref.getName()+"."+ts));
+                    Logger.d("backup "+pref +" to "+tf);
+                    r.pref+=2;
+                }
+            }
+            r.success = true;
+        }catch(Exception x){
+            Logger.e(x.getMessage(),x);
+            r.err = x.getMessage();
+            r.success = false;
+        }
+        return r;
+    }
+
+    public static Result restore(){
+        Result r = new Result();
+        Contexts ctxs = contexts();
+        if(!contexts().hasWorkingFolderPermission() && !hasBackup()){
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access);
+            return r;
+        }
+        try {
+            File workingFolder = ctxs.getWorkingFolder();
+            File dbFolder = ctxs.getAppDbFolder();
+            File prefFolder = ctxs.getAppPrefFolder();
+
+            //restore db
+            File[] dbfs = workingFolder.listFiles(new DBFileFilter());
+            if(dbfs!=null){//just in case
+                for(File dbf:dbfs){
+                    File tf;
+                    Files.copyFileTo(dbf, tf = new File(dbFolder, dbf.getName()));
+                    Logger.d("restore "+dbf +" to "+tf);
+                    r.db++;
+                }
+            }
+
+            //restore preference
+            File[] prefs = workingFolder.listFiles(new PrefFileFilter());
+            if(prefs!=null){//just in case
+                for(File pref:prefs){
+                    File tf;
+                    Files.copyFileTo(pref, tf = new File(prefFolder, pref.getName()));
+                    Logger.d("restore "+pref +" to "+tf);
+                    r.pref++;
+                }
+            }
+            r.success = true;
+        }catch(Exception x){
+            Logger.e(x.getMessage(),x);
+            r.err = x.getMessage();
+            r.success = false;
+        }
+        return r;
     }
 }

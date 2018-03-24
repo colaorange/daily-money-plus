@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.ui.report.BalanceActivity;
-import com.colaorange.dailymoney.ui.report.SearchActivity;
 /**
  * 
  * @author dennis
@@ -45,12 +44,6 @@ public class ReportsDesktop extends AbstractDesktop {
         DesktopItem totalBalance = new DesktopItem(new IntentRun(activity, intent),
                 i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month,99);
         addItem(totalBalance);
-
-        //need icon and fix sql injection bug
-//        intent = new Intent(activity, SearchActivity.class);
-//        DesktopItem search = new DesktopItem(new IntentRun(activity, intent),
-//                i18n.string(R.string.dtitem_report_search), R.drawable.dtitem,99);
-//        addItem(search);
     }
 
 }

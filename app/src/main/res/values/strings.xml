@@ -27,7 +27,6 @@
     <string name="clabel_all">All</string>
     <string name="clabel_default">Default</string>
 	<string name="app_name">Daily Money</string>
-	<string name="app_code">daily-money-crouch</string>
     <string name="defacc_bank1">Bank.A</string>
     <string name="defacc_bank2">Bank.B</string>
     <string name="defacc_cash">Cash</string>
@@ -246,7 +245,7 @@
     <string name="label_firstday_sat">Saturday</string>
 
     <!-- from 20120427 by Lancelot Liu -->
-    <string name="label_backup_db">Backup DB</string>
+    <string name="label_backup_data">Backup Data</string>
     <string name="msg_db_backuped">%1$s files backup to %2$s</string>
     <string name="msg_no_db">There is no data to backup</string>
     <string name="label_prefs_lastbackup">Last Data Backup Time</string>
@@ -262,5 +261,8 @@
     <string name="search_reset">Reset</string>
 
     <string name="msg_working_folder_no_access">Working folder %1$s is not accessable, please open the access right in system setting</string>
+    <string name="label_restore_data">Restore Data</string>
+    <string name="msg_db_restored">%1$s files restored to %2$s</string>
+    <string name="qmsg_restore_data">WARN: Current data will be replaced, do you still want to restore?</string>
 </resources>
 
