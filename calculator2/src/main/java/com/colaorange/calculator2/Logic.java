@@ -17,7 +17,7 @@
 /**
  * the source is come from andorid - 2.1 calculator2
  */
-package com.colaorange.dailymoney.calculator2;
+package com.colaorange.calculator2;
 
 import android.view.KeyEvent;
 import android.widget.Button;
@@ -28,8 +28,6 @@ import org.javia.arity.Symbols;
 import org.javia.arity.SyntaxException;
 import org.javia.arity.Util;
 
-import com.colaorange.dailymoney.R;
-import com.colaorange.dailymoney.calculator2.CalculatorDisplay.Scroll;
 
 class Logic {
     private CalculatorDisplay mDisplay;
@@ -228,7 +226,7 @@ class Logic {
         }
         mResult = "";
         result = result.replace('-', MINUS);
-        mDisplay.setText(result,Scroll.NONE);
+        mDisplay.setText(result, CalculatorDisplay.Scroll.NONE);
         mIsError = false;
     }
 }

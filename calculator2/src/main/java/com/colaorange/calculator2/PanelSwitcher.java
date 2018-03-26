@@ -17,7 +17,7 @@
 /**
  * the source is come from andorid - 2.1 calculator2
  */
-package com.colaorange.dailymoney.calculator2;
+package com.colaorange.calculator2;
 
 import android.view.animation.TranslateAnimation;
 import android.view.MotionEvent;

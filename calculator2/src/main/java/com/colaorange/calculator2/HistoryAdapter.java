@@ -17,7 +17,7 @@
 /**
  * the source is come from andorid - 2.1 calculator2
  */
-package com.colaorange.dailymoney.calculator2;
+package com.colaorange.calculator2;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -30,7 +30,6 @@ import java.util.Vector;
 
 import org.javia.arity.SyntaxException;
 
-import com.colaorange.dailymoney.R;
 
 class HistoryAdapter extends BaseAdapter {
     private Vector<HistoryEntry> mEntries;

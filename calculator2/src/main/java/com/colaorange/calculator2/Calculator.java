@@ -16,9 +16,9 @@
 /**
  * the source is come from andorid - 2.1 calculator2
  */
-package com.colaorange.dailymoney.calculator2;
+package com.colaorange.calculator2;
 
-import com.colaorange.dailymoney.R;
+import com.colaorange.calculator2.R;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
-import com.colaorange.dailymoney.calculator2.Calculator;
+import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;

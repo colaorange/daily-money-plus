@@ -17,7 +17,7 @@
 /**
  * the source is come for andorid - 2.1
  */
-package com.colaorange.dailymoney.calculator2;
+package com.colaorange.calculator2;
 
 import java.io.DataInput;
 import java.io.DataOutput;
