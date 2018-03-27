@@ -127,9 +127,11 @@ public class Contexts {
             }
             Logger.d(">>initialial application context "+appId+","+ appVerName +","+ appVerCode);
 
+            //initial i18n util before any other init
+            this.i18n = new I18N(contextsApp);
+
             reloadPreference();
 
-            this.i18n = new I18N(contextsApp);
             initDataProvider();
             initTracker();
             return true;
