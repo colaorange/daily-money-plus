@@ -17,7 +17,7 @@
     <string name="clabel_info">资讯</string>
     <string name="clabel_name">名称</string>
     <string name="clabel_type">类型</string>
-    <string name="clabel_unknow">未知</string>
+    <string name="clabel_unknown">未知</string>
     <string name="clabel_warn">警告</string>
     <string name="cmsg_busy">程式忙碌中，请等一下</string>
     <string name="cmsg_error">错误 : %1$s</string>

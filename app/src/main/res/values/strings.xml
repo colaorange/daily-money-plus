@@ -18,7 +18,7 @@
     <string name="clabel_info">Information</string>
     <string name="clabel_name">Name</string>
     <string name="clabel_type">Type</string>
-    <string name="clabel_unknow">Unknow</string>
+    <string name="clabel_unknown">Unknown</string>
     <string name="clabel_warn">Warn</string>
     <string name="cmsg_busy">Application is busy, please wait for a second</string>
     <string name="cmsg_error">Error : %1$s</string>
@@ -198,6 +198,7 @@
     <string name="dtitem_about">About</string>
     
     <string name="path_about_app">about.html</string>
+    <string name="path_contributor">contributor.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
     <string name="label_weekly_expense">Weekly : %1$s</string>
     <string name="label_monthly_expense">Monthly : %1$s</string>

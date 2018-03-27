@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="@string/clabel_unknow" />
+                    android:text="@string/clabel_unknown" />
             </LinearLayout>
 
             <Button

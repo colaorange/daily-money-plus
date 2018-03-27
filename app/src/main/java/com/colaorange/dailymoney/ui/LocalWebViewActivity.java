@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.ui;
 
 import android.os.Bundle;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.colaorange.commons.util.GUIs;
@@ -33,7 +34,7 @@ public class LocalWebViewActivity extends ContextsActivity {
         
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(new JSCallHandler(),"dmctrl");
+        webView.addJavascriptInterface(this,"dmctrl");
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY); 
     }
 
@@ -50,23 +51,20 @@ public class LocalWebViewActivity extends ContextsActivity {
         String title = bundle.getString(INTENT_TITLE);
         if(title!=null){
             this.setTitle(title);
-            //to late to set here?
-//            this.setTheme(android.R.style.Theme_Dialog);
         }
         
         webView.loadUrl(Constants.LOCAL_URL_PREFIX+uri);
     }
 
-    private void onLinkClicked(final String path){
-       webView.loadUrl(Constants.LOCAL_URL_PREFIX+path);
+    @JavascriptInterface
+    public void onLinkClicked(final String path){
+        //not in ui thread.
+        //android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+        GUIs.post(new Runnable() {
+            public void run() {
+                webView.loadUrl(Constants.LOCAL_URL_PREFIX + path);
+            }
+        });
     }
-    
-    class JSCallHandler {
-        public void onLinkClicked(final String path){
-            GUIs.post(new Runnable(){
-                public void run() {
-                    LocalWebViewActivity.this.onLinkClicked(path);
-                }});
-        }
-    }
+
 }

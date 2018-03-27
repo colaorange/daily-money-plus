@@ -17,7 +17,7 @@
     <string name="clabel_info">Informazione</string>
     <string name="clabel_name">Nome</string>
     <string name="clabel_type">Tipo</string>
-    <string name="clabel_unknow">Sconosciuto</string>
+    <string name="clabel_unknown">Sconosciuto</string>
     <string name="clabel_warn">Avviso</string>
     <string name="cmsg_busy">Applicazione occupata, attendere qualche secondo...</string>
     <string name="cmsg_error">Errore : %1$s</string>
