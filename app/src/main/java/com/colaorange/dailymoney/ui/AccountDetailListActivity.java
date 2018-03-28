@@ -71,7 +71,7 @@ public class AccountDetailListActivity extends ContextsActivity {
         info = b.getString(INTENT_TARGET_INFO);
         info = info==null?" ":info+" ";
         
-        DateFormat format = getContexts().getDateFormat();
+        DateFormat format = contexts().getDateFormat();
         String fromStr = startDate==null?"":format.format(startDate);
         String toStr = endDate==null?"":format.format(endDate);
 
@@ -121,7 +121,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     
     private void reloadData() {
         infoView.setText(info);
-        final IDataProvider idp = getContexts().getDataProvider();
+        final IDataProvider idp = contexts().getDataProvider();
 //        detailListHelper.reloadData(idp.listAllDetail());
         GUIs.doBusy(this,new GUIs.BusyAdapter() {
             @SuppressWarnings("unchecked")
@@ -130,13 +130,13 @@ public class AccountDetailListActivity extends ContextsActivity {
             @Override
             public void run() {
                 if(target instanceof Account){
-                    data = idp.listDetail((Account)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate,getContexts().getPrefMaxRecords());
+                    data = idp.listDetail((Account)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate, contexts().getPrefMaxRecords());
                     count = idp.countDetail((Account)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate, endDate);
                 }else if(target instanceof AccountType){
-                    data = idp.listDetail((AccountType)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate,getContexts().getPrefMaxRecords());
+                    data = idp.listDetail((AccountType)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate, contexts().getPrefMaxRecords());
                     count = idp.countDetail((AccountType)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate, endDate);
                 }else if(target instanceof String){
-                    data = idp.listDetail((String)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate,getContexts().getPrefMaxRecords());
+                    data = idp.listDetail((String)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate,endDate, contexts().getPrefMaxRecords());
                     count = idp.countDetail((String)target,IDataProvider.LIST_DETAIL_MODE_BOTH,startDate, endDate);
                 }
             }

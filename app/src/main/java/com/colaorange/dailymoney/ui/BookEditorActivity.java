@@ -168,7 +168,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         workingBook.setNote(noteEditor.getText().toString().trim());
         workingBook.setSymbolPosition(pos);
         
-        IMasterDataProvider idp = getContexts().getMasterDataProvider();
+        IMasterDataProvider idp = contexts().getMasterDataProvider();
 
         if (modeCreate) {
             idp.newBook(workingBook);

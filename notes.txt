@@ -10,3 +10,6 @@
 * Menu
     https://stackoverflow.com/questions/40867621/contextmenu-position-is-messed-up-in-android-7
     https://stackoverflow.com/questions/27277050/android-default-theme
+* SD/Storage
+    http://julianchu.net/2017/08/21-storage.html
+    https://developer.android.com/training/basics/data-storage/files.html?hl=zh-tw

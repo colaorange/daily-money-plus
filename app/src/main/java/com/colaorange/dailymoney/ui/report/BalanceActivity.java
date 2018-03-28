@@ -254,7 +254,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
    
 
     private void reloadData() {
-        final CalendarHelper cal = getContexts().getCalendarHelper();
+        final CalendarHelper cal = contexts().getCalendarHelper();
         currentEndDate = null;
         currentStartDate = null;
         infoView.setText("");
@@ -274,7 +274,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             @Override
             public void run() {
-                boolean hierarchical = getContexts().isPrefHierarachicalReport();
+                boolean hierarchical = contexts().isPrefHierarachicalReport();
                 
                 List<Balance> asset = BalanceHelper.calculateBalanceList(AccountType.ASSET, currentStartDate, currentEndDate);
                 List<Balance> income = BalanceHelper.calculateBalanceList(AccountType.INCOME, currentStartDate, currentEndDate);
@@ -334,7 +334,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             @Override
             public void onBusyFinish() {
-                final CalendarHelper cal = getContexts().getCalendarHelper();
+                final CalendarHelper cal = contexts().getCalendarHelper();
                 listViewData.clear();
                 listViewData.addAll(all);
                 listViewMapList.clear();
@@ -342,7 +342,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                 for (Balance b : listViewData) {
                     Map<String, Object> row = new HashMap<String, Object>();
                     listViewMapList.add(row);
-                    String money = getContexts().toFormattedMoneyString(b.getMoney());
+                    String money = contexts().toFormattedMoneyString(b.getMoney());
                     row.put(bindingFrom[0], new NamedItem(bindingFrom[0],b,""));//layout
                     row.put(bindingFrom[1], new NamedItem(bindingFrom[1],b,b.getName()));
                     row.put(bindingFrom[2], new NamedItem(bindingFrom[2],b,money));
@@ -401,7 +401,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void onNext() {
-        CalendarHelper cal = getContexts().getCalendarHelper();
+        CalendarHelper cal = contexts().getCalendarHelper();
         switch (mode) {
         case MODE_MONTH:
             currentDate = cal.monthAfter(currentDate, 1);
@@ -415,7 +415,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void onPrev() {
-        CalendarHelper cal = getContexts().getCalendarHelper();
+        CalendarHelper cal = contexts().getCalendarHelper();
         switch (mode) {
         case MODE_MONTH:
             currentDate = cal.monthBefore(currentDate, 1);
@@ -451,7 +451,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             doYearlyRunChart();
             return true;
         } else if (item.getItemId() == R.id.toggle_hierarchical_report) {
-            getContexts().setPrefHierarachicalReport(!getContexts().isPrefHierarachicalReport());
+            contexts().setPrefHierarachicalReport(!contexts().isPrefHierarachicalReport());
             GUIs.delayPost(new Runnable(){
                 @Override
                 public void run() {

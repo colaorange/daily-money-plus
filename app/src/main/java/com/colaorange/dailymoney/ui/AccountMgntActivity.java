@@ -162,7 +162,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void reloadData() {
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         listViewData = null;
 
         AccountType type = AccountType.find(currTab);
@@ -232,7 +232,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         Account acc = (Account) listViewData.get(pos);
         String name = acc.getName();
 
-        getContexts().getDataProvider().deleteAccount(acc.getId());
+        contexts().getDataProvider().deleteAccount(acc.getId());
         reloadData();
         GUIs.shortToast(this, i18n.string(R.string.msg_account_deleted, name));
         trackEvent(Contexts.TRACKER_EVT_DELETE);

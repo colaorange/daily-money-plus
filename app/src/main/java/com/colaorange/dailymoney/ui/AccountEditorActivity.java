@@ -217,7 +217,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         workingAccount.setInitialValue(Formats.string2Double(initval));
         workingAccount.setCashAccount(cashAccountEditor.isChecked());
         
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         
         Account namedAcc = idp.findAccount(type,name);
         if (modeCreate) {

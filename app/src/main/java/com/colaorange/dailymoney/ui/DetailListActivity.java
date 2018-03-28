@@ -189,7 +189,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     
 
     private void reloadData() {
-        final CalendarHelper cal = getContexts().getCalendarHelper();
+        final CalendarHelper cal = contexts().getCalendarHelper();
         final Date start;
         final Date end;
         infoView.setText("");
@@ -245,7 +245,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 //            modeBtn.setImageResource(R.drawable.btn_month);
             break;
         }
-        final IDataProvider idp = getContexts().getDataProvider();
+        final IDataProvider idp = contexts().getDataProvider();
 //        detailListHelper.reloadData(idp.listAllDetail());
         GUIs.doBusy(this,new GUIs.BusyAdapter() {
             List<Detail> data = null;
@@ -259,7 +259,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
             
             @Override
             public void run() {
-                data = idp.listDetail(start,end,getContexts().getPrefMaxRecords());
+                data = idp.listDetail(start,end, contexts().getPrefMaxRecords());
                 count = idp.countDetail(start, end);
                 income = idp.sumFrom(AccountType.INCOME,start,end);
                 expense = idp.sumTo(AccountType.EXPENSE,start,end);//nagivate
@@ -270,33 +270,33 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
             }
             @Override
             public void onBusyFinish() {
-                final CalendarHelper cal = getContexts().getCalendarHelper();
+                final CalendarHelper cal = contexts().getCalendarHelper();
                 sumUnknowView.setVisibility(TextView.GONE);
               //update data
                 detailListHelper.reloadData(data);
                 int showcount = 0;
                 if(income!=0){
-                    sumIncomeView.setText(i18n.string(R.string.label_detlist_sum_income,getContexts().toFormattedMoneyString((income))));
+                    sumIncomeView.setText(i18n.string(R.string.label_detlist_sum_income, contexts().toFormattedMoneyString((income))));
                     sumIncomeView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if(expense!=0){
-                    sumExpenseView.setText(i18n.string(R.string.label_detlist_sum_expense,getContexts().toFormattedMoneyString((expense))));
+                    sumExpenseView.setText(i18n.string(R.string.label_detlist_sum_expense, contexts().toFormattedMoneyString((expense))));
                     sumExpenseView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if(asset!=0){
-                    sumAssetView.setText(i18n.string(R.string.label_detlist_sum_asset,getContexts().toFormattedMoneyString((asset))));
+                    sumAssetView.setText(i18n.string(R.string.label_detlist_sum_asset, contexts().toFormattedMoneyString((asset))));
                     sumAssetView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if(liability!=0){
-                    sumLiabilityView.setText(i18n.string(R.string.label_detlist_sum_liability,getContexts().toFormattedMoneyString((liability))));
+                    sumLiabilityView.setText(i18n.string(R.string.label_detlist_sum_liability, contexts().toFormattedMoneyString((liability))));
                     sumLiabilityView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if(other!=0){
-                    sumOtherView.setText(i18n.string(R.string.label_detlist_sum_other,getContexts().toFormattedMoneyString((other))));
+                    sumOtherView.setText(i18n.string(R.string.label_detlist_sum_other, contexts().toFormattedMoneyString((other))));
                     sumOtherView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
@@ -420,7 +420,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void onNext() {
-        CalendarHelper cal = getContexts().getCalendarHelper();
+        CalendarHelper cal = contexts().getCalendarHelper();
         switch(mode){
         case MODE_DAY:
             currentDate = cal.dateAfter(currentDate,1);
@@ -442,7 +442,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void onPrev() {
-        CalendarHelper cal = getContexts().getCalendarHelper();
+        CalendarHelper cal = contexts().getCalendarHelper();
         switch(mode){
         case MODE_DAY:
             currentDate = cal.dateBefore(currentDate,1);

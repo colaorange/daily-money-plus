@@ -70,7 +70,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deteditor);
-        format = getContexts().getDateFormat();
+        format = contexts().getDateFormat();
         initIntent();
         initialEditor();
     }
@@ -229,7 +229,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void reloadSpinnerData() {
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         // initial from
         AccountType[] avail = AccountType.getFromType();
         fromAccountList.clear();
@@ -329,7 +329,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     @Override
     public void onClick(View v) {
-        CalendarHelper cal = getContexts().getCalendarHelper();
+        CalendarHelper cal = contexts().getCalendarHelper();
         if (v.getId() == R.id.deteditor_ok) {
             doOk();
         } else if (v.getId() == R.id.deteditor_cancel) {
@@ -418,7 +418,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         Date date = null;
         try {
-            date = getContexts().getDateFormat().parse(datestr);
+            date = contexts().getDateFormat().parse(datestr);
         } catch (ParseException e) {
             Logger.e(e.getMessage(), e);
             GUIs.errorToast(this, e);
@@ -455,7 +455,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         workingDetail.setDate(date);
         workingDetail.setMoney(money);
         workingDetail.setNote(note.trim());
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         if (modeCreate) {
             
             idp.newDetail(workingDetail);

@@ -22,7 +22,7 @@ public class AboutActivity extends ContextsActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.about);
-        setTitle(i18n.string(R.string.app_name)+" "+getContexts().getAppVerName());
+        setTitle(i18n.string(R.string.app_name)+" "+ contexts().getAppVerName());
 
         aboutapp = (WebView) findViewById(R.id.about_app);
         contributor = (WebView) findViewById(R.id.about_contributor);

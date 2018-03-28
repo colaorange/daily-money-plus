@@ -181,42 +181,30 @@ public class Contexts {
         }
     }
 
-    protected void trackEvent(final String category,final String action,final String label,final long value) {
+    protected void trackEvent(final String category,final String action,final String label,final Long value) {
         if (isPrefAllowAnalytics() && sTracker != null) {
             try{
                 Logger.d("track event " + category +", "+action);
-                sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+                sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value==null?0:value.longValue()).build());
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
         }
     }
 
-    protected void trackPageView(final String path) {
-        if (isPrefAllowAnalytics() && sTracker != null) {
-            try {
-                Logger.d("track " + path);
-                sTracker.setScreenName(path);
-                sTracker.send(new HitBuilders.ScreenViewBuilder().build());
-            } catch (Throwable t) {
-                Logger.e(t.getMessage(), t);
-            }
-        }
+    public boolean shareHtmlContent(Activity activity, String subject,String html){
+        return shareHtmlContent(activity, subject,html,null);
     }
-
-    public boolean shareHtmlContent(String subject,String html){
-        return shareHtmlContent(subject,html,null);
-    }
-    public boolean shareHtmlContent(String subject,String html,List<File> attachments){
-        return shareContent(subject,html,true,attachments);
+    public boolean shareHtmlContent(Activity activity, String subject,String html,List<File> attachments){
+        return shareContent(activity, subject,html,true,attachments);
     }
 
 
-    public boolean shareTextContent(String subject,String text){
-        return shareTextContent(subject,text,null);
+    public boolean shareTextContent(Activity activity, String subject,String text){
+        return shareTextContent(activity, subject,text,null);
     }
-    public boolean shareTextContent(String subject,String text,List<File> attachments){
-        return shareContent(subject,text,false,attachments);
+    public boolean shareTextContent(Activity activity, String subject,String text,List<File> attachments){
+        return shareContent(activity, subject,text,false,attachments);
     }
 
     public String getCurrencySymbol(){
@@ -224,7 +212,7 @@ public class Contexts {
     }
 
 
-    public boolean shareContent(String subject,String content,boolean htmlContent,List<File> attachments){
+    public boolean shareContent(Activity activity, String subject,String content,boolean htmlContent,List<File> attachments){
         Intent intent;
         if(attachments == null || attachments.size()<=1){
             intent = new Intent(Intent.ACTION_SEND);
@@ -234,10 +222,16 @@ public class Contexts {
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
         if(htmlContent){
             intent.setType("text/html");
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(content));
+            //Key android.intent.extra.TEXT expected ArrayList<CharSequence> but value was a java.lang.String.  The default value <null> was returned.
+            ArrayList<CharSequence> arr = new ArrayList<>();
+            arr.add(Html.fromHtml(content));
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, arr);
         }else{
             intent.setType("text/plain");
-            intent.putExtra(android.content.Intent.EXTRA_TEXT, content);
+            //Key android.intent.extra.TEXT expected ArrayList<CharSequence> but value was a java.lang.String.  The default value <null> was returned.
+            ArrayList<CharSequence> arr = new ArrayList<>();
+            arr.add(content);
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, arr);
         }
 
         ArrayList<Parcelable> parcels = new ArrayList<Parcelable>();
@@ -253,7 +247,7 @@ public class Contexts {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, parcels);
         }
         try{
-            contextsApp.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
+            activity.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
         }catch(Exception x){
             Logger.e(x.getMessage(),x);
             return false;

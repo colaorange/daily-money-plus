@@ -31,7 +31,7 @@ public class PasswordProtectionActivity extends ContextsActivity implements OnCl
     }
 
     private void doPasswordOk() {
-        String password = getContexts().getPrefPassword();
+        String password = contexts().getPrefPassword();
         String pd = ((TextView)findViewById(R.id.pdprot_text)).getText().toString();
         if(password.equals(pd)){
            setResult(RESULT_OK);

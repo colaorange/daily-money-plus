@@ -82,7 +82,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         loadDesktop();
         loadWhatisNew();
         
-        if(getContexts().isFirstTime()){
+        if(contexts().isFirstTime()){
             doTheFisrtTime();
         }
     }
@@ -110,7 +110,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initPasswordProtection() { 
         dtLayout.setVisibility(View.INVISIBLE);
-        final String password = getContexts().getPrefPassword();
+        final String password = contexts().getPrefPassword();
         if("".equals(password)||protectionPassed){
             dtLayout.setVisibility(View.VISIBLE);
             return;
@@ -126,7 +126,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initialApplicationInfo() {
         appinfo = i18n.string(R.string.app_name);
-        String ver = getContexts().getAppVerName();
+        String ver = contexts().getAppVerName();
         appinfo += " ver : "+ver;
     }
     
@@ -134,7 +134,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         if(BackupRestorer.hasBackup()){
             restoreFromBackup();
         }else{
-            IDataProvider idp = getContexts().getDataProvider();
+            IDataProvider idp = contexts().getDataProvider();
             if(idp.listAccount(null).size()==0){
                 //cause of this function is not ready in previous version, so i check the size for old user
                 new DataCreator(idp,i18n).createDefaultAccount();
@@ -175,7 +175,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
                     GUIs.doBusy(DesktopActivity.this, restorejob);
                 }else{
-                    IDataProvider idp = getContexts().getDataProvider();
+                    IDataProvider idp = contexts().getDataProvider();
                     if(idp.listAccount(null).size()==0){
                         //cause of this function is not ready in previous version, so i check the size for old user
                         new DataCreator(idp,i18n).createDefaultAccount();
@@ -252,7 +252,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     
     private void loadWhatisNew(){
         if(protectionInfront) return;
-        if(getContexts().isFirstVersionTime()){
+        if(contexts().isFirstVersionTime()){
             Intent intent = new Intent(this, LocalWebViewDlg.class);
             intent.putExtra(LocalWebViewDlg.INTENT_URI_ID, R.string.path_what_is_new);
             startActivity(intent);
@@ -278,12 +278,12 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Date end = calHelper.weekEndDate(now);
         AccountType type = AccountType.EXPENSE;
         double b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense,getContexts().toFormattedMoneyString(b)));
+        infoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
         
         start = calHelper.monthStartDate(now);
         end = calHelper.monthEndDate(now);
         b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense,getContexts().toFormattedMoneyString(b)));
+        infoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
         
         
         
@@ -295,7 +295,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 b += BalanceHelper.calculateBalance(ac,null, calHelper.toDayEnd(now)).getMoney();
             }
         }
-        infoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash,getContexts().toFormattedMoneyString(b)));
+        infoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
     }
 
     @Override

@@ -81,7 +81,7 @@ public class BookMgntActivity extends ContextsActivity {
 
 
     private void reloadData() {
-        final IMasterDataProvider idp = getContexts().getMasterDataProvider();
+        final IMasterDataProvider idp = contexts().getMasterDataProvider();
         GUIs.doBusy(this,new GUIs.BusyAdapter() {
             List<Book> data = null;
             

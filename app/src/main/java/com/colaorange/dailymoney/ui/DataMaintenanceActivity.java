@@ -59,11 +59,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.datamain);
-        workingFolder = getContexts().getWorkingFolder();
-        backupcsv = getContexts().isPrefBackupCSV();
+        workingFolder = contexts().getWorkingFolder();
+        backupcsv = contexts().isPrefBackupCSV();
         
-        vercode = getContexts().getAppVerCode();
-        csvEncoding = getContexts().getPrefCSVEncoding();
+        vercode = contexts().getAppVerCode();
+        csvEncoding = contexts().getPrefCSVEncoding();
 
         initialListener();
 
@@ -80,7 +80,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         Button requestPermissionBtn = (Button)findViewById(R.id.datamain_request_permission);
         //only for 6.0(23+)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !getContexts().hasWorkingFolderPermission()){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()){
             requestPermissionBtn.setVisibility(View.VISIBLE);
         }else{
             requestPermissionBtn.setVisibility(View.GONE);
@@ -89,7 +89,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         //working fodler accessibility
         TextView workingFolderText = ((TextView)findViewById(R.id.datamain_workingfolder));
         //test accessable
-        if (getContexts().hasWorkingFolderPermission()) {
+        if (contexts().hasWorkingFolderPermission()) {
             workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info), null, null, null);
             workingFolderText.setText(workingFolder.getAbsolutePath());
         } else {
@@ -99,8 +99,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         TextView lastBackupText = ((TextView)findViewById(R.id.datamain_lastbackup));
 
-        if(getContexts().getPrefLastBackup()!=null) {
-            lastBackupText.setText(getContexts().getPrefLastBackup());
+        if(contexts().getPrefLastBackup()!=null) {
+            lastBackupText.setText(contexts().getPrefLastBackup());
         }
     }
 
@@ -160,7 +160,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 if (result.isSuccess()) {
                     String count = ""+(result.getDb()+result.getPref());
                     String msg = i18n.string(R.string.msg_db_backuped, count, workingFolder);
-                    getContexts().setPrefLastBackupTime(now);
+                    contexts().setPrefLastBackupTime(now);
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                     refreshUI();
                 } else {
@@ -191,7 +191,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     String count = ""+(result.getDb()+result.getPref());
                     String msg = i18n.string(R.string.msg_db_restored, count, workingFolder);
                     if(lastBakcup!=null){
-                        getContexts().setPrefLastBackupTime(lastBakcup);
+                        contexts().setPrefLastBackupTime(lastBakcup);
                     }
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                 } else {
@@ -201,7 +201,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
             @Override
             public void run() {
-                lastBakcup = getContexts().getPrefLastBackupTime();
+                lastBakcup = contexts().getPrefLastBackupTime();
                 result = BackupRestorer.restore();
                 trackEvent("restore");
             }
@@ -284,7 +284,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
             @Override
             public void run() {
-                IDataProvider idp = getContexts().getDataProvider();
+                IDataProvider idp = contexts().getDataProvider();
                 new DataCreator(idp, i18n).createDefaultAccount();
             }
         };
@@ -301,7 +301,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void doExportCSV() {
-        final int workingBookId = getContexts().getWorkingBookId(); 
+        final int workingBookId = contexts().getWorkingBookId();
         new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_export_csv))
                 .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
                     @Override
@@ -335,7 +335,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void doImportCSV() {
-        final int workingBookId = getContexts().getWorkingBookId(); 
+        final int workingBookId = contexts().getWorkingBookId();
         new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_import_csv))
                 .setItems(R.array.csv_type_import_options, new DialogInterface.OnClickListener() {
                     @Override
@@ -374,19 +374,22 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
                         final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-                            int count = -1;
+                            List<File> files;
                             public void onBusyError(Throwable t) {
                                 GUIs.error(DataMaintenanceActivity.this, t);
                             }
                             public void onBusyFinish() {
-                                if(count<0){
+                                if(files == null || files.size()<0){
                                     GUIs.alert(DataMaintenanceActivity.this,R.string.msg_no_csv);
+                                }else{
+                                    DateFormat df = contexts().getDateFormat();
+                                    contexts().shareTextContent(DataMaintenanceActivity.this, i18n.string(R.string.msg_share_csv_title,df.format(new Date())),i18n.string(R.string.msg_share_csv_content),files);
                                 }
                             }
                             @Override
                             public void run() {
                                 try {
-                                    count = _shareCSV(which);
+                                    files = _shareCSV(which);
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(),e);
                                 }
@@ -423,7 +426,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 detail = true;
                 break;
         }
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         if(account && detail){
             idp.reset();
         }else if(account){
@@ -453,7 +456,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 break;
             default :return -1;
         }
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         StringWriter sw;
         CsvWriter csvw;
         int count = 0;
@@ -551,7 +554,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             default :return -1;
         }
         
-        IDataProvider idp = getContexts().getDataProvider();
+        IDataProvider idp = contexts().getDataProvider();
         File details = getWorkingFile(shared?"details.csv":"details-"+workingBookId+".csv");
         File accounts = getWorkingFile(shared?"accounts.csv":"accounts-"+workingBookId+".csv");
         
@@ -637,10 +640,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     
     
     /** running in thread **/
-    private int _shareCSV(int mode) throws Exception{
+    private List<File> _shareCSV(int mode) throws Exception{
         if(Contexts.DEBUG){
             Logger.d("share csv "+mode);
         }
+        List<File> files = new ArrayList<File>();
         boolean account = false;
         boolean detail = false;
         switch(mode){
@@ -653,7 +657,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             case 2:
                 detail = true;
                 break;
-            default :return -1;
+            default : return files;
         }
         
         File details = getWorkingFile("details.csv");
@@ -661,28 +665,18 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         
         if((detail && (!details.exists() || !details.canRead())) || 
                 (account && (!accounts.exists() || !accounts.canRead())) ){
-            return -1;
+            return files;
         }
-        
-        int count = 0;
-
-        List<File> files = new ArrayList<File>();
         
         if (detail) {
             files.add(details);
-            count++;
         }
 
         if (account) {
             files.add(accounts);
-            count++;
         }
-        
-        if(count>0){
-            DateFormat df = getContexts().getDateFormat();
-            getContexts().shareTextContent(i18n.string(R.string.msg_share_csv_title,df.format(new Date())),i18n.string(R.string.msg_share_csv_content),files);
-        }
-        return count;
+
+        return files;
             
     }
 }

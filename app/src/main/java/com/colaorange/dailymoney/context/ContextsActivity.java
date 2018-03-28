@@ -28,9 +28,8 @@ public class ContextsActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Logger.d("activity created:"+this);
-        Contexts ctxs = Contexts.instance();
 
-        refreshUtil(ctxs);
+        refreshUtil();
 
         Bundle b = getIntentExtras();
         if(b!=null) {
@@ -41,13 +40,17 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     protected void onStart(){
         super.onStart();
-
-        Contexts ctxs = Contexts.instance();
-        String path = getTrackerPath();
-        ctxs.trackPageView(path);
+        trackEvent(Contexts.TRACKER_EVT_VIEW);
     }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+    }
+
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
@@ -68,12 +71,12 @@ public class ContextsActivity extends AppCompatActivity {
 
     protected void trackEvent(String action){
         Contexts ctxs = Contexts.instance();
-        ctxs.trackEvent(getTrackerPath(),action,"",0);
+        ctxs.trackEvent(getTrackerPath(),action,"",null);
     }
     
-    private void refreshUtil(Contexts ctxs){
-        i18n = ctxs.getI18n();
-        calHelper = ctxs.getCalendarHelper();
+    private void refreshUtil(){
+        i18n = contexts().getI18n();
+        calHelper = contexts().getCalendarHelper();
     }
     
 
@@ -101,8 +104,8 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Contexts ctxs = Contexts.instance();
-        refreshUtil(ctxs);
+
+        refreshUtil();
     }
 
 
@@ -119,7 +122,7 @@ public class ContextsActivity extends AppCompatActivity {
         return fakeExtra;
     }
 
-    protected Contexts getContexts(){
+    protected Contexts contexts(){
         return Contexts.instance();
     }
     
