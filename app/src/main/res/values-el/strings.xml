@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <sringg name="a1_lang_Chinese_name_comment">希臘文</sringg>
+
     <string name="act_balance_detlist">Λίστα συναλλαγών</string>
     <string name="act_balance_piechart">Γράφημα πίτας</string>
     <string name="act_balance_yearly_cumulative_timechart">Ετήσιο διάγραμμα (σωρευτικό)</string>
