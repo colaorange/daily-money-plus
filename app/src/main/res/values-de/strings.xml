@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <sringg name="a1_lang_Chinese_name_comment">德文</sringg>
+    <string name="a1_lang_Chinese_name_comment">德文</string>
 
     <string name="act_balance_detlist">Eintragsliste</string>
     <string name="act_balance_piechart">Tortendiagramm</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <sringg name="a1_lang_Chinese_name_comment">越南文</sringg>
+    <string name="a1_lang_Chinese_name_comment">越南文</string>
 
     <string name="act_balance_detlist">Danh sách chi tiết</string>
     <string name="act_balance_piechart">Biểu đồ tròn</string>

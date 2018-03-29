@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <sringg name="a1_lang_Chinese_name_comment">葡萄牙文</sringg>
+    <string name="a1_lang_Chinese_name_comment">葡萄牙文</string>
 
     <string name="act_balance_detlist">Lista de Detalhes</string>
     <string name="act_balance_piechart">Gráfico Pizza</string>
