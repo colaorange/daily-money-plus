@@ -14,3 +14,8 @@
 * SD/Storage
     http://julianchu.net/2017/08/21-storage.html
     https://developer.android.com/training/basics/data-storage/files.html?hl=zh-tw
+* Icon
+    https://stackoverflow.com/questions/28684759/import-material-design-icons-into-an-android-project
+    https://github.com/code-mc/material-icon-lib
+    https://fontawesome.com/icons?d=gallery&m=free
+    https://fontawesome.com/license
