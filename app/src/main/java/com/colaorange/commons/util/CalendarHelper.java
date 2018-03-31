@@ -1,5 +1,7 @@
 package com.colaorange.commons.util;
 
+import android.annotation.SuppressLint;
+
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +50,7 @@ public class CalendarHelper {
         this.timeZone = timeZone;
     }
 
+    @SuppressLint("WrongConstant")
     public Calendar calendar(Date d) {
         Calendar cal = Calendar.getInstance();
         cal.setFirstDayOfWeek(firstDayOfWeek);

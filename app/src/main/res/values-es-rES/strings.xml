@@ -33,7 +33,7 @@
     <string name="clabel_name">Nombre</string>
     <string name="clabel_share">Compartir</string>
     <string name="clabel_type">Tipo</string>
-    <string name="clabel_unknow">Desconocido</string>
+    <string name="clabel_unknown">Desconocido</string>
     <string name="clabel_warn">Aviso</string>
 
     <string name="cmsg_busy">La aplicación está ocupada, por favor espera un momento...</string>

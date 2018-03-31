@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="a1_lang_Chinese_name_comment">English</string>
 
     <string name="cact_cancel">Cancel</string>
     <string name="cact_close">Close</string>

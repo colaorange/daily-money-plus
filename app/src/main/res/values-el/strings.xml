@@ -32,7 +32,7 @@
     <string name="clabel_name">Όνομα</string>
     <string name="clabel_share">Αποστολή</string>
     <string name="clabel_type">Τύπος</string>
-    <string name="clabel_unknow">Άγνωστο</string>
+    <string name="clabel_unknown">Άγνωστο</string>
     <string name="clabel_warn">Προειδοποίηση</string>
 
     <string name="cmsg_busy">Η εφαρμογή είναι απασχολημένη, περιμένετε λίγο...</string>

@@ -87,6 +87,7 @@ class PanelSwitcher extends FrameLayout {
     }
 
     protected void onFinishInflate() {
+        super.onFinishInflate();
         int count = getChildCount();
         children = new View[count];
         for (int i = 0; i < count; ++i) {

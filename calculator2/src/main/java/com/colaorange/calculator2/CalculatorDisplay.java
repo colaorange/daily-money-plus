@@ -184,6 +184,7 @@ class CalculatorDisplay extends ViewSwitcher {
     
     @Override
     protected void onFocusChanged(boolean gain, int direction, Rect prev) {
+        super.onFocusChanged(gain, direction, prev);
         //Calculator.log("focus " + gain + "; " + direction + "; " + prev);
         if (!gain) {
             requestFocus();

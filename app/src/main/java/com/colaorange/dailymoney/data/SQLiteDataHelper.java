@@ -77,6 +77,7 @@ public class SQLiteDataHelper extends SQLiteOpenHelper{
         if(oldVersion==4){//schema before 0.9.4
             //upgrade to 0.9.4
             Logger.i("upgrade schem from "+oldVersion+" to "+newVersion);
+            //noinspection SyntaxError
             db.execSQL("ALTER TABLE "+TB_ACC+" ADD "+COL_ACC_CASHACCOUNT+" INTEGER NULL ");
             oldVersion++;
         }
