@@ -24,9 +24,9 @@ public class AboutActivity extends ContextsActivity {
         setContentView(R.layout.about);
         setTitle(i18n.string(R.string.app_name)+" "+ contexts().getAppVerName());
 
-        aboutapp = (WebView) findViewById(R.id.about_app);
-        contributor = (WebView) findViewById(R.id.about_contributor);
-        whatsnew = (WebView) findViewById(R.id.about_whatsnew);
+        aboutapp = findViewById(R.id.about_app);
+        contributor = findViewById(R.id.about_contributor);
+        whatsnew = findViewById(R.id.about_whatsnew);
 
 
         aboutapp.getSettings().setAllowFileAccess(true);

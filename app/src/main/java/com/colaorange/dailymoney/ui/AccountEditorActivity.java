@@ -91,14 +91,14 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     Button closeBtn;
     
     private void initialEditor() {
-        nameEditor = (EditText)findViewById(R.id.acceditor_name);
+        nameEditor = findViewById(R.id.acceditor_name);
         nameEditor.setText(workingAccount.getName());
         
-        initvalEditor = (EditText)findViewById(R.id.acceditor_initval);
+        initvalEditor = findViewById(R.id.acceditor_initval);
         initvalEditor.setText(Formats.double2String(workingAccount.getInitialValue()));
         
         //initial spinner
-        typeEditor = (Spinner) findViewById(R.id.acceditor_type);
+        typeEditor = findViewById(R.id.acceditor_type);
         List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
         String type = workingAccount.getType();
         int selpos,i;
@@ -133,10 +133,10 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         });
         
         
-        cashAccountEditor = (CheckBox)findViewById(R.id.acceditor_cash_account);
+        cashAccountEditor = findViewById(R.id.acceditor_cash_account);
         cashAccountEditor.setChecked(workingAccount.isCashAccount());
         
-        okBtn = (Button)findViewById(R.id.acceditor_ok); 
+        okBtn = findViewById(R.id.acceditor_ok);
         if(modeCreate){
             okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp,0,0,0);
             okBtn.setText(R.string.cact_create);
@@ -147,9 +147,9 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         okBtn.setOnClickListener(this);
         
         
-        cancelBtn = (Button)findViewById(R.id.acceditor_cancel); 
-        closeBtn =  (Button)findViewById(R.id.acceditor_close);
-        cal2Btn = (ImageButton)findViewById(R.id.acceditor_cal2);
+        cancelBtn = findViewById(R.id.acceditor_cancel);
+        closeBtn = findViewById(R.id.acceditor_close);
+        cal2Btn = findViewById(R.id.acceditor_cal2);
         
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);

@@ -297,7 +297,7 @@ public class GUIs {
     /**
      * on busy event will be invoked in gui thread.
      */
-    public static interface IBusyRunnable extends Runnable{
+    public interface IBusyRunnable extends Runnable{
         void onBusyFinish();
         void onBusyError(Throwable t);
     }
@@ -329,8 +329,8 @@ public class GUIs {
         picker.show();
     }
     
-    public static interface OnFinishListener {   
-        public boolean onFinish(Object data);
+    public interface OnFinishListener {
+        boolean onFinish(Object data);
     }
     
     public static int converDP2Pixel(Context context,float dp){

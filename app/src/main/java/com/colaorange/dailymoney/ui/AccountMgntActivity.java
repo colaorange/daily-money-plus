@@ -67,7 +67,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void initialTab() {
-        TabHost tabs = (TabHost) findViewById(R.id.accmgnt_tabs);
+        TabHost tabs = findViewById(R.id.accmgnt_tabs);
         tabs.setup();
 
         
@@ -138,7 +138,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
                 return true;
             }});
         
-        listView = (ListView) findViewById(R.id.accmgnt_list);
+        listView = findViewById(R.id.accmgnt_list);
         listView.setAdapter(listViewAdapter);
         
         
@@ -229,7 +229,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doDeleteAccount(int pos) {
-        Account acc = (Account) listViewData.get(pos);
+        Account acc = listViewData.get(pos);
         String name = acc.getName();
 
         contexts().getDataProvider().deleteAccount(acc.getId());
@@ -240,7 +240,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doEditAccount(int pos) {
-        Account acc = (Account) listViewData.get(pos);
+        Account acc = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(this,AccountEditorActivity.class);
         intent.putExtra(AccountEditorActivity.INTENT_MODE_CREATE,false);
@@ -249,7 +249,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
     
     private void doCopyAccount(int pos) {
-        Account acc = (Account) listViewData.get(pos);
+        Account acc = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(this,AccountEditorActivity.class);
         intent.putExtra(AccountEditorActivity.INTENT_MODE_CREATE,true);

@@ -81,7 +81,7 @@ public class BookListHelper implements OnItemClickListener{
     }
 
     public void reloadData(List<Book> data) {
-        listViewData = data;;
+        listViewData = data;
         listViewMapList.clear();
         int workingId = Contexts.instance().getWorkingBookId();
         for (Book book : listViewData) {
@@ -120,7 +120,7 @@ public class BookListHelper implements OnItemClickListener{
 
 
     public void doEditBook(int pos) {
-        Book book = (Book) listViewData.get(pos);
+        Book book = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(activity,BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.INTENT_MODE_CREATE,false);
@@ -129,7 +129,7 @@ public class BookListHelper implements OnItemClickListener{
     }
 
     public void doDeleteBook(final int pos) {
-        final Book book = (Book) listViewData.get(pos);
+        final Book book = listViewData.get(pos);
         if(book.getId()==0){
             //default book
             GUIs.shortToast(activity, R.string.msg_cannot_delete_default_book);
@@ -160,7 +160,7 @@ public class BookListHelper implements OnItemClickListener{
     }
     
     public void doSetWorkingBook(int pos){
-        Book d = (Book) listViewData.get(pos);
+        Book d = listViewData.get(pos);
         if(Contexts.instance().getWorkingBookId()==d.getId()){
             return;
         }
@@ -169,8 +169,8 @@ public class BookListHelper implements OnItemClickListener{
     }
 
 
-    public static interface OnBookListener {
-        public void onBookDeleted(Book detail);
+    public interface OnBookListener {
+        void onBookDeleted(Book detail);
     }
     
     class ListViewBinder implements SimpleAdapter.ViewBinder{

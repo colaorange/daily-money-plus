@@ -61,7 +61,7 @@ public class BookMgntActivity extends ContextsActivity {
             }
         });
         
-        ListView listView = (ListView)findViewById(R.id.bookmgnt_list);
+        ListView listView = findViewById(R.id.bookmgnt_list);
         bookListHelper.setup(listView);
         
         registerForContextMenu(listView);

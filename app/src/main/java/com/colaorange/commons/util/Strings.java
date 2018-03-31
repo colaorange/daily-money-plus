@@ -173,7 +173,7 @@ public class Strings {
 
 
     public static void saveString(OutputStream os,String str) throws IOException {
-        saveString(os,"UTF8");
+        saveString(os, str, "UTF8");
     }
 
     public static void saveString(OutputStream os,String str,String encoding) throws IOException {
@@ -355,10 +355,8 @@ public class Strings {
 //    }
 
     public static boolean equals(String a, String b) {
-        if (a == b || (a != null && b != null && a.equals(b)))
-            return true;
+        return a == b || (a != null && b != null && a.equals(b));
 
-        return false;
     }
 
     public static String toHexString(byte b) {

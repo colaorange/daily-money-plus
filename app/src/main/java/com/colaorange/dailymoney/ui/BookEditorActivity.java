@@ -81,14 +81,14 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     Button cancelBtn;
     
     private void initialEditor() {
-        nameEditor = (EditText)findViewById(R.id.bookeditor_name);
+        nameEditor = findViewById(R.id.bookeditor_name);
         nameEditor.setText(workingBook.getName());
         
-        symbolEditor = (EditText)findViewById(R.id.bookeditor_symbol);
+        symbolEditor = findViewById(R.id.bookeditor_symbol);
         symbolEditor.setText(workingBook.getSymbol());
         
       //initial spinner
-        positionEditor = (Spinner) findViewById(R.id.bookeditor_symbol_position);
+        positionEditor = findViewById(R.id.bookeditor_symbol_position);
         List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
         SymbolPosition symbolPos = workingBook.getSymbolPosition();
         int selpos,i;
@@ -111,10 +111,10 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             positionEditor.setSelection(selpos);
         }
         
-        noteEditor = (EditText)findViewById(R.id.bookeditor_note);
+        noteEditor = findViewById(R.id.bookeditor_note);
         noteEditor.setText(workingBook.getNote());
         
-        okBtn = (Button)findViewById(R.id.btn_ok);
+        okBtn = findViewById(R.id.btn_ok);
         if(modeCreate){
             okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp,0,0,0);
             okBtn.setText(R.string.cact_create);
@@ -125,7 +125,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         okBtn.setOnClickListener(this);
         
         
-        cancelBtn = (Button)findViewById(R.id.btn_cancel); 
+        cancelBtn = findViewById(R.id.btn_cancel);
 
         
         cancelBtn.setOnClickListener(this);

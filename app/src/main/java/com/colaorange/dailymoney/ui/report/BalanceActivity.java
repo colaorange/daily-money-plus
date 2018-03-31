@@ -109,13 +109,13 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         monthDateFormat = new SimpleDateFormat("yyyy/MM");
         yearDateFormat = new SimpleDateFormat("yyyy");
 
-        infoView = (TextView) findViewById(R.id.report_balance_infobar);
+        infoView = findViewById(R.id.report_balance_infobar);
         toolbarView = findViewById(R.id.report_balance_toolbar);
 
         findViewById(R.id.report_balance_prev).setOnClickListener(this);
         findViewById(R.id.report_balance_next).setOnClickListener(this);
         findViewById(R.id.report_balance_today).setOnClickListener(this);
-        modeBtn = (ImageButton) findViewById(R.id.report_balance_mode);
+        modeBtn = findViewById(R.id.report_balance_mode);
         modeBtn.setOnClickListener(this);
 
 
@@ -184,7 +184,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             }
         });
 
-        listView = (ListView) findViewById(R.id.report_balance_list);
+        listView = findViewById(R.id.report_balance_list);
         listView.setAdapter(listViewAdapter);
 
         listView.setOnItemClickListener(this);

@@ -76,10 +76,7 @@ public class BackupRestorer {
         @Override
         public boolean accept(File file) {
             String nm = file.getName();
-            if(file.isFile() && (nm.equals(DB) || (nm.startsWith(DB_PRE) && nm.endsWith(DB_POS)))){
-                return true;
-            }
-            return false;
+            return file.isFile() && (nm.equals(DB) || (nm.startsWith(DB_PRE) && nm.endsWith(DB_POS)));
         }
     }
 
@@ -88,10 +85,7 @@ public class BackupRestorer {
         @Override
         public boolean accept(File file) {
             String nm = file.getName();
-            if(file.isFile() && (nm.equals(contexts().getAppId() + "_preferences.xml"))){
-                return true;
-            }
-            return false;
+            return file.isFile() && (nm.equals(contexts().getAppId() + "_preferences.xml"));
         }
     }
 

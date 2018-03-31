@@ -54,11 +54,8 @@ public class User {
             return false;
         User other = (User) obj;
         if (dbname == null) {
-            if (other.dbname != null)
-                return false;
-        } else if (!dbname.equals(other.dbname))
-            return false;
-        return true;
+            return other.dbname == null;
+        } else return dbname.equals(other.dbname);
     }
     
     

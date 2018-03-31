@@ -30,7 +30,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     }
 
     private void initWebView() {
-        webView = (WebView)findViewById(R.id.webview);
+        webView = findViewById(R.id.webview);
         
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setJavaScriptEnabled(true);

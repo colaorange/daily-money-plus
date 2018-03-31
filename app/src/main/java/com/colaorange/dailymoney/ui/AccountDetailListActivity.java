@@ -98,9 +98,9 @@ public class AccountDetailListActivity extends ContextsActivity {
             }
         });
         
-        infoView = (TextView)findViewById(R.id.accdetlist_infobar);
+        infoView = findViewById(R.id.accdetlist_infobar);
         
-        ListView listView = (ListView)findViewById(R.id.accdetlist_list);
+        ListView listView = findViewById(R.id.accdetlist_list);
         detailListHelper.setup(listView);
         registerForContextMenu(listView);
     }

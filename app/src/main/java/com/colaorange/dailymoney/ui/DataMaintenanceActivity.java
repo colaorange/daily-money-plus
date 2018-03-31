@@ -78,7 +78,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void refreshUI() {
 
-        Button requestPermissionBtn = (Button)findViewById(R.id.datamain_request_permission);
+        Button requestPermissionBtn = findViewById(R.id.datamain_request_permission);
         //only for 6.0(23+)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()){
             requestPermissionBtn.setVisibility(View.VISIBLE);
@@ -87,7 +87,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
 
         //working fodler accessibility
-        TextView workingFolderText = ((TextView)findViewById(R.id.datamain_workingfolder));
+        TextView workingFolderText = findViewById(R.id.datamain_workingfolder);
         //test accessable
         if (contexts().hasWorkingFolderPermission()) {
             workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info), null, null, null);
@@ -97,7 +97,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             workingFolderText.setText(i18n.string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
         }
 
-        TextView lastBackupText = ((TextView)findViewById(R.id.datamain_lastbackup));
+        TextView lastBackupText = findViewById(R.id.datamain_lastbackup);
 
         if(contexts().getPrefLastBackup()!=null) {
             lastBackupText.setText(contexts().getPrefLastBackup());
@@ -403,7 +403,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     
     
 
-    private File getWorkingFile(String name) throws IOException {
+    private File getWorkingFile(String name) {
         File file = new File(workingFolder, name);
         return file;
     }
@@ -616,7 +616,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                 while(accountReader.readRecord()){
                     Account acc = new Account(accountReader.get("type"),accountReader.get("name"),Formats.normalizeString2Double(accountReader.get("init")));
                     String cash = accountReader.get("cash");
-                    acc.setCashAccount("1".equals(cash)?true:false);
+                    acc.setCashAccount("1".equals(cash));
                     
                     idp.newAccountNoCheck(accountReader.get("id"),acc);
                     count ++;

@@ -125,15 +125,15 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         boolean archived = workingDetail.isArchived();
 
 
-        dateEditor = (EditText) findViewById(R.id.deteditor_date);
+        dateEditor = findViewById(R.id.deteditor_date);
         dateEditor.setText(format.format(workingDetail.getDate()));
         dateEditor.setEnabled(!archived);
 
-        moneyEditor = (EditText) findViewById(R.id.deteditor_money);
+        moneyEditor = findViewById(R.id.deteditor_money);
         moneyEditor.setText(workingDetail.getMoney()<=0?"":Formats.double2String(workingDetail.getMoney()));
         moneyEditor.setEnabled(!archived);
 
-        noteEditor = (EditText) findViewById(R.id.deteditor_note);
+        noteEditor = findViewById(R.id.deteditor_note);
         noteEditor.setText(workingDetail.getNote());
 
         if (!archived) {
@@ -144,7 +144,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         }
         findViewById(R.id.deteditor_cal2).setOnClickListener(this);
 
-        okBtn = (Button) findViewById(R.id.deteditor_ok);
+        okBtn = findViewById(R.id.deteditor_ok);
         if (modeCreate) {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_create);
@@ -155,14 +155,14 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         }
         okBtn.setOnClickListener(this);
 
-        cancelBtn = (Button) findViewById(R.id.deteditor_cancel);
-        closeBtn = (Button) findViewById(R.id.deteditor_close);
+        cancelBtn = findViewById(R.id.deteditor_cancel);
+        closeBtn = findViewById(R.id.deteditor_close);
 
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
 
-        fromEditor = (Spinner) findViewById(R.id.deteditor_from);
-        toEditor = (Spinner) findViewById(R.id.deteditor_to);
+        fromEditor = findViewById(R.id.deteditor_from);
+        toEditor = findViewById(R.id.deteditor_to);
 
         fromAccountList = new ArrayList<IndentNode>();
         fromAccountMapList = new ArrayList<Map<String, Object>>();

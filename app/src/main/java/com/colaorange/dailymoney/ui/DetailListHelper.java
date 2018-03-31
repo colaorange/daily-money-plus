@@ -112,7 +112,7 @@ public class DetailListHelper implements OnItemClickListener{
     
     private DateFormat dayOfWeekFormat = new SimpleDateFormat("E"); 
     public void reloadData(List<Detail> data) {
-        listViewData = data;;
+        listViewData = data;
         listViewMapList.clear();
         DateFormat dateFormat = Contexts.instance().getDateFormat();//for 2010/01/01
         for (Detail det : listViewData) {
@@ -158,7 +158,7 @@ public class DetailListHelper implements OnItemClickListener{
 
 
     public void doEditDetail(int pos) {
-        Detail d = (Detail) listViewData.get(pos);
+        Detail d = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(activity,DetailEditorActivity.class);
         intent.putExtra(DetailEditorActivity.INTENT_MODE_CREATE,false);
@@ -167,7 +167,7 @@ public class DetailListHelper implements OnItemClickListener{
     }
 
     public void doDeleteDetail(int pos) {
-        Detail d = (Detail) listViewData.get(pos);
+        Detail d = listViewData.get(pos);
         boolean r = Contexts.instance().getDataProvider().deleteDetail(d.getId());
         if(r){
             if(listener!=null){
@@ -183,7 +183,7 @@ public class DetailListHelper implements OnItemClickListener{
 
 
     public void doCopyDetail(int pos) {
-        Detail d = (Detail) listViewData.get(pos);
+        Detail d = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(activity,DetailEditorActivity.class);
         intent.putExtra(DetailEditorActivity.INTENT_MODE_CREATE,true);
@@ -192,8 +192,8 @@ public class DetailListHelper implements OnItemClickListener{
     }
     
     
-    public static interface OnDetailListener {
-        public void onDetailDeleted(Detail detail);
+    public interface OnDetailListener {
+        void onDetailDeleted(Detail detail);
     }
     
     class ListViewBinder implements SimpleAdapter.ViewBinder{

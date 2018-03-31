@@ -94,15 +94,15 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
         monthDateFormat = new SimpleDateFormat("yyyy/MM - MMM");
         yearDateFormat = new SimpleDateFormat("yyyy");
 
-        infoView = (TextView) findViewById(R.id.detlist_infobar);
+        infoView = findViewById(R.id.detlist_infobar);
         toolbarView = findViewById(R.id.detlist_toolbar);
-        sumIncomeView = (TextView) findViewById(R.id.detlist_sum_income);
-        sumExpenseView = (TextView) findViewById(R.id.detlist_sum_expense);
-        sumAssetView = (TextView) findViewById(R.id.detlist_sum_asset);
-        sumLiabilityView = (TextView) findViewById(R.id.detlist_sum_liability);
-        sumOtherView = (TextView) findViewById(R.id.detlist_sum_other);
-        sumUnknowView = (TextView) findViewById(R.id.detlist_sum_unknow);
-        modeBtn = (ImageButton) findViewById(R.id.detlist_mode);
+        sumIncomeView = findViewById(R.id.detlist_sum_income);
+        sumExpenseView = findViewById(R.id.detlist_sum_expense);
+        sumAssetView = findViewById(R.id.detlist_sum_asset);
+        sumLiabilityView = findViewById(R.id.detlist_sum_liability);
+        sumOtherView = findViewById(R.id.detlist_sum_other);
+        sumUnknowView = findViewById(R.id.detlist_sum_unknow);
+        modeBtn = findViewById(R.id.detlist_mode);
 
         modeBtn.setOnClickListener(this);
 
@@ -114,7 +114,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
-        ListView listView = (ListView) findViewById(R.id.detlist_list);
+        ListView listView = findViewById(R.id.detlist_list);
         detailListHelper.setup(listView);
 
 

@@ -72,13 +72,13 @@ public class Calculator extends Activity implements OnClickListener {
         mPersist = new Persist(this);
         mHistory = mPersist.history;
 
-        mDisplay = (CalculatorDisplay) findViewById(R.id.cal2_display);
+        mDisplay = findViewById(R.id.cal2_display);
 
         mLogic = new Logic(this, mHistory, mDisplay, (Button) findViewById(R.id.cal2_equal));
         HistoryAdapter historyAdapter = new HistoryAdapter(this, mHistory, mLogic);
         mHistory.setObserver(historyAdapter);
         View view;
-        mPanelSwitcher = (PanelSwitcher) findViewById(R.id.cal2_panelswitch);
+        mPanelSwitcher = findViewById(R.id.cal2_panelswitch);
                                        
         mListener.setHandler(mLogic, mPanelSwitcher);
 
