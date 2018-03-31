@@ -20,7 +20,6 @@ public class ReportsDesktop extends AbstractDesktop {
     @Override
     protected void init() {
         label = i18n.string(R.string.dt_reports);
-        icon = R.drawable.tab_reports;
         
         Intent intent = null;
         

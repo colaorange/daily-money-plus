@@ -116,10 +116,10 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         
         okBtn = (Button)findViewById(R.id.btn_ok);
         if(modeCreate){
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_add,0,0,0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp,0,0,0);
             okBtn.setText(R.string.cact_create);
         }else{
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_update,0,0,0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp,0,0,0);
             okBtn.setText(R.string.cact_update);
         }
         okBtn.setOnClickListener(this);

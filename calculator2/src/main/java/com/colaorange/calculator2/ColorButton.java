@@ -23,6 +23,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.widget.Button;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ import android.content.res.Resources;
 /**
  * Button with click-animation effect.
  */
-class ColorButton extends Button implements OnClickListener {
+class ColorButton extends AppCompatButton implements OnClickListener {
     int CLICK_FEEDBACK_COLOR;
     static final int CLICK_FEEDBACK_INTERVAL = 10;
     static final int CLICK_FEEDBACK_DURATION = 350;

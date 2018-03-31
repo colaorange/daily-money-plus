@@ -206,7 +206,11 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         
         for(Desktop d:desktops){
             TabSpec tab = tabs.newTabSpec(d.getLabel());
-            tab.setIndicator(d.getLabel(),getResources().getDrawable(d.getIcon()));
+            if(d.getIcon()<0){
+                tab.setIndicator(d.getLabel());
+            }else {
+                tab.setIndicator(d.getLabel(), getResources().getDrawable(d.getIcon()));
+            }
             tab.setContent(R.id.dt_grid);
             tabs.addTab(tab);
             if(currTab==null){

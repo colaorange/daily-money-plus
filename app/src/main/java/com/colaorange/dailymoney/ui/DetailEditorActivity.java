@@ -66,13 +66,29 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     private SimpleAdapter toAccountAdapter;
 
 
+    private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY };
+    private static int[] spto = new int[] { R.id.simple_spitem_display,R.id.simple_spdditem_display };
+
+    Spinner fromEditor;
+    Spinner toEditor;
+
+    EditText dateEditor;
+    EditText noteEditor;
+    EditText moneyEditor;
+
+    Button okBtn;
+    Button cancelBtn;
+    Button closeBtn;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.deteditor);
         format = contexts().getDateFormat();
-        initIntent();
-        initialEditor();
+        initParams();
+        initMembers();
+        refreshUI();
     }
     
 
@@ -84,7 +100,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     }
 
 
-    private void initIntent() {
+    private void initParams() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(INTENT_MODE_CREATE,true);
         detail = (Detail)bundle.get(INTENT_DETAIL);
@@ -103,27 +119,11 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         }
     }
 
-    private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY };
-    private static int[] spto = new int[] { R.id.simple_spitem_display,R.id.simple_spdditem_display };
 
-    Spinner fromEditor;
-    Spinner toEditor;
-
-    EditText dateEditor;
-    EditText noteEditor;
-    EditText moneyEditor;
-
-    Button okBtn;
-    Button cancelBtn;
-    Button closeBtn;
-
-    private void initialEditor() {
+    private void initMembers() {
 
         boolean archived = workingDetail.isArchived();
 
-        // initial spinner
-
-        initialSpinner();
 
         dateEditor = (EditText) findViewById(R.id.deteditor_date);
         dateEditor.setText(format.format(workingDetail.getDate()));
@@ -146,10 +146,10 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         okBtn = (Button) findViewById(R.id.deteditor_ok);
         if (modeCreate) {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_add, 0, 0, 0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_create);
         } else {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.btn_update, 0, 0, 0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_update);
             moneyEditor.requestFocus();
         }
@@ -160,10 +160,10 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
-    }
 
-    private void initialSpinner() {
         fromEditor = (Spinner) findViewById(R.id.deteditor_from);
+        toEditor = (Spinner) findViewById(R.id.deteditor_to);
+
         fromAccountList = new ArrayList<IndentNode>();
         fromAccountMapList = new ArrayList<Map<String, Object>>();
         fromAccountAdapter = new SimpleAdapterEx(this, fromAccountMapList, R.layout.simple_spitem, spfrom, spto);
@@ -178,9 +178,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             }
         });
         fromEditor.setAdapter(fromAccountAdapter);
-        
 
-        toEditor = (Spinner) findViewById(R.id.deteditor_to);
         toAccountList = new ArrayList<IndentNode>();
         toAccountMapList = new ArrayList<Map<String, Object>>();
         toAccountAdapter = new SimpleAdapterEx(this, toAccountMapList, R.layout.simple_spitem, spfrom, spto);
@@ -195,8 +193,6 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             }
         });
         toEditor.setAdapter(toAccountAdapter);
-
-        reloadSpinnerData();
 
         fromEditor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -225,10 +221,13 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
     }
 
-    private void reloadSpinnerData() {
+    private void refreshUI(){
+        refreshSpinner();
+    }
+
+    private void refreshSpinner() {
         IDataProvider idp = contexts().getDataProvider();
         // initial from
         AccountType[] avail = AccountType.getFromType();
@@ -316,7 +315,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     private void onFromChanged(Account acc) {
         workingDetail.setFrom(acc.getId());
-        reloadSpinnerData();
+        refreshSpinner();
     }
 
     private void onToChanged(Account acc) {
@@ -548,7 +547,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 //                ddDisabled = DetailEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
 //                ddDisabled.setAlpha(32);
                 ddSelected = DetailEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
-                ddSelected.setAlpha(192);
+                ddSelected.setAlpha(128);
             }
             
             if(Constants.DISPLAY.equals(name)){

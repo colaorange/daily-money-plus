@@ -19,3 +19,5 @@
     https://github.com/code-mc/material-icon-lib
     https://fontawesome.com/icons?d=gallery&m=free
     https://fontawesome.com/license
+* Layout
+    https://github.com/google/flexbox-layout

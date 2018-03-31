@@ -29,6 +29,6 @@
 		<Button android:id="@+id/btn_ok" android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:text="@string/cact_ok"/>
 		<Button android:id="@+id/btn_cancel" android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_weight="1" android:text="@string/cact_cancel"  android:drawableLeft="@drawable/btn_cancel" />
+			android:layout_weight="1" android:text="@string/cact_cancel"  android:drawableLeft="@drawable/ic_clear_white_24dp" />
 	</LinearLayout>
 </LinearLayout>

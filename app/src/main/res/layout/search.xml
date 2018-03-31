@@ -38,7 +38,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_back" />
+                android:src="@drawable/ic_arrow_back_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_from_today"
@@ -48,7 +48,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_today" />
+                android:src="@drawable/ic_today_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_from_next"
@@ -58,7 +58,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_forward" />
+                android:src="@drawable/ic_arrow_forward_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_from_datepicker"
@@ -68,7 +68,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_datepicker" />
+                android:src="@drawable/ic_date_range_white_24dp" />
         </LinearLayout>
 
         <TextView
@@ -100,7 +100,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_back" />
+                android:src="@drawable/ic_arrow_back_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_to_today"
@@ -110,7 +110,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_today" />
+                android:src="@drawable/ic_today_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_to_next"
@@ -120,7 +120,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_forward" />
+                android:src="@drawable/ic_arrow_forward_white_24dp" />
 
             <ImageButton
                 android:id="@+id/search_to_datepicker"
@@ -130,7 +130,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/btn_datepicker" />
+                android:src="@drawable/ic_date_range_white_24dp" />
         </LinearLayout>
 
         <TextView

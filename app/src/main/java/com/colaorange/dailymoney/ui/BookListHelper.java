@@ -183,9 +183,9 @@ public class BookListHelper implements OnItemClickListener{
                 ImageView layout = (ImageView)view;
                 Boolean selected = (Boolean)item.getValue();
                 if(selected.booleanValue()){
-                    layout.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_working));
+                    layout.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_active));
                 }else{
-                    layout.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_nonworking));
+                    layout.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_notactive));
                 }
                 return true;
             }

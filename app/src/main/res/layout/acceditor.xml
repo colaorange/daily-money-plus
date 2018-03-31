@@ -21,7 +21,7 @@
 			     <EditText android:id="@+id/acceditor_initval" android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:inputType="numberSigned" android:layout_weight="4" />
 				 <ImageButton android:id="@+id/acceditor_cal2" android:layout_width="58dp" android:layout_height="48dp"
-                    android:src="@drawable/btn_cal2" android:scaleType="centerCrop" android:layout_weight="1" android:paddingLeft="5dp"
+                    android:src="@drawable/ic_grid_on_white_24dp" android:scaleType="centerCrop" android:layout_weight="1" android:paddingLeft="5dp"
                     android:paddingRight="5dp" />
 		     </LinearLayout>
 
@@ -35,8 +35,8 @@
 		<Button android:id="@+id/acceditor_ok" android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="1" android:text="@string/cact_ok"/>
 		<Button android:id="@+id/acceditor_cancel" android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_weight="1" android:text="@string/cact_cancel"  android:drawableLeft="@drawable/btn_cancel" />
+			android:layout_weight="1" android:text="@string/cact_cancel"  android:drawableLeft="@drawable/ic_clear_white_24dp" />
 	    <Button android:id="@+id/acceditor_close" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="@string/cact_close"  android:drawableLeft="@drawable/btn_cancel" android:visibility="gone" />
+            android:layout_weight="1" android:text="@string/cact_close"  android:drawableLeft="@drawable/ic_clear_white_24dp" android:visibility="gone" />
 	</LinearLayout>
 </LinearLayout>

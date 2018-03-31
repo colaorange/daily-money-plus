@@ -33,7 +33,6 @@ public class TestsDesktop extends AbstractDesktop {
     @Override
     protected void init() {
         label = i18n.string(R.string.dt_tests);
-        icon = R.drawable.tab_tests;
         
         DesktopItem dt = null;
         dt = new DesktopItem(new Runnable() {

@@ -33,7 +33,7 @@
     </style>
 
     <style name="cal2_digit_button_style" parent="cal2_button_style">
-       <item name="android:background">@drawable/cal2_blue_button</item>
+       <item name="android:background">@drawable/cal2_lighter_button</item>
     </style>
 
     <style name="cal2_button_small_style" parent="cal2_button_style">

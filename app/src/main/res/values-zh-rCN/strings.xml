@@ -53,7 +53,7 @@
     <string name="dt_reports">报表桌面</string>
     <string name="dt_tests">测试桌面</string>
 
-    <string name="dtitem_about">关于我</string>
+    <string name="dtitem_about">关于</string>
     <string name="dtitem_accmgnt">账户管理</string>
     <string name="dtitem_adddetail">新增明細</string>
     <string name="dtitem_datamain">资料维护</string>

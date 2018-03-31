@@ -237,22 +237,22 @@ public class DetailListHelper implements OnItemClickListener{
                 }
                 int drawid;
                 if( (flag & 1) == 1){//expense
-                    drawid = R.drawable.selector_expense;
+                    drawid = R.drawable.selector_detail_expense;
                     last = AccountType.EXPENSE;
                 }else if( (flag & 2) == 2){//income
-                    drawid = R.drawable.selector_income;
+                    drawid = R.drawable.selector_detail_income;
                     last = AccountType.INCOME;
                 }else if( (flag & 4) == 4){
-                    drawid = R.drawable.selector_asset;
+                    drawid = R.drawable.selector_detail_asset;
                     last = AccountType.ASSET;
                 }else if( (flag & 8) == 8){
-                    drawid = R.drawable.selector_liability;
+                    drawid = R.drawable.selector_detail_liability;
                     last = AccountType.LIABILITY;
                 }else if( (flag & 16) == 16){
-                    drawid = R.drawable.selector_other;
+                    drawid = R.drawable.selector_detail_other;
                     last = AccountType.OTHER;
                 }else{
-                    drawid = R.drawable.selector_unknow;
+                    drawid = R.drawable.selector_detail_unknow;
                     last = null;
                 }
                 Drawable draw = activity.getResources().getDrawable(drawid);
@@ -316,17 +316,17 @@ public class DetailListHelper implements OnItemClickListener{
                 view.setBackgroundDrawable(null);
                 if(last!=lastFrom){
                     if(AccountType.INCOME== lastFrom){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_income));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_income));
                     }else if(AccountType.EXPENSE== lastFrom){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_expense));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_expense));
                     }else if(AccountType.ASSET== lastFrom){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_asset));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_asset));
                     }else if(AccountType.LIABILITY== lastFrom){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_liability));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_liability));
                     }else if(AccountType.OTHER== lastFrom){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_other));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_other));
                     }else{
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_unknow));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_unknow));
                     }
                 }
             }
@@ -335,11 +335,11 @@ public class DetailListHelper implements OnItemClickListener{
                 view.setBackgroundDrawable(null);
                 if(AccountType.INCOME == lastFrom){
                     if(AccountType.ASSET== lastTo){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_asset));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_asset));
                     }else if(AccountType.LIABILITY== lastTo){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_liability));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_liability));
                     }else if(AccountType.OTHER== lastTo){
-                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_other));
+                        view.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.selector_detail_other));
                     }
                 }
             }

@@ -15,6 +15,9 @@ import android.content.Intent;
  */
 public class Desktop {
 
+
+    public static final int NO_ICON = -1;
+
     protected String label;
     protected int icon;
     protected Activity activity;
@@ -22,7 +25,7 @@ public class Desktop {
     List<DesktopItem> items = new ArrayList<DesktopItem>();
 
     public Desktop(Activity activity){
-        this(activity,"",0);
+        this(activity,"",NO_ICON);
     }
     
     public Desktop(Activity activity,String label, int icon) {

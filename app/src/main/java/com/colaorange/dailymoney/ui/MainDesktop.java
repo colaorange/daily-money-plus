@@ -21,7 +21,6 @@ public class MainDesktop extends AbstractDesktop {
     @Override
     protected void init() {
         label = i18n.string(R.string.dt_main);
-        icon = R.drawable.tab_main;
 
         DesktopItem adddetdt = new DesktopItem(new Runnable() {
             public void run() {
@@ -69,12 +68,11 @@ public class MainDesktop extends AbstractDesktop {
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.INTENT_URI_ID, R.string.path_how2use);
         DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_how2use),-1,0);
-        how2use.setHidden(true);
-        
+                i18n.string(R.string.dtitem_how2use),R.drawable.dtitem_how2use,0);
+
         DesktopItem aboutdt = new DesktopItem(new ActivityRun(activity, AboutActivity.class),
                 i18n.string(R.string.dtitem_about), R.drawable.dtitem_about,0);
-        
+
         addItem(adddetdt);
         addItem(daylist);
         addItem(weeklist);
