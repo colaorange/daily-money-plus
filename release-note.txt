@@ -1,13 +1,21 @@
-= Last =
+
+== 0.9.9 ==
+=== Features ===
+ # Support Hungarian, Turkish
+
+=== Bugs ===
+
+
+====================================================================================================
 == 0.9.8 ==
 === Features ===
- # 1: Add functions about 'manually backup db & pref to sd' & 'restore db & pref from sd at first time'. 
+ # 1: Add functions about 'manually backup db & pref to sd' & 'restore db & pref from sd at first time'.
+ # Support Vietnamese, Greek, Brazilian Portuguese, Spanish
 
 === Bugs ===
  * 88: Adding new record from the list view should use the day from the list view, not today.
-  
-===============================================================================
-= History =
+ * Fixed bugs that are in new android os (4+)
+
 == 0.9.7 ==
 === Features ===
  * 67: Please consider to change the report display format
