@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +20,7 @@ import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.SymbolPosition;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * 
@@ -114,7 +115,7 @@ public class BookListHelper implements OnItemClickListener{
         intent = new Intent(activity,BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.INTENT_MODE_CREATE,true);
         intent.putExtra(BookEditorActivity.INTENT_BOOK,book);
-        activity.startActivityForResult(intent,Constants.REQUEST_BOOK_EDITOR_CODE);
+        activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
     }
 
 

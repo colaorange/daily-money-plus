@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 /**
  * 

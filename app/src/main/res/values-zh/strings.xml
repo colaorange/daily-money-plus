@@ -9,7 +9,7 @@
     <string name="act_balance_yearly_timechart">每月結算年度圖</string>
     <string name="act_toggle_hierarchical_report">切換階層式報表</string>
 
-    <string name="app_name">每日記帳本</string>
+    <string name="app_name">每日記帳本+</string>
 
     <string name="cact_cancel">取消</string>
     <string name="cact_close">關閉</string>
@@ -18,7 +18,7 @@
     <string name="cact_delete">刪除</string>
     <string name="cact_edit">編輯</string>
     <string name="cact_new">新增</string>
-    <string name="cact_ok">OK</string>
+    <string name="cact_ok">確定</string>
     <string name="cact_stop">停止</string>
     <string name="cact_update">更新</string>
 

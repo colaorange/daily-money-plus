@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,7 @@ import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.IMasterDataProvider;
 import com.colaorange.dailymoney.data.SymbolPosition;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * Edit or create a book

@@ -1,11 +1,10 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.dailymoney.R;
-import com.colaorange.dailymoney.context.ContextsActivity;
-import com.colaorange.dailymoney.ui.report.BalanceActivity;
+import com.colaorange.dailymoney.ui.legacy.report.BalanceActivity;
 /**
  * 
  * @author dennis

@@ -3,13 +3,12 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.bottleworks.dailymoney"
+        applicationId "com.colaorange.dailymoney"
         minSdkVersion 15
         targetSdkVersion 23
-        //we had yyyy already, google doesn't allow me to use lower number
-        //noinspection HighAppVersionCode
-        versionCode 2018040300
-        versionName "0.9.9-freshly-20180403"
+        //yy/mm/dd/increment
+        versionCode 180405006
+        versionName "0.9.9-freshly-180405"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions{

@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,7 +33,8 @@ import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.AccountType;
 import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.data.IDataProvider;
-import com.colaorange.dailymoney.ui.AccountUtil.IndentNode;
+import com.colaorange.dailymoney.ui.Constants;
+import com.colaorange.dailymoney.ui.legacy.AccountUtil.IndentNode;
 
 /**
  * Edit or create a detail

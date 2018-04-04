@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui.report;
+package com.colaorange.dailymoney.ui.legacy.report;
 
 import org.achartengine.chart.PointStyle;
 import org.achartengine.renderer.DefaultRenderer;

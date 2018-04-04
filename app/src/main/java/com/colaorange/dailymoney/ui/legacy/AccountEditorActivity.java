@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.AccountType;
 import com.colaorange.dailymoney.data.DuplicateKeyException;
 import com.colaorange.dailymoney.data.IDataProvider;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * Edit or create a account

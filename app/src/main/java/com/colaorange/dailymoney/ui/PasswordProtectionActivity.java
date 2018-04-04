@@ -10,18 +10,16 @@ import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 
 /**
- * 
  * @author dennis
- *
  */
-public class PasswordProtectionActivity extends ContextsActivity implements OnClickListener{
+public class PasswordProtectionActivity extends ContextsActivity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pdprotection);
         findViewById(R.id.pdprot_ok).setOnClickListener(this);
     }
-    
+
 
     @Override
     public void onClick(View v) {
@@ -32,12 +30,12 @@ public class PasswordProtectionActivity extends ContextsActivity implements OnCl
 
     private void doPasswordOk() {
         String password = contexts().getPrefPassword();
-        String pd = ((TextView)findViewById(R.id.pdprot_text)).getText().toString();
-        if(password.equals(pd)){
-           setResult(RESULT_OK);
-           finish();
-        }else{
-            GUIs.shortToast(this,R.string.msg_wrong_password);
+        String pd = ((TextView) findViewById(R.id.pdprot_text)).getText().toString();
+        if (password.equals(pd)) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            GUIs.shortToast(this, R.string.msg_wrong_password);
         }
     }
 }

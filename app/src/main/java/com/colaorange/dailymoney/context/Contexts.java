@@ -6,11 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -39,7 +36,7 @@ import com.colaorange.dailymoney.data.SQLiteMasterDataHelper;
 import com.colaorange.dailymoney.data.SQLiteMasterDataProvider;
 import com.colaorange.dailymoney.data.SymbolPosition;
 import com.colaorange.dailymoney.ui.Constants;
-import com.colaorange.dailymoney.ui.DesktopActivity;
+import com.colaorange.dailymoney.ui.legacy.DesktopActivity;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -259,7 +256,7 @@ public class Contexts {
      * return true is this is first time you call this api in this application.
      * note that, when calling this twice, it returns false. see {@link DesktopActivity#initialApplicationInfo}
      */
-    public boolean isFirstTime(){
+    public boolean getAndSetFirstTime(){
         try{
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
             if(!prefs.contains("app_firsttime")){
@@ -277,7 +274,7 @@ public class Contexts {
     /**
      * return true is this is first time you call this api in this application and current version
      */
-    public boolean isFirstVersionTime(){
+    public boolean getAndSetFirstVersionTime(){
         int curr = getAppVerCode();
         try{
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);

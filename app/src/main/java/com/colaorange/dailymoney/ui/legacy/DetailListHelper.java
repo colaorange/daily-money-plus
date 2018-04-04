@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,6 +29,7 @@ import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.AccountType;
 import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.data.IDataProvider;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * 
@@ -152,7 +153,7 @@ public class DetailListHelper implements OnItemClickListener{
         intent = new Intent(activity,DetailEditorActivity.class);
         intent.putExtra(DetailEditorActivity.INTENT_MODE_CREATE,true);
         intent.putExtra(DetailEditorActivity.INTENT_DETAIL,d);
-        activity.startActivityForResult(intent,Constants.REQUEST_DETAIL_EDITOR_CODE);
+        activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
 

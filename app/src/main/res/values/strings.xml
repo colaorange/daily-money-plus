@@ -27,7 +27,7 @@
     <string name="cmsg_field_zero">%1$s is zero</string>
     <string name="clabel_all">All</string>
     <string name="clabel_default">Default</string>
-	<string name="app_name">Daily Money</string>
+	<string name="app_name">Daily Money+</string>
     <string name="defacc_bank1">Bank.A</string>
     <string name="defacc_bank2">Bank.B</string>
     <string name="defacc_cash">Cash</string>

@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui.report;
+package com.colaorange.dailymoney.ui.legacy.report;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,9 +35,9 @@ import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.AccountType;
 import com.colaorange.dailymoney.data.Balance;
 import com.colaorange.dailymoney.data.BalanceHelper;
-import com.colaorange.dailymoney.ui.AccountDetailListActivity;
+import com.colaorange.dailymoney.ui.legacy.AccountDetailListActivity;
 import com.colaorange.dailymoney.ui.Constants;
-import com.colaorange.dailymoney.ui.NamedItem;
+import com.colaorange.dailymoney.ui.legacy.NamedItem;
 
 /**
  * @author dennis

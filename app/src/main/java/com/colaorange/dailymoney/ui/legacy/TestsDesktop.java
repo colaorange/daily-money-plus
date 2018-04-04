@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.Date;
 
@@ -13,6 +13,8 @@ import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.DataCreator;
 import com.colaorange.dailymoney.data.IDataProvider;
 import com.colaorange.dailymoney.data.SymbolPosition;
+import com.colaorange.dailymoney.ui.Constants;
+
 /**
  * 
  * @author dennis
@@ -65,7 +67,7 @@ public class TestsDesktop extends AbstractDesktop {
                 intent = new Intent(activity,BookEditorActivity.class);
                 intent.putExtra(BookEditorActivity.INTENT_MODE_CREATE,false);
                 intent.putExtra(BookEditorActivity.INTENT_BOOK,book);
-                activity.startActivityForResult(intent,Constants.REQUEST_BOOK_EDITOR_CODE);
+                activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
         }, "Edit selected book", R.drawable.dtitem_test);
         

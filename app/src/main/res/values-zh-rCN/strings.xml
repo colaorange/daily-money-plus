@@ -8,7 +8,7 @@
     <string name="act_balance_yearly_runchart">资产债务趋势图</string>
     <string name="act_balance_yearly_timechart">每月结算年度图</string>
 
-    <string name="app_name">每日记账本</string>
+    <string name="app_name">每日记账本+</string>
 
     <string name="cact_cancel">取消</string>
     <string name="cact_close">关闭</string>
@@ -27,7 +27,7 @@
     <string name="clabel_error">错误</string>
     <string name="clabel_info">资讯</string>
     <string name="clabel_name">名称</string>
-    <string name="clabel_share">分享Share</string>
+    <string name="clabel_share">分享</string>
     <string name="clabel_type">类型</string>
     <string name="clabel_unknown">未知</string>
     <string name="clabel_warn">警告</string>
@@ -37,8 +37,8 @@
     <string name="cmsg_field_empty">%1$s 是空的</string>
     <string name="cmsg_field_zero">%1$s 是零</string>
 
-    <string name="defacc_bank1">银行.台湾</string>
-    <string name="defacc_bank2">银行.HSBC</string>
+    <string name="defacc_bank1">银行.工商</string>
+    <string name="defacc_bank2">银行.农业</string>
     <string name="defacc_cash">现金</string>
     <string name="defacc_creditcard">信用卡</string>
     <string name="defacc_entertainment">娱乐</string>
@@ -195,4 +195,6 @@
     <string name="title_detmgnt">明细管理器</string>
     <string name="title_pdprotection">密码保护</string>
     <string name="title_prefs">喜好设定</string>
+    <string name="clabel_all">全部</string>
+    <string name="cat_set_working_book">设定为使用中的帐本</string>
 </resources>

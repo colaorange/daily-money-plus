@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.IMasterDataProvider;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * 

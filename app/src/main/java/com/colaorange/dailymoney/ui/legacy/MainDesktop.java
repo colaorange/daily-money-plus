@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.Date;
 
@@ -7,6 +7,9 @@ import android.content.Intent;
 
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Detail;
+import com.colaorange.dailymoney.ui.Constants;
+import com.colaorange.dailymoney.ui.LocalWebViewActivity;
+
 /**
  * 
  * @author dennis
@@ -29,7 +32,7 @@ public class MainDesktop extends AbstractDesktop {
                 intent = new Intent(activity,DetailEditorActivity.class);
                 intent.putExtra(DetailEditorActivity.INTENT_MODE_CREATE,true);
                 intent.putExtra(DetailEditorActivity.INTENT_DETAIL,d);
-                activity.startActivityForResult(intent,Constants.REQUEST_DETAIL_EDITOR_CODE);
+                activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
             }
         }, i18n.string(R.string.dtitem_adddetail), R.drawable.dtitem_adddetail,999);
 

@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 
 import android.content.SharedPreferences;
@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.ui.Constants;
+
 /**
  * 
  * @author dennis

@@ -9,7 +9,7 @@
     <string name="act_balance_yearly_timechart">每月結算年度圖</string>
     <string name="act_toggle_hierarchical_report">切換階層式報表</string>
 
-    <string name="app_name">每日記帳本</string>
+    <string name="app_name">每日記帳本+</string>
 
     <string name="cact_cancel">取消</string>
     <string name="cact_close">關閉</string>
@@ -29,7 +29,7 @@
     <string name="clabel_error">錯誤</string>
     <string name="clabel_info">資訊</string>
     <string name="clabel_name">名稱</string>
-    <string name="clabel_share">分享Share</string>
+    <string name="clabel_share">分享</string>
     <string name="clabel_type">類型</string>
     <string name="clabel_unknown">未知</string>
     <string name="clabel_warn">警告</string>
@@ -239,4 +239,6 @@
     <string name="title_detmgnt">明細管理器</string>
     <string name="title_pdprotection">密碼保護</string>
     <string name="title_prefs">喜好設定</string>
+    <string name="clabel_all">全部</string>
+    <string name="clabel_default">預設</string>
 </resources>

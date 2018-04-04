@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.colaorange.dailymoney.context.Contexts;
-import com.colaorange.dailymoney.ui.AccountUtil;
-import com.colaorange.dailymoney.ui.AccountUtil.IndentNode;
+import com.colaorange.dailymoney.ui.legacy.AccountUtil;
+import com.colaorange.dailymoney.ui.legacy.AccountUtil.IndentNode;
 
 public class BalanceHelper {
     

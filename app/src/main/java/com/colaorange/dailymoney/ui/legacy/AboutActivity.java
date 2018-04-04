@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui;
+package com.colaorange.dailymoney.ui.legacy;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * @author dennis
