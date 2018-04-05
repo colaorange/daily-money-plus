@@ -16,10 +16,10 @@ public class DesktopItem {
     protected String label;
     Runnable run;
     
-    //a important item(>=0), will show to menu (the larger number will put to front of menu)
-    int important;
+    //a importance item(>=0), will show to menu (the larger number will put to front of menu)
+    int importance;
     
-    //a hidden item, show not show to desktop, but still show to menu if it is important
+    //a hidden item, show not show to desktop, but still show to menu if it is importance
     boolean hidden;
 
     public DesktopItem(Runnable run, String label) {
@@ -30,11 +30,11 @@ public class DesktopItem {
         this(run, label, icon,-1);
     }
     
-    public DesktopItem(Runnable run, String label, int icon, int important) {
+    public DesktopItem(Runnable run, String label, int icon, int importance) {
         this.run = run;
         this.label = label;
         this.icon = icon;
-        this.important = important;
+        this.importance = importance;
     }
 
     public void run() {
@@ -53,12 +53,12 @@ public class DesktopItem {
         
     }
 
-    public int getImportant() {
-        return important;
+    public int getImportance() {
+        return importance;
     }
 
-    public void setImportant(int important) {
-        this.important = important;
+    public void setImportance(int importance) {
+        this.importance = importance;
     }
 
     public boolean isHidden() {

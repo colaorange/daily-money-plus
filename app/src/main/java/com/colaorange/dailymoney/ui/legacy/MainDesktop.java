@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.ui.Constants;
 import com.colaorange.dailymoney.ui.LocalWebViewActivity;
@@ -67,14 +68,7 @@ public class MainDesktop extends AbstractDesktop {
         
         DesktopItem prefdt = new DesktopItem(new ActivityRun(activity, PrefsActivity.class),
                 i18n.string(R.string.dtitem_prefs), R.drawable.dtitem_prefs);
-        
-        intent = new Intent(activity, LocalWebViewActivity.class);
-        intent.putExtra(LocalWebViewActivity.INTENT_URI_ID, R.string.path_how2use);
-        DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_how2use),R.drawable.dtitem_how2use,0);
 
-        DesktopItem aboutdt = new DesktopItem(new ActivityRun(activity, AboutActivity.class),
-                i18n.string(R.string.dtitem_about), R.drawable.dtitem_about,0);
 
         addItem(adddetdt);
         addItem(daylist);
@@ -85,10 +79,38 @@ public class MainDesktop extends AbstractDesktop {
         addItem(datamaindt);
         addItem(prefdt);
         addItem(bookmgntdt);
+
+        intent = new Intent(activity, LocalWebViewActivity.class);
+        intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_how2use);
+        intent.putExtra(LocalWebViewActivity.INTENT_TITLE, i18n.string(R.string.label_how2use));
+        DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.label_how2use),R.drawable.dtitem_how2use,0);
+
+        intent = new Intent(activity, LocalWebViewActivity.class);
+        intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_about);
+        intent.putExtra(LocalWebViewActivity.INTENT_TITLE, Contexts.instance().getAppVerName());
+        DesktopItem about = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.label_about),R.drawable.dtitem_about,0);
+
+        intent = new Intent(activity, LocalWebViewActivity.class);
+        intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_contributor);
+        intent.putExtra(LocalWebViewActivity.INTENT_TITLE, i18n.string(R.string.label_contributor));
+        DesktopItem contributor = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.label_contributor),-1,0);
+        contributor.setHidden(true);
+
+        intent = new Intent(activity, LocalWebViewActivity.class);
+        intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_history);
+        intent.putExtra(LocalWebViewActivity.INTENT_TITLE, i18n.string(R.string.label_history));
+        DesktopItem history = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.label_history),-1,0);
+        history.setHidden(true);
         
         addItem(how2use);
-        
-        addItem(aboutdt);
+        addItem(contributor);
+        addItem(history);
+        addItem(about);
+
     }
 
 }

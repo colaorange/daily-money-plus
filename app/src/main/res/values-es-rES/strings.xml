@@ -57,7 +57,6 @@
     <string name="dt_reports">Informes</string>
     <string name="dt_tests">Pruebas</string>
 
-    <string name="dtitem_about">Acerca de</string>
     <string name="dtitem_accmgnt">Cuentas</string>
     <string name="dtitem_adddetail">Añadir detalle</string>
     <string name="dtitem_books">Libros</string>
@@ -67,12 +66,12 @@
     <string name="dtitem_detlist_month">Lista mensual</string>
     <string name="dtitem_detlist_week">Lista semanal</string>
     <string name="dtitem_detlist_year">Lista anual</string>
-    <string name="dtitem_how2use">Guía de uso</string>
     <string name="dtitem_prefs">Ajustes</string>
     <string name="dtitem_report_cumulative_balance">Balance acumulativo</string>
     <string name="dtitem_report_monthly_balance">Balance mensual</string>
     <string name="dtitem_report_yearly_balance">Balance anual</string>
 
+    <string name="label_about">Acerca de</string>
     <string name="label_accdetlist_dateinfo">%1$s a %2$s</string>
     <string name="label_account">Cuenta</string>
     <string name="label_account_only">Solo cuentas</string>
@@ -117,6 +116,7 @@
     <string name="label_firstday_sat">Sábado</string>
     <string name="label_firstday_sun">Domingo</string>
     <string name="label_from_account">De</string>
+    <string name="label_how2use">Guía de uso</string>
     <string name="label_import_csv">Importar CSV</string>
     <string name="label_income">Ingreso</string>
     <string name="label_initial_value">Inicial</string>
@@ -186,7 +186,7 @@
     <string name="msg_detail_created">El movimiento se ha creado</string>
     <string name="msg_detail_deleted">El movimiento se ha eliminado</string>
     <string name="msg_detail_updated">El movimiento se ha actualizado</string>
-    <string name="msg_firsttime_use_hint">Bienvenido a Daily Money, haz click en Añadir Movimiento para empezar</string>
+    <string name="msg_firsttime_use_hint">Bienvenido a Daily Money</string>
     <string name="msg_folder_cleared">La carpeta de trabajo %1$s se ha limpiado</string>
     <string name="msg_no_csv">No hay archivos CSV</string>
     <string name="msg_rested">Los datos se han reestablecido</string>
@@ -195,7 +195,7 @@
     <string name="msg_share_csv_title">Daily Money %1$s</string>
     <string name="msg_wrong_password">¡Contraseña incorrecta!</string>
 
-    <string name="path_about_app">about.html</string>
+    <string name="path_about">about.html</string>
     <string name="path_how2use">how2use.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 

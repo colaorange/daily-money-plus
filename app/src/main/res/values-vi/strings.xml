@@ -57,7 +57,6 @@
     <string name="dt_reports">Các báo cáo</string>
     <string name="dt_tests">Các bài kiểm tra</string>
 
-    <string name="dtitem_about">Giới thiệu</string>
     <string name="dtitem_accmgnt">Tài khoản</string>
     <string name="dtitem_adddetail">Thêm chi tiết</string>
     <string name="dtitem_books">Sách</string>
@@ -67,13 +66,13 @@
     <string name="dtitem_detlist_month">Danh sách theo tháng</string>
     <string name="dtitem_detlist_week">Danh sách theo tuần</string>
     <string name="dtitem_detlist_year">Danh sách theo năm</string>
-    <string name="dtitem_how2use">Cách sử dụng</string>
     <string name="dtitem_prefs">Tùy chọn</string>
     <string name="dtitem_report_cumulative_balance">Cân bằng lũy tích</string>
     <string name="dtitem_report_monthly_balance">Cân bằng tháng</string>
     <string name="dtitem_report_search">Tìm kiếm</string>
     <string name="dtitem_report_yearly_balance">Cân bằng năm</string>
 
+    <string name="label_about">Giới thiệu</string>
     <string name="label_accdetlist_dateinfo">%1$s đến %2$s</string>
     <string name="label_account">Tài khoản</string>
     <string name="label_account_only">Chỉ tài khoản </string>
@@ -120,6 +119,7 @@
     <string name="label_firstday_sun">Chủ Nhật</string>
     <string name="label_from_account">Từ</string>
     <string name="label_from_date">từ Ngày</string>
+    <string name="label_how2use">Cách sử dụng</string>
     <string name="label_import_csv">Nhập CSV</string>
     <string name="label_income">Thu nhập</string>
     <string name="label_initial_value">Ban đầu</string>
@@ -195,7 +195,7 @@
     <string name="msg_detail_created">Chi tiết đã được tạo mới</string>
     <string name="msg_detail_deleted">Chi tiết đã bị xóa</string>
     <string name="msg_detail_updated">Chi tiết đã được cập nhật</string>
-    <string name="msg_firsttime_use_hint">Chào mừng đến Daily Money, nhắp Thêm Chi Tiết để bắt đầu</string>
+    <string name="msg_firsttime_use_hint">Chào mừng đến Daily Money</string>
     <string name="msg_folder_cleared">Thư mục đang hoạt động %1$s đã được dọn</string>
     <string name="msg_no_csv">không có tập tin CSV</string>
     <string name="msg_no_db">Không có dữ liệu để sao lưu</string>
@@ -206,7 +206,7 @@
     <string name="msg_working_folder_no_access">Thư mục đang hoạt động %1$s không thể truy cập được, vui lòng mở quyền truy cập trong Cài đặt Hệ thống</string>
     <string name="msg_wrong_password">Sai mật khẩu!</string>
 
-    <string name="path_about_app">giới thiệu.html</string>
+    <string name="path_about">giới thiệu.html</string>
     <string name="path_how2use">Cách sử dụng.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 

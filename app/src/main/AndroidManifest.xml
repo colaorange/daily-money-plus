@@ -21,7 +21,7 @@
 
         <activity android:name="com.colaorange.calculator2.Calculator" android:theme="@style/AppTheme.NoTitle"/>
 
-        <activity android:name=".ui.StartupActivity" android:theme="@style/AppTheme.NoTitle"
+        <activity android:name=".ui.StartupActivity" android:theme="@style/AppTheme.Startup"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,6 @@
         </activity>
 
         <activity android:name=".ui.LocalWebViewActivity" android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.LocalWebViewDlg" android:theme="@style/AppTheme.Dialog.NoTitle"/>
 
         <activity android:name=".ui.PasswordProtectionActivity" android:theme="@style/AppTheme.Dialog" android:label="@string/title_pdprotection"/>
 
@@ -59,7 +58,6 @@
         <activity android:name=".ui.legacy.DataMaintenanceActivity" android:label="@string/title_datamain" android:theme="@style/AppTheme.Legacy"/>
 
         <activity android:name=".ui.legacy.report.BalanceActivity" android:theme="@style/AppTheme.Legacy" android:label="@string/label_balance"/>
-        <activity android:name=".ui.legacy.AboutActivity" android:theme="@style/AppTheme.Legacy"/>
 
 
         <activity android:name="org.achartengine.GraphicalActivity" android:theme="@style/AppTheme.Legacy.NoTitle"/>

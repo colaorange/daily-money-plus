@@ -56,7 +56,6 @@
     <string name="dt_reports">Reports</string>
     <string name="dt_tests">Tests</string>
 
-    <string name="dtitem_about">Über</string>
     <string name="dtitem_accmgnt">Konten</string>
     <string name="dtitem_adddetail">Buchung hinzufügen</string>
     <string name="dtitem_books">Datenbanken</string>
@@ -66,12 +65,12 @@
     <string name="dtitem_detlist_month">Monatliche Liste</string>
     <string name="dtitem_detlist_week">Wöchentliche Liste</string>
     <string name="dtitem_detlist_year">Jährliche Liste</string>
-    <string name="dtitem_how2use">Wie benutzt man dieses Programm</string>
     <string name="dtitem_prefs">Einstellungen</string>
     <string name="dtitem_report_cumulative_balance">Gesamte Bilanz</string>
     <string name="dtitem_report_monthly_balance">Monatliche Bilanz</string>
     <string name="dtitem_report_yearly_balance">Jährliche Bilanz</string>
 
+    <string name="label_about">Über</string>
     <string name="label_accdetlist_dateinfo">%1$s bis %2$s</string>
     <string name="label_account">Konto</string>
     <string name="label_account_only">Nur Konten</string>
@@ -116,6 +115,7 @@
     <string name="label_firstday_mon">Montag</string>
     <string name="label_firstday_sun">Sonntag</string>
     <string name="label_from_account">Von</string>
+    <string name="label_how2use">Wie benutzt man dieses Programm</string>
     <string name="label_import_csv">CSV Importieren</string>
     <string name="label_income">Einnahmen</string>
     <string name="label_initial_value">Kontostand zu Beginn</string>
@@ -185,7 +185,7 @@
     <string name="msg_detail_created">Eintrag wurde erstellt</string>
     <string name="msg_detail_deleted">Eintrag wurde gelöscht</string>
     <string name="msg_detail_updated">Eintrag wurde aktualisiert</string>
-    <string name="msg_firsttime_use_hint">Willkommen zu Daily Money, Klicke auf Eintrag hinzufügen um zu beginnen</string>
+    <string name="msg_firsttime_use_hint">Willkommen zu Daily Money</string>
     <string name="msg_folder_cleared">Arbeitsordner %1$s wurde geleert</string>
     <string name="msg_no_csv">Keine CSV Datein vorhanden</string>
     <string name="msg_rested">Daten wurden zurückgesetzt</string>
@@ -194,7 +194,7 @@
     <string name="msg_share_csv_title">Daily Money %1$s</string>
     <string name="msg_wrong_password">Falsches Passwort!</string>
 
-    <string name="path_about_app">about.html</string>
+    <string name="path_about">about.html</string>
     <string name="path_how2use">how2use.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 

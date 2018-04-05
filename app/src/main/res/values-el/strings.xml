@@ -56,7 +56,6 @@
     <string name="dt_reports">Στατιστικά</string>
     <string name="dt_tests">Δοκιμές</string>
 
-    <string name="dtitem_about">Σχετικά</string>
     <string name="dtitem_accmgnt">Λογαρ/μοί</string>
     <string name="dtitem_adddetail">Συναλλαγή</string>
     <string name="dtitem_books">Βιβλία</string>
@@ -66,13 +65,13 @@
     <string name="dtitem_detlist_month">Μηνιαία λίστα</string>
     <string name="dtitem_detlist_week">Εβδομ. λίστα</string>
     <string name="dtitem_detlist_year">Ετήσια λίστα</string>
-    <string name="dtitem_how2use">Οδηγίες χρήσης</string>
     <string name="dtitem_prefs">Επιλογές</string>
     <string name="dtitem_report_cumulative_balance">Αθροιστικό Υπόλοιπο</string>
     <string name="dtitem_report_monthly_balance">Μηνιαίο ισοζύγιο</string>
     <string name="dtitem_report_search">Αναζήτηση</string>
     <string name="dtitem_report_yearly_balance">Ετήσιο ισοζύγιο</string>
 
+    <string name="label_about">Σχετικά</string>
     <string name="label_accdetlist_dateinfo">%1$s μέχρι %2$s</string>
     <string name="label_account">Λογαριασμός</string>
     <string name="label_account_only">Αρχεία λογαριασμών</string>
@@ -119,6 +118,7 @@
     <string name="label_firstday_sun">Κυριακή</string>
     <string name="label_from_account">Από</string>
     <string name="label_from_date">Από την ημερομηνία</string>
+    <string name="label_how2use">Οδηγίες χρήσης</string>
     <string name="label_import_csv">Εισαγωγή από αρχείο CSV</string>
     <string name="label_income">Έσοδα</string>
     <string name="label_initial_value">Αρχικό ποσό</string>
@@ -203,7 +203,7 @@
     <string name="msg_share_csv_title">Daily Money %1$s</string>
     <string name="msg_wrong_password">Λάθος Κωδικός !</string>
 
-    <string name="path_about_app">about.html</string>
+    <string name="path_about">about.html</string>
     <string name="path_how2use">how2use.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 

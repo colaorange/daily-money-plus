@@ -35,7 +35,7 @@ import com.colaorange.dailymoney.data.BalanceHelper;
 import com.colaorange.dailymoney.data.Book;
 import com.colaorange.dailymoney.data.IDataProvider;
 import com.colaorange.dailymoney.data.IMasterDataProvider;
-import com.colaorange.dailymoney.ui.LocalWebViewDlg;
+import com.colaorange.dailymoney.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.ui.StartupActivity;
 
 /**
@@ -76,7 +76,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
         refreshDesktop();
 
-        handleFirstVersionTime();
+        handleFirstTime();
     }
 
     @Override
@@ -145,7 +145,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         gridView = findViewById(R.id.dt_grid);
         gridView.setAdapter(gridViewAdapter);
         gridView.setOnItemClickListener(this);
-        // registerForContextMenu(gridView);
 
     }
 
@@ -159,14 +158,16 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         gridViewAdapter.notifyDataSetChanged();
     }
 
-    private boolean handleFirstVersionTime() {
+    private boolean handleFirstTime() {
         boolean fv = contexts().getAndSetFirstVersionTime();
         if (firstTime){
             firstTime = false;
             GUIs.post(new Runnable(){
                 @Override
                 public void run() {
-                    Intent intent = new Intent(DesktopActivity.this, AboutActivity.class);
+                    Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
+                    intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_about);
+                    intent.putExtra(LocalWebViewActivity.INTENT_TITLE, i18n.string(R.string.app_name));
                     startActivity(intent);
                 }
             });
@@ -175,8 +176,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             GUIs.post(new Runnable(){
                 @Override
                 public void run() {
-                    Intent intent = new Intent(DesktopActivity.this, LocalWebViewDlg.class);
-                    intent.putExtra(LocalWebViewDlg.INTENT_URI_ID, R.string.path_what_is_new);
+                    Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
+                    intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_what_is_new);
+                    intent.putExtra(LocalWebViewActivity.INTENT_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);
                 }
             });
@@ -232,12 +234,11 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // getMenuInflater().inflate(R.menu.accmgnt_optmenu, menu);
         super.onCreateOptionsMenu(menu);
         List<DesktopItem> importants = new ArrayList<DesktopItem>();
         for (Desktop d : desktops) {
             for (DesktopItem item : d.getItems()) {
-                if (item.getImportant() >= 0) {
+                if (item.getImportance() >= 0) {
                     importants.add(item);
                 }
             }
@@ -245,7 +246,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         //sort
         Collections.sort(importants, new Comparator<DesktopItem>() {
             public int compare(DesktopItem item1, DesktopItem item2) {
-                return Integer.valueOf(item2.getImportant()).compareTo(Integer.valueOf(item1.getImportant()));
+                return Integer.valueOf(item2.getImportance()).compareTo(Integer.valueOf(item1.getImportance()));
             }
         });
         for (DesktopItem item : importants) {

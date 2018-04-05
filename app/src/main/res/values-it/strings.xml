@@ -53,7 +53,6 @@
     <string name="dt_reports">Rapporti</string>
     <string name="dt_tests">Prove</string>
 
-    <string name="dtitem_about">Informazioni</string>
     <string name="dtitem_accmgnt">Conti</string>
     <string name="dtitem_adddetail">Aggiungi dettagli</string>
     <string name="dtitem_datamain">Dati</string>
@@ -67,6 +66,7 @@
     <string name="dtitem_report_monthly_balance">Bilancio mensile</string>
     <string name="dtitem_report_yearly_balance">Bilancio annuale</string>
 
+    <string name="label_about">Informazioni</string>
     <string name="label_accdetlist_dateinfo">%1$s a %2$s</string>
     <string name="label_account">Conti</string>
     <string name="label_account_only">Solo Conti</string>
@@ -163,7 +163,7 @@
     <string name="msg_detail_created">Dettaglio creato</string>
     <string name="msg_detail_deleted">Dettaglio eliminato</string>
     <string name="msg_detail_updated">Dettaglio aggiornato</string>
-    <string name="msg_firsttime_use_hint">Benvenuto in Daily Money, clicca su Aggiungi Dettaglio per iniziare</string>
+    <string name="msg_firsttime_use_hint">Benvenuto in Daily Money</string>
     <string name="msg_folder_cleared">Cartella di lavoro %1$s creata</string>
     <string name="msg_no_csv">File CSV non trovato</string>
     <string name="msg_rested">Dati reimpostati</string>
@@ -172,7 +172,7 @@
     <string name="msg_share_csv_title">Daily Money %1$s</string>
     <string name="msg_wrong_password">Password Errata!</string>
 
-    <string name="path_about_app">about.html</string>
+    <string name="path_about">about.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 
     <string name="qmsg_clear_folder">Vuoi pulire la cartella di lavoro %1$s?</string>

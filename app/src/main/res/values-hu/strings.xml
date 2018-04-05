@@ -57,7 +57,6 @@
     <string name="dt_reports">Jelentések</string>
     <string name="dt_tests">Tesztek</string>
 
-    <string name="dtitem_about">Névjegy</string>
     <string name="dtitem_accmgnt">Számlák</string>
     <string name="dtitem_adddetail">Új tétel</string>
     <string name="dtitem_books">Könyvek</string>
@@ -67,12 +66,12 @@
     <string name="dtitem_detlist_month">Havi lista</string>
     <string name="dtitem_detlist_week">Heti lista</string>
     <string name="dtitem_detlist_year">Éves lista</string>
-    <string name="dtitem_how2use">Használati útmutató</string>
     <string name="dtitem_prefs">Beállítások</string>
     <string name="dtitem_report_cumulative_balance">Összesített egyenleg</string>
     <string name="dtitem_report_monthly_balance">Havi egyenleg</string>
     <string name="dtitem_report_yearly_balance">Éves egyenleg</string>
 
+    <string name="label_about">Névjegy</string>
     <string name="label_accdetlist_dateinfo">%1$s-tól %2$s-ig</string>
     <string name="label_account">Számla</string>
     <string name="label_account_only">Csak számla</string>
@@ -117,6 +116,7 @@
     <string name="label_firstday_sat">Szombat</string>
     <string name="label_firstday_sun">Vasárnap</string>
     <string name="label_from_account">Honnan</string>
+    <string name="label_how2use">Használati útmutató</string>
     <string name="label_import_csv">CSV import</string>
     <string name="label_income">Bevétel</string>
     <string name="label_initial_value">Kezdeti érték</string>
@@ -186,7 +186,7 @@
     <string name="msg_detail_created">Tétel rögzítve</string>
     <string name="msg_detail_deleted">Tétel törölve</string>
     <string name="msg_detail_updated">Tétel frissítve</string>
-    <string name="msg_firsttime_use_hint">Üdvözöl a Daily Money, kattints az új tételre a kezdéshez</string>
+    <string name="msg_firsttime_use_hint">Üdvözöl a Daily Money</string>
     <string name="msg_folder_cleared">%1$s munkakönyvtár kiürítve</string>
     <string name="msg_no_csv">Nincs CSV fájl</string>
     <string name="msg_rested">Adatok törölve</string>
@@ -195,7 +195,7 @@
     <string name="msg_share_csv_title">Daily Money %1$s</string>
     <string name="msg_wrong_password">Hibás jelszó!</string>
 
-    <string name="path_about_app">about.html</string>
+    <string name="path_about">about.html</string>
     <string name="path_how2use">how2use.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 

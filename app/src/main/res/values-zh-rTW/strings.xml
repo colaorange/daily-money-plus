@@ -25,7 +25,9 @@
     <string name="cat_set_working_book">設定為使用中的帳本</string>
 
     <string name="clabel_alert">警告</string>
+    <string name="clabel_all">全部</string>
     <string name="clabel_busy">忙碌</string>
+    <string name="clabel_default">預設</string>
     <string name="clabel_error">錯誤</string>
     <string name="clabel_info">資訊</string>
     <string name="clabel_name">名稱</string>
@@ -55,7 +57,6 @@
     <string name="dt_reports">報表桌面</string>
     <string name="dt_tests">測試桌面</string>
 
-    <string name="dtitem_about">關於</string>
     <string name="dtitem_accmgnt">帳戶管理</string>
     <string name="dtitem_adddetail">新增明細</string>
     <string name="dtitem_books">帳本管理</string>
@@ -65,13 +66,13 @@
     <string name="dtitem_detlist_month">月明細列表</string>
     <string name="dtitem_detlist_week">周明細列表</string>
     <string name="dtitem_detlist_year">年明細列表</string>
-    <string name="dtitem_how2use">如何使用</string>
     <string name="dtitem_prefs">喜好設定</string>
     <string name="dtitem_report_cumulative_balance">累計結算</string>
     <string name="dtitem_report_monthly_balance">單月份結算</string>
     <string name="dtitem_report_search">搜尋</string>
     <string name="dtitem_report_yearly_balance">單年結算</string>
 
+    <string name="label_about">關於</string>
     <string name="label_accdetlist_dateinfo">%1$s 到 %2$s</string>
     <string name="label_account">帳戶</string>
     <string name="label_account_only">只有帳戶</string>
@@ -119,6 +120,7 @@
     <string name="label_firstday_sun">星期日</string>
     <string name="label_from_account">從帳戶</string>
     <string name="label_from_date">起日</string>
+    <string name="label_how2use">如何使用</string>
     <string name="label_import_csv">匯入 CSV</string>
     <string name="label_income">收入</string>
     <string name="label_initial_value">初始值</string>
@@ -195,7 +197,7 @@
     <string name="msg_detail_created">明細已被建立</string>
     <string name="msg_detail_deleted">明細已被刪除</string>
     <string name="msg_detail_updated">明細已被更新</string>
-    <string name="msg_firsttime_use_hint">歡迎使用每日記帳本, 請點選 新增明細 來開始</string>
+    <string name="msg_firsttime_use_hint">歡迎使用每日記帳本</string>
     <string name="msg_folder_cleared">工作目錄 %1$s 已經被清除</string>
     <string name="msg_no_csv">沒有CSV檔案</string>
     <string name="msg_no_db">沒有資料可供備份</string>
@@ -206,7 +208,8 @@
     <string name="msg_working_folder_no_access">工作目錄 %1$s 無法存取, 請到系統設定開啟存取權限</string>
     <string name="msg_wrong_password">錯誤的密碼!</string>
 
-    <string name="path_about_app">about_zh.html</string>
+    <string name="path_about">about_zh.html</string>
+    <string name="path_history">history_zh.html</string>
     <string name="path_how2use">how2use_zh.html</string>
     <string name="path_what_is_new">whatsnew_zh.html</string>
 
@@ -239,6 +242,4 @@
     <string name="title_detmgnt">明細管理器</string>
     <string name="title_pdprotection">密碼保護</string>
     <string name="title_prefs">喜好設定</string>
-    <string name="clabel_all">全部</string>
-    <string name="clabel_default">預設</string>
 </resources>
