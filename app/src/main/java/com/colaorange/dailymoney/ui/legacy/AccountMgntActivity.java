@@ -244,8 +244,8 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         Account acc = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.INTENT_MODE_CREATE,false);
-        intent.putExtra(AccountEditorActivity.INTENT_ACCOUNT,acc);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,false);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
         startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
     
@@ -253,8 +253,8 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         Account acc = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.INTENT_MODE_CREATE,true);
-        intent.putExtra(AccountEditorActivity.INTENT_ACCOUNT,acc);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,true);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
         startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
@@ -262,8 +262,8 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         Account acc = new Account(currTab, "", 0D);
         Intent intent = null;
         intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.INTENT_MODE_CREATE,true);
-        intent.putExtra(AccountEditorActivity.INTENT_ACCOUNT,acc);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,true);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
         startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 

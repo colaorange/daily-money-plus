@@ -31,8 +31,8 @@ import com.colaorange.dailymoney.ui.Constants;
  */
 public class BookEditorActivity extends ContextsActivity implements android.view.View.OnClickListener{
 
-    public static final String INTENT_MODE_CREATE = "modeCreate";
-    public static final String INTENT_BOOK = "book";
+    public static final String PARAM_MODE_CREATE = "bkeditor.modeCreate";
+    public static final String PARAM_BOOK = "bkeditor.book";
         
     private boolean modeCreate;
     private Book book;
@@ -57,8 +57,8 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     
     private void initIntent() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(INTENT_MODE_CREATE,true);
-        book = (Book)bundle.get(INTENT_BOOK);
+        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
+        book = (Book)bundle.get(PARAM_BOOK);
         workingBook = clone(book);
         
         if(modeCreate){

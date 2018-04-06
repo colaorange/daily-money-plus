@@ -4,35 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.Button;
 
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
-import com.colaorange.dailymoney.ui.legacy.Desktop;
-import com.colaorange.dailymoney.ui.legacy.DesktopActivity;
-import com.colaorange.dailymoney.ui.legacy.DesktopItem;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * @author dennis
  */
-public class LocalWebViewActivity extends ContextsActivity{
+public class LocalWebViewActivity extends ContextsActivity {
 
-    public static final String INTENT_URI = "uri";
-    public static final String INTENT_URI_RES_ID = "uriResId";
-    public static final String INTENT_TITLE = "title";
+    public static final String PARAM_URI = "lwv.uri";
+    public static final String PARAM_URI_RES_ID = "lwv.uriResId";
 
     WebView webView;
 
-    String title;
     String uri;
 
     @Override
@@ -49,19 +37,17 @@ public class LocalWebViewActivity extends ContextsActivity{
         Bundle bundle = getIntentExtras();
         uri = null;
 
-        int rid = bundle.getInt(INTENT_URI_RES_ID, -1);
+        int rid = bundle.getInt(PARAM_URI_RES_ID, -1);
         if (rid != -1) {
             uri = i18n.string(rid);
         } else {
-            uri = bundle.getString(INTENT_URI);
+            uri = bundle.getString(PARAM_URI);
         }
-
-        title = bundle.getString(INTENT_TITLE);
     }
 
     private void initMembers() {
 
-        webView = findViewById(R.id.webview);
+        webView = findViewById(R.id.localwebview);
 
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -70,10 +56,6 @@ public class LocalWebViewActivity extends ContextsActivity{
     }
 
     private void refreshUI() {
-        if (title != null) {
-            this.setTitle(title);
-        }
-
         webView.loadUrl(Constants.LOCAL_URL_PREFIX + uri);
     }
 
@@ -99,8 +81,8 @@ public class LocalWebViewActivity extends ContextsActivity{
         GUIs.post(new Runnable() {
             public void run() {
                 Intent intent = new Intent(LocalWebViewActivity.this, LocalWebViewActivity.class);
-                intent.putExtra(LocalWebViewActivity.INTENT_URI, path);
-                intent.putExtra(LocalWebViewActivity.INTENT_TITLE, LocalWebViewActivity.this.getTitle());
+                intent.putExtra(LocalWebViewActivity.PARAM_URI, path);
+                intent.putExtra(LocalWebViewActivity.PARAM_TITLE, LocalWebViewActivity.this.getTitle());
                 startActivity(intent);
             }
         });

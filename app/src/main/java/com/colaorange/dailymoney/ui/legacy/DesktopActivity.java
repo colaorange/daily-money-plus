@@ -166,8 +166,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_about);
-                    intent.putExtra(LocalWebViewActivity.INTENT_TITLE, i18n.string(R.string.app_name));
+                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
+                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.app_name));
                     startActivity(intent);
                 }
             });
@@ -177,8 +177,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.INTENT_URI_RES_ID, R.string.path_what_is_new);
-                    intent.putExtra(LocalWebViewActivity.INTENT_TITLE, Contexts.instance().getAppVerName());
+                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_what_is_new);
+                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);
                 }
             });

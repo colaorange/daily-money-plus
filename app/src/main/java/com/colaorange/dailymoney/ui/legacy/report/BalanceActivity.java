@@ -47,10 +47,10 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     public static final int MODE_MONTH = 0;
     public static final int MODE_YEAR = 1;
 
-    public static final String INTENT_BALANCE_DATE = "balanceDate";
-    public static final String INTENT_MODE = "mode";
-    public static final String INTENT_TARGET_DATE = "target";
-    public static final String INTENT_TOTAL_MODE = "modeTotal";
+    public static final String PARAM_BALANCE_DATE = "balance.balanceDate";
+    public static final String PARAM_MODE = "balance.mode";
+//    public static final String PARAM_TARGET_DATE = "target";
+    public static final String PARAM_TOTAL_MODE = "balance.modeTotal";
 
     TextView infoView;
     View toolbarView;
@@ -93,9 +93,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private void initParams() {
         Bundle b = getIntentExtras();
-        mode = b.getInt(INTENT_MODE, MODE_MONTH);
-        totalMode = b.getBoolean(INTENT_TOTAL_MODE, true);
-        Object o = b.get(INTENT_BALANCE_DATE);
+        mode = b.getInt(PARAM_MODE, MODE_MONTH);
+        totalMode = b.getBoolean(PARAM_TOTAL_MODE, true);
+        Object o = b.get(PARAM_BALANCE_DATE);
         if (o instanceof Date) {
             targetDate = (Date) o;
         } else {
@@ -490,13 +490,13 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         Intent intent = null;
         intent = new Intent(this, AccountDetailListActivity.class);
         if (currentStartDate != null) {
-            intent.putExtra(AccountDetailListActivity.INTENT_START, currentStartDate);
+            intent.putExtra(AccountDetailListActivity.PARAM_START, currentStartDate);
         }
         if (currentEndDate != null) {
-            intent.putExtra(AccountDetailListActivity.INTENT_END, currentEndDate);
+            intent.putExtra(AccountDetailListActivity.PARAM_END, currentEndDate);
         }
-        intent.putExtra(AccountDetailListActivity.INTENT_TARGET, b.getTarget());
-        intent.putExtra(AccountDetailListActivity.INTENT_TARGET_INFO, b.getName());
+        intent.putExtra(AccountDetailListActivity.PARAM_TARGET, b.getTarget());
+        intent.putExtra(AccountDetailListActivity.PARAM_TARGET_INFO, b.getName());
         this.startActivityForResult(intent, Constants.REQUEST_ACCOUNT_DETAIL_LIST_CODE);
     }
 

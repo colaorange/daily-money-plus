@@ -18,8 +18,6 @@
  */
 package com.colaorange.calculator2;
 
-import com.colaorange.calculator2.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -38,9 +36,9 @@ import android.widget.TextView;
 
 public class Calculator extends Activity implements OnClickListener {
     
-    public static final String INTENT_START_VALUE = "cal2_startValue";
-    public static final String INTENT_NEED_RESULT = "cal2_needResult";
-    public static final String INTENT_RESULT_VALUE = "cal2_resultValue";
+    public static final String PARAM_START_VALUE = "cal2.startValue";
+    public static final String PARAM_NEED_RESULT = "cal2.needResult";
+    public static final String PARAM_RESULT_VALUE = "cal2.resultValue";
     
     
     EventListener mListener = new EventListener();
@@ -92,8 +90,8 @@ public class Calculator extends Activity implements OnClickListener {
         
         
         /*modify by dennis, provide initial value  */
-        boolean needresult = getIntent().getExtras().getBoolean(INTENT_NEED_RESULT,false);
-        String startValue = getIntent().getExtras().getString(INTENT_START_VALUE);
+        boolean needresult = getIntent().getExtras().getBoolean(PARAM_NEED_RESULT,false);
+        String startValue = getIntent().getExtras().getString(PARAM_START_VALUE);
         
         if(startValue!=null){
             mLogic.setNumbericResult(startValue);
@@ -215,7 +213,7 @@ public class Calculator extends Activity implements OnClickListener {
         if (v.getId() == R.id.cal2_ok) {
             String result = mLogic.getNumbericResult();
             Intent intent = new Intent();
-            intent.putExtra(INTENT_RESULT_VALUE,result);
+            intent.putExtra(PARAM_RESULT_VALUE,result);
             setResult(RESULT_OK, intent);
             finish();
         } else if (v.getId() == R.id.cal2_close) {

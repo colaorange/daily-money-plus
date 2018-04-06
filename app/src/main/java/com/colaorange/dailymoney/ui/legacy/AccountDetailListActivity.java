@@ -33,10 +33,10 @@ import com.colaorange.dailymoney.ui.Constants;
  */
 public class AccountDetailListActivity extends ContextsActivity {
        
-    public static final String INTENT_START = "start";
-    public static final String INTENT_END = "end";
-    public static final String INTENT_TARGET = "target";
-    public static final String INTENT_TARGET_INFO = "targetInfo";
+    public static final String PARAM_START = "accdet.start";
+    public static final String PARAM_END = "accdet.end";
+    public static final String PARAM_TARGET = "accdet.target";
+    public static final String PARAM_TARGET_INFO = "accdet.targetInfo";
     
     
     DetailListHelper detailListHelper;
@@ -66,10 +66,10 @@ public class AccountDetailListActivity extends ContextsActivity {
 
     private void initialIntent() {
         Bundle b = getIntentExtras(); 
-        startDate = (Date)b.get(INTENT_START);
-        endDate = (Date)b.get(INTENT_END);
-        target = b.get(INTENT_TARGET);
-        info = b.getString(INTENT_TARGET_INFO);
+        startDate = (Date)b.get(PARAM_START);
+        endDate = (Date)b.get(PARAM_END);
+        target = b.get(PARAM_TARGET);
+        info = b.getString(PARAM_TARGET_INFO);
         info = info==null?" ":info+" ";
         
         DateFormat format = contexts().getDateFormat();

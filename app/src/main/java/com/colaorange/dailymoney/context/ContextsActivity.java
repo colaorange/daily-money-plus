@@ -12,13 +12,12 @@ import com.colaorange.commons.util.Logger;
 
 /**
  * provide life cycle and easy access to contexts
- * 
+ *
  * @author dennis
- * 
  */
 public class ContextsActivity extends AppCompatActivity {
 
-    public static final String INTENT_TITLE = "title";
+    public static final String PARAM_TITLE = "activity.title";
 
     protected I18N i18n;
     protected CalendarHelper calHelper;
@@ -27,35 +26,26 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        Logger.d("activity created:"+this);
+        Logger.d("activity created:" + this);
 
         refreshUtil();
-
-        Bundle b = getIntentExtras();
-        if(b!=null) {
-            String t = b.getString(INTENT_TITLE);
-            if(t!=null){
-                setTitle(t);
-            }
-        }
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
-        trackEvent(Contexts.TRACKER_EVT_VIEW);
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
     }
 
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults){
-        for(int g:grantResults){
-            if(g== PackageManager.PERMISSION_GRANTED){
+                                           @NonNull int[] grantResults) {
+        for (int g : grantResults) {
+            if (g == PackageManager.PERMISSION_GRANTED) {
                 //simply reload this activie
                 makeRestart();
                 break;
@@ -63,38 +53,38 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
-    protected void makeRestart(){
+    protected void makeRestart() {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
     }
 
-    protected void trackEvent(String action){
+    protected void trackEvent(String action) {
         Contexts ctxs = Contexts.instance();
-        ctxs.trackEvent(getTrackerPath(),action,"",null);
+        ctxs.trackEvent(getTrackerPath(), action, "", null);
     }
-    
-    private void refreshUtil(){
+
+    private void refreshUtil() {
         i18n = contexts().getI18n();
         calHelper = contexts().getCalendarHelper();
     }
-    
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.d("activity destroyed:"+this);
+        Logger.d("activity destroyed:" + this);
     }
 
     @SuppressWarnings("rawtypes")
     private String getTrackerPath() {
         Class clz = getClass();
         String name = clz.getSimpleName();
-        String pkg = clz.getPackage()==null?"":clz.getPackage().getName();
+        String pkg = clz.getPackage() == null ? "" : clz.getPackage().getName();
         StringBuilder sb = new StringBuilder("/a/");
         int i;
-        if((i = pkg.lastIndexOf('.')) !=-1){
-            pkg = pkg.substring(i+1); 
+        if ((i = pkg.lastIndexOf('.')) != -1) {
+            pkg = pkg.substring(i + 1);
         }
         sb.append(pkg).append(".").append(name);
         return sb.toString();
@@ -104,6 +94,12 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Bundle b = getIntentExtras();
+        String t = b.getString(PARAM_TITLE);
+        if (t != null) {
+            setTitle(t);
+        }
 
         refreshUtil();
     }
@@ -122,10 +118,9 @@ public class ContextsActivity extends AppCompatActivity {
         return fakeExtra;
     }
 
-    protected Contexts contexts(){
+    protected Contexts contexts() {
         return Contexts.instance();
     }
-    
 
 
 }

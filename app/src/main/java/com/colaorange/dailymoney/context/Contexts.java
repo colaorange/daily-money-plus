@@ -82,7 +82,6 @@ public class Contexts {
     private GoogleAnalytics sAnalytics;
     private Tracker sTracker;
 
-    public static final String TRACKER_EVT_VIEW = "V";
     public static final String TRACKER_EVT_CREATE = "C";
     public static final String TRACKER_EVT_UPDATE = "U";
     public static final String TRACKER_EVT_DELETE = "D";

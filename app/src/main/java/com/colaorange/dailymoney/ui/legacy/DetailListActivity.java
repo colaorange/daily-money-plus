@@ -41,8 +41,8 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     public static final int MODE_YEAR = 3;
     public static final int MODE_ALL = 4;
 
-    public static final String INTENT_MODE = "mode";
-    public static final String INTENT_TARGET_DATE = "target";
+    public static final String PARAM_MODE = "dtlist.mode";
+    public static final String PARAM_TARGET_DATE = "dtlist.target";
 
     DetailListHelper detailListHelper;
 
@@ -79,8 +79,8 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
     private void initParams() {
         Bundle b = getIntentExtras();
-        mode = b.getInt(INTENT_MODE, MODE_WEEK);
-        Object o = b.get(INTENT_TARGET_DATE);
+        mode = b.getInt(PARAM_MODE, MODE_WEEK);
+        Object o = b.get(PARAM_TARGET_DATE);
         if (o instanceof Date) {
             targetDate = (Date) o;
         } else {

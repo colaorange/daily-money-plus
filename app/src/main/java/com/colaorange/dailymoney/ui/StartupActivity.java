@@ -28,6 +28,7 @@ public class StartupActivity extends ContextsActivity {
             doFirstTime();
             firstTime = true;
         }
+        trackEvent("startup");
     }
 
     @Override
@@ -66,7 +67,7 @@ public class StartupActivity extends ContextsActivity {
         Intent intent = null;
         intent = new Intent(this,PasswordProtectionActivity.class);
         startActivityForResult(intent, Constants.REQUEST_PASSWORD_PROTECTION_CODE);
-
+        trackEvent("protection");
         return true;
     }
 
@@ -83,7 +84,7 @@ public class StartupActivity extends ContextsActivity {
             new DataCreator(idp, i18n).createDefaultAccount();
         }
         GUIs.longToast(this, R.string.msg_firsttime_use_hint);
-        trackEvent("default_first");
+        trackEvent("first_time");
     }
 
 

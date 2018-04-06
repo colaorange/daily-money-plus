@@ -44,8 +44,8 @@ import com.colaorange.dailymoney.ui.legacy.AccountUtil.IndentNode;
  */
 public class DetailEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
     
-    public static final String INTENT_MODE_CREATE = "modeCreate";
-    public static final String INTENT_DETAIL = "detail";
+    public static final String PARAM_MODE_CREATE = "dteditor.modeCreate";
+    public static final String PARAM_DETAIL = "dteditor.detail";
    
     
     private boolean modeCreate;
@@ -103,8 +103,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     private void initParams() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(INTENT_MODE_CREATE,true);
-        detail = (Detail)bundle.get(INTENT_DETAIL);
+        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
+        detail = (Detail)bundle.get(PARAM_DETAIL);
         
         //issue 51, for direct call from outside action, 
         if(detail==null){
@@ -373,8 +373,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     private void doCalculator2() {
         Intent intent = null;
         intent = new Intent(this,Calculator.class);
-        intent.putExtra(Calculator.INTENT_NEED_RESULT,true);
-        intent.putExtra(Calculator.INTENT_START_VALUE,moneyEditor.getText().toString());
+        intent.putExtra(Calculator.PARAM_NEED_RESULT,true);
+        intent.putExtra(Calculator.PARAM_START_VALUE,moneyEditor.getText().toString());
         startActivityForResult(intent,Constants.REQUEST_CALCULATOR_CODE);
     }
     
@@ -382,7 +382,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode==Activity.RESULT_OK){
-            String result = data.getExtras().getString(Calculator.INTENT_RESULT_VALUE);
+            String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
             try{
                 double d = Double.parseDouble(result);
                 if(d>0){

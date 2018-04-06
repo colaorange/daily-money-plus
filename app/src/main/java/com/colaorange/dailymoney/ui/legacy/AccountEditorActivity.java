@@ -37,8 +37,8 @@ import com.colaorange.dailymoney.ui.Constants;
  */
 public class AccountEditorActivity extends ContextsActivity implements android.view.View.OnClickListener{
 
-    public static final String INTENT_MODE_CREATE = "modeCreate";
-    public static final String INTENT_ACCOUNT = "account";
+    public static final String PARAM_MODE_CREATE = "acceditor.modeCreate";
+    public static final String PARAM_ACCOUNT = "acceditor.account";
         
     private boolean modeCreate;
     private int counterCreate;
@@ -67,8 +67,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     
     private void initIntent() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(INTENT_MODE_CREATE,true);
-        account = (Account)bundle.get(INTENT_ACCOUNT);
+        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
+        account = (Account)bundle.get(PARAM_ACCOUNT);
         workingAccount = clone(account);
         
         if(modeCreate){
@@ -176,8 +176,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     private void doCalculator2() {
         Intent intent = null;
         intent = new Intent(this,Calculator.class);
-        intent.putExtra(Calculator.INTENT_NEED_RESULT,true);
-        intent.putExtra(Calculator.INTENT_START_VALUE,initvalEditor.getText().toString());
+        intent.putExtra(Calculator.PARAM_NEED_RESULT,true);
+        intent.putExtra(Calculator.PARAM_START_VALUE,initvalEditor.getText().toString());
         startActivityForResult(intent,Constants.REQUEST_CALCULATOR_CODE);
     }
     
@@ -185,7 +185,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode==Activity.RESULT_OK){
-            String result = data.getExtras().getString(Calculator.INTENT_RESULT_VALUE);
+            String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
             try{
                 double d = Double.parseDouble(result);
                 initvalEditor.setText(Formats.double2String(d));
