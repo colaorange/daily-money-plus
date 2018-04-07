@@ -4,11 +4,11 @@
     android:id="@+id/dt_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/dt_bg"
+    android:background="@color/desktop_bg"
     android:orientation="vertical">
 
     <TabHost
-        android:id="@+id/dt_tabs"
+        android:id="@+id/desktop_tabs"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1">
@@ -29,7 +29,7 @@
                 android:layout_height="fill_parent">
 
                 <GridView
-                    android:id="@+id/dt_grid"
+                    android:id="@+id/desktop_grid"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:columnWidth="80dp"
@@ -47,7 +47,7 @@
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dt_info_bg"
+        android:background="@color/desktop_info_bg"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         app:flexWrap="wrap"
@@ -56,7 +56,7 @@
         app:justifyContent="center"
         >
         <TextView
-            android:id="@+id/dt_info_weekly_expense"
+            android:id="@+id/desktop_weekly_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -68,7 +68,7 @@
             />
 
         <TextView
-            android:id="@+id/dt_info_monthly_expense"
+            android:id="@+id/desktop_monthly_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
             android:paddingTop="5dp"
             />
         <TextView
-            android:id="@+id/dt_info_cumulative_cash"
+            android:id="@+id/desktop_cumulative_cash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

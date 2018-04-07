@@ -115,7 +115,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             } else {
                 tab.setIndicator(d.getLabel(), getResources().getDrawable(d.getIcon()));
             }
-            tab.setContent(R.id.dt_grid);
+            tab.setContent(R.id.desktop_grid);
             tabs.addTab(tab);
             if (currTab == null) {
                 currTab = tab.getTag();
@@ -134,15 +134,15 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
 
     private void initMembers() {
-        tabs = findViewById(R.id.dt_tabs);
+        tabs = findViewById(R.id.desktop_tabs);
 
-        infoWeeklyExpense = findViewById(R.id.dt_info_weekly_expense);
-        infoMonthlyExpense = findViewById(R.id.dt_info_monthly_expense);
-        infoCumulativeCash = findViewById(R.id.dt_info_cumulative_cash);
+        infoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
+        infoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
+        infoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
 
 
         gridViewAdapter = new DesktopItemAdapter();
-        gridView = findViewById(R.id.dt_grid);
+        gridView = findViewById(R.id.desktop_grid);
         gridView.setAdapter(gridViewAdapter);
         gridView.setOnItemClickListener(this);
 
@@ -337,8 +337,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 view = (LinearLayout) convertView;
             }
 
-            iv = view.findViewById(R.id.dt_icon);
-            tv = view.findViewById(R.id.dt_label);
+            iv = view.findViewById(R.id.desktop_icon);
+            tv = view.findViewById(R.id.desktop_label);
 
             DesktopItem item = getCurrentVisibleDesktopItems().get(position);
             iv.setImageResource(item.getIcon());

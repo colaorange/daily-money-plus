@@ -31,8 +31,8 @@ public class BookListHelper implements OnItemClickListener{
     
     private static String[] bindingFrom = new String[] { "working_book","id","name", "symbol", "note"};
     
-    private static int[] bindingTo = new int[] { R.id.bookmgnt_item_working_book,R.id.bookmgnt_item_id,R.id.bookmgnt_item_name,
-        R.id.bookmgnt_item_symbol, R.id.bookmgnt_item_note};
+    private static int[] bindingTo = new int[] { R.id.book_mgnt_item_icon,R.id.book_mgnt_item_id,R.id.book_mgnt_item_name,
+        R.id.book_mgnt_item_symbol, R.id.book_mgnt_item_note};
     
     
     private List<Book> listViewData = new ArrayList<Book>();

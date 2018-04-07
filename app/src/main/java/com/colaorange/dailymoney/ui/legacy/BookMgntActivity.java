@@ -62,7 +62,7 @@ public class BookMgntActivity extends ContextsActivity {
             }
         });
         
-        ListView listView = findViewById(R.id.bookmgnt_list);
+        ListView listView = findViewById(R.id.book_mgnt_list);
         bookListHelper.setup(listView);
         
         registerForContextMenu(listView);
@@ -110,7 +110,7 @@ public class BookMgntActivity extends ContextsActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.bookmgnt_menu_new) {
+        if (item.getItemId() == R.id.book_mgnt_menu_new) {
             bookListHelper.doNewBook();
             return true;
         }
@@ -121,7 +121,7 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.bookmgnt_list) {
+        if (v.getId() == R.id.book_mgnt_list) {
             getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);
         }
 
@@ -130,13 +130,13 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.bookmgnt_menu_edit) {
+        if (item.getItemId() == R.id.book_mgnt_menu_edit) {
             bookListHelper.doEditBook(info.position);
             return true;
-        } else if (item.getItemId() == R.id.bookmgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.book_mgnt_menu_delete) {
             bookListHelper.doDeleteBook(info.position);
             return true;
-        } else if (item.getItemId() == R.id.bookmgnt_menu_set_working) {
+        } else if (item.getItemId() == R.id.book_mgnt_menu_set_working) {
             bookListHelper.doSetWorkingBook(info.position);
             finish();
             return true;

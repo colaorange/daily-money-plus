@@ -5,7 +5,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	<TabHost
-		android:id="@+id/accmgnt_tabs"
+		android:id="@+id/account_mgnt_tabs"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
 		<LinearLayout

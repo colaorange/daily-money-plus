@@ -40,15 +40,15 @@ import com.colaorange.dailymoney.ui.Constants;
 /**
  * @author dennis
  */
-public class BalanceListActivity extends ContextsActivity implements OnClickListener, OnItemClickListener {
+public class BalanceActivity extends ContextsActivity implements OnClickListener, OnItemClickListener {
 
     public static final int MODE_MONTH = 0;
     public static final int MODE_YEAR = 1;
 
-    public static final String PARAM_BALANCE_DATE = "balance_list.balanceDate";
-    public static final String PARAM_MODE = "balance_list.mode";
+    public static final String PARAM_BALANCE_DATE = "balance.balanceDate";
+    public static final String PARAM_MODE = "balance.mode";
 //    public static final String PARAM_TARGET_DATE = "target";
-    public static final String PARAM_TOTAL_MODE = "balance_list.modeTotal";
+    public static final String PARAM_TOTAL_MODE = "balance.modeTotal";
 
     TextView infoView;
     View toolbarView;
@@ -69,7 +69,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
 
     private static String[] bindingFrom = new String[]{"layout", "name", "money"};
 
-    private static int[] bindingTo = new int[]{R.id.report_balance_layout, R.id.report_balance_item_name, R.id.report_balance_item_money};
+    private static int[] bindingTo = new int[]{R.id.balance_item_layout, R.id.balance_item_name, R.id.balance_item_money};
 
     private List<Balance> listViewData = new ArrayList<Balance>();
 
@@ -82,7 +82,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.balance_list);
+        setContentView(R.layout.balance);
         initParams();
         initMembers();
         refreshUI();
@@ -107,17 +107,17 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
         monthDateFormat = new SimpleDateFormat("yyyy/MM");
         yearDateFormat = new SimpleDateFormat("yyyy");
 
-        infoView = findViewById(R.id.report_balance_infobar);
-        toolbarView = findViewById(R.id.report_balance_toolbar);
+        infoView = findViewById(R.id.balance_infobar);
+        toolbarView = findViewById(R.id.balance_toolbar);
 
-        findViewById(R.id.report_balance_prev).setOnClickListener(this);
-        findViewById(R.id.report_balance_next).setOnClickListener(this);
-        findViewById(R.id.report_balance_today).setOnClickListener(this);
-        modeBtn = findViewById(R.id.report_balance_mode);
+        findViewById(R.id.balance_prev).setOnClickListener(this);
+        findViewById(R.id.balance_next).setOnClickListener(this);
+        findViewById(R.id.balance_today).setOnClickListener(this);
+        modeBtn = findViewById(R.id.balance_mode);
         modeBtn.setOnClickListener(this);
 
 
-        listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.balance_list_item, bindingFrom, bindingTo);
+        listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.balance_item, bindingFrom, bindingTo);
         listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
 
             @Override
@@ -177,12 +177,12 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
                         tv.setTextColor(getResources().getColor(R.color.unknow_fgd));
                     }
                 }
-                adjustItem(tv, b, GUIs.getDPRatio(BalanceListActivity.this));
+                adjustItem(tv, b, GUIs.getDPRatio(BalanceActivity.this));
                 return false;
             }
         });
 
-        listView = findViewById(R.id.report_balance_list);
+        listView = findViewById(R.id.balance_list);
         listView.setAdapter(listViewAdapter);
 
         listView.setOnItemClickListener(this);
@@ -383,13 +383,13 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.report_balance_prev) {
+        if (v.getId() == R.id.balance_prev) {
             onPrev();
-        } else if (v.getId() == R.id.report_balance_next) {
+        } else if (v.getId() == R.id.balance_next) {
             onNext();
-        } else if (v.getId() == R.id.report_balance_today) {
+        } else if (v.getId() == R.id.balance_today) {
             onToday();
-        } else if (v.getId() == R.id.report_balance_mode) {
+        } else if (v.getId() == R.id.balance_mode) {
             onMode();
         }
     }
@@ -457,7 +457,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
         if (item.getItemId() == R.id.balance_menu_yearly_runchart) {
             doYearlyRunChart();
             return true;
-        } else if (item.getItemId() == R.id.toggle_hierarchical_report) {
+        } else if (item.getItemId() == R.id.balance_menu_toggle_hierarchy) {
             contexts().setPrefHierarachicalReport(!contexts().isPrefHierarachicalReport());
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -515,7 +515,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.report_balance_list) {
+        if (v.getId() == R.id.balance_list) {
 //            AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;            
             getMenuInflater().inflate(R.menu.balance_ctxmenu, menu);
         }
@@ -570,7 +570,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
                     Balance balance = BalanceHelper.calculateBalance(acc, currentStartDate, currentEndDate);
                     list.add(balance);
                 }
-                Intent intent = new BalancePieChart(BalanceListActivity.this, GUIs.getOrientation(BalanceListActivity.this), GUIs.getDPRatio(BalanceListActivity.this)).createIntent(at, list);
+                Intent intent = new BalancePieChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(at, list);
                 startActivity(intent);
             }
         });
@@ -610,7 +610,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
                     }
                 }
 
-                Intent intent = new BalanceTimeChart(BalanceListActivity.this, GUIs.getOrientation(BalanceListActivity.this), GUIs.getDPRatio(BalanceListActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_timechart, at.getDisplay(i18n), yearDateFormat.format(currentDate)), balances);
                 startActivity(intent);
             }
@@ -655,7 +655,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
                     }
                 }
 
-                Intent intent = new BalanceTimeChart(BalanceListActivity.this, GUIs.getOrientation(BalanceListActivity.this), GUIs.getDPRatio(BalanceListActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_cumulative_timechart, at.getDisplay(i18n), yearDateFormat.format(currentDate)), balances);
                 startActivity(intent);
             }
@@ -694,7 +694,7 @@ public class BalanceListActivity extends ContextsActivity implements OnClickList
                     }
                 }
 
-                Intent intent = new BalanceTimeChart(BalanceListActivity.this, GUIs.getOrientation(BalanceListActivity.this), GUIs.getDPRatio(BalanceListActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_runchart, yearDateFormat.format(currentDate)), balances);
                 startActivity(intent);
             }

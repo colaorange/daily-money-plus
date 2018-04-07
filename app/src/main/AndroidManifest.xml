@@ -57,7 +57,7 @@
         <activity android:name=".ui.legacy.PrefsActivity" android:label="@string/title_prefs" android:theme="@style/AppTheme.Legacy"/>
         <activity android:name=".ui.legacy.DataMaintenanceActivity" android:label="@string/title_datamain" android:theme="@style/AppTheme.Legacy"/>
 
-        <activity android:name=".ui.legacy.BalanceListActivity" android:theme="@style/AppTheme.Legacy" android:label="@string/label_balance"/>
+        <activity android:name=".ui.legacy.BalanceActivity" android:theme="@style/AppTheme.Legacy" android:label="@string/label_balance"/>
 
 
         <activity android:name="org.achartengine.GraphicalActivity" android:theme="@style/AppTheme.Legacy.NoTitle"/>

@@ -18,7 +18,7 @@
             android:paddingRight="30dp">
 
             <TextView
-                android:id="@+id/datamain_workingfolder"
+                android:id="@+id/data_maintenance_workingfolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -29,7 +29,7 @@
                 android:text="@string/label_prefs_workingfolder" />
 
             <Button
-                android:id="@+id/datamain_request_permission"
+                android:id="@+id/data_maintenance_request_permission"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -61,7 +61,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/datamain_backup"
+                android:id="@+id/data_maintenance_backup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -70,7 +70,7 @@
                 android:text="@string/label_backup_data" />
 
             <Button
-                android:id="@+id/datamain_export_csv"
+                android:id="@+id/data_maintenance_export_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_import_export_white_24dp"
@@ -78,7 +78,7 @@
                 android:text="@string/label_export_csv" />
 
             <Button
-                android:id="@+id/datamain_share_csv"
+                android:id="@+id/data_maintenance_share_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -88,7 +88,7 @@
 
 
             <Button
-                android:id="@+id/datamain_restore"
+                android:id="@+id/data_maintenance_restore"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -97,7 +97,7 @@
                 android:text="@string/label_restore_data" />
 
             <Button
-                android:id="@+id/datamain_import_csv"
+                android:id="@+id/data_maintenance_import_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -107,7 +107,7 @@
 
             <!--TODO should move to developer-->
             <Button
-                android:id="@+id/datamain_reset"
+                android:id="@+id/data_maintenance_reset"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"
@@ -116,7 +116,7 @@
                 android:visibility="gone" />
 
             <Button
-                android:id="@+id/datamain_clear_folder"
+                android:id="@+id/data_maintenance_clear_folder"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -126,7 +126,7 @@
                 android:visibility="gone" />
 
             <Button
-                android:id="@+id/datamain_create_default"
+                android:id="@+id/data_maintenance_create_default"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"

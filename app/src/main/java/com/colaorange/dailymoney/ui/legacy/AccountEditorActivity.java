@@ -80,7 +80,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     
     /** need to mapping twice to do different mapping in spitem and spdropdown item*/
     private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY};
-    private static int[] spto = new int[] { R.id.simple_spitem_display, R.id.simple_spdditem_display};
+    private static int[] spto = new int[] { R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
     
     EditText nameEditor;
     EditText initvalEditor;
@@ -92,14 +92,14 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     Button closeBtn;
     
     private void initMembers() {
-        nameEditor = findViewById(R.id.acceditor_name);
+        nameEditor = findViewById(R.id.account_editor_name);
         nameEditor.setText(workingAccount.getName());
         
-        initvalEditor = findViewById(R.id.acceditor_initval);
+        initvalEditor = findViewById(R.id.account_editor_initval);
         initvalEditor.setText(Formats.double2String(workingAccount.getInitialValue()));
         
         //initial spinner
-        typeEditor = findViewById(R.id.acceditor_type);
+        typeEditor = findViewById(R.id.account_editor_type);
         List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
         String type = workingAccount.getType();
 
@@ -119,8 +119,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         }
 
 
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spitem, spfrom, spto);
-        adapter.setDropDownViewResource(R.layout.simple_spdd);
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown_item, spfrom, spto);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         adapter.setViewBinder(new AccountTypeViewBinder());
         typeEditor.setAdapter(adapter);
         typeEditor.setSelection(selpos);
@@ -137,7 +137,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         });
         
         
-        cashAccountEditor = findViewById(R.id.acceditor_cash_account);
+        cashAccountEditor = findViewById(R.id.account_editor_cash_account);
 
         cashAccountEditor.setChecked(workingAccount.isCashAccount());
         
@@ -154,7 +154,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         
         cancelBtn = findViewById(R.id.acceditor_cancel);
         closeBtn = findViewById(R.id.acceditor_close);
-        cal2Btn = findViewById(R.id.acceditor_cal2);
+        cal2Btn = findViewById(R.id.account_editor_cal2);
         
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
@@ -172,7 +172,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             doCancel();
         } else if (v.getId() == R.id.acceditor_close) {
             doClose();
-        } else if (v.getId() == R.id.acceditor_cal2) {
+        } else if (v.getId() == R.id.account_editor_cal2) {
             doCalculator2();
         }
     }

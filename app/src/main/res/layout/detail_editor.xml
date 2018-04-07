@@ -21,7 +21,7 @@
                 android:text="@string/label_from_account" />
 
             <Spinner
-                android:id="@+id/deteditor_from"
+                android:id="@+id/detail_editor_from"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -34,7 +34,7 @@
                 android:text="@string/label_to_account" />
 
             <Spinner
-                android:id="@+id/deteditor_to"
+                android:id="@+id/detail_editor_to"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -55,29 +55,29 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/deteditor_date"
+                    android:id="@+id/detail_editor_date"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:editable="false" />
 
                 <ImageButton
-                    android:id="@+id/deteditor_prev"
+                    android:id="@+id/detail_editor_prev"
                     style="@style/editorToolIconBtn"
                     android:src="@drawable/ic_arrow_back_white_24dp" />
 
                 <ImageButton
-                    android:id="@+id/deteditor_today"
+                    android:id="@+id/detail_editor_today"
                     style="@style/editorToolIconBtn"
                     android:src="@drawable/ic_today_white_24dp" />
 
                 <ImageButton
-                    android:id="@+id/deteditor_next"
+                    android:id="@+id/detail_editor_next"
                     style="@style/editorToolIconBtn"
                     android:src="@drawable/ic_arrow_forward_white_24dp" />
 
                 <ImageButton
-                    android:id="@+id/deteditor_datepicker"
+                    android:id="@+id/detail_editor_datepicker"
                     style="@style/editorToolIconBtn"
                     android:src="@drawable/ic_date_range_white_24dp" />
             </LinearLayout>
@@ -97,14 +97,14 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/deteditor_money"
+                    android:id="@+id/detail_editor_money"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="numberDecimal" />
 
                 <ImageButton
-                    android:id="@+id/deteditor_cal2"
+                    android:id="@+id/detail_editor_cal2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/editorToolIconBtn"
@@ -118,7 +118,7 @@
                 android:text="@string/label_note" />
 
             <EditText
-                android:id="@+id/deteditor_note"
+                android:id="@+id/detail_editor_note"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -133,19 +133,19 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/deteditor_ok"
+            android:id="@+id/detail_editor_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="@drawable/ic_add_white_24dp"
             android:text="@string/cact_ok" />
 
         <Button
-            android:id="@+id/deteditor_cancel"
+            android:id="@+id/detail_editor_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="@drawable/ic_clear_white_24dp"
             android:text="@string/cact_cancel" />
 
         <Button
-            android:id="@+id/deteditor_close"
+            android:id="@+id/detail_editor_close"
             style="@style/editorActionBtn"
             android:drawableLeft="@drawable/ic_clear_white_24dp"
             android:text="@string/cact_close"

@@ -68,7 +68,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
 
     private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY };
-    private static int[] spto = new int[] { R.id.simple_spitem_display,R.id.simple_spdditem_display };
+    private static int[] spto = new int[] { R.id.simple_spinner_item_display,R.id.simple_spinner_dropdown_item_display};
 
     Spinner fromEditor;
     Spinner toEditor;
@@ -126,26 +126,26 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         boolean archived = workingDetail.isArchived();
 
 
-        dateEditor = findViewById(R.id.deteditor_date);
+        dateEditor = findViewById(R.id.detail_editor_date);
         dateEditor.setText(format.format(workingDetail.getDate()));
         dateEditor.setEnabled(!archived);
 
-        moneyEditor = findViewById(R.id.deteditor_money);
+        moneyEditor = findViewById(R.id.detail_editor_money);
         moneyEditor.setText(workingDetail.getMoney()<=0?"":Formats.double2String(workingDetail.getMoney()));
         moneyEditor.setEnabled(!archived);
 
-        noteEditor = findViewById(R.id.deteditor_note);
+        noteEditor = findViewById(R.id.detail_editor_note);
         noteEditor.setText(workingDetail.getNote());
 
         if (!archived) {
-            findViewById(R.id.deteditor_prev).setOnClickListener(this);
-            findViewById(R.id.deteditor_next).setOnClickListener(this);
-            findViewById(R.id.deteditor_today).setOnClickListener(this);
-            findViewById(R.id.deteditor_datepicker).setOnClickListener(this);
+            findViewById(R.id.detail_editor_prev).setOnClickListener(this);
+            findViewById(R.id.detail_editor_next).setOnClickListener(this);
+            findViewById(R.id.detail_editor_today).setOnClickListener(this);
+            findViewById(R.id.detail_editor_datepicker).setOnClickListener(this);
         }
-        findViewById(R.id.deteditor_cal2).setOnClickListener(this);
+        findViewById(R.id.detail_editor_cal2).setOnClickListener(this);
 
-        okBtn = findViewById(R.id.deteditor_ok);
+        okBtn = findViewById(R.id.detail_editor_ok);
         if (modeCreate) {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_create);
@@ -156,19 +156,19 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         }
         okBtn.setOnClickListener(this);
 
-        cancelBtn = findViewById(R.id.deteditor_cancel);
-        closeBtn = findViewById(R.id.deteditor_close);
+        cancelBtn = findViewById(R.id.detail_editor_cancel);
+        closeBtn = findViewById(R.id.detail_editor_close);
 
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
 
-        fromEditor = findViewById(R.id.deteditor_from);
-        toEditor = findViewById(R.id.deteditor_to);
+        fromEditor = findViewById(R.id.detail_editor_from);
+        toEditor = findViewById(R.id.detail_editor_to);
 
         fromAccountList = new ArrayList<IndentNode>();
         fromAccountMapList = new ArrayList<Map<String, Object>>();
-        fromAccountAdapter = new SimpleAdapterEx(this, fromAccountMapList, R.layout.simple_spitem, spfrom, spto);
-        fromAccountAdapter.setDropDownViewResource(R.layout.simple_spdd);
+        fromAccountAdapter = new SimpleAdapterEx(this, fromAccountMapList, R.layout.simple_spinner_dropdown_item, spfrom, spto);
+        fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         fromAccountAdapter.setViewBinder(new AccountViewBinder(){
             public Account getSelectedAccount(){
                 int pos = fromEditor.getSelectedItemPosition();
@@ -182,8 +182,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         toAccountList = new ArrayList<IndentNode>();
         toAccountMapList = new ArrayList<Map<String, Object>>();
-        toAccountAdapter = new SimpleAdapterEx(this, toAccountMapList, R.layout.simple_spitem, spfrom, spto);
-        toAccountAdapter.setDropDownViewResource(R.layout.simple_spdd);
+        toAccountAdapter = new SimpleAdapterEx(this, toAccountMapList, R.layout.simple_spinner_dropdown_item, spfrom, spto);
+        toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         toAccountAdapter.setViewBinder(new AccountViewBinder(){
             public Account getSelectedAccount(){
                 int pos = toEditor.getSelectedItemPosition();
@@ -330,29 +330,29 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     @Override
     public void onClick(View v) {
         CalendarHelper cal = contexts().getCalendarHelper();
-        if (v.getId() == R.id.deteditor_ok) {
+        if (v.getId() == R.id.detail_editor_ok) {
             doOk();
-        } else if (v.getId() == R.id.deteditor_cancel) {
+        } else if (v.getId() == R.id.detail_editor_cancel) {
             doCancel();
-        } else if (v.getId() == R.id.deteditor_close) {
+        } else if (v.getId() == R.id.detail_editor_close) {
             doClose();
-        } else if (v.getId() == R.id.deteditor_prev) {
+        } else if (v.getId() == R.id.detail_editor_prev) {
             try {
                 Date d = format.parse(dateEditor.getText().toString());
                 updateDateEditor(cal.yesterday(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
-        } else if (v.getId() == R.id.deteditor_next) {
+        } else if (v.getId() == R.id.detail_editor_next) {
             try {
                 Date d = format.parse(dateEditor.getText().toString());
                 updateDateEditor(cal.tomorrow(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
-        } else if (v.getId() == R.id.deteditor_today) {
+        } else if (v.getId() == R.id.detail_editor_today) {
             updateDateEditor(cal.today());
-        } else if (v.getId() == R.id.deteditor_datepicker) {
+        } else if (v.getId() == R.id.detail_editor_datepicker) {
             try {
                 Date d = format.parse(dateEditor.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
@@ -365,7 +365,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
-        } else if (v.getId() == R.id.deteditor_cal2) {
+        } else if (v.getId() == R.id.detail_editor_cal2) {
             doCalculator2();
         }
     }
@@ -569,7 +569,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
                 }
                 tv.setTextColor(tcolor);
                 StringBuilder display = new StringBuilder();
-                if(tv.getId()==R.id.simple_spdditem_display){
+                if(tv.getId()==R.id.simple_spinner_dropdown_item_display){
                     tv.setPadding((int)(ddPaddingLeftBase+tn.getIndent()*ddPaddingIntentBase), tv.getPaddingTop(), tv.getPaddingRight(),tv.getPaddingBottom());
                     if(tn.getAccount()==null){
 //                        tv.setBackgroundDrawable(ddDisabled);

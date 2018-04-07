@@ -45,7 +45,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     
     private static String[] bindingFrom = new String[] { "name", "initvalue", "id" };
     
-    private static int[] bindingTo = new int[] { R.id.accmgnt_item_name, R.id.accmgnt_item_initvalue, R.id.accmgnt_item_id };
+    private static int[] bindingTo = new int[] { R.id.account_mgnt_item_name, R.id.account_mgnt_item_initvalue, R.id.account_mgnt_item_id};
     
     private List<Account> listViewData = new ArrayList<Account>();
     
@@ -69,7 +69,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     private void initMembers() {
 
         //tabs
-        TabHost tabs = findViewById(R.id.accmgnt_tabs);
+        TabHost tabs = findViewById(R.id.account_mgnt_tabs);
         tabs.setup();
         
         AccountType[] ata = AccountType.getSupportedType();
@@ -194,7 +194,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.accmgnt_menu_new) {
+        if (item.getItemId() == R.id.account_mgnt_menu_new) {
             doNewAccount();
             return true;
         }
@@ -213,13 +213,13 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.accmgnt_menu_edit) {
+        if (item.getItemId() == R.id.account_mgnt_menu_edit) {
             doEditAccount(info.position);
             return true;
-        } else if (item.getItemId() == R.id.accmgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.account_mgnt_menu_delete) {
             doDeleteAccount(info.position);
             return true;
-        } else if (item.getItemId() == R.id.accmgnt_menu_copy) {
+        } else if (item.getItemId() == R.id.account_mgnt_menu_copy) {
             doCopyAccount(info.position);
             return true;
         } else {

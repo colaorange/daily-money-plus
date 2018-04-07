@@ -78,7 +78,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void refreshUI() {
 
-        Button requestPermissionBtn = findViewById(R.id.datamain_request_permission);
+        Button requestPermissionBtn = findViewById(R.id.data_maintenance_request_permission);
         //only for 6.0(23+)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()){
             requestPermissionBtn.setVisibility(View.VISIBLE);
@@ -87,7 +87,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
 
         //working fodler accessibility
-        TextView workingFolderText = findViewById(R.id.datamain_workingfolder);
+        TextView workingFolderText = findViewById(R.id.data_maintenance_workingfolder);
         //test accessable
         if (contexts().hasWorkingFolderPermission()) {
             workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info), null, null, null);
@@ -105,39 +105,39 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void initMembers() {
-        findViewById(R.id.datamain_request_permission).setOnClickListener(this);
-        findViewById(R.id.datamain_backup).setOnClickListener(this);
-        findViewById(R.id.datamain_export_csv).setOnClickListener(this);
-        findViewById(R.id.datamain_share_csv).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_request_permission).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_backup).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_export_csv).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_share_csv).setOnClickListener(this);
 
-        findViewById(R.id.datamain_restore).setOnClickListener(this);
-        findViewById(R.id.datamain_import_csv).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_restore).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_import_csv).setOnClickListener(this);
 
         //TODO move to developer
-        findViewById(R.id.datamain_reset).setOnClickListener(this);
-        findViewById(R.id.datamain_clear_folder).setOnClickListener(this);
-        findViewById(R.id.datamain_create_default).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_reset).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_clear_folder).setOnClickListener(this);
+        findViewById(R.id.data_maintenance_create_default).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.datamain_request_permission) {
+        if (v.getId() == R.id.data_maintenance_request_permission) {
             doRequestPermission();
-        } else if (v.getId() == R.id.datamain_import_csv) {
+        } else if (v.getId() == R.id.data_maintenance_import_csv) {
             doImportCSV();
-        } else if (v.getId() == R.id.datamain_export_csv) {
+        } else if (v.getId() == R.id.data_maintenance_export_csv) {
             doExportCSV();
-        } else if (v.getId() == R.id.datamain_share_csv) {
+        } else if (v.getId() == R.id.data_maintenance_share_csv) {
             doShareCSV();
-        } else if (v.getId() == R.id.datamain_backup) {
+        } else if (v.getId() == R.id.data_maintenance_backup) {
             doBackup();
-        } else if (v.getId() == R.id.datamain_restore) {
+        } else if (v.getId() == R.id.data_maintenance_restore) {
             doRestore();
-        } else if (v.getId() == R.id.datamain_reset) {
+        } else if (v.getId() == R.id.data_maintenance_reset) {
             doReset();
-        } else if (v.getId() == R.id.datamain_create_default) {
+        } else if (v.getId() == R.id.data_maintenance_create_default) {
             doCreateDefault();
-        } else if (v.getId() == R.id.datamain_clear_folder) {
+        } else if (v.getId() == R.id.data_maintenance_clear_folder) {
             doClearFolder();
         }
     }

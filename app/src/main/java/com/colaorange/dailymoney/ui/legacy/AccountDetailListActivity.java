@@ -52,7 +52,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_detail_list);
+        setContentView(R.layout.account_detail_mgnt);
         initParams();
         initMembers();
         GUIs.delayPost(new Runnable() {
@@ -100,9 +100,9 @@ public class AccountDetailListActivity extends ContextsActivity {
             }
         });
         
-        infoView = findViewById(R.id.accdetlist_infobar);
+        infoView = findViewById(R.id.account_detail_list_infobar);
         
-        ListView listView = findViewById(R.id.accdetlist_list);
+        ListView listView = findViewById(R.id.account_detail_list_list);
         detailListHelper.setup(listView);
         registerForContextMenu(listView);
     }
@@ -153,13 +153,13 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.account_detail_list_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_detail_mgnt_optmenu, menu);
         return true;
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.accdetlist_menu_new) {
+        if (item.getItemId() == R.id.account_detail_mgnt_menu_new) {
             detailListHelper.doNewDetail();
             return true;
         }
@@ -169,8 +169,8 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.accdetlist_list) {
-            getMenuInflater().inflate(R.menu.account_detail_list_ctxmenu, menu);
+        if (v.getId() == R.id.account_detail_list_list) {
+            getMenuInflater().inflate(R.menu.account_detail_mgnt_ctxmenu, menu);
         }
 
     }
@@ -178,13 +178,13 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.accdetlist_menu_edit) {
+        if (item.getItemId() == R.id.account_detail_mgnt_menu_edit) {
             detailListHelper.doEditDetail(info.position);
             return true;
-        } else if (item.getItemId() == R.id.accdetlist_menu_delete) {
+        } else if (item.getItemId() == R.id.account_detail_mgnt_menu_delete) {
             detailListHelper.doDeleteDetail(info.position);
             return true;
-        } else if (item.getItemId() == R.id.accdetlist_menu_copy) {
+        } else if (item.getItemId() == R.id.account_detail_mgnt_menu_copy) {
             detailListHelper.doCopyDetail(info.position);
             return true;
         }

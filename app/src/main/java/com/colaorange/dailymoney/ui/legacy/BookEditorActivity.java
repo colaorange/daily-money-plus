@@ -70,7 +70,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
     /** need to mapping twice to do different mapping in spitem and spdropdown item*/
     private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY};
-    private static int[] spto = new int[] { R.id.simple_spitem_display, R.id.simple_spdditem_display};
+    private static int[] spto = new int[] { R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
     
     EditText nameEditor;
     EditText symbolEditor;
@@ -82,14 +82,14 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     Button cancelBtn;
     
     private void initMembers() {
-        nameEditor = findViewById(R.id.bookeditor_name);
+        nameEditor = findViewById(R.id.book_editor_name);
         nameEditor.setText(workingBook.getName());
         
-        symbolEditor = findViewById(R.id.bookeditor_symbol);
+        symbolEditor = findViewById(R.id.book_editor_symbol);
         symbolEditor.setText(workingBook.getSymbol());
         
       //initial spinner
-        positionEditor = findViewById(R.id.bookeditor_symbol_position);
+        positionEditor = findViewById(R.id.book_editor_symbol_position);
         List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
         SymbolPosition symbolPos = workingBook.getSymbolPosition();
         int selpos,i;
@@ -104,15 +104,15 @@ public class BookEditorActivity extends ContextsActivity implements android.view
                 selpos = i;
             }
         }
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spitem, spfrom, spto);
-        adapter.setDropDownViewResource(R.layout.simple_spdd);
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown_item, spfrom, spto);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         adapter.setViewBinder(new SymbolPositionViewBinder());
         positionEditor.setAdapter(adapter);
         if(selpos>-1){
             positionEditor.setSelection(selpos);
         }
         
-        noteEditor = findViewById(R.id.bookeditor_note);
+        noteEditor = findViewById(R.id.book_editor_note);
         noteEditor.setText(workingBook.getNote());
         
         okBtn = findViewById(R.id.btn_ok);

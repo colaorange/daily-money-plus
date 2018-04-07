@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/book_mgnt_menu_new"
+        android:id="@+id/detail_mgnt_menu_new"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/cact_new"></item>
 </menu>

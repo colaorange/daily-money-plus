@@ -40,7 +40,7 @@ public class DetailListHelper implements OnItemClickListener{
     
     private static String[] bindingFrom = new String[] { "layout","layout_inner","from", "to", "money" , "note", "date" };
     
-    private static int[] bindingTo = new int[] { R.id.detlist_item_layout,R.id.detlist_item_layout_inner,R.id.detlist_item_from, R.id.detlist_item_to, R.id.detlist_item_money,R.id.detlist_item_note,R.id.detlist_item_date };
+    private static int[] bindingTo = new int[] { R.id.detail_mgnt_item_layout,R.id.detail_mgnt_item_layout_inner,R.id.detail_mgnt_item_from, R.id.detail_mgnt_item_to, R.id.detail_mgnt_item_money,R.id.detail_mgnt_item_note,R.id.detail_mgnt_item_date};
     
     
     private List<Detail> listViewData = new ArrayList<Detail>();
@@ -75,16 +75,16 @@ public class DetailListHelper implements OnItemClickListener{
         int layout = 0;
         switch(Contexts.instance().getPrefDetailListLayout()){
         case 2:
-            layout = R.layout.detail_list_item2;
+            layout = R.layout.detail_mgnt_item2;
             break;
         case 3:
-            layout = R.layout.detail_list_item3;
+            layout = R.layout.detail_mgnt_item3;
             break;
         case 4:
-            layout = R.layout.detail_list_item4;
+            layout = R.layout.detail_mgnt_item4;
             break;
         default:
-            layout = R.layout.detail_list_item1;
+            layout = R.layout.detail_mgnt_item1;
         }
         
         listViewAdapter = new SimpleAdapter(activity, listViewMapList, layout, bindingFrom, bindingTo);

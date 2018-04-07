@@ -5,55 +5,55 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/report_balance_toolbar"
+        android:id="@+id/balance_toolbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/report_balance_info_bg"
+        android:background="@color/balance_info_bg"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/report_balance_prev"
+            android:id="@+id/balance_prev"
             style="@style/editorActionBtn"
             android:src="@drawable/ic_arrow_back_white_24dp" />
 
         <ImageButton
-            android:id="@+id/report_balance_today"
+            android:id="@+id/balance_today"
             style="@style/editorActionBtn"
             android:src="@drawable/ic_today_white_24dp" />
 
         <ImageButton
-            android:id="@+id/report_balance_next"
+            android:id="@+id/balance_next"
             style="@style/editorActionBtn"
             android:src="@drawable/ic_arrow_forward_white_24dp" />
 
         <ImageButton
-            android:id="@+id/report_balance_mode"
+            android:id="@+id/balance_mode"
             style="@style/editorActionBtn"
             android:src="@drawable/ic_date_range_white_24dp" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/report_balance_infobar"
+        android:id="@+id/balance_infobar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/report_balance_info_bg"
+        android:background="@color/balance_info_bg"
         android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"
         android:text=""
-        android:textColor="@color/report_balance_info_fg"
+        android:textColor="@color/balance_info_fg"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/report_balance_list_bg">
+        android:background="@color/balance_bg">
 
         <ListView
-            android:id="@+id/report_balance_list"
+            android:id="@+id/balance_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -17,20 +17,20 @@ public class PasswordProtectionActivity extends ContextsActivity implements OnCl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pwd_protection);
-        findViewById(R.id.pdprot_ok).setOnClickListener(this);
+        findViewById(R.id.pwd_protection_ok).setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.pdprot_ok) {
+        if (v.getId() == R.id.pwd_protection_ok) {
             doPasswordOk();
         }
     }
 
     private void doPasswordOk() {
         String password = contexts().getPrefPassword();
-        String pd = ((TextView) findViewById(R.id.pdprot_text)).getText().toString();
+        String pd = ((TextView) findViewById(R.id.pwd_protection_text)).getText().toString();
         if (password.equals(pd)) {
             setResult(RESULT_OK);
             finish();

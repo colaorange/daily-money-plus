@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_mgnt_item_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <ImageView
-        android:id="@+id/book_mgnt_item_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center" />
-
     <LinearLayout
+        android:id="@+id/detail_mgnt_item_layout_inner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/book_mgnt_item_icon"
         android:orientation="vertical"
         android:paddingBottom="1dp"
         android:paddingRight="5dp">
@@ -23,27 +18,22 @@
             android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/detail_mgnt_item_money"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/book_mgnt_item_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:paddingRight="5dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                android:gravity="left"
+                android:paddingRight="5dp"
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/book_mgnt_item_symbol"
+                android:id="@+id/detail_mgnt_item_note"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:gravity="right" />
+                android:layout_weight="1"
+                android:gravity="right"
+                android:singleLine="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -53,15 +43,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:gravity="left"
-                android:singleLine="true"
-                android:text="ID:"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/book_mgnt_item_id"
+                android:id="@+id/detail_mgnt_item_date"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_marginRight="3dp"
@@ -69,12 +51,27 @@
                 android:singleLine="true"
                 android:textSize="11sp" />
 
-            <TextView
-                android:id="@+id/book_mgnt_item_note"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/detail_mgnt_item_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/detail_mgnt_item_from"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:gravity="right"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:singleLine="true"
                 android:textSize="11sp" />
         </LinearLayout>

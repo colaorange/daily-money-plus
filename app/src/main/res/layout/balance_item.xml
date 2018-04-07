@@ -6,24 +6,24 @@
     android:layout_marginRight="5dp">
 
     <LinearLayout
-        android:id="@+id/report_balance_layout"
+        android:id="@+id/balance_item_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/report_balance_item_name"
+            android:id="@+id/balance_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true" />
 
         <TextView
-            android:id="@+id/report_balance_item_money"
+            android:id="@+id/balance_item_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/report_balance_item_name"
+            android:layout_toRightOf="@id/balance_item_name"
             android:gravity="right" />
     </LinearLayout>
 </RelativeLayout>
