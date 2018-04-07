@@ -50,12 +50,12 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bookeditor);
-        initIntent();
-        initialEditor();
+        setContentView(R.layout.book_editor);
+        initParams();
+        initMembers();
     }
     
-    private void initIntent() {
+    private void initParams() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
         book = (Book)bundle.get(PARAM_BOOK);
@@ -81,7 +81,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     Button okBtn;
     Button cancelBtn;
     
-    private void initialEditor() {
+    private void initMembers() {
         nameEditor = findViewById(R.id.bookeditor_name);
         nameEditor.setText(workingBook.getName());
         

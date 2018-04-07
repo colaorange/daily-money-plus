@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.ui.legacy.report;
+package com.colaorange.dailymoney.ui.legacy;
 
 import java.util.List;
 

@@ -33,9 +33,9 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bookmgnt);
-        initialIntent();
-        initialContent();
+        setContentView(R.layout.book_mgnt);
+        initParams();
+        initMembers();
         GUIs.delayPost(new Runnable() {
             @Override
             public void run() {
@@ -45,12 +45,12 @@ public class BookMgntActivity extends ContextsActivity {
     }
     
 
-    private void initialIntent() {
+    private void initParams() {
 
     }
 
 
-    private void initialContent() {
+    private void initMembers() {
         
         
         bookListHelper = new BookListHelper(this, i18n,true, new BookListHelper.OnBookListener() {
@@ -104,7 +104,7 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.bookmgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.book_mgnt_optmenu, menu);
         return true;
     }
 
@@ -122,7 +122,7 @@ public class BookMgntActivity extends ContextsActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.bookmgnt_list) {
-            getMenuInflater().inflate(R.menu.bookmgnt_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);
         }
 
     }

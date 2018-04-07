@@ -85,7 +85,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.deteditor);
+        setContentView(R.layout.detail_editor);
         format = contexts().getDateFormat();
         initParams();
         initMembers();

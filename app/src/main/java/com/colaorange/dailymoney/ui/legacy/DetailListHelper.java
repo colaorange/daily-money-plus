@@ -75,16 +75,16 @@ public class DetailListHelper implements OnItemClickListener{
         int layout = 0;
         switch(Contexts.instance().getPrefDetailListLayout()){
         case 2:
-            layout = R.layout.detlist_item2;
+            layout = R.layout.detail_list_item2;
             break;
         case 3:
-            layout = R.layout.detlist_item3;
+            layout = R.layout.detail_list_item3;
             break;
         case 4:
-            layout = R.layout.detlist_item4;
+            layout = R.layout.detail_list_item4;
             break;
         default:
-            layout = R.layout.detlist_item1;
+            layout = R.layout.detail_list_item1;
         }
         
         listViewAdapter = new SimpleAdapter(activity, listViewMapList, layout, bindingFrom, bindingTo);

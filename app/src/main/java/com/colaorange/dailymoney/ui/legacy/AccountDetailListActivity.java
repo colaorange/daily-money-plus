@@ -52,19 +52,19 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accdetlist);
-        initialIntent();
-        initialContent();
+        setContentView(R.layout.account_detail_list);
+        initParams();
+        initMembers();
         GUIs.delayPost(new Runnable() {
             @Override
             public void run() {
-                reloadData();
+                refreshUI();
             }
         },25);
     }
     
 
-    private void initialIntent() {
+    private void initParams() {
         Bundle b = getIntentExtras(); 
         startDate = (Date)b.get(PARAM_START);
         endDate = (Date)b.get(PARAM_END);
@@ -77,7 +77,8 @@ public class AccountDetailListActivity extends ContextsActivity {
         String toStr = endDate==null?"":format.format(endDate);
 
         info = info + i18n.string(R.string.label_accdetlist_dateinfo,fromStr,toStr); 
-        
+
+        //TODO
         if(target instanceof AccountType){
         }else if(target instanceof Account){
         }else if(target instanceof String){
@@ -88,13 +89,13 @@ public class AccountDetailListActivity extends ContextsActivity {
     }
 
 
-    private void initialContent() {
+    private void initMembers() {
         
         detailListHelper = new DetailListHelper(this, i18n,calHelper,true,new DetailListHelper.OnDetailListener() {
             @Override
             public void onDetailDeleted(Detail detail) {
                 GUIs.shortToast(AccountDetailListActivity.this, i18n.string(R.string.msg_detail_deleted));
-                reloadData();
+                refreshUI();
                 setResult(RESULT_OK);
             }
         });
@@ -113,17 +114,17 @@ public class AccountDetailListActivity extends ContextsActivity {
             GUIs.delayPost(new Runnable(){
                 @Override
                 public void run() {
-                    reloadData();
+                    refreshUI();
                     setResult(RESULT_OK);
                 }});
             
         }
     }
     
-    private void reloadData() {
+    private void refreshUI() {
         infoView.setText(info);
         final IDataProvider idp = contexts().getDataProvider();
-//        detailListHelper.reloadData(idp.listAllDetail());
+//        detailListHelper.refreshUI(idp.listAllDetail());
         GUIs.doBusy(this,new GUIs.BusyAdapter() {
             @SuppressWarnings("unchecked")
             List<Detail> data = Collections.EMPTY_LIST;
@@ -152,7 +153,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.accdetlist_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_detail_list_optmenu, menu);
         return true;
     }
     
@@ -169,7 +170,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.accdetlist_list) {
-            getMenuInflater().inflate(R.menu.accdetlist_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.account_detail_list_ctxmenu, menu);
         }
 
     }

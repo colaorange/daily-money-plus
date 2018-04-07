@@ -26,7 +26,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.localwebview);
+        setContentView(R.layout.local_webview);
 
         initParams();
         initMembers();

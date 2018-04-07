@@ -60,17 +60,17 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accmgnt);
-        initialTab();
-        initialContent();
+        setContentView(R.layout.account_mgnt);
+        initMembers();
         
-        reloadData();
+        refreshUI();
     }
 
-    private void initialTab() {
+    private void initMembers() {
+
+        //tabs
         TabHost tabs = findViewById(R.id.accmgnt_tabs);
         tabs.setup();
-
         
         AccountType[] ata = AccountType.getSupportedType();
         Resources r = getResources();
@@ -91,10 +91,8 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
         tabs.setOnTabChangedListener(this);
 
-    }
-
-    private void initialContent() {
-        listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.accmgnt_item, bindingFrom, bindingTo);
+        //
+        listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.account_mgnt_item, bindingFrom, bindingTo);
         listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder(){
 
             @Override
@@ -156,13 +154,13 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
             GUIs.delayPost(new Runnable(){
                 @Override
                 public void run() {
-                    reloadData();
+                    refreshUI();
                 }});
             
         }
     }
 
-    private void reloadData() {
+    private void refreshUI() {
         IDataProvider idp = contexts().getDataProvider();
         listViewData = null;
 
@@ -184,13 +182,13 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     @Override
     public void onTabChanged(String tabId) {
         currTab = tabId;
-        reloadData();
+        refreshUI();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.accmgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_mgnt_optmenu, menu);
         return true;
     }
 
@@ -207,7 +205,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.accmgnt_list) {
-            getMenuInflater().inflate(R.menu.accmgnt_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);
         }
 
     }
@@ -234,7 +232,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         String name = acc.getName();
 
         contexts().getDataProvider().deleteAccount(acc.getId());
-        reloadData();
+        refreshUI();
         GUIs.shortToast(this, i18n.string(R.string.msg_account_deleted, name));
         trackEvent(Contexts.TRACKER_EVT_DELETE);
 

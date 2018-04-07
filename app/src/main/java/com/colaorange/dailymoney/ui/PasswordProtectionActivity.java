@@ -16,7 +16,7 @@ public class PasswordProtectionActivity extends ContextsActivity implements OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pdprotection);
+        setContentView(R.layout.pwd_protection);
         findViewById(R.id.pdprot_ok).setOnClickListener(this);
     }
 

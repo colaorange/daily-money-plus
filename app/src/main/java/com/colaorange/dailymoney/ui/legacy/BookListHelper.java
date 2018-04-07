@@ -60,7 +60,7 @@ public class BookListHelper implements OnItemClickListener{
     
     public void setup(ListView listview){
         
-        int layout = R.layout.bookmgnt_item;
+        int layout = R.layout.book_mgnt_item;
         
         listViewAdapter = new SimpleAdapter(activity, listViewMapList, layout, bindingFrom, bindingTo);
         listViewAdapter.setViewBinder(new ListViewBinder());

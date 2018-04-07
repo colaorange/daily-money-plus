@@ -21,3 +21,5 @@
     https://fontawesome.com/license
 * Layout
     https://github.com/google/flexbox-layout
+* Material design component
+    https://material.io/components/android/catalog/text-input-layout/

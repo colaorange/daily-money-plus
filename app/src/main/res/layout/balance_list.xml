@@ -7,38 +7,29 @@
     <LinearLayout
         android:id="@+id/report_balance_toolbar"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:background="@color/report_balance_info_bg"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="0.5dp">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/report_balance_prev"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/editorActionBtn"
             android:src="@drawable/ic_arrow_back_white_24dp" />
 
         <ImageButton
             android:id="@+id/report_balance_today"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/editorActionBtn"
             android:src="@drawable/ic_today_white_24dp" />
 
         <ImageButton
             android:id="@+id/report_balance_next"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/editorActionBtn"
             android:src="@drawable/ic_arrow_forward_white_24dp" />
 
         <ImageButton
             android:id="@+id/report_balance_mode"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/editorActionBtn"
             android:src="@drawable/ic_date_range_white_24dp" />
 
     </LinearLayout>

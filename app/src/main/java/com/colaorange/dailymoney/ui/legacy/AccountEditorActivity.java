@@ -37,8 +37,8 @@ import com.colaorange.dailymoney.ui.Constants;
  */
 public class AccountEditorActivity extends ContextsActivity implements android.view.View.OnClickListener{
 
-    public static final String PARAM_MODE_CREATE = "acceditor.modeCreate";
-    public static final String PARAM_ACCOUNT = "acceditor.account";
+    public static final String PARAM_MODE_CREATE = "account_editor.modeCreate";
+    public static final String PARAM_ACCOUNT = "account_editor.account";
         
     private boolean modeCreate;
     private int counterCreate;
@@ -60,17 +60,17 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.acceditor);
-        initIntent();
-        initialEditor();
+        setContentView(R.layout.account_editor);
+        initParams();
+        initMembers();
     }
     
-    private void initIntent() {
+    private void initParams() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
         account = (Account)bundle.get(PARAM_ACCOUNT);
         workingAccount = clone(account);
-        
+
         if(modeCreate){
             setTitle(R.string.title_acceditor_create);
         }else{
@@ -91,7 +91,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     Button cancelBtn;
     Button closeBtn;
     
-    private void initialEditor() {
+    private void initMembers() {
         nameEditor = findViewById(R.id.acceditor_name);
         nameEditor.setText(workingAccount.getName());
         
@@ -102,30 +102,33 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         typeEditor = findViewById(R.id.acceditor_type);
         List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
         String type = workingAccount.getType();
-        int selpos,i;
-        selpos = i = -1;
+
+        AccountType selType = null;
+        int selpos = 0;
+        int i = 0;
         for (AccountType at : AccountType.getSupportedType()) {
-            i++;
-            Map<String, Object> row = new HashMap<String, Object>();
+            Map<String, Object> row = new HashMap<>();
             data.add(row);
             row.put(spfrom[0], new NamedItem(spfrom[0],at,at.getDisplay(i18n)));
             
             if(at.getType().equals(type)){
                 selpos = i;
+                selType = at;
             }
+            i++;
         }
+
+
         SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spitem, spfrom, spto);
         adapter.setDropDownViewResource(R.layout.simple_spdd);
         adapter.setViewBinder(new AccountTypeViewBinder());
         typeEditor.setAdapter(adapter);
-        if(selpos>-1){
-            typeEditor.setSelection(selpos);
-        }
+        typeEditor.setSelection(selpos);
         typeEditor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 AccountType type = AccountType.getSupportedType()[typeEditor.getSelectedItemPosition()];
-                onTypeChanged(type);
+                doTypeChanged(type);
             }
 
             @Override
@@ -135,6 +138,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         
         
         cashAccountEditor = findViewById(R.id.acceditor_cash_account);
+
         cashAccountEditor.setChecked(workingAccount.isCashAccount());
         
         okBtn = findViewById(R.id.acceditor_ok);
@@ -155,9 +159,10 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         cancelBtn.setOnClickListener(this);
         closeBtn.setOnClickListener(this);
         cal2Btn.setOnClickListener(this);
-        
-        onTypeChanged(AccountType.getSupportedType()[selpos]);
+
+        doTypeChanged(selType);
     }
+
     
     @Override
     public void onClick(View v) {
@@ -274,14 +279,13 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         finish();
     }
     
-    private void onTypeChanged(AccountType type){
-        //allow income and expense have initial value, since 1/15
-//        boolean enableInitval = !(type==AccountType.INCOME || type==AccountType.EXPENSE);
-//        initvalEditor.setEnabled(enableInitval);
-//        cal2Btn.setEnabled(enableInitval);
-//        if(!enableInitval){
-//            initvalEditor.setText("0");
-//        }
+    private void doTypeChanged(AccountType type){
+        if(AccountType.ASSET.equals(type)){
+            cashAccountEditor.setVisibility(View.VISIBLE);
+        }else{
+            cashAccountEditor.setVisibility(View.INVISIBLE);
+            cashAccountEditor.setChecked(false);
+        }
     }
     
     class AccountTypeViewBinder implements SimpleAdapter.ViewBinder{

@@ -58,14 +58,14 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.datamain);
+        setContentView(R.layout.data_maintenance);
         workingFolder = contexts().getWorkingFolder();
         backupcsv = contexts().isPrefBackupCSV();
         
         vercode = contexts().getAppVerCode();
         csvEncoding = contexts().getPrefCSVEncoding();
 
-        initialListener();
+        initMembers();
 
 
     }
@@ -104,7 +104,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
     }
 
-    private void initialListener() {
+    private void initMembers() {
         findViewById(R.id.datamain_request_permission).setOnClickListener(this);
         findViewById(R.id.datamain_backup).setOnClickListener(this);
         findViewById(R.id.datamain_export_csv).setOnClickListener(this);
