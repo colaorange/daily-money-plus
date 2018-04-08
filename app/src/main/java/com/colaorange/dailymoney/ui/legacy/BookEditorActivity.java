@@ -15,7 +15,9 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -26,27 +28,29 @@ import com.colaorange.dailymoney.ui.Constants;
 
 /**
  * Edit or create a book
- * @author dennis
  *
+ * @author dennis
  */
-public class BookEditorActivity extends ContextsActivity implements android.view.View.OnClickListener{
+public class BookEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
     public static final String PARAM_MODE_CREATE = "bkeditor.modeCreate";
     public static final String PARAM_BOOK = "bkeditor.book";
-        
+
     private boolean modeCreate;
     private Book book;
     private Book workingBook;
 
     Activity activity;
-    
-    
-    /** clone book without id **/
-    private Book clone(Book book){
-        Book b = new Book(book.getName(),book.getSymbol(),book.getSymbolPosition(),book.getNote());
+
+
+    /**
+     * clone book without id
+     **/
+    private Book clone(Book book) {
+        Book b = new Book(book.getName(), book.getSymbol(), book.getSymbolPosition(), book.getNote());
         return b;
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,53 +58,55 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         initParams();
         initMembers();
     }
-    
+
     private void initParams() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
-        book = (Book)bundle.get(PARAM_BOOK);
+        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
+        book = (Book) bundle.get(PARAM_BOOK);
         workingBook = clone(book);
-        
-        if(modeCreate){
+
+        if (modeCreate) {
             setTitle(R.string.title_bookeditor_create);
-        }else{
+        } else {
             setTitle(R.string.title_bookeditor_update);
         }
     }
 
-    /** need to mapping twice to do different mapping in spitem and spdropdown item*/
-    private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY};
-    private static int[] spto = new int[] { R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
-    
+    /**
+     * need to mapping twice to do different mapping in spitem and spdropdown item
+     */
+    private static String[] spfrom = new String[]{Constants.DISPLAY, Constants.DISPLAY};
+    private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
+
     EditText nameEditor;
     EditText symbolEditor;
     EditText noteEditor;
     Spinner positionEditor;
-    
-    
+
+
     Button okBtn;
     Button cancelBtn;
-    
+
     private void initMembers() {
         nameEditor = findViewById(R.id.book_editor_name);
         nameEditor.setText(workingBook.getName());
-        
+
         symbolEditor = findViewById(R.id.book_editor_symbol);
         symbolEditor.setText(workingBook.getSymbol());
-        
-      //initial spinner
+
+        //initial spinner
         positionEditor = findViewById(R.id.book_editor_symbol_position);
-        List<Map<String, Object>> data = new  ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         SymbolPosition symbolPos = workingBook.getSymbolPosition();
-        int selpos,i;
+        int selpos, i;
         selpos = i = -1;
         for (SymbolPosition sp : SymbolPosition.getAvailable()) {
             i++;
             Map<String, Object> row = new HashMap<String, Object>();
             data.add(row);
-            row.put(spfrom[0], new NamedItem(spfrom[0],sp,sp.getDisplay(i18n)));
-            
-            if(sp.equals(symbolPos)){
+            row.put(spfrom[0], new NamedItem(spfrom[0], sp, sp.getDisplay(i18n())));
+
+            if (sp.equals(symbolPos)) {
                 selpos = i;
             }
         }
@@ -108,30 +114,30 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         adapter.setViewBinder(new SymbolPositionViewBinder());
         positionEditor.setAdapter(adapter);
-        if(selpos>-1){
+        if (selpos > -1) {
             positionEditor.setSelection(selpos);
         }
-        
+
         noteEditor = findViewById(R.id.book_editor_note);
         noteEditor.setText(workingBook.getNote());
-        
+
         okBtn = findViewById(R.id.btn_ok);
-        if(modeCreate){
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp,0,0,0);
+        if (modeCreate) {
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_create);
-        }else{
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp,0,0,0);
+        } else {
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp, 0, 0, 0);
             okBtn.setText(R.string.cact_update);
         }
         okBtn.setOnClickListener(this);
-        
-        
+
+
         cancelBtn = findViewById(R.id.btn_cancel);
 
-        
+
         cancelBtn.setOnClickListener(this);
     }
-    
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_ok) {
@@ -141,34 +147,35 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         }
     }
 
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private void doOk(){   
-        //verify
-      //verify
-        if(Spinner.INVALID_POSITION==positionEditor.getSelectedItemPosition()){
-            GUIs.shortToast(this,i18n.string(R.string.cmsg_field_empty,i18n.string(R.string.label_symbol_position)));
+
+    private void doOk() {
+        I18N i18n = i18n();
+
+        if (Spinner.INVALID_POSITION == positionEditor.getSelectedItemPosition()) {
+            GUIs.shortToast(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_symbol_position)));
             return;
         }
-        
+
         String name = nameEditor.getText().toString().trim();
-        if("".equals(name)){
+        if ("".equals(name)) {
             nameEditor.requestFocus();
-            GUIs.alert(this,i18n.string(R.string.cmsg_field_empty,i18n.string(R.string.clabel_name)));
+            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_name)));
             return;
         }
 
         SymbolPosition pos = SymbolPosition.getAvailable()[positionEditor.getSelectedItemPosition()];
-        
+
         //assign
         workingBook.setName(name);
         workingBook.setSymbol(symbolEditor.getText().toString().trim());
         workingBook.setNote(noteEditor.getText().toString().trim());
         workingBook.setSymbolPosition(pos);
-        
+
         IMasterDataProvider idp = contexts().getMasterDataProvider();
 
         if (modeCreate) {
@@ -176,7 +183,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             GUIs.shortToast(this, i18n.string(R.string.msg_book_created, name));
             trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
-            idp.updateBook(book.getId(),workingBook);
+            idp.updateBook(book.getId(), workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_updated, name));
             setResult(RESULT_OK);
             finish();
@@ -184,25 +191,25 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         }
         setResult(RESULT_OK);
         finish();
-        
+
     }
-    
+
     private void doCancel() {
         setResult(RESULT_CANCELED);
         finish();
     }
-    
-    class SymbolPositionViewBinder implements SimpleAdapter.ViewBinder{
+
+    class SymbolPositionViewBinder implements SimpleAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Object data, String text) {
-            
-            NamedItem item = (NamedItem)data;
+
+            NamedItem item = (NamedItem) data;
             String name = item.getName();
-            if(!(view instanceof TextView)){
-               return false;
+            if (!(view instanceof TextView)) {
+                return false;
             }
-            if(Constants.DISPLAY.equals(name)){
-                TextView tv = (TextView)view;
+            if (Constants.DISPLAY.equals(name)) {
+                TextView tv = (TextView) view;
                 tv.setTextColor(getResources().getColor(R.color.symbolpos_fgl));
                 tv.setText(item.getToString());
                 return true;

@@ -3,7 +3,9 @@ package com.colaorange.dailymoney.ui.legacy;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.context.Contexts;
 
 /**
  * 
@@ -18,6 +20,8 @@ public class ReportsDesktop extends AbstractDesktop {
 
     @Override
     protected void init() {
+        I18N i18n = Contexts.instance().getI18n();
+
         label = i18n.string(R.string.dt_reports);
         
         Intent intent = null;

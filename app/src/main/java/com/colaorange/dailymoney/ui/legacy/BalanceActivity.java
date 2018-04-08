@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
@@ -261,7 +262,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
 
     private void refreshData() {
-        final CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         currentEndDate = null;
         currentStartDate = null;
         infoView.setText("");
@@ -281,7 +282,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             @Override
             public void run() {
-                boolean hierarchical = contexts().isPrefHierarachicalReport();
+                I18N i18n = i18n();
+                boolean hierarchical = preference().isHierarchicalBalance();
 
                 List<Balance> asset = BalanceHelper.calculateBalanceList(AccountType.ASSET, currentStartDate, currentEndDate);
                 List<Balance> income = BalanceHelper.calculateBalanceList(AccountType.INCOME, currentStartDate, currentEndDate);
@@ -341,7 +343,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             @Override
             public void onBusyFinish() {
-                final CalendarHelper cal = contexts().getCalendarHelper();
+                I18N i18n = i18n();
+                CalendarHelper cal = calendarHelper();
+
                 listViewData.clear();
                 listViewData.addAll(all);
                 listViewMapList.clear();
@@ -408,7 +412,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void onNext() {
-        CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_MONTH:
                 currentDate = cal.monthAfter(currentDate, 1);
@@ -422,7 +426,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void onPrev() {
-        CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_MONTH:
                 currentDate = cal.monthBefore(currentDate, 1);
@@ -458,7 +462,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             doYearlyRunChart();
             return true;
         } else if (item.getItemId() == R.id.balance_menu_toggle_hierarchy) {
-            contexts().setPrefHierarachicalReport(!contexts().isPrefHierarachicalReport());
+            preference().setHierarchicalBalance(!preference().isHierarchicalBalance());
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
@@ -580,6 +584,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @Override
             public void run() {
+                CalendarHelper calHelper = calendarHelper();
+                I18N i18n = i18n();
                 Balance b = listViewData.get(pos);
                 AccountType at;
                 List<Balance> group = b.getGroup();
@@ -621,6 +627,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @Override
             public void run() {
+                CalendarHelper calHelper = calendarHelper();
+                I18N i18n = i18n();
 
                 Balance b = listViewData.get(pos);
                 AccountType at;
@@ -667,6 +675,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @Override
             public void run() {
+                CalendarHelper calHelper = calendarHelper();
+                I18N i18n = i18n();
+
                 boolean[] yearly = new boolean[]{false, false, true, true, false};
                 AccountType[] ats = new AccountType[]{AccountType.ASSET, AccountType.LIABILITY, AccountType.INCOME, AccountType.EXPENSE, AccountType.OTHER};
                 List<List<Balance>> balances = new ArrayList<List<Balance>>();

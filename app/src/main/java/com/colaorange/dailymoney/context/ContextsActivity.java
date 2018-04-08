@@ -19,16 +19,11 @@ public class ContextsActivity extends AppCompatActivity {
 
     public static final String PARAM_TITLE = "activity.title";
 
-    protected I18N i18n;
-    protected CalendarHelper calHelper;
-
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Logger.d("activity created:" + this);
-
-        refreshUtil();
     }
 
     @Override
@@ -64,11 +59,13 @@ public class ContextsActivity extends AppCompatActivity {
         ctxs.trackEvent(getTrackerPath(), action, "", null);
     }
 
-    private void refreshUtil() {
-        i18n = contexts().getI18n();
-        calHelper = contexts().getCalendarHelper();
+    protected I18N i18n(){
+        return contexts().getI18n();
     }
 
+    protected CalendarHelper calendarHelper(){
+        return preference().getCalendarHelper();
+    }
 
     @Override
     protected void onDestroy() {
@@ -100,8 +97,6 @@ public class ContextsActivity extends AppCompatActivity {
         if (t != null) {
             setTitle(t);
         }
-
-        refreshUtil();
     }
 
 
@@ -120,6 +115,10 @@ public class ContextsActivity extends AppCompatActivity {
 
     protected Contexts contexts() {
         return Contexts.instance();
+    }
+
+    protected Preference preference(){
+        return contexts().getPreference();
     }
 
 

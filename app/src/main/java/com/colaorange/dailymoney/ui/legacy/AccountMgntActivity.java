@@ -76,7 +76,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         Resources r = getResources();
         for(AccountType at:ata){
             TabSpec tab = tabs.newTabSpec(at.getType());
-            tab.setIndicator(AccountType.getDisplay(i18n, tab.getTag()),r.getDrawable(at.getDrawable()));
+            tab.setIndicator(AccountType.getDisplay(i18n(), tab.getTag()),r.getDrawable(at.getDrawable()));
             tab.setContent(R.id.accmgnt_list);
             tabs.addTab(tab);
             if(currTab==null){
@@ -132,7 +132,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 //                    return true;
 //                }
                 
-                text = i18n.string(R.string.label_initial_value)+" : "+data.toString();
+                text = i18n().string(R.string.label_initial_value)+" : "+data.toString();
                 tv.setText(text);
                 return true;
             }});
@@ -233,7 +233,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
         contexts().getDataProvider().deleteAccount(acc.getId());
         refreshUI();
-        GUIs.shortToast(this, i18n.string(R.string.msg_account_deleted, name));
+        GUIs.shortToast(this, i18n().string(R.string.msg_account_deleted, name));
         trackEvent(Contexts.TRACKER_EVT_DELETE);
 
     }

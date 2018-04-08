@@ -53,10 +53,10 @@ public class BookMgntActivity extends ContextsActivity {
     private void initMembers() {
         
         
-        bookListHelper = new BookListHelper(this, i18n,true, new BookListHelper.OnBookListener() {
+        bookListHelper = new BookListHelper(this, true, new BookListHelper.OnBookListener() {
             @Override
             public void onBookDeleted(Book book) {
-                GUIs.shortToast(BookMgntActivity.this, i18n.string(R.string.msg_book_deleted,book.getName()));
+                GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted,book.getName()));
                 reloadData();
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }

@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -90,6 +91,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void initMembers() {
+
         dayDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         weekDateFormat = new SimpleDateFormat("MM/dd");
         monthDateFormat = new SimpleDateFormat("yyyy/MM - MMM");
@@ -107,10 +109,10 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
         modeBtn.setOnClickListener(this);
 
-        detailListHelper = new DetailListHelper(this, i18n, calHelper, true, new DetailListHelper.OnDetailListener() {
+        detailListHelper = new DetailListHelper(this, true, new DetailListHelper.OnDetailListener() {
             @Override
             public void onDetailDeleted(Detail detail) {
-                GUIs.shortToast(DetailListActivity.this, i18n.string(R.string.msg_detail_deleted));
+                GUIs.shortToast(DetailListActivity.this, i18n().string(R.string.msg_detail_deleted));
                 refreshUI();
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
@@ -180,7 +182,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
 
     private void refreshData() {
-        final CalendarHelper cal = contexts().getCalendarHelper();
+        final CalendarHelper cal = calendarHelper();
         final Date start;
         final Date end;
         infoView.setText("");
@@ -250,7 +252,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
             @Override
             public void run() {
-                data = idp.listDetail(start, end, contexts().getPrefMaxRecords());
+                data = idp.listDetail(start, end, preference().getMaxRecords());
                 count = idp.countDetail(start, end);
                 income = idp.sumFrom(AccountType.INCOME, start, end);
                 expense = idp.sumTo(AccountType.EXPENSE, start, end);//nagivate
@@ -262,7 +264,9 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
             @Override
             public void onBusyFinish() {
-                final CalendarHelper cal = contexts().getCalendarHelper();
+                CalendarHelper cal = calendarHelper();
+                I18N i18n = i18n();
+
                 sumUnknowView.setVisibility(TextView.GONE);
                 //update data
                 detailListHelper.reloadData(data);
@@ -409,7 +413,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void onNext() {
-        CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_DAY:
                 currentDate = cal.dateAfter(currentDate, 1);
@@ -428,7 +432,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void onPrev() {
-        CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_DAY:
                 currentDate = cal.dateBefore(currentDate, 1);

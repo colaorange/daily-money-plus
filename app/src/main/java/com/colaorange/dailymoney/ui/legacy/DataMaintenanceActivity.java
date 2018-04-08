@@ -60,10 +60,10 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data_maintenance);
         workingFolder = contexts().getWorkingFolder();
-        backupcsv = contexts().isPrefBackupCSV();
+        backupcsv = preference().isBackupCSV();
         
         vercode = contexts().getAppVerCode();
-        csvEncoding = contexts().getPrefCSVEncoding();
+        csvEncoding = preference().getCSVEncoding();
 
         initMembers();
 
@@ -94,13 +94,13 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             workingFolderText.setText(workingFolder.getAbsolutePath());
         } else {
             workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_alert), null, null, null);
-            workingFolderText.setText(i18n.string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
+            workingFolderText.setText(i18n().string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
         }
 
         TextView lastBackupText = findViewById(R.id.datamain_lastbackup);
 
-        if(contexts().getPrefLastBackup()!=null) {
-            lastBackupText.setText(contexts().getPrefLastBackup());
+        if(preference().getLastBackup()!=null) {
+            lastBackupText.setText(preference().getLastBackup());
         }
     }
 
@@ -159,8 +159,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void onBusyFinish() {
                 if (result.isSuccess()) {
                     String count = ""+(result.getDb()+result.getPref());
-                    String msg = i18n.string(R.string.msg_db_backuped, count, workingFolder);
-                    contexts().setPrefLastBackupTime(now);
+                    String msg = i18n().string(R.string.msg_db_backuped, count, workingFolder);
+                    preference().setLastBackupTime(now);
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                     refreshUI();
                 } else {
@@ -189,9 +189,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void onBusyFinish() {
                 if (result.isSuccess()) {
                     String count = ""+(result.getDb()+result.getPref());
-                    String msg = i18n.string(R.string.msg_db_restored, count, workingFolder);
+                    String msg = i18n().string(R.string.msg_db_restored, count, workingFolder);
                     if(lastBakcup!=null){
-                        contexts().setPrefLastBackupTime(lastBakcup);
+                        preference().setLastBackupTime(lastBakcup);
                     }
                     GUIs.alert(DataMaintenanceActivity.this, msg);
                 } else {
@@ -201,14 +201,14 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
             @Override
             public void run() {
-                lastBakcup = contexts().getPrefLastBackupTime();
+                lastBakcup = preference().getLastBackupTime();
                 result = BackupRestorer.restore();
                 trackEvent("restore");
             }
         };
 
 
-        GUIs.confirm(this, i18n.string(R.string.qmsg_restore_data), new GUIs.OnFinishListener() {
+        GUIs.confirm(this, i18n().string(R.string.qmsg_restore_data), new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(Object data) {
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
@@ -220,7 +220,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void doReset() {
-        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_reset))
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.qmsg_reset))
                 .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
@@ -247,7 +247,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
             @Override
             public void onBusyFinish() {
-                GUIs.alert(DataMaintenanceActivity.this, i18n.string(R.string.msg_folder_cleared,workingFolder));
+                GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.msg_folder_cleared,workingFolder));
             }
 
             @Override
@@ -262,7 +262,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             }
         };
 
-        GUIs.confirm(this, i18n.string(R.string.qmsg_clear_folder,workingFolder), new GUIs.OnFinishListener() {
+        GUIs.confirm(this, i18n().string(R.string.qmsg_clear_folder,workingFolder), new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(Object data) {
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
@@ -285,11 +285,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             @Override
             public void run() {
                 IDataProvider idp = contexts().getDataProvider();
-                new DataCreator(idp, i18n).createDefaultAccount();
+                new DataCreator(idp, i18n()).createDefaultAccount();
             }
         };
 
-        GUIs.confirm(this, i18n.string(R.string.qmsg_create_default), new GUIs.OnFinishListener() {
+        GUIs.confirm(this, i18n().string(R.string.qmsg_create_default), new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(Object data) {
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
@@ -302,7 +302,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void doExportCSV() {
         final int workingBookId = contexts().getWorkingBookId();
-        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_export_csv))
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.qmsg_export_csv))
                 .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
@@ -313,7 +313,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                             }
                             public void onBusyFinish() {
                                 if(count>=0){
-                                    String msg = i18n.string(R.string.msg_csv_exported,Integer.toString(count),workingFolder);
+                                    String msg = i18n().string(R.string.msg_csv_exported,Integer.toString(count),workingFolder);
                                     GUIs.alert(DataMaintenanceActivity.this,msg);
                                 }else{
                                     GUIs.alert(DataMaintenanceActivity.this,R.string.msg_no_csv);
@@ -336,7 +336,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void doImportCSV() {
         final int workingBookId = contexts().getWorkingBookId();
-        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_import_csv))
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.qmsg_import_csv))
                 .setItems(R.array.csv_type_import_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
@@ -347,7 +347,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                             }
                             public void onBusyFinish() {
                                 if(count>=0){
-                                    String msg = i18n.string(R.string.msg_csv_imported,Integer.toString(count),workingFolder);
+                                    String msg = i18n().string(R.string.msg_csv_imported,Integer.toString(count),workingFolder);
                                     GUIs.alert(DataMaintenanceActivity.this,msg);
                                 }else{
                                     GUIs.alert(DataMaintenanceActivity.this,R.string.msg_no_csv);
@@ -369,7 +369,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
     
     private void doShareCSV() {        
-        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_share_csv))
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.qmsg_share_csv))
                 .setItems(R.array.csv_type_options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
@@ -383,7 +383,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                     GUIs.alert(DataMaintenanceActivity.this,R.string.msg_no_csv);
                                 }else{
                                     DateFormat df = contexts().getDateFormat();
-                                    contexts().shareTextContent(DataMaintenanceActivity.this, i18n.string(R.string.msg_share_csv_title,df.format(new Date())),i18n.string(R.string.msg_share_csv_content),files);
+                                    contexts().shareTextContent(DataMaintenanceActivity.this, i18n().string(R.string.msg_share_csv_title,df.format(new Date())),i18n().string(R.string.msg_share_csv_content),files);
                                 }
                             }
                             @Override

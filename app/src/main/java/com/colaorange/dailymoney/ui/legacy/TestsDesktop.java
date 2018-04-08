@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
@@ -29,11 +30,13 @@ public class TestsDesktop extends AbstractDesktop {
     
     @Override
     public boolean isAvailable(){
-        return Contexts.instance().isPrefOpenTestsDesktop();
+        return Contexts.instance().getPreference().isOpenTestsDesktop();
     }
 
     @Override
     protected void init() {
+        I18N i18n = Contexts.instance().getI18n();
+
         label = i18n.string(R.string.dt_tests);
         
         DesktopItem dt = null;
@@ -214,6 +217,7 @@ public class TestsDesktop extends AbstractDesktop {
             }
             @Override
             public void run() {
+                I18N i18n = Contexts.instance().getI18n();
                 IDataProvider idp = Contexts.instance().getDataProvider();
                 new DataCreator(idp,i18n).createTestData(loop);
             }});

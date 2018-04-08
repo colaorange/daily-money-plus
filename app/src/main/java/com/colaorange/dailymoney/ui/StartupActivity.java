@@ -60,7 +60,7 @@ public class StartupActivity extends ContextsActivity {
      * @return true if handling
      */
     private boolean handleProtection() {
-        final String password = contexts().getPrefPassword();
+        final String password = preference().getPassword();
         if("".equals(password)||passedProtection){
             return false;
         }
@@ -81,7 +81,7 @@ public class StartupActivity extends ContextsActivity {
     private void doFirstTime() {
         IDataProvider idp = contexts().getDataProvider();
         if (idp.listAccount(null).size() == 0) {//just in case
-            new DataCreator(idp, i18n).createDefaultAccount();
+            new DataCreator(idp, i18n()).createDefaultAccount();
         }
         GUIs.longToast(this, R.string.msg_firsttime_use_hint);
         trackEvent("first_time");

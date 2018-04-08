@@ -5,6 +5,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.data.Detail;
@@ -24,6 +25,7 @@ public class MainDesktop extends AbstractDesktop {
 
     @Override
     protected void init() {
+        I18N i18n = Contexts.instance().getI18n();
         label = i18n.string(R.string.dt_main);
 
         DesktopItem adddetdt = new DesktopItem(new Runnable() {

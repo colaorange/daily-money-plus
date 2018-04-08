@@ -39,7 +39,7 @@ public class LocalWebViewActivity extends ContextsActivity {
 
         int rid = bundle.getInt(PARAM_URI_RES_ID, -1);
         if (rid != -1) {
-            uri = i18n.string(rid);
+            uri = i18n().string(rid);
         } else {
             uri = bundle.getString(PARAM_URI);
         }
@@ -63,7 +63,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuItem mi = menu.add(i18n.string(R.string.cact_close));
+        MenuItem mi = menu.add(i18n().string(R.string.cact_close));
         mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

@@ -18,9 +18,11 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
 import com.colaorange.calculator2.Calculator;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -92,6 +94,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     Button closeBtn;
     
     private void initMembers() {
+        I18N i18n = i18n();
+
         nameEditor = findViewById(R.id.account_editor_name);
         nameEditor.setText(workingAccount.getName());
         
@@ -198,7 +202,9 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             }
         }
     }
-    private void doOk(){   
+    private void doOk(){
+
+        I18N i18n = i18n();
         //verify
         if(Spinner.INVALID_POSITION==typeEditor.getSelectedItemPosition()){
             GUIs.shortToast(this,i18n.string(R.string.cmsg_field_empty,i18n.string(R.string.clabel_type)));
@@ -275,7 +281,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
     private void doClose() {
         setResult(RESULT_OK);
-        GUIs.shortToast(this,i18n.string(R.string.msg_created_account,counterCreate));
+        GUIs.shortToast(this,i18n().string(R.string.msg_created_account,counterCreate));
         finish();
     }
     

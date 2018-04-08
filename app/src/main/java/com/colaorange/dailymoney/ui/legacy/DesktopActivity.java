@@ -25,7 +25,9 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -167,7 +169,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
-                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.app_name));
+                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
                 }
             });
@@ -189,6 +191,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void refreshUI() {
 
+        CalendarHelper calHelper = calendarHelper();
+        I18N i18n = i18n();
 
         IMasterDataProvider imdp = Contexts.instance().getMasterDataProvider();
         Book book = imdp.findBook(Contexts.instance().getWorkingBookId());

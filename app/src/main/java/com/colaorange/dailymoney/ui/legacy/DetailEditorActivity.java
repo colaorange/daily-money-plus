@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.GUIs;
+import com.colaorange.commons.util.I18N;
 import com.colaorange.commons.util.Logger;
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.context.Contexts;
@@ -329,7 +330,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     @Override
     public void onClick(View v) {
-        CalendarHelper cal = contexts().getCalendarHelper();
+        CalendarHelper cal = calendarHelper();
         if (v.getId() == R.id.detail_editor_ok) {
             doOk();
         } else if (v.getId() == R.id.detail_editor_cancel) {
@@ -396,6 +397,9 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void doOk() {
+
+        I18N i18n = i18n();
+
         // verify
         int fromPos = fromEditor.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount()==null) {
@@ -491,7 +495,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     private void doClose() {
         setResult(RESULT_OK);
-        GUIs.shortToast(this,i18n.string(R.string.msg_created_detail,counterCreate));
+        GUIs.shortToast(this,i18n().string(R.string.msg_created_detail,counterCreate));
         finish();
     }
     
@@ -531,6 +535,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         
         @Override
         public boolean setViewValue(View view, Object data, String text) {
+
+            I18N i18n = i18n();
             
             NamedItem item = (NamedItem)data;
             String name = item.getName();
