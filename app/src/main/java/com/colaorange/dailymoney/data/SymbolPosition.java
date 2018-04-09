@@ -3,6 +3,7 @@
  */
 package com.colaorange.dailymoney.data;
 
+import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.R;
 
@@ -58,5 +59,21 @@ public enum SymbolPosition {
     
     public static SymbolPosition[] getAvailable() {
         return available;
+    }
+
+    public static String money2String(Double money, String symbol, SymbolPosition pos) {
+        return money2String(money == null ? 0D : money.doubleValue(), symbol, pos);
+    }
+
+    public static String money2String(double money, String symbol, SymbolPosition pos) {
+        StringBuilder sb = new StringBuilder();
+        if (SymbolPosition.FRONT.equals(pos) && symbol != null) {
+            sb.append(symbol);
+        }
+        sb.append(Formats.getMoneyFormat().format(money));
+        if (SymbolPosition.AFTER.equals(pos) && symbol != null) {
+            sb.append(symbol);
+        }
+        return sb.toString();
     }
 }

@@ -2,6 +2,7 @@ package com.colaorange.commons.util;
 
 import android.annotation.SuppressLint;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -291,16 +292,20 @@ public class CalendarHelper {
         return toDayEnd(base).before(d2);
     }
 
-    static SimpleDateFormat RFC1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'",
-            new DateFormatSymbols(Locale.ENGLISH));
     static public final TimeZone UTC0 = TimeZone.getTimeZone("UTC0");
     static public final TimeZone GMT0 = TimeZone.getTimeZone("GMT+0:00");
 
+
+    public static DateFormat getRRC1123Format(){
+        return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'",
+                new DateFormatSymbols(Locale.ENGLISH));
+    }
+
     public static String getRFC1123(Date date) {
-        return RFC1123.format(date);
+        return getRRC1123Format().format(date);
     }
 
     public static Date parseRFC1123(String str) throws Exception {
-        return RFC1123.parse(str);
+        return getRRC1123Format().parse(str);
     }
 }

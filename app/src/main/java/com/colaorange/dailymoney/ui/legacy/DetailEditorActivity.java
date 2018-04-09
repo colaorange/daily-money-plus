@@ -54,7 +54,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     private Detail detail;
     private Detail workingDetail;
 
-    private DateFormat format;
+    private DateFormat dateFormat;
 
     boolean archived = false;
 
@@ -87,7 +87,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_editor);
-        format = contexts().getDateFormat();
+        dateFormat = preference().getDateFormat();
         initParams();
         initMembers();
         refreshUI();
@@ -128,7 +128,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
 
         dateEditor = findViewById(R.id.detail_editor_date);
-        dateEditor.setText(format.format(workingDetail.getDate()));
+        dateEditor.setText(dateFormat.format(workingDetail.getDate()));
         dateEditor.setEnabled(!archived);
 
         moneyEditor = findViewById(R.id.detail_editor_money);
@@ -325,7 +325,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void updateDateEditor(Date d) {
-        dateEditor.setText(format.format(d));
+        dateEditor.setText(dateFormat.format(d));
     }
 
     @Override
@@ -339,14 +339,14 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             doClose();
         } else if (v.getId() == R.id.detail_editor_prev) {
             try {
-                Date d = format.parse(dateEditor.getText().toString());
+                Date d = dateFormat.parse(dateEditor.getText().toString());
                 updateDateEditor(cal.yesterday(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
         } else if (v.getId() == R.id.detail_editor_next) {
             try {
-                Date d = format.parse(dateEditor.getText().toString());
+                Date d = dateFormat.parse(dateEditor.getText().toString());
                 updateDateEditor(cal.tomorrow(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
@@ -355,7 +355,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             updateDateEditor(cal.today());
         } else if (v.getId() == R.id.detail_editor_datepicker) {
             try {
-                Date d = format.parse(dateEditor.getText().toString());
+                Date d = dateFormat.parse(dateEditor.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
                     public boolean onFinish(Object data) {
@@ -422,7 +422,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         Date date = null;
         try {
-            date = contexts().getDateFormat().parse(datestr);
+            date = dateFormat.parse(datestr);
         } catch (ParseException e) {
             Logger.e(e.getMessage(), e);
             GUIs.errorToast(this, e);

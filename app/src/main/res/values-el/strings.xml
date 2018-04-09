@@ -135,8 +135,6 @@
     <string name="label_prefcat_others">Υπόλοιποι</string>
     <string name="label_prefs_allow_analytics">Στείλτε google analytics</string>
     <string name="label_prefs_allow_analytics_sum">[Δεν θα στείλω άλλα δεδομένα] Αποστολή χρήσης για να βελτιώσω την εφαρμογή</string>
-    <string name="label_prefs_backupcsv">Αντίγραφα ασφαλείας CSV</string>
-    <string name="label_prefs_backupcsv_sum">Δημιουργία αντιγράφων ασφαλείας του παλιού CSV κατά την εξαγωγή</string>
     <string name="label_prefs_csv_encoding">CSV Encoding</string>
     <string name="label_prefs_csv_encoding_sum">Μην το αλλάξεις αν δεν γνωρίζεις τι είναι</string>
     <string name="label_prefs_detlayout">Διάταξη εγγραφής</string>

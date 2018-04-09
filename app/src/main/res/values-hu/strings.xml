@@ -133,8 +133,6 @@
     <string name="label_prefcat_others">Egyebek</string>
     <string name="label_prefs_allow_analytics">Google analytics engedélyezése</string>
     <string name="label_prefs_allow_analytics_sum">Használati statisztika küldése [Más adatot nem küld]</string>
-    <string name="label_prefs_backupcsv">CSV biztonsági másolat</string>
-    <string name="label_prefs_backupcsv_sum">Exportnál másolatot készít a régi CSV-ből</string>
     <string name="label_prefs_csv_encoding">CSV Kódolás</string>
     <string name="label_prefs_csv_encoding_sum">Ha nem tudod, mi ez, ne változtasd meg</string>
     <string name="label_prefs_detlayout">Tétel formátum</string>

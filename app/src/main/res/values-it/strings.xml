@@ -123,8 +123,6 @@
     <string name="label_prefcat_others">Altri</string>
     <string name="label_prefs_allow_analytics">Invia dati a Google Analytics</string>
     <string name="label_prefs_allow_analytics_sum">L’invio dei dati di utilizzo aiuta a migliorare l’applicazione [Non verranno inviati altri dati] </string>
-    <string name="label_prefs_backupcsv">Salva CSV</string>
-    <string name="label_prefs_backupcsv_sum">Salva il vecchio CSV durante l’esportazione dei nuovi dati</string>
     <string name="label_prefs_csv_encoding">Codifica del CSV</string>
     <string name="label_prefs_csv_encoding_sum">Da non cambiare se non si ha idea di cosa questo sia</string>
     <string name="label_prefs_detlayout">Schema dei dettagli</string>

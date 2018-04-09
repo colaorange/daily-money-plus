@@ -23,13 +23,11 @@ public class PrefsActivity extends PreferenceActivity implements OnSharedPrefere
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs);
-        setPrefSummary(Constants.PREFS_LAST_BACKUP);
     }
     
     protected void onResume(){
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-        setPrefSummary(Constants.PREFS_LAST_BACKUP);
     }
     
     protected void onPause(){
@@ -44,13 +42,5 @@ public class PrefsActivity extends PreferenceActivity implements OnSharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         dirty = true;
-    }
-
-    private void setPrefSummary(String prefKey) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Preference p = findPreference(prefKey);
-        if(p!=null){
-            p.setSummary(sharedPreferences.getString(prefKey, "Unknown"));
-        }
     }
 }

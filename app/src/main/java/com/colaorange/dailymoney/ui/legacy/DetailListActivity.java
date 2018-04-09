@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.ui.legacy;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import com.colaorange.commons.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.context.Preference;
 import com.colaorange.dailymoney.data.AccountType;
 import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.data.IDataProvider;
@@ -61,10 +61,10 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     private Date currentDate;
     private int mode = MODE_WEEK;
 
-    private DateFormat dayDateFormat;
-    private DateFormat weekDateFormat;
+    private DateFormat dateFormat;
     private DateFormat monthDateFormat;
-    private DateFormat yearDateFormat;
+    private DateFormat yearMonthFormat;
+    private DateFormat yearFormat;
 
     ImageButton modeBtn;
 
@@ -91,11 +91,11 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     }
 
     private void initMembers() {
-
-        dayDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        weekDateFormat = new SimpleDateFormat("MM/dd");
-        monthDateFormat = new SimpleDateFormat("yyyy/MM - MMM");
-        yearDateFormat = new SimpleDateFormat("yyyy");
+        Preference preference = preference();
+        dateFormat = preference.getDateFormat();//new SimpleDateFormat("yyyy/MM/dd");
+        monthDateFormat = preference.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
+        yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
+        yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
 
         infoView = findViewById(R.id.detail_mgnt_infobar);
         toolbarView = findViewById(R.id.detail_mgnt_toolbar);
@@ -309,17 +309,18 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                         infoView.setText(i18n.string(R.string.label_all_details, Integer.toString(count)));
                         break;
                     case MODE_MONTH:
-                        infoView.setText(i18n.string(R.string.label_month_details, monthDateFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_month_details, yearMonthFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
                         break;
                     case MODE_DAY:
-                        infoView.setText(i18n.string(R.string.label_day_details, dayDateFormat.format(currentDate), Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_day_details, dateFormat.format(currentDate), Integer.toString(count)));
                         break;
                     case MODE_YEAR:
-                        infoView.setText(i18n.string(R.string.label_year_details, yearDateFormat.format(currentDate), Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_year_details, yearFormat.format(currentDate), Integer.toString(count)));
                         break;
+                    case MODE_WEEK:
                     default:
-                        infoView.setText(i18n.string(R.string.label_week_details, weekDateFormat.format(start), weekDateFormat.format(end),
-                                cal.weekOfMonth(currentDate), cal.weekOfYear(currentDate), yearDateFormat.format(start), Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_week_details, monthDateFormat.format(start), monthDateFormat.format(end),
+                                cal.weekOfMonth(currentDate), cal.weekOfYear(currentDate), yearFormat.format(start), Integer.toString(count)));
                         break;
                 }
 

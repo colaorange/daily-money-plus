@@ -104,12 +104,11 @@ public class DetailListHelper implements OnItemClickListener {
         }
     }
 
-    private DateFormat dayOfWeekFormat = new SimpleDateFormat("E");
 
     public void reloadData(List<Detail> data) {
         listViewData = data;
         listViewMapList.clear();
-        DateFormat dateFormat = Contexts.instance().getDateFormat();//for 2010/01/01
+        DateFormat dateFormat = Contexts.instance().getPreference().getDateFormat();//for 2010/01/01
         for (Detail det : listViewData) {
             Map<String, Object> row = toDetailMap(det, dateFormat);
             listViewMapList.add(row);
@@ -118,7 +117,7 @@ public class DetailListHelper implements OnItemClickListener {
         listViewAdapter.notifyDataSetChanged();
     }
 
-    private Map<String, Object> toDetailMap(Detail det, DateFormat format) {
+    private Map<String, Object> toDetailMap(Detail det, DateFormat dateFormat) {
         CalendarHelper calHelper = Contexts.instance().getCalendarHelper();
         I18N i18n = Contexts.instance().getI18n();
 
@@ -135,7 +134,7 @@ public class DetailListHelper implements OnItemClickListener {
         row.put(bindingFrom[3], new NamedItem(bindingFrom[3], det, to));
         row.put(bindingFrom[4], new NamedItem(bindingFrom[4], det, money));
         row.put(bindingFrom[5], new NamedItem(bindingFrom[5], det, det.getNote()));
-        row.put(bindingFrom[6], new NamedItem(bindingFrom[6], det, format.format(det.getDate()) + " " + dayOfWeekFormat.format(det.getDate()) + ","));
+        row.put(bindingFrom[6], new NamedItem(bindingFrom[6], det, dateFormat.format(det.getDate())));
 
         return row;
     }

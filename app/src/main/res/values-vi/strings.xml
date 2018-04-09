@@ -136,8 +136,6 @@
     <string name="label_prefcat_others">Khác</string>
     <string name="label_prefs_allow_analytics">Gửi Google phân tích</string>
     <string name="label_prefs_allow_analytics_sum">[Không gửi bất kỳ dữ liệu nào khác]Gửi ý kiến để giúp nhà phát triển cải thiện ứng dụng</string>
-    <string name="label_prefs_backupcsv">Sao lưu CSV</string>
-    <string name="label_prefs_backupcsv_sum">Sao lưu CSV cũ khi xuất </string>
     <string name="label_prefs_csv_encoding">Mã hóa CSV </string>
     <string name="label_prefs_csv_encoding_sum">Không thay đổi nếu bạn không biết rõ</string>
     <string name="label_prefs_detlayout">Sơ đồ chi tiết</string>

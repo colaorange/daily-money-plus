@@ -16,13 +16,17 @@ public class Constants {
     static final public String PREFS_MAX_RECORDS = "max_records";
     static final public String PREFS_OPEN_TESTS_DESKTOP = "open_testsdekstop";
     
-    static final public String PREFS_BACKUP_CSV = "backup_csv";
+    static final public String PREFS_BACKUP_WITH_TIMESTAMP = "backup_with_timestamp";
     
     static final public String PREFS_ALLOW_ANALYTICS = "allow_analytics";
     
     static final public String PREFS_HIERARCHICAL_REPORT = "hierarchical_report";
     
     static final public String PREFS_CSV_ENCODING = "csv_encoding";
+
+    static final public String PREFS_FORMAT_DATE = "format_date";
+    static final public String PREFS_FORMAT_TIME = "format_time";
+    static final public String PREFS_FORMAT_MONTH = "format_month";
     
     
     public static final int REQUEST_CALCULATOR_CODE = 1;

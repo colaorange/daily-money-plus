@@ -74,7 +74,7 @@ public class AccountDetailListActivity extends ContextsActivity {
         info = b.getString(PARAM_TARGET_INFO);
         info = info == null ? " " : info + " ";
 
-        DateFormat format = contexts().getDateFormat();
+        DateFormat format = preference().getDateFormat();
         String fromStr = startDate == null ? "" : format.format(startDate);
         String toStr = endDate == null ? "" : format.format(endDate);
 

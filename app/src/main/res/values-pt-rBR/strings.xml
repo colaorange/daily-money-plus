@@ -133,8 +133,6 @@
     <string name="label_prefcat_others">Outros</string>
     <string name="label_prefs_allow_analytics">Enviar dados de uso</string>
     <string name="label_prefs_allow_analytics_sum">(Enviar os dados ajuda a aperfeiçoar a aplicação)</string>
-    <string name="label_prefs_backupcsv">Backup de CSV</string>
-    <string name="label_prefs_backupcsv_sum">Backup CSV antigo enquanto exporta os dados</string>
     <string name="label_prefs_csv_encoding">codificação de CSV</string>
     <string name="label_prefs_csv_encoding_sum">Não altere esse item se você não sabe o que é</string>
     <string name="label_prefs_detlayout">Detalhes de layout</string>

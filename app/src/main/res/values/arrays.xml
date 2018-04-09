@@ -45,5 +45,25 @@
         <item>UTF16</item>
         <item>UTF8</item>
     </string-array>
+
+    <string-array name="prefs_format_date_val" translatable="false">
+        <item>Y/M/D</item>
+        <item>M/D/Y</item>
+        <item>D/M/Y</item>
+    </string-array>
+    <string-array name="prefs_format_time_val" translatable="false">
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+    <string-array name="prefs_format_month_val" translatable="false">
+        <item>digital</item>
+        <item>short</item>
+        <item>full</item>
+    </string-array>
+    <string-array name="prefs_format_month_label" translatable="false">
+        <item>@string/label_prefs_format_month_digital</item>
+        <item>@string/label_prefs_format_month_short</item>
+        <item>@string/label_prefs_format_month_full</item>
+    </string-array>
     
 </resources>

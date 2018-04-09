@@ -77,10 +77,6 @@ public class Contexts {
     private Contexts() {
     }
 
-//    private DateFormat getLastBackupFormat(){
-//        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//    }
-
     /**
      * get a Contexts instance for activity use
      **/
@@ -419,22 +415,6 @@ public class Contexts {
         return masterDataProvider;
     }
 
-    public DateFormat getDateFormat() {
-        return android.text.format.DateFormat.getDateFormat(contextsApp);
-    }
-
-    public DateFormat getLongDateFormat() {
-        return android.text.format.DateFormat.getLongDateFormat(contextsApp);
-    }
-
-    public DateFormat getMediumDateFormat() {
-        return android.text.format.DateFormat.getMediumDateFormat(contextsApp);
-    }
-
-    public DateFormat getTimeFormat() {
-        return android.text.format.DateFormat.getTimeFormat(contextsApp);
-    }
-
     public Drawable getDrawable(int id) {
         return contextsApp.getResources().getDrawable(id);
     }
@@ -442,7 +422,7 @@ public class Contexts {
     public String toFormattedMoneyString(double money) {
         IMasterDataProvider imdp = getMasterDataProvider();
         Book book = imdp.findBook(preference.getWorkingBookId());
-        return Formats.money2String(money, book.getSymbol(), book.getSymbolPosition());
+        return SymbolPosition.money2String(money, book.getSymbol(), book.getSymbolPosition());
     }
 
 

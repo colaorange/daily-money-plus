@@ -96,8 +96,6 @@
     <string name="label_prefcat_others">Другие</string>
     <string name="label_prefs_allow_analytics">Отправлять google analytics</string>
     <string name="label_prefs_allow_analytics_sum">[не посылать любые другие данные] Отправка использования, чтобы помочь мне улучшить применение</string>
-    <string name="label_prefs_backupcsv">Резервная копия CSV</string>
-    <string name="label_prefs_backupcsv_sum">Резервная копия старых CSV при экспорте</string>
     <string name="label_prefs_csv_encoding">CSV Кодировка</string>
     <string name="label_prefs_csv_encoding_sum">Не изменяйте это, если вы не знаете что это такое</string>
     <string name="label_prefs_detlayout">Подробный план</string>

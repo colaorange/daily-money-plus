@@ -15,7 +15,6 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -459,11 +458,6 @@ public class Strings {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
-    }
-
-    public static String getTimeString(String pattern,long time){
-        SimpleDateFormat f = new SimpleDateFormat(pattern);
-        return f.format(time);
     }
 
     public static String ellipsis(String str, int length) {

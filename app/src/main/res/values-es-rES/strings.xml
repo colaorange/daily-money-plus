@@ -133,8 +133,6 @@
     <string name="label_prefcat_others">Otros</string>
     <string name="label_prefs_allow_analytics">Enviar datos a google analytics</string>
     <string name="label_prefs_allow_analytics_sum">[No se enviarán otros datos]Las estadísticas se usarán para mejorar la aplicación</string>
-    <string name="label_prefs_backupcsv">Copia de seguridad CSV</string>
-    <string name="label_prefs_backupcsv_sum">Guardar el viejo CSV al exportar</string>
     <string name="label_prefs_csv_encoding">Codificación CSV</string>
     <string name="label_prefs_csv_encoding_sum">No cambies esto si no sabes qué es</string>
     <string name="label_prefs_detlayout">Diseño de la lista</string>
