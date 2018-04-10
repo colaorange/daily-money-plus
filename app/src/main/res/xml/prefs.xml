@@ -28,7 +28,7 @@
 
         <ListPreference
             android:defaultValue="@string/default_prefs_format_date"
-            android:entries="@array/prefs_format_date_val"
+            android:entries="@array/prefs_format_date_label"
             android:entryValues="@array/prefs_format_date_val"
             android:key="format_date"
             android:summary="@string/label_prefs_format_date_sum"
@@ -57,11 +57,6 @@
 
 
     <PreferenceCategory android:title="@string/label_prefcat_data">
-        <!-- working_folder : readonly since 0.9.8 -->
-        <!-- 
-	    <EditTextPreference android:key="working_folder" android:title="@string/label_prefs_workingfolder" 
-	        android:summary="@string/label_prefs_workingfolder_sum" android:defaultValue="bwDailyMoney"  />
-	     -->
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="backup_with_timestamp"
@@ -77,13 +72,19 @@
             android:key="firstday_week"
             android:summary="@string/label_prefs_firstday_week_sum"
             android:title="@string/label_prefs_firstday_week" />
-
-        <EditTextPreference
+        <ListPreference
             android:defaultValue="1"
-            android:key="startday_month"
-            android:numeric="signed"
+            android:entries="@array/prefs_firstday_month_val"
+            android:entryValues="@array/prefs_firstday_month_val"
+            android:key="firstday_month"
             android:summary="@string/label_prefs_startday_month_sum"
             android:title="@string/label_prefs_startday_month" />
+        <EditTextPreference
+            android:defaultValue="0101"
+            android:key="startday_year"
+            android:inputType="text"
+            android:summary="@string/label_prefs_startday_year_sum"
+            android:title="@string/label_prefs_startday_year" />
     </PreferenceCategory>
 
 

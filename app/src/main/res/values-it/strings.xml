@@ -140,7 +140,6 @@
     <string name="label_prefs_testsdekstop">Apri scrivania prove</string>
     <string name="label_prefs_testsdekstop_sum">Apre la scrivania delle prove, solo per gli sviluppatori</string>
     <string name="label_prefs_workingfolder">Cartella di lavoro</string>
-    <string name="label_prefs_workingfolder_sum">Scegli il nome della cartella nella scheda SD per l’esportazione dei dati</string>
     <string name="label_reports">Rapporti</string>
     <string name="label_reset">Reimposta dati</string>
     <string name="label_share_csv">Condividi CSV</string>

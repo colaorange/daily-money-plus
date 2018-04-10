@@ -152,7 +152,6 @@
     <string name="label_prefs_testsdekstop">Testleri masaüstünda aç</string>
     <string name="label_prefs_testsdekstop_sum">Testleri masaüstünde aç, yalnýzca geliþtiriciler için</string>
     <string name="label_prefs_workingfolder">Seçili dizin</string>
-    <string name="label_prefs_workingfolder_sum">Dýþa aktarýlan veriler için sdcard klasör adýný ayarlayýn</string>
     <string name="label_reports">Raporlar</string>
     <string name="label_reset">Verileri Sýfýrla</string>
     <string name="label_share_csv">CSV\'i paylaþ</string>

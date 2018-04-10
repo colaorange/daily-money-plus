@@ -151,7 +151,6 @@
     <string name="label_prefs_testsdekstop">Testdektop öffnen</string>
     <string name="label_prefs_testsdekstop_sum">Öffnet den Testdektop. Nur für Entwickler</string>
     <string name="label_prefs_workingfolder">Arbeitsordner</string>
-    <string name="label_prefs_workingfolder_sum">Lege den Ordnernamen auf der SD-Karte fest um Daten zu exportieren</string>
     <string name="label_reports">Report</string>
     <string name="label_reset">Daten zurücksetzen</string>
     <string name="label_share_csv">CSV freigeben</string>

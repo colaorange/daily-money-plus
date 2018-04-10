@@ -155,7 +155,6 @@
     <string name="label_prefs_testsdekstop">Πειραματική επιφάνεια εργασίας</string>
     <string name="label_prefs_testsdekstop_sum">Πειραματική επιφάνεια εργασίας μόνο για προγραμματιστές</string>
     <string name="label_prefs_workingfolder">Ενεργός φάκελος</string>
-    <string name="label_prefs_workingfolder_sum">Ορίστε το όνομα του φακέλου στην κάρτα sd για την εξαγωγή δεδομένων</string>
     <string name="label_reports">Στατιστικά</string>
     <string name="label_reset">Μηδενισμός δεδομένων</string>
     <string name="label_restore_data">Επαναφορά δεδομένων</string>

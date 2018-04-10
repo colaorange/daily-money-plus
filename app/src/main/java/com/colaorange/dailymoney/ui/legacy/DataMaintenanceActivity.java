@@ -465,8 +465,22 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         StringWriter sw;
         CsvWriter csvw;
         int count = 0;
-        String timestamp = preference().getBackupDateTimeFormat().format(new Date());
+
+        long now = System.currentTimeMillis();
+
+
         boolean backupWithTime = preference().isBackupWithTimestamp();
+
+        File withTimeFolder = null;
+        if(backupWithTime) {
+            withTimeFolder = new File(workingFolder, "by-timestamp-csv");
+            withTimeFolder = new File(withTimeFolder, preference().getBackupMonthFormat().format(now));
+            if (!withTimeFolder.exists()) {
+                withTimeFolder.mkdirs();
+            }
+        }
+        String timestamp = preference().getBackupDateTimeFormat().format(now);
+
         if (detail) {
             sw = new StringWriter();
             csvw = new CsvWriter(sw, ',');
@@ -482,8 +496,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             File file0 = getWorkingFile("details.csv");
             File file1 = getWorkingFile("details-" + workingBookId + ".csv");
 
-            saveCSVFile(file0, csv, backupWithTime, timestamp);
-            saveCSVFile(file1, csv, backupWithTime, timestamp);
+            saveCSVFile(file0, csv, withTimeFolder, timestamp);
+            saveCSVFile(file1, csv, withTimeFolder, timestamp);
         }
 
         if (account) {
@@ -499,28 +513,24 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             File file0 = getWorkingFile("accounts.csv");
             File file1 = getWorkingFile("accounts-" + workingBookId + ".csv");
 
-            saveCSVFile(file0, csv, backupWithTime, timestamp);
-            saveCSVFile(file1, csv, backupWithTime, timestamp);
+            saveCSVFile(file0, csv, withTimeFolder, timestamp);
+            saveCSVFile(file1, csv, withTimeFolder, timestamp);
         }
 
         return count;
     }
 
-    private void saveCSVFile(File toFile, String csv, boolean backupWithTime, String timestamp) throws IOException {
+    private void saveCSVFile(File toFile, String csv, File withTimeFolder, String timestamp) throws IOException {
 
         Files.saveString(csv, toFile, csvEncoding);
-
-        if(backupWithTime) {
-            File withTimeFodler = new File(toFile.getParent(), "csv-with-timestamp");
-            if (!withTimeFodler.exists()) {
-                withTimeFodler.mkdir();
-            }
-            Files.copyFileTo(toFile, new File(withTimeFodler, timestamp + "." + toFile.getName()));
-        }
-
         if (Contexts.DEBUG) {
             Logger.d("export to " + toFile.toString());
         }
+
+        if(withTimeFolder!=null) {
+            Files.copyFileTo(toFile, new File(withTimeFolder, timestamp + "." + toFile.getName()));
+        }
+
     }
 
     private int getAppver(String str) {

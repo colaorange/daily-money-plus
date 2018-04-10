@@ -152,7 +152,6 @@
     <string name="label_prefs_testsdekstop">Tesztek megnyitása</string>
     <string name="label_prefs_testsdekstop_sum">teszt környezet megnyitása, csak fejlesztőknek</string>
     <string name="label_prefs_workingfolder">Munkakönyvtár</string>
-    <string name="label_prefs_workingfolder_sum">Az exportok mentési könyvtára az SD kártyán</string>
     <string name="label_reports">Jelentések</string>
     <string name="label_reset">Adatok törlése</string>
     <string name="label_share_csv">CSV megosztása</string>

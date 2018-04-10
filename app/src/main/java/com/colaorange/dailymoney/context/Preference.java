@@ -201,10 +201,11 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
-        if (!formatMonthSet.contains(formatDate)) {
+        if (!formatMonthSet.contains(formatMonth)) {
             formatMonth = formatMonthSet.iterator().next();
         }
 
+        boolean monthDigital = false;
         yearFormat = "yyyy";
 
         switch (formatMonth){
@@ -217,6 +218,7 @@ public class Preference {
             case FORMAT_MONTH_DIGITAL:
             default:
                 monthFormat = "MM";
+                monthDigital = true;
                 break;
         }
 
@@ -230,22 +232,33 @@ public class Preference {
                 break;
         }
 
+        if(!monthDigital){
+            monthDateFormat = monthFormat+" dd";
+            yearMonthFormat = yearFormat+" "+monthFormat;
+        }
+
         switch (formatDate) {
             case FORMAT_DATE_DMY:
-                dateFormat = "dd/"+monthFormat+"/"+yearFormat;
-                monthDateFormat = "dd/"+monthFormat;
-                yearMonthFormat = monthFormat+"/"+yearFormat;
+                dateFormat = "dd/MM/"+yearFormat;
+                if(monthDigital) {
+                    monthDateFormat = "dd/" + monthFormat;
+                    yearMonthFormat = monthFormat + "/" + yearFormat;
+                }
                 break;
             case FORMAT_DATE_MDY:
-                dateFormat = monthFormat+"/dd/"+yearFormat;
-                monthDateFormat = monthFormat+"/dd";
-                yearMonthFormat = monthFormat+"/"+yearFormat;
+                dateFormat = "MM/dd/"+yearFormat;
+                if(monthDigital) {
+                    monthDateFormat = monthFormat + "/dd";
+                    yearMonthFormat = monthFormat + "/" + yearFormat;
+                }
                 break;
             case FORMAT_DATE_YMD:
             default:
-                dateFormat = yearFormat+"/dd/"+monthFormat;
-                monthDateFormat = "dd/"+monthFormat;
-                yearMonthFormat = yearFormat+"/"+monthFormat;
+                dateFormat = yearFormat+"/MM/dd";
+                if(monthDigital) {
+                    monthDateFormat = "dd/" + monthFormat;
+                    yearMonthFormat = yearFormat + "/" + monthFormat;
+                }
                 break;
         }
 
@@ -332,6 +345,7 @@ public class Preference {
     }
 
     public static final String DEFAULT_BACKUP_DATE_TIME_FORMAT = "yyyyMMdd-HHmmss";
+    public static final String DEFAULT_BACKUP_Month_FORMAT = "yyyyMM";
 
     public DateFormat getBackupDateTimeFormat() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
@@ -342,6 +356,17 @@ public class Preference {
             Logger.w(x.getMessage());
         }
         return new SimpleDateFormat(DEFAULT_BACKUP_DATE_TIME_FORMAT);
+    }
+
+    public DateFormat getBackupMonthFormat() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        try {
+            String format = prefs.getString("backupMonthFormat", DEFAULT_BACKUP_Month_FORMAT);
+            return new SimpleDateFormat(format);
+        } catch (Exception x) {
+            Logger.w(x.getMessage());
+        }
+        return new SimpleDateFormat(DEFAULT_BACKUP_Month_FORMAT);
     }
 
 

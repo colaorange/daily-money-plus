@@ -113,7 +113,6 @@
     <string name="label_prefs_testsdekstop">Открыть экран тестирования</string>
     <string name="label_prefs_testsdekstop_sum">открытые испытания рабочего стола, только для разработчиков</string>
     <string name="label_prefs_workingfolder">Рабочий каталог</string>
-    <string name="label_prefs_workingfolder_sum">Укажите название каталога на sdcard для экспорта данных</string>
     <string name="label_reports">Отчеты</string>
     <string name="label_reset">Сброс данных</string>
     <string name="label_share_csv">Доступ к CSV</string>

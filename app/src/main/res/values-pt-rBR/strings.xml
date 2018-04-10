@@ -152,7 +152,6 @@
     <string name="label_prefs_testsdekstop">Abrir testes no desktop</string>
     <string name="label_prefs_testsdekstop_sum">abre tests de desktop, para desenvolvedores somente</string>
     <string name="label_prefs_workingfolder">Diretório corrente</string>
-    <string name="label_prefs_workingfolder_sum">Escolha o nome do diretório do cartão sd para exportar os dados</string>
     <string name="label_reports">Relatórios</string>
     <string name="label_reset">Reset dados</string>
     <string name="label_share_csv">Compartilhar CSV</string>

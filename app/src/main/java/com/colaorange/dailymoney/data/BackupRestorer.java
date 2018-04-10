@@ -89,6 +89,7 @@ public class BackupRestorer {
             return r;
         }
         boolean bakcupWithTime = ctxs.getPreference().isBackupWithTimestamp();
+        long now = System.currentTimeMillis();
         try {
             File workingFolder = ctxs.getWorkingFolder();
             File dbFolder = ctxs.getAppDbFolder();
@@ -96,12 +97,13 @@ public class BackupRestorer {
 
             File withTimeFolder = null;
             if (bakcupWithTime) {
-                withTimeFolder = new File(workingFolder, "backup-with-timestamp");
+                withTimeFolder = new File(workingFolder, "by-timestamp");
+                withTimeFolder = new File(withTimeFolder, ctxs.getPreference().getBackupMonthFormat().format(now));
                 if (!withTimeFolder.exists()) {
-                    withTimeFolder.mkdir();
+                    withTimeFolder.mkdirs();
                 }
             }
-            String timestamp = ctxs.getPreference().getBackupDateTimeFormat().format(System.currentTimeMillis());
+            String timestamp = ctxs.getPreference().getBackupDateTimeFormat().format(now);
 
             //backup db
             File[] dbfs = dbFolder.listFiles(new DBFileFilter());

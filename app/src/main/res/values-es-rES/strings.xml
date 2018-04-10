@@ -152,7 +152,6 @@
     <string name="label_prefs_testsdekstop">Abrir escritorio de pruebas</string>
     <string name="label_prefs_testsdekstop_sum">Abre el escritorio de pruebas, solo para desarrolladores</string>
     <string name="label_prefs_workingfolder">Carpeta de trabajo</string>
-    <string name="label_prefs_workingfolder_sum">Establecer el nombre de la carpeta de trabajo en la tarjeta SD para exportar los datos</string>
     <string name="label_reports">Informes</string>
     <string name="label_reset">Reestablecer datos</string>
     <string name="label_share_csv">Compartir CSV</string>

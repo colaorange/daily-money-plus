@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,6 +46,7 @@ public class LocalWebViewActivity extends ContextsActivity {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initMembers() {
 
         webView = findViewById(R.id.local_webview);

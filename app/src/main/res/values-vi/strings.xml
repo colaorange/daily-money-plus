@@ -156,7 +156,6 @@
     <string name="label_prefs_testsdekstop">Mở màn hình nền kiểm tra</string>
     <string name="label_prefs_testsdekstop_sum">Mở màn hình nền kiểm tra, chỉ dành cho nhà phát triển</string>
     <string name="label_prefs_workingfolder">Thư mục đang hoạt động</string>
-    <string name="label_prefs_workingfolder_sum">Thiết lập tên thư mục trong thẻ SD để xuất dữ liệu </string>
     <string name="label_reports">Các báo cáo</string>
     <string name="label_reset">Đặt lại dữ liệu</string>
     <string name="label_restore_data">Khôi phục dữ liệu</string>
