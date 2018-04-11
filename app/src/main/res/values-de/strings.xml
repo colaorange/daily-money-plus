@@ -152,7 +152,7 @@
     <string name="label_prefs_testsdekstop_sum">Öffnet den Testdektop. Nur für Entwickler</string>
     <string name="label_prefs_workingfolder">Arbeitsordner</string>
     <string name="label_reports">Report</string>
-    <string name="label_reset">Daten zurücksetzen</string>
+    <string name="label_reset">Zurücksetzen</string>
     <string name="label_share_csv">CSV freigeben</string>
     <string name="label_shared_account_only">Nur das freigebene Konto</string>
     <string name="label_shared_all">Alles freigegeben</string>
@@ -199,7 +199,7 @@
     <string name="qmsg_create_default">Willst du die Standarddaten erstellen?</string>
     <string name="qmsg_delete_book">Willst du die Datenbank %1$s und alle enthaltenen Daten löschen?</string>
     <string name="qmsg_export_csv">Willst du die Daten in CSV exportieren?</string>
-    <string name="qmsg_import_csv">Willst du CSV Daten importieren und die vorhandenen Daten ersetzen?</string>
+    <string name="qmsg_import_csv">Willst du CSV Daten?</string>
     <string name="qmsg_reset">Willst du die Daten zurücksetzen?</string>
     <string name="qmsg_share_csv">Welche CSV Datei soll freigegeben werden</string>
 

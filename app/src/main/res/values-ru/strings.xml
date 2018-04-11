@@ -114,7 +114,7 @@
     <string name="label_prefs_testsdekstop_sum">открытые испытания рабочего стола, только для разработчиков</string>
     <string name="label_prefs_workingfolder">Рабочий каталог</string>
     <string name="label_reports">Отчеты</string>
-    <string name="label_reset">Сброс данных</string>
+    <string name="label_reset">Сброс</string>
     <string name="label_share_csv">Доступ к CSV</string>
     <string name="label_to_account">К</string>
     <string name="label_week_details">%5$s %1$s к %2$s - Неделя %3$s/%4$s (%6$s)</string>
@@ -148,7 +148,7 @@
     <string name="qmsg_clear_folder">Вы действительно хотите очистить каталог %1$s?</string>
     <string name="qmsg_create_default">Вы хотите создать данные по умолчанию?</string>
     <string name="qmsg_export_csv">Вы хотите экспортировать CSV и заменить его?</string>
-    <string name="qmsg_import_csv">Вы хотите импортировать CSV и заменить данные?</string>
+    <string name="qmsg_import_csv">Вы хотите импортировать CSV-файлы?</string>
     <string name="qmsg_reset">Вы действительно хотите сбросить все данные?</string>
     <string name="qmsg_share_csv">Каким файлам CSV дать доступ?</string>
 

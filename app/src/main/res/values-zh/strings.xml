@@ -161,7 +161,7 @@
     <string name="label_prefs_workingfolder">工作目錄</string>
     <string name="label_reports">報表</string>
     <string name="label_request_storage_permission">請求讀取權限</string>
-    <string name="label_reset">重置資料</string>
+    <string name="label_reset">重置</string>
     <string name="label_restore_data">還原資料</string>
     <string name="label_share_csv">分享CSV</string>
     <string name="label_shared_account_only">共享的-只有帳戶</string>
@@ -191,7 +191,6 @@
     <string name="msg_csv_imported">資料從 %2$s (%1$s)被匯入</string>
     <string name="msg_db_backuped">%1$s 個檔案備份至 %2$s</string>
     <string name="msg_db_restored">%1$s 個檔案從 %2$s 還原</string>
-    <string name="msg_db_retored">資料已經回復成功, 請繼續使用</string>
     <string name="msg_default_created">預設的資料(帳戶)已經被建立</string>
     <string name="msg_detail_created">明細已被建立</string>
     <string name="msg_detail_deleted">明細已被刪除</string>
@@ -199,7 +198,7 @@
     <string name="msg_firsttime_use_hint">歡迎使用每日記帳本</string>
     <string name="msg_folder_cleared">工作目錄 %1$s 已經被清除</string>
     <string name="msg_no_csv">沒有CSV檔案</string>
-    <string name="msg_no_db">沒有資料可供備份</string>
+    <string name="msg_no_data">沒有資料可供備份/匯出</string>
     <string name="msg_rested">資料已經被重置</string>
     <string name="msg_same_from_to">相同的帳戶</string>
     <string name="msg_share_csv_content">Daily Money CSV 檔案</string>
@@ -215,7 +214,7 @@
     <string name="qmsg_create_default">您想要建立預設的資料(帳戶)嗎?</string>
     <string name="qmsg_delete_book">你想要刪除帳本 %1$s 及其包含的帳戶及明細資料嗎?</string>
     <string name="qmsg_export_csv">您想要匯出資料並覆蓋CSV檔嗎?</string>
-    <string name="qmsg_import_csv">您想要匯入CSV檔並覆蓋資料嗎?</string>
+    <string name="qmsg_import_csv">您想要匯入CSV檔並增加資料嗎?</string>
     <string name="qmsg_reset">您想要重置資料嗎?</string>
     <string name="qmsg_restore_data">警告: 現行資料將被取代, 你依然想要還原資料嗎?</string>
     <string name="qmsg_retore_db">你的儲存裏有舊的每日記帳本備份, 你想回用這些備份資料嗎(目前的資料將被取代)?</string>

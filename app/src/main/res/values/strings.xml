@@ -165,7 +165,7 @@
     <string name="label_prefs_workingfolder">Working folder</string>
     <string name="label_reports">Reports</string>
     <string name="label_request_storage_permission">Request storage permission</string>
-    <string name="label_reset">Reset data</string>
+    <string name="label_reset">Reset</string>
     <string name="label_restore_data">Restore Data</string>
     <string name="label_share_csv">Share CSV</string>
     <string name="label_shared_account_only">Shared-Account only</string>
@@ -194,8 +194,7 @@
     <string name="msg_csv_exported">Data (%1$s) was all exported to %2$s, </string>
     <string name="msg_csv_imported">Data was imported from %2$s (%1$s)</string>
     <string name="msg_db_backuped">%1$s files backup to %2$s</string>
-    <string name="msg_db_restored">%1$s files restored to %2$s</string>
-    <string name="msg_db_retored">Data was restored, welcome back!</string>
+    <string name="msg_db_restored">%1$s files restored from %2$s</string>
     <string name="msg_default_created">Default date was created</string>
     <string name="msg_detail_created">Detail was created</string>
     <string name="msg_detail_deleted">Detail was deleted</string>
@@ -203,8 +202,8 @@
     <string name="msg_firsttime_use_hint">Welcome to Daily Money</string>
     <string name="msg_folder_cleared">Working folder %1$s was cleared</string>
     <string name="msg_no_csv">No CSV Files</string>
-    <string name="msg_no_db">There is no data to backup</string>
-    <string name="msg_rested">Date was reseted</string>
+    <string name="msg_no_data">There is no data to backup/export</string>
+    <string name="msg_rested">Date was reset</string>
     <string name="msg_same_from_to">From and To are the same one</string>
     <string name="msg_share_csv_content">Daily Money CSV Files</string>
     <string name="msg_share_csv_title">Daily Money %1$s</string>
@@ -221,7 +220,7 @@
     <string name="qmsg_create_default">Do you want to create default data?</string>
     <string name="qmsg_delete_book">Do you want to delete book %1$s and all it\'s data?</string>
     <string name="qmsg_export_csv">Do you want to export CSV and replace it?</string>
-    <string name="qmsg_import_csv">Do you want to import CSV and replace data?</string>
+    <string name="qmsg_import_csv">Do you want to import CSV and append data?</string>
     <string name="qmsg_reset">Do you want to reset data?</string>
     <string name="qmsg_restore_data">WARN: Current data will be replaced, do you still want to restore?</string>
     <string name="qmsg_retore_db">It looks like you have Daily Money data backup in storage, do you want to restore it (all current data will be replaced) ?</string>
@@ -272,5 +271,11 @@
     <string name="label_prefs_format_month_short">Short (Dec)</string>
     <string name="label_prefs_format_month_full">Full (December)</string>
 
+    <string name="label_working_book_account">Working book account</string>
+    <string name="label_working_book">Working book</string>
+    <string name="label_all_book">All books</string>
+
+    <string name="label_reset_working_book">Reset working book</string>
+    <string name="qmsg_reset_working_book">WARN: The working-book will be cleared, do you still want to reset</string>
 
 </resources>

@@ -153,7 +153,7 @@
     <string name="label_prefs_testsdekstop_sum">abre tests de desktop, para desenvolvedores somente</string>
     <string name="label_prefs_workingfolder">Diretório corrente</string>
     <string name="label_reports">Relatórios</string>
-    <string name="label_reset">Reset dados</string>
+    <string name="label_reset">Reset</string>
     <string name="label_share_csv">Compartilhar CSV</string>
     <string name="label_shared_account_only">Compartilhar apenas contas</string>
     <string name="label_shared_all">Compartilhar-Todos</string>
@@ -200,7 +200,7 @@
     <string name="qmsg_create_default">Você quer criar dados padrão?</string>
     <string name="qmsg_delete_book">Você quer apagar o livro %1$s com todos dados?</string>
     <string name="qmsg_export_csv">Você quer exportar e substituir o CSV?</string>
-    <string name="qmsg_import_csv">Você quer importar o CSV e substituir os dados?</string>
+    <string name="qmsg_import_csv">Você quer importar arquivos CSV?</string>
     <string name="qmsg_reset">Você quer resetar os dados?</string>
     <string name="qmsg_share_csv">Quais arquivos CSV deseja compartilhar?</string>
 

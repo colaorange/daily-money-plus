@@ -344,8 +344,8 @@ public class Preference {
         return calendarHelper;
     }
 
-    public static final String DEFAULT_BACKUP_DATE_TIME_FORMAT = "yyyyMMdd-HHmmss";
-    public static final String DEFAULT_BACKUP_Month_FORMAT = "yyyyMM";
+    public static final String DEFAULT_BACKUP_DATE_TIME_FORMAT = "yyMMdd-HHmmss";
+    public static final String DEFAULT_BACKUP_Month_FORMAT = "yyMM";
 
     public DateFormat getBackupDateTimeFormat() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);

@@ -10,6 +10,7 @@
     https://developers.google.com/analytics/devguides/collection/android/v3/
       adb shell setprop log.tag.GAv4 DEBUG
       adb logcat -s GAv4
+    Android\sdk\platform-tools
 * Menu
     https://stackoverflow.com/questions/40867621/contextmenu-position-is-messed-up-in-android-7
     https://stackoverflow.com/questions/27277050/android-default-theme

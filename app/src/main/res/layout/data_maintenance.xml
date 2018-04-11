@@ -105,15 +105,17 @@
                 android:gravity="center"
                 android:text="@string/label_import_csv" />
 
-            <!--TODO should move to developer-->
             <Button
                 android:id="@+id/data_maintenance_reset"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"
                 android:gravity="center"
-                android:text="@string/label_reset"
-                android:visibility="gone" />
+                android:text="@string/label_reset_working_book"
+                android:layout_marginTop="10dp"
+                />
+
+            <!--TODO should move to developer-->
 
             <Button
                 android:id="@+id/data_maintenance_clear_folder"

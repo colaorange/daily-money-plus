@@ -8,7 +8,9 @@ import com.colaorange.dailymoney.context.Contexts;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Backup & Restore util
@@ -16,11 +18,14 @@ import java.util.List;
  * Created by Dennis
  */
 
-public class BackupRestorer {
+public class DataBackupRestorer {
 
     private static final String DB = "dm.db";
     private static final String DB_PRE = "dm_";
     private static final String DB_POS = ".db";
+
+    private static final String BACKUP_FOLER = "backup";
+    private static final String LAST_FOLER = "last";
 
     private static Contexts contexts() {
         return Contexts.instance();
@@ -31,6 +36,7 @@ public class BackupRestorer {
         int db = 0;
         int pref = 0;
         String err;
+        File lastFolder;
 
         public boolean isSuccess() {
             return success;
@@ -46,6 +52,10 @@ public class BackupRestorer {
 
         public String getErr() {
             return err;
+        }
+
+        public File getLastFolder() {
+            return lastFolder;
         }
     }
 
@@ -88,33 +98,46 @@ public class BackupRestorer {
             r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access);
             return r;
         }
-        boolean bakcupWithTime = ctxs.getPreference().isBackupWithTimestamp();
         long now = System.currentTimeMillis();
         try {
-            File workingFolder = ctxs.getWorkingFolder();
+            File backupFolder = new File(ctxs.getWorkingFolder(), BACKUP_FOLER);
+            File lastFolder = r.lastFolder = new File(backupFolder, LAST_FOLER);
+
+            if (!lastFolder.exists()) {
+                lastFolder.mkdirs();
+            } else if (!lastFolder.isDirectory()) {
+                r.err = "last folder is not directory";
+                return r;
+            }
+            for (File f : lastFolder.listFiles()) {
+                if (f.isFile()) {
+                    f.delete();
+                }
+            }
+
+
             File dbFolder = ctxs.getAppDbFolder();
             File prefFolder = ctxs.getAppPrefFolder();
 
             File withTimeFolder = null;
-            if (bakcupWithTime) {
-                withTimeFolder = new File(workingFolder, "by-timestamp");
-                withTimeFolder = new File(withTimeFolder, ctxs.getPreference().getBackupMonthFormat().format(now));
+            if (ctxs.getPreference().isBackupWithTimestamp()) {
+                withTimeFolder = new File(backupFolder, ctxs.getPreference().getBackupMonthFormat().format(now));
+                withTimeFolder = new File(withTimeFolder, ctxs.getPreference().getBackupDateTimeFormat().format(now));
                 if (!withTimeFolder.exists()) {
                     withTimeFolder.mkdirs();
                 }
             }
-            String timestamp = ctxs.getPreference().getBackupDateTimeFormat().format(now);
 
             //backup db
             File[] dbfs = dbFolder.listFiles(new DBFileFilter());
             if (dbfs != null) {//just in case
                 for (File dbf : dbfs) {
                     File tf;
-                    Files.copyFileTo(dbf, tf = new File(workingFolder, dbf.getName()));
-                    Logger.d("backup " + dbf + " to " + tf);
-                    if (bakcupWithTime) {
-                        Files.copyFileTo(dbf, tf = new File(withTimeFolder, timestamp + "." + dbf.getName()));
-                        Logger.d("backup " + dbf + " to " + tf);
+                    Files.copyFileTo(dbf, tf = new File(lastFolder, dbf.getName()));
+                    Logger.d("backup db " + dbf + " to " + tf);
+                    if (withTimeFolder != null) {
+                        Files.copyFileTo(dbf, tf = new File(withTimeFolder, dbf.getName()));
+                        Logger.d("backup db " + dbf + " to " + tf);
                     }
                     r.db++;
                 }
@@ -125,13 +148,13 @@ public class BackupRestorer {
             if (prefs != null) {//just in case
                 for (File pref : prefs) {
                     File tf;
-                    Files.copyFileTo(pref, tf = new File(workingFolder, pref.getName()));
-                    Logger.d("backup " + pref + " to " + tf);
-                    if (bakcupWithTime) {
-                        Files.copyFileTo(pref, tf = new File(withTimeFolder, timestamp + "." + pref.getName()));
-                        Logger.d("backup " + pref + " to " + tf);
+                    Files.copyFileTo(pref, tf = new File(lastFolder, pref.getName()));
+                    Logger.d("backup pref " + pref + " to " + tf);
+                    if (withTimeFolder != null) {
+                        Files.copyFileTo(pref, tf = new File(withTimeFolder, pref.getName()));
+                        Logger.d("backup pref " + pref + " to " + tf);
                     }
-                    r.pref ++;
+                    r.pref++;
                 }
             }
             r.success = true;
@@ -151,31 +174,59 @@ public class BackupRestorer {
             return r;
         }
         try {
-            File workingFolder = ctxs.getWorkingFolder();
+            File backupFolder = new File(ctxs.getWorkingFolder(), BACKUP_FOLER);
+            File lastFolder = new File(backupFolder, LAST_FOLER);
+            if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
+                lastFolder = ctxs.getWorkingFolder();
+            }
+            r.lastFolder = lastFolder;
+
             File dbFolder = ctxs.getAppDbFolder();
             File prefFolder = ctxs.getAppPrefFolder();
 
-            //restore db
-            File[] dbfs = workingFolder.listFiles(new DBFileFilter());
-            if (dbfs != null) {//just in case
-                for (File dbf : dbfs) {
-                    File tf;
-                    Files.copyFileTo(dbf, tf = new File(dbFolder, dbf.getName()));
-                    Logger.d("restore " + dbf + " to " + tf);
-                    r.db++;
+            DBFileFilter dbFileFilter = new DBFileFilter();
+            PrefFileFilter prefFileFilter = new PrefFileFilter();
+
+            Set<String> filesToRemove = new LinkedHashSet<>();
+            //remove old db, for full backup
+            //if we don't it is possible copy 2 file, but there are many other db files in dbfolder
+            if (lastFolder.listFiles(dbFileFilter).length > 0) {
+                for (File f : dbFolder.listFiles(dbFileFilter)) {
+                    filesToRemove.add(f.getAbsolutePath());
+                }
+            }
+            //remove old db, for full backup
+            //if we don't it is possible copy 2 file, but there are many other db files in dbfolder
+            if (lastFolder.listFiles(prefFileFilter).length > 0) {
+                for (File f : prefFolder.listFiles(prefFileFilter)) {
+                    filesToRemove.add(f.getAbsolutePath());
                 }
             }
 
-            //restore preference
-            File[] prefs = workingFolder.listFiles(new PrefFileFilter());
-            if (prefs != null) {//just in case
-                for (File pref : prefs) {
-                    File tf;
-                    Files.copyFileTo(pref, tf = new File(prefFolder, pref.getName()));
-                    Logger.d("restore " + pref + " to " + tf);
-                    r.pref++;
-                }
+            //restore db
+            for (File dbfile : lastFolder.listFiles(dbFileFilter)) {
+                File targetfile;
+                Files.copyFileTo(dbfile, targetfile = new File(dbFolder, dbfile.getName()));
+                Logger.d("restore db " + dbfile + " to " + targetfile);
+                filesToRemove.remove(targetfile.getAbsolutePath());
+                r.db++;
             }
+
+
+            //restore preference
+            for (File preffile : lastFolder.listFiles(prefFileFilter)) {
+                File targetfile;
+                Files.copyFileTo(preffile, targetfile = new File(prefFolder, preffile.getName()));
+                Logger.d("restore pref " + preffile + " to " + targetfile);
+                filesToRemove.remove(targetfile.getAbsolutePath());
+                r.pref++;
+            }
+
+            for(String f:filesToRemove){
+                new File(f).delete();
+                Logger.d("delete unnecessary db/pref file " + f);
+            }
+
             r.success = true;
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);

@@ -1,6 +1,7 @@
 
 == 0.9.9 ==
 === Features ===
+ # Enhance data backup & csv export
  # Support date, month, hour format
  # Support Hungarian, Turkish
 

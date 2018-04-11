@@ -343,26 +343,39 @@ public class Contexts {
     }
 
 
+    /**
+     * new a dataprovider for a book, the caller has to destroy after using it.
+     */
+    public IDataProvider newDataProvider(int bookId){
+        CalendarHelper calHelper = getCalendarHelper();
+
+        String dbname = "dm.db";
+        if (bookId > WORKING_BOOK_DEFAULT) {
+            dbname = "dm_" + bookId + ".db";
+        }
+        IDataProvider provider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp, dbname), calHelper);
+        provider.init();
+        if (DEBUG) {
+            Logger.d("newDataProvider :" + provider);
+        }
+        return provider;
+    }
+
+
     private void initDataProvider() {
 
         int bookid = getWorkingBookId();
         CalendarHelper calHelper = getCalendarHelper();
-
-        String dbname = "dm.db";
-        if (bookid > WORKING_BOOK_DEFAULT) {
-            dbname = "dm_" + bookid + ".db";
-        }
-        dataProvider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp, dbname), calHelper);
-        dataProvider.init();
+        dataProvider = newDataProvider(bookid);
         if (DEBUG) {
             Logger.d("initDataProvider :" + dataProvider);
         }
 
-        dbname = "dm_master.db";
+        String dbname = "dm_master.db";
         masterDataProvider = new SQLiteMasterDataProvider(new SQLiteMasterDataHelper(contextsApp, dbname), calHelper);
         masterDataProvider.init();
         if (DEBUG) {
-            Logger.d("masterDataProvider :" + masterDataProvider);
+            Logger.d("initMasterDataProvider :" + masterDataProvider);
         }
         //create selected book if not exist;
 

@@ -153,7 +153,7 @@
     <string name="label_prefs_testsdekstop_sum">teszt környezet megnyitása, csak fejlesztőknek</string>
     <string name="label_prefs_workingfolder">Munkakönyvtár</string>
     <string name="label_reports">Jelentések</string>
-    <string name="label_reset">Adatok törlése</string>
+    <string name="label_reset">Törlése</string>
     <string name="label_share_csv">CSV megosztása</string>
     <string name="label_shared_account_only">Csak Megosztott-Számla</string>
     <string name="label_shared_all">Megosztott-Mind</string>
@@ -200,7 +200,7 @@
     <string name="qmsg_create_default">Létrehozzuk az alapértelmezett adatokat?</string>
     <string name="qmsg_delete_book">Tényleg törlöd a %1$s könyvet az összes adatával együtt?</string>
     <string name="qmsg_export_csv">Szeretnéd felülírni a létező CSV fájlt?</string>
-    <string name="qmsg_import_csv">Lecseréljük a meglévő adatokat az importált CSV-vel?</string>
+    <string name="qmsg_import_csv">CSV fájlokat szeretne importálni?</string>
     <string name="qmsg_reset">Tényleg törlöd az összes adatot?</string>
     <string name="qmsg_share_csv">CSV fájl megosztása?</string>
 

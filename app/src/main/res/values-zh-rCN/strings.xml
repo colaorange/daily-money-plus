@@ -146,7 +146,7 @@
     <string name="label_prefs_testsdekstop_sum">启用测试桌面, 仅供开发者使用</string>
     <string name="label_prefs_workingfolder">工作目录</string>
     <string name="label_reports">报表</string>
-    <string name="label_reset">重置资料</string>
+    <string name="label_reset">重置</string>
     <string name="label_share_csv">分享CSV</string>
     <string name="label_to_account">到账户</string>
     <string name="label_week_details">%5$s %1$s到%2$s - 周%3$s/%4$s(%6$s笔)</string>
@@ -180,7 +180,7 @@
     <string name="qmsg_clear_folder">您想要清除工作目录%1$s吗?所有目录內的档案將被移除</string>
     <string name="qmsg_create_default">您想要建立预设的资料(账户)吗?</string>
     <string name="qmsg_export_csv">您想要导出资料并覆盖CSV档案吗?</string>
-    <string name="qmsg_import_csv">您想要导入CSV档案并覆盖资料吗?</string>
+    <string name="qmsg_import_csv">您想要导入CSV档案吗?</string>
     <string name="qmsg_reset">您想要重置资料吗?</string>
     <string name="qmsg_share_csv">分享那些CSV档案?</string>
 

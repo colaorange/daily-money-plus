@@ -156,7 +156,7 @@
     <string name="label_prefs_testsdekstop_sum">Πειραματική επιφάνεια εργασίας μόνο για προγραμματιστές</string>
     <string name="label_prefs_workingfolder">Ενεργός φάκελος</string>
     <string name="label_reports">Στατιστικά</string>
-    <string name="label_reset">Μηδενισμός δεδομένων</string>
+    <string name="label_reset">Μηδενισμός</string>
     <string name="label_restore_data">Επαναφορά δεδομένων</string>
     <string name="label_share_csv">Αποστολή CSV</string>
     <string name="label_shared_account_only">Μόνο Shared-Account</string>
@@ -193,7 +193,7 @@
     <string name="msg_firsttime_use_hint">Καλωσήρθατε στο Daily Money</string>
     <string name="msg_folder_cleared">Ο φάκελος εργασίας %1$s διαγράφηκε</string>
     <string name="msg_no_csv">Δεν υπάρχουν αρχεία CSV</string>
-    <string name="msg_no_db">Δεν υπάρχουν δεδομένα για δημιουργία αντιγράφων ασφαλείας</string>
+    <string name="msg_no_data">Δεν υπάρχουν δεδομένα για δημιουργία αντιγράφων ασφαλείας</string>
     <string name="msg_rested">Η ημερομηνία επανατοποθετήθηκε</string>
     <string name="msg_same_from_to">Από και Προς είναι ίδια</string>
     <string name="msg_share_csv_content">Daily Money CSV Αρχεία</string>
@@ -208,7 +208,7 @@
     <string name="qmsg_create_default">Θέλετε να δημιουργήσετε προεπιλεγμένα δεδομένα;</string>
     <string name="qmsg_delete_book">Θέλετε να διαγράψετε το βιβλίο %1$s και όλα τα δεδομένα του;</string>
     <string name="qmsg_export_csv">Θέλετε να αντικαταστήσετε τα αρχεία CSV ?</string>
-    <string name="qmsg_import_csv">Θα εισάγετε και θα αντικαταστήσετε τα αρχεία CSV?</string>
+    <string name="qmsg_import_csv">Θέλετε να εισαγάγετε αρχεία CSV ?</string>
     <string name="qmsg_reset">Θέλετε να διαγραφούν όλα τα δεδομένα ;</string>
     <string name="qmsg_share_csv">Ποια αρχεία CSV θα σταλούν;</string>
 

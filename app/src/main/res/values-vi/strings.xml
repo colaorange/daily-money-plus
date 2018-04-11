@@ -157,7 +157,7 @@
     <string name="label_prefs_testsdekstop_sum">Mở màn hình nền kiểm tra, chỉ dành cho nhà phát triển</string>
     <string name="label_prefs_workingfolder">Thư mục đang hoạt động</string>
     <string name="label_reports">Các báo cáo</string>
-    <string name="label_reset">Đặt lại dữ liệu</string>
+    <string name="label_reset">Đặt lại</string>
     <string name="label_restore_data">Khôi phục dữ liệu</string>
     <string name="label_share_csv">Chia sẻ CSV</string>
     <string name="label_shared_account_only">Chia sẻ-Chỉ duy nhất Tài khoản </string>
@@ -187,7 +187,6 @@
     <string name="msg_csv_imported">Dữ liệu đã được nhập từ %2$s (%1$s)</string>
     <string name="msg_db_backuped">%1$s các tập tin sao lưu đến %2$s</string>
     <string name="msg_db_restored">%1$s tập tin khôi phục đến %2$s</string>
-    <string name="msg_db_retored">Dữ liệu đã được khôi phục, chào mừng quay trở lại!</string>
     <string name="msg_default_created">Ngày mặc định đã được tạo mới</string>
     <string name="msg_detail_created">Chi tiết đã được tạo mới</string>
     <string name="msg_detail_deleted">Chi tiết đã bị xóa</string>
@@ -195,7 +194,7 @@
     <string name="msg_firsttime_use_hint">Chào mừng đến Daily Money</string>
     <string name="msg_folder_cleared">Thư mục đang hoạt động %1$s đã được dọn</string>
     <string name="msg_no_csv">không có tập tin CSV</string>
-    <string name="msg_no_db">Không có dữ liệu để sao lưu</string>
+    <string name="msg_no_data">Không có dữ liệu để sao lưu</string>
     <string name="msg_rested">Ngày đã được đặt lại</string>
     <string name="msg_same_from_to">Từ và Đến cùng một loại</string>
     <string name="msg_share_csv_content">Các tập tin CSV Daily Money </string>
@@ -211,7 +210,7 @@
     <string name="qmsg_create_default">Bạn có muốn tạo dữ liệu mặc định?</string>
     <string name="qmsg_delete_book">Bạn có muốn xóa sách %1$s và tất cả dữ liệu của nó?</string>
     <string name="qmsg_export_csv">Bạn có muốn xuất CSV và thay thế nó?</string>
-    <string name="qmsg_import_csv">Bạn có muốn nhập CSV và thay thế dữ liệu?</string>
+    <string name="qmsg_import_csv">Bạn có muốn nhập tệp CSV không??</string>
     <string name="qmsg_reset">Bạn có muốn đặt lại dữ liệu?</string>
     <string name="qmsg_restore_data">Cảnh báo: Dữ liệu hiện tại sẽ bị thay thế, bạn có muốn khôi phục không? </string>
     <string name="qmsg_retore_db">Trông như bạn có sao lưu dữ liệu Daily Money trong bộ nhớ, bạn có muốn khôi phục nó không?(tất cả dữ liệu hiện tại sẽ bị thay thế)?</string>
