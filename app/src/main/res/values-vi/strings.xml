@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="a1_lang_Chinese_name_comment">越南文</string>
+    <string name="a1_lang_name_comment_NativeChinese">越南文</string>
 
     <string name="act_balance_detlist">Danh sách chi tiết</string>
     <string name="act_balance_piechart">Biểu đồ tròn</string>
@@ -48,10 +48,14 @@
     <string name="defacc_entertainment">Giải trí</string>
     <string name="defacc_food1">Thực phẩm.Cá nhân</string>
     <string name="defacc_food2">Thực phẩm.Tiệc tùng</string>
-    <string name="defacc_interest">Sở thích</string>
+    <string name="defacc_interest">Tiền lãi</string>
     <string name="defacc_otherexpense">Những chi phí khác</string>
     <string name="defacc_otherincome">Thu nhập khác</string>
     <string name="defacc_salary">Lương</string>
+
+    <string name="default_prefs_format_date">M/D/Y</string>
+    <string name="default_prefs_format_month">digital</string>
+    <string name="default_prefs_format_time">12</string>
 
     <string name="dt_main">Chính</string>
     <string name="dt_reports">Các báo cáo</string>
@@ -67,32 +71,33 @@
     <string name="dtitem_detlist_week">Danh sách theo tuần</string>
     <string name="dtitem_detlist_year">Danh sách theo năm</string>
     <string name="dtitem_prefs">Tùy chọn</string>
-    <string name="dtitem_report_cumulative_balance">Cân bằng lũy tích</string>
-    <string name="dtitem_report_monthly_balance">Cân bằng tháng</string>
+    <string name="dtitem_report_cumulative_balance">Số dư lũy tích</string>
+    <string name="dtitem_report_monthly_balance">Số dư tháng</string>
     <string name="dtitem_report_search">Tìm kiếm</string>
-    <string name="dtitem_report_yearly_balance">Cân bằng năm</string>
+    <string name="dtitem_report_yearly_balance">Số dư năm</string>
 
-    <string name="label_about">Giới thiệu</string>
     <string name="label_accdetlist_dateinfo">%1$s đến %2$s</string>
     <string name="label_account">Tài khoản</string>
     <string name="label_account_only">Chỉ tài khoản </string>
+    <string name="label_all_books">All books</string>
     <string name="label_all_details">Tất cả các chi tiết (%1$s các ghi chép)</string>
     <string name="label_asset">Tài sản</string>
     <string name="label_backup_data">Sao lưu dữ liệu</string>
     <string name="label_balance_mode_month">Trong %1$s (%2$s-%3$s)</string>
     <string name="label_balance_mode_month_total">Cho đến %1$s (-%2$s)</string>
-    <string name="label_balance_mode_year">Cân bằng trong năm %1$s</string>
-    <string name="label_balance_mode_year_total">Cân bằng cho đến năm %1$s</string>
-    <string name="label_balance_tasset">Cân bằng Tài sản</string>
-    <string name="label_balance_texpense">Cân bằng Chi tiêu</string>
-    <string name="label_balance_tincome">Cân bằng Thu nhập</string>
-    <string name="label_balance_tliability">Cân bằng Khoản vay</string>
-    <string name="label_balance_tother">Cân bằng Khác</string>
+    <string name="label_balance_mode_year">Số dư trong năm %1$s</string>
+    <string name="label_balance_mode_year_total">Số dư cho đến năm %1$s</string>
+    <string name="label_balance_tasset">Số dư Tài sản</string>
+    <string name="label_balance_texpense">Số dư Chi tiêu</string>
+    <string name="label_balance_tincome">Số dư Thu nhập</string>
+    <string name="label_balance_tliability">Số dư Khoản vay</string>
+    <string name="label_balance_tother">Số dư Khác</string>
     <string name="label_balance_yearly_cumulative_timechart">%1$s trong %2$s (lũy tích)</string>
     <string name="label_balance_yearly_runchart">Tài sản-Khoản vay(lũy tích) trong %1$s</string>
     <string name="label_balance_yearly_timechart">%1$s trong %2$s</string>
     <string name="label_cash_account">Tài khoản tiền mặt</string>
     <string name="label_clear_folder">Dọn thư mục đang hoạt động</string>
+    <string name="label_contributor">Người đóng góp</string>
     <string name="label_count">(%1$s)</string>
     <string name="label_create_default">Tạo dữ liệu mặc định(tài khoản)</string>
     <string name="label_cumulative_cash">Tiền mặt : %1$s</string>
@@ -119,7 +124,6 @@
     <string name="label_firstday_sun">Chủ Nhật</string>
     <string name="label_from_account">Từ</string>
     <string name="label_from_date">từ Ngày</string>
-    <string name="label_how2use">Cách sử dụng</string>
     <string name="label_import_csv">Nhập CSV</string>
     <string name="label_income">Thu nhập</string>
     <string name="label_initial_value">Ban đầu</string>
@@ -132,16 +136,34 @@
     <string name="label_position_after">Phía sau</string>
     <string name="label_position_front">Phía trước</string>
     <string name="label_position_none">Không hiển thị</string>
+    <string name="label_prefcat_accounting_period">Accounting peroid</string>
+    <string name="label_prefcat_contribution">Contribution</string>
     <string name="label_prefcat_csv">CSV</string>
+    <string name="label_prefcat_data">Data</string>
+    <string name="label_prefcat_developer">Developer</string>
+    <string name="label_prefcat_display">Display</string>
     <string name="label_prefcat_others">Khác</string>
+    <string name="label_prefcat_security">Security</string>
     <string name="label_prefs_allow_analytics">Gửi Google phân tích</string>
-    <string name="label_prefs_allow_analytics_sum">[Không gửi bất kỳ dữ liệu nào khác]Gửi ý kiến để giúp nhà phát triển cải thiện ứng dụng</string>
+    <string name="label_prefs_allow_analytics_sum">[Không gửi bất kỳ dữ liệu nào khác] Gửi ý kiến để giúp nhà phát triển cải thiện ứng dụng</string>
     <string name="label_prefs_csv_encoding">Mã hóa CSV </string>
     <string name="label_prefs_csv_encoding_sum">Không thay đổi nếu bạn không biết rõ</string>
     <string name="label_prefs_detlayout">Sơ đồ chi tiết</string>
     <string name="label_prefs_detlayout_sum">Chọn cách thể hiện sơ đồ danh sách chi tiết</string>
     <string name="label_prefs_firstday_week">Ngày đầu tiên của tuần</string>
     <string name="label_prefs_firstday_week_sum">Thiết lập ngày đầu tiên của tuần</string>
+    <string name="label_prefs_format_date">Date format</string>
+    <string name="label_prefs_format_date_dmy">Day/Month/Year (31/12/2017)</string>
+    <string name="label_prefs_format_date_mdy">Month/Day/Year (12/31/2017)</string>
+    <string name="label_prefs_format_date_sum">Y/M/D, D/M/Y or M/D/Y</string>
+    <string name="label_prefs_format_date_ymd">Year/Month/Day (2017/12/31)</string>
+    <string name="label_prefs_format_month">Month format</string>
+    <string name="label_prefs_format_month_digital">Digital (12)</string>
+    <string name="label_prefs_format_month_full">Full (December)</string>
+    <string name="label_prefs_format_month_short">Short (Dec)</string>
+    <string name="label_prefs_format_month_sum">Digital, Short or Full</string>
+    <string name="label_prefs_format_time">Time format</string>
+    <string name="label_prefs_format_time_sum">12 or 24</string>
     <string name="label_prefs_improvider">Cung cấp bộ nhớ trong</string>
     <string name="label_prefs_improvider_sum">Để thử ứng dụng này, dữ liệu trong trạng thái hiện tại sẽ không còn tồn tại</string>
     <string name="label_prefs_lastbackup">Thời gian sao lưu dữ liệu gần đây nhất</string>
@@ -152,17 +174,15 @@
     <string name="label_prefs_passwordvd">Mật khẩu bảo vệ-2</string>
     <string name="label_prefs_passwordvd_sum">Thiết lập lại cùng mật khẩu để kích hoạt sự bảo vệ</string>
     <string name="label_prefs_startday_month">Ngày đầu tiên của tháng</string>
-    <string name="label_prefs_startday_month_sum">Thiết lập ngày đầu tiên của tháng(từ 1 đến 28)</string>
+    <string name="label_prefs_startday_month_sum">Thiết lập ngày đầu tiên của tháng (từ 1 đến 28)</string>
     <string name="label_prefs_testsdekstop">Mở màn hình nền kiểm tra</string>
     <string name="label_prefs_testsdekstop_sum">Mở màn hình nền kiểm tra, chỉ dành cho nhà phát triển</string>
     <string name="label_prefs_workingfolder">Thư mục đang hoạt động</string>
     <string name="label_reports">Các báo cáo</string>
-    <string name="label_reset">Đặt lại</string>
+    <string name="label_reset">Đặt lại dữ liệu</string>
+    <string name="label_reset_working_book">Reset working book</string>
     <string name="label_restore_data">Khôi phục dữ liệu</string>
     <string name="label_share_csv">Chia sẻ CSV</string>
-    <string name="label_shared_account_only">Chia sẻ-Chỉ duy nhất Tài khoản </string>
-    <string name="label_shared_all">Chia sẻ-Tất cả</string>
-    <string name="label_shared_detail_only">Chia sẻ-Chỉ duy nhất Chi tiết</string>
     <string name="label_symbol">Biểu tượng</string>
     <string name="label_symbol_position">Vị trí biểu tượng</string>
     <string name="label_to_account">Đến</string>
@@ -170,6 +190,8 @@
     <string name="label_week_details">%5$s %1$s đến %2$s - Tuần %3$s/%4$s (%6$s)</string>
     <string name="label_weekly_expense">Hàng tuần : %1$s</string>
     <string name="label_what_is_new">What is new</string>
+    <string name="label_working_book">Working book</string>
+    <string name="label_working_book_account">Working book account</string>
     <string name="label_year_details">%1$s (%2$s các ghi chép)</string>
 
     <string name="msg_account_created">Tài khoản %1$s đã được tạo mới theo đúng loại %2$s</string>
@@ -191,7 +213,7 @@
     <string name="msg_detail_created">Chi tiết đã được tạo mới</string>
     <string name="msg_detail_deleted">Chi tiết đã bị xóa</string>
     <string name="msg_detail_updated">Chi tiết đã được cập nhật</string>
-    <string name="msg_firsttime_use_hint">Chào mừng đến Daily Money</string>
+    <string name="msg_firsttime_use_hint">Chào mừng đến Daily Money, nhắp Thêm chi tiết để bắt đầu</string>
     <string name="msg_folder_cleared">Thư mục đang hoạt động %1$s đã được dọn</string>
     <string name="msg_no_csv">không có tập tin CSV</string>
     <string name="msg_no_data">Không có dữ liệu để sao lưu</string>
@@ -202,18 +224,19 @@
     <string name="msg_working_folder_no_access">Thư mục đang hoạt động %1$s không thể truy cập được, vui lòng mở quyền truy cập trong Cài đặt Hệ thống</string>
     <string name="msg_wrong_password">Sai mật khẩu!</string>
 
-    <string name="path_about">giới thiệu.html</string>
-    <string name="path_how2use">Cách sử dụng.html</string>
+    <string name="path_about">about_vi.html</string>
+    <string name="path_history">history.html</string>
+    <string name="path_how2use">how2use_vi.html</string>
     <string name="path_what_is_new">whatsnew.html</string>
 
     <string name="qmsg_clear_folder">Bạn có muốn dọn thư mục đang hoạt động %1$s? Tất cả các tập tin trong thư mục sẽ bị xóa.</string>
     <string name="qmsg_create_default">Bạn có muốn tạo dữ liệu mặc định?</string>
     <string name="qmsg_delete_book">Bạn có muốn xóa sách %1$s và tất cả dữ liệu của nó?</string>
     <string name="qmsg_export_csv">Bạn có muốn xuất CSV và thay thế nó?</string>
-    <string name="qmsg_import_csv">Bạn có muốn nhập tệp CSV không??</string>
+    <string name="qmsg_import_csv">Bạn có muốn nhập CSV và thay thế dữ liệu?</string>
     <string name="qmsg_reset">Bạn có muốn đặt lại dữ liệu?</string>
+    <string name="qmsg_reset_working_book">WARN: The working-book will be cleared, do you still want to reset</string>
     <string name="qmsg_restore_data">Cảnh báo: Dữ liệu hiện tại sẽ bị thay thế, bạn có muốn khôi phục không? </string>
-    <string name="qmsg_retore_db">Trông như bạn có sao lưu dữ liệu Daily Money trong bộ nhớ, bạn có muốn khôi phục nó không?(tất cả dữ liệu hiện tại sẽ bị thay thế)?</string>
     <string name="qmsg_share_csv">Chia sẻ tập tin CSV nào?</string>
 
     <string name="search_reset">Đặt lại</string>

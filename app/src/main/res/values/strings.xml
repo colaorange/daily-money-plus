@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="a1_lang_Chinese_name_comment">English</string>
+    <string name="a1_lang_name_comment_NativeChinese">English</string>
 
     <string name="act_balance_detlist">Detail list</string>
     <string name="act_balance_piechart">Pie chart</string>
@@ -53,6 +53,10 @@
     <string name="defacc_otherincome">Other income</string>
     <string name="defacc_salary">Salary</string>
 
+    <string name="default_prefs_format_date">M/D/Y</string>
+    <string name="default_prefs_format_month">digital</string>
+    <string name="default_prefs_format_time">12</string>
+
     <string name="dt_main">Main</string>
     <string name="dt_reports">Reports</string>
     <string name="dt_tests">Tests</string>
@@ -76,6 +80,7 @@
     <string name="label_accdetlist_dateinfo">%1$s to %2$s</string>
     <string name="label_account">Account</string>
     <string name="label_account_only">Account only</string>
+    <string name="label_all_books">All books</string>
     <string name="label_all_details">All details (%1$s records)</string>
     <string name="label_asset">Asset</string>
     <string name="label_backup_data">Backup Data</string>
@@ -135,8 +140,14 @@
     <string name="label_position_after">After</string>
     <string name="label_position_front">Front</string>
     <string name="label_position_none">No Display</string>
+    <string name="label_prefcat_accounting_period">Accounting peroid</string>
+    <string name="label_prefcat_contribution">Contribution</string>
     <string name="label_prefcat_csv">CSV</string>
+    <string name="label_prefcat_data">Data</string>
+    <string name="label_prefcat_developer">Developer</string>
+    <string name="label_prefcat_display">Display</string>
     <string name="label_prefcat_others">Others</string>
+    <string name="label_prefcat_security">Security</string>
     <string name="label_prefs_allow_analytics">Send google analytics</string>
     <string name="label_prefs_allow_analytics_sum">[Will not send any other data]Sending usage to help me improve application</string>
     <string name="label_prefs_backup_with_timestamp">Backup with timestamp</string>
@@ -147,6 +158,18 @@
     <string name="label_prefs_detlayout_sum">Choose different type for detail list layout</string>
     <string name="label_prefs_firstday_week">First day of week</string>
     <string name="label_prefs_firstday_week_sum">Set the first day of week</string>
+    <string name="label_prefs_format_date">Date format</string>
+    <string name="label_prefs_format_date_dmy">Day/Month/Year (31/12/2017)</string>
+    <string name="label_prefs_format_date_mdy">Month/Day/Year (12/31/2017)</string>
+    <string name="label_prefs_format_date_sum">Y/M/D, D/M/Y or M/D/Y</string>
+    <string name="label_prefs_format_date_ymd">Year/Month/Day (2017/12/31)</string>
+    <string name="label_prefs_format_month">Month format</string>
+    <string name="label_prefs_format_month_digital">Digital (12)</string>
+    <string name="label_prefs_format_month_full">Full (December)</string>
+    <string name="label_prefs_format_month_short">Short (Dec)</string>
+    <string name="label_prefs_format_month_sum">Digital, Short or Full</string>
+    <string name="label_prefs_format_time">Time format</string>
+    <string name="label_prefs_format_time_sum">12 or 24</string>
     <string name="label_prefs_improvider">In-memory-provider</string>
     <string name="label_prefs_improvider_sum">For trying this application, data in this mode will not be persisted</string>
     <string name="label_prefs_lastbackup">Last Data Backup Time</string>
@@ -166,11 +189,9 @@
     <string name="label_reports">Reports</string>
     <string name="label_request_storage_permission">Request storage permission</string>
     <string name="label_reset">Reset</string>
+    <string name="label_reset_working_book">Reset working book</string>
     <string name="label_restore_data">Restore Data</string>
     <string name="label_share_csv">Share CSV</string>
-    <string name="label_shared_account_only">Shared-Account only</string>
-    <string name="label_shared_all">Shared-All</string>
-    <string name="label_shared_detail_only">Shared-Detail only</string>
     <string name="label_symbol">Symbol</string>
     <string name="label_symbol_position">Symbol Position</string>
     <string name="label_to_account">To</string>
@@ -178,6 +199,8 @@
     <string name="label_week_details">%5$s %1$s to %2$s - Week %3$s/%4$s (%6$s)</string>
     <string name="label_weekly_expense">Weekly : %1$s</string>
     <string name="label_what_is_new">What is new</string>
+    <string name="label_working_book">Working book</string>
+    <string name="label_working_book_account">Working book account</string>
     <string name="label_year_details">%1$s (%2$s records)</string>
 
     <string name="msg_account_created">Account %1$s was created in type %2$s</string>
@@ -222,8 +245,8 @@
     <string name="qmsg_export_csv">Do you want to export CSV and replace it?</string>
     <string name="qmsg_import_csv">Do you want to import CSV and append data?</string>
     <string name="qmsg_reset">Do you want to reset data?</string>
+    <string name="qmsg_reset_working_book">WARN: The working-book will be cleared, do you still want to reset</string>
     <string name="qmsg_restore_data">WARN: Current data will be replaced, do you still want to restore?</string>
-    <string name="qmsg_retore_db">It looks like you have Daily Money data backup in storage, do you want to restore it (all current data will be replaced) ?</string>
     <string name="qmsg_share_csv">Share which CSV files?</string>
 
     <string name="search_reset">Reset</string>
@@ -245,37 +268,4 @@
     <string name="title_detmgnt">Detail Manager</string>
     <string name="title_pdprotection">Password protection</string>
     <string name="title_prefs">Preferences</string>
-
-    <!-- new for format-->
-    <string name="default_prefs_format_date">M/D/Y</string>
-    <string name="default_prefs_format_time">12</string>
-    <string name="default_prefs_format_month">digital</string>
-
-    <string name="label_prefcat_security">Security</string>
-    <string name="label_prefcat_accounting_period">Accounting peroid</string>
-    <string name="label_prefcat_display">Display</string>
-    <string name="label_prefcat_data">Data</string>
-    <string name="label_prefcat_developer">Developer</string>
-    <string name="label_prefcat_contribution">Contribution</string>
-
-    <string name="label_prefs_format_date_sum">Y/M/D, D/M/Y or M/D/Y</string>
-    <string name="label_prefs_format_date">Date format</string>
-    <string name="label_prefs_format_date_ymd">Year/Month/Day (2017/12/31)</string>
-    <string name="label_prefs_format_date_dmy">Day/Month/Year (31/12/2017)</string>
-    <string name="label_prefs_format_date_mdy">Month/Day/Year (12/31/2017)</string>
-    <string name="label_prefs_format_time_sum">12 or 24</string>
-    <string name="label_prefs_format_time">Time format</string>
-    <string name="label_prefs_format_month_sum">Digital, Short or Full</string>
-    <string name="label_prefs_format_month">Month format</string>
-    <string name="label_prefs_format_month_digital">Digital (12)</string>
-    <string name="label_prefs_format_month_short">Short (Dec)</string>
-    <string name="label_prefs_format_month_full">Full (December)</string>
-
-    <string name="label_working_book_account">Working book account</string>
-    <string name="label_working_book">Working book</string>
-    <string name="label_all_book">All books</string>
-
-    <string name="label_reset_working_book">Reset working book</string>
-    <string name="qmsg_reset_working_book">WARN: The working-book will be cleared, do you still want to reset</string>
-
 </resources>

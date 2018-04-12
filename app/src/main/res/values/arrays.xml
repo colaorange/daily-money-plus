@@ -30,7 +30,7 @@
     </string-array>
     
     <string-array name="csv_type_options" translatable="false">
-        <item>@string/label_all_book</item>
+        <item>@string/label_all_books</item>
         <item>@string/label_working_book</item>
         <item>@string/label_working_book_account</item>
     </string-array>    

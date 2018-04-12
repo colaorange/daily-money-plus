@@ -1,7 +1,11 @@
-body {
+@charset "utf-8"
+
+
+* {
+}
+html, body{
     background-color: black;
     color: white;
-    font-size: 14px;
     margin: 0px;
     padding: 5px;
 }

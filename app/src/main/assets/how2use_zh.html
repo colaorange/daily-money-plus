@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -27,7 +28,7 @@
     <li class="liability"><i >債務</i> : 信用戶, 貸款..等</li>
     <li class="other"><i>其他</i> : ...</li>
     </ol>  
-    * 帳戶的排序是依型態及名字的順序,你可以在帳戶名字上加上1或A等前置字來排序你的帳號.<br/>
+    * 帳戶的排序是依型態及名字的順序,你可以在帳戶名字上加上1或A等前置字來排序你的帳戶.<br/>
     * 帳戶名字可以用.(點)來分隔(例如 食.早餐,食.午餐), 明細編輯時, 將會提供較佳的階層式選擇.<br/>
 </blockquote>
 <h2>轉換明細</h2>
@@ -80,7 +81,7 @@
 <h3>累加的結算報告</h3>
 <blockquote>
     當你想知道你目前有多少現金, 目前有多少資產, 而不是這個月花多少的時候，你會需要使用累加的結算報告。要讓累加的結果報告正確計算，
-    你必需設定每個帳號的初始金額(通常只有 <i class="asset">資產</i> 跟 <i class="liability">債務</i> 會有初始值. <i class="income">收入</i> 跟 <i class="expense">支出</i> 是不會有初始值的)<br/>
+    你必需設定每個帳戶的初始金額(通常只有 <i class="asset">資產</i> 跟 <i class="liability">債務</i> 會有初始值. <i class="income">收入</i> 跟 <i class="expense">支出</i> 是不會有初始值的)<br/>
     如果你沒有設定初始值的話，有一個簡單的方法可以算出你的初始值。例如：你現在的現金有333, 但是累加結算報告顯示你的現金是-100)
     <ol>
     <li>編輯現金帳戶</li>
@@ -88,7 +89,7 @@
     </ol>  
 </blockquote>
 </blockquote>
-<h2>Multiple Books</h2>
+<h2>多帳本</h2>
 
 <blockquote>
 <p > 
@@ -98,13 +99,12 @@
     而不同帳本的資料是互相隔離不共用的.
 </p>
 <p>
-    當匯出CSV時，會同時匯出兩個共享與全部帳本的檔案(details.csv 和 accounts.csv).
-    同時也會匯出兩個只有使用中帳本相關的檔案(details-'id'.cvs 和 accounts-'id'.csv, 'id' 為帳本的id).
-    當匯入CSV時,你可以選擇從帳本相關檔案, 或從共享檔案匯入.
+    當匯出CSV時,可選擇匯出使用中的帳本(details.csv 和 accounts.csv)或是全部帳本(details-'id'.cvs 和 accounts-'id'.csv, 'id' 為帳本的id).
+    當匯入CSV時,僅能將使用中的帳本(details.csv 和 accounts.csv)或帳本帳戶(accounts.csv)的CSV匯入目前程式使用中的帳本
 </p>
 <p>     
     當你刪除一帳本時，該關聯的帳戶及明細資料庫也會一伴被刪除.
-    預設帳號(id=0)及使用中的帳本是不允許刪除的.
+    預設帳戶(id=0)及使用中的帳本是不允許刪除的.
 </p>
 </blockquote>
 </body>

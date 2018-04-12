@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="a1_lang_Chinese_name_comment">中文</string>
+    <string name="a1_lang_name_comment_NativeChinese">中文</string>
 
     <string name="act_balance_detlist">明细清单</string>
     <string name="act_balance_piechart">结算图饼图</string>
@@ -197,4 +197,36 @@
     <string name="title_detmgnt">明细管理器</string>
     <string name="title_pdprotection">密码保护</string>
     <string name="title_prefs">喜好设定</string>
+
+    <string name="default_prefs_format_date">Y/M/D</string>
+        <string name="default_prefs_format_time">24</string>
+        <string name="default_prefs_format_month">digital</string>
+
+        <string name="label_prefcat_security">安全</string>
+        <string name="label_prefcat_accounting_period">会计期间</string>
+        <string name="label_prefcat_display">显示</string>
+        <string name="label_prefcat_data">资料</string>
+        <string name="label_prefcat_developer">开发者</string>
+        <string name="label_prefcat_contribution">贡献</string>
+
+        <string name="label_prefs_format_date_sum">例如. 年/月/日, 日/月/年, 月/日/年</string>
+        <string name="label_prefs_format_date">日期的格式</string>
+        <string name="label_prefs_format_date_ymd">年/月/日 (2017/12/31)</string>
+        <string name="label_prefs_format_date_dmy">日/月/年 (31/12/2017)</string>
+        <string name="label_prefs_format_date_mdy">月/日/年 (12/31/2017)</string>
+
+        <string name="label_prefs_format_time_sum">12或24小时制</string>
+        <string name="label_prefs_format_time">时间格式</string>
+        <string name="label_prefs_format_month_sum">数字, 短名, 全名</string>
+        <string name="label_prefs_format_month">月份格式</string>
+        <string name="label_prefs_format_month_digital">数字 (12)</string>
+        <string name="label_prefs_format_month_short">短名 (12月)</string>
+        <string name="label_prefs_format_month_full">全名 (12月)</string>
+
+        <string name="label_working_book_account">使用中帐本的帐号</string>
+        <string name="label_working_book">使用中的帐本</string>
+        <string name="label_all_books">全部帐本</string>
+
+        <string name="label_reset_working_book">重置使用中的帐本</string>
+        <string name="qmsg_reset_working_book">警告: 使用中的帐本将被清除, 你仍然要重置吗?</string>
 </resources>
