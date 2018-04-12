@@ -30,11 +30,11 @@ public class CSVImportExporter {
         return Contexts.instance();
     }
 
-    public static enum ExportMode {
+    public enum ExportMode {
         ALL_BOOKS, WORKING_BOOK, WORKING_BOOK_ACCOUNT
     }
 
-    public static enum ImportMode {
+    public enum ImportMode {
         WORKING_BOOK, WORKING_BOOK_ACCOUNT
     }
 
