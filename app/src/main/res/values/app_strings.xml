@@ -2,4 +2,10 @@
 <resources>
     <string name="app_code" translatable="false">daily-money-plus</string>
     <string name="app_name" translatable="false">Daily Money+</string>
+
+    <string name="path_about" translatable="false">en/about.html</string>
+    <string name="path_contributor" translatable="false">en/contributor.html</string>
+    <string name="path_history" translatable="false">en/history.html</string>
+    <string name="path_how2use" translatable="false">en/how2use.html</string>
+    <string name="path_what_is_new" translatable="false">en/whatsnew.html</string>
 </resources>

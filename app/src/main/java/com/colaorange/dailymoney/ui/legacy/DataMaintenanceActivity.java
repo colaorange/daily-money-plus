@@ -217,6 +217,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                         public void onBusyError(Throwable t) {
                             GUIs.error(DataMaintenanceActivity.this, t);
                         }
+                        public void onBusyFinish() {
+                            GUIs.alert(DataMaintenanceActivity.this, R.string.msg_rested);
+                        }
 
                         @Override
                         public void run() {
