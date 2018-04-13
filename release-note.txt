@@ -1,6 +1,7 @@
 
 == 0.9.9 ==
 === Features ===
+ # Fix decimal separator issue in some language when using calculator (current our calculator always use '.' as decimal separator)
  # Enhance data backup & csv export
  # Support date, month, hour format
  # Support Hungarian, Turkish

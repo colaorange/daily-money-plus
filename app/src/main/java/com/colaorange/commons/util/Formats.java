@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.data.SymbolPosition;
 
 /**
@@ -85,4 +86,22 @@ public class Formats {
         return getNormalizeDateTimeFormat().parse(date);
     }
 
+    public static String editorTextNumberDecimalToCal2(String value) throws ParseException {
+        DecimalFormat f = getDoubleFormat();
+
+        double d = f.parse(value).doubleValue();
+        value = f.format(d).replace(f.getDecimalFormatSymbols().getDecimalSeparator(), '.');
+
+        return value;
+    }
+
+    public static String cal2ToEditorTextNumberDecimal(String value) throws ParseException {
+        DecimalFormat f = getDoubleFormat();
+
+        value = value.replace('.', f.getDecimalFormatSymbols().getDecimalSeparator());
+        double d = f.parse(value).doubleValue();
+        value = f.format(d);
+
+        return value;
+    }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="cal2_advanced">Προηγμένος πίνακας</string>
     <string name="cal2_app_name">Αριθμομηχανή</string>
     <string name="cal2_basic">Βασικός πίνακας</string>
@@ -18,21 +18,18 @@
     <string name="cal2_digit7">7</string>
     <string name="cal2_digit8">8</string>
     <string name="cal2_digit9">9</string>
-    <string name="cal2_div">÷</string>
-    <string name="cal2_dot">.</string>
+
     <string name="cal2_e">e</string>
-    <string name="cal2_enter">↓</string>
-    <string name="cal2_equal">=</string>
+
     <string name="cal2_error">Λάθος</string>
     <string name="cal2_factorial">!</string>
     <string name="cal2_leftParen">(</string>
     <string name="cal2_lg">log</string>
     <string name="cal2_ln">ln</string>
-    <string name="cal2_minus">−</string>
-    <string name="cal2_mul">×</string>
+
     <string name="cal2_ok">OK</string>
     <string name="cal2_pi">π</string>
-    <string name="cal2_plus">+</string>
+
     <string name="cal2_power">^</string>
     <string name="cal2_rightParen">)</string>
     <string name="cal2_sin">sin</string>

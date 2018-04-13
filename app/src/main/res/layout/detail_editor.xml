@@ -101,7 +101,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789.,"
+                    />
 
                 <ImageButton
                     android:id="@+id/detail_editor_cal2"

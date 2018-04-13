@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2009 The Android Open Source Project
+<?xml version="1.0" encoding="UTF-8"?><!-- Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,8 +12,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="cal2_app_name" msgid="8095131950334945205">"Калькулятор"</string>
     <string name="cal2_error" msgid="9197457880925804499">"Ошибка"</string>
     <string name="cal2_digit0" msgid="8069590963464434135">"0"</string>
@@ -42,5 +40,5 @@
     <string name="cal2_clear_history" msgid="8458043980601165012">"Очистить историю"</string>
 
     <string name="cal2_ok">OK</string>
-    <string name="cal2_close">Закрыть</string>    
+    <string name="cal2_close">Закрыть</string>
 </resources>

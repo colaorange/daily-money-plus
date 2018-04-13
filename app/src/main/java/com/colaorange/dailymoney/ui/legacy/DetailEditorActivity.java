@@ -39,16 +39,15 @@ import com.colaorange.dailymoney.ui.legacy.AccountUtil.IndentNode;
 
 /**
  * Edit or create a detail
- * 
+ *
  * @author dennis
- * 
  */
 public class DetailEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
-    
+
     public static final String PARAM_MODE_CREATE = "dteditor.modeCreate";
     public static final String PARAM_DETAIL = "dteditor.detail";
-   
-    
+
+
     private boolean modeCreate;
     private int counterCreate;
     private Detail detail;
@@ -68,8 +67,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     private SimpleAdapter toAccountAdapter;
 
 
-    private static String[] spfrom = new String[] { Constants.DISPLAY,Constants.DISPLAY };
-    private static int[] spto = new int[] { R.id.simple_spinner_item_display,R.id.simple_spinner_dropdown_item_display};
+    private static String[] spfrom = new String[]{Constants.DISPLAY, Constants.DISPLAY};
+    private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
 
     Spinner fromEditor;
     Spinner toEditor;
@@ -92,9 +91,11 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         initMembers();
         refreshUI();
     }
-    
 
-    /** clone a detail without id **/
+
+    /**
+     * clone a detail without id
+     **/
     private Detail clone(Detail detail) {
         Detail d = new Detail(detail.getFrom(), detail.getTo(), detail.getDate(), detail.getMoney(), detail.getNote());
         d.setArchived(detail.isArchived());
@@ -104,19 +105,19 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     private void initParams() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE,true);
-        detail = (Detail)bundle.get(PARAM_DETAIL);
-        
+        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
+        detail = (Detail) bundle.get(PARAM_DETAIL);
+
         //issue 51, for direct call from outside action, 
-        if(detail==null){
+        if (detail == null) {
             detail = new Detail("", "", new Date(), 0D, "");
         }
-        
+
         workingDetail = clone(detail);
-        
-        if(modeCreate){
+
+        if (modeCreate) {
             setTitle(R.string.title_deteditor_create);
-        }else{
+        } else {
             setTitle(R.string.title_deteditor_update);
         }
     }
@@ -132,7 +133,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         dateEditor.setEnabled(!archived);
 
         moneyEditor = findViewById(R.id.detail_editor_money);
-        moneyEditor.setText(workingDetail.getMoney()<=0?"":Formats.double2String(workingDetail.getMoney()));
+        moneyEditor.setText(workingDetail.getMoney() <= 0 ? "" : Formats.double2String(workingDetail.getMoney()));
         moneyEditor.setEnabled(!archived);
 
         noteEditor = findViewById(R.id.detail_editor_note);
@@ -170,10 +171,10 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         fromAccountMapList = new ArrayList<Map<String, Object>>();
         fromAccountAdapter = new SimpleAdapterEx(this, fromAccountMapList, R.layout.simple_spinner_dropdown_item, spfrom, spto);
         fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
-        fromAccountAdapter.setViewBinder(new AccountViewBinder(){
-            public Account getSelectedAccount(){
+        fromAccountAdapter.setViewBinder(new AccountViewBinder() {
+            public Account getSelectedAccount() {
                 int pos = fromEditor.getSelectedItemPosition();
-                if(pos>=0){
+                if (pos >= 0) {
                     return fromAccountList.get(pos).getAccount();
                 }
                 return null;
@@ -185,10 +186,10 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         toAccountMapList = new ArrayList<Map<String, Object>>();
         toAccountAdapter = new SimpleAdapterEx(this, toAccountMapList, R.layout.simple_spinner_dropdown_item, spfrom, spto);
         toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
-        toAccountAdapter.setViewBinder(new AccountViewBinder(){
-            public Account getSelectedAccount(){
+        toAccountAdapter.setViewBinder(new AccountViewBinder() {
+            public Account getSelectedAccount() {
                 int pos = toEditor.getSelectedItemPosition();
-                if(pos>=0){
+                if (pos >= 0) {
                     return toAccountList.get(pos).getAccount();
                 }
                 return null;
@@ -200,7 +201,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 IndentNode tn = fromAccountList.get(pos);
-                if(tn.getAccount()!=null){
+                if (tn.getAccount() != null) {
                     onFromChanged(tn.getAccount());
                 }
             }
@@ -214,7 +215,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 IndentNode tn = toAccountList.get(pos);
-                if(tn.getAccount()!=null){
+                if (tn.getAccount() != null) {
                     onToChanged(tn.getAccount());
                 }
             }
@@ -225,7 +226,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         });
     }
 
-    private void refreshUI(){
+    private void refreshUI() {
         refreshSpinner();
     }
 
@@ -240,7 +241,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             fromAccountList.addAll(AccountUtil.toIndentNode(accl));
         }
         String fromAccount = workingDetail.getFrom();
-        int fromsel,firstfromsel, i;
+        int fromsel, firstfromsel, i;
         fromsel = firstfromsel = i = -1;
         String fromType = null;
         for (IndentNode pn : fromAccountList) {
@@ -248,17 +249,17 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             Map<String, Object> row = new HashMap<String, Object>();
             fromAccountMapList.add(row);
 
-            row.put(spfrom[0], new NamedItem(spfrom[0],pn,""));
-            row.put(spfrom[1], new NamedItem(spfrom[1],pn,""));
-            if(pn.getAccount()!=null){
-                if(firstfromsel==-1){
+            row.put(spfrom[0], new NamedItem(spfrom[0], pn, ""));
+            row.put(spfrom[1], new NamedItem(spfrom[1], pn, ""));
+            if (pn.getAccount() != null) {
+                if (firstfromsel == -1) {
                     firstfromsel = i;
                 }
-                if(fromsel==-1 && pn.getAccount().getId().equals(fromAccount)){
+                if (fromsel == -1 && pn.getAccount().getId().equals(fromAccount)) {
                     fromsel = i;
                     fromType = pn.getAccount().getType();
                 }
-                
+
             }
         }
 
@@ -271,7 +272,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             toAccountList.addAll(AccountUtil.toIndentNode(accl));
         }
         String toAccount = workingDetail.getTo();
-        int tosel,firsttosel;
+        int tosel, firsttosel;
         tosel = firsttosel = i = -1;
         // String toType = null;
         for (IndentNode pn : toAccountList) {
@@ -279,34 +280,34 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             Map<String, Object> row = new HashMap<String, Object>();
             toAccountMapList.add(row);
 
-            row.put(spfrom[0], new NamedItem(spfrom[0],pn,""));
-            row.put(spfrom[1], new NamedItem(spfrom[1],pn,""));
-            if(pn.getAccount()!=null){
-                if(firsttosel==-1){
+            row.put(spfrom[0], new NamedItem(spfrom[0], pn, ""));
+            row.put(spfrom[1], new NamedItem(spfrom[1], pn, ""));
+            if (pn.getAccount() != null) {
+                if (firsttosel == -1) {
                     firsttosel = i;
                 }
-                if(tosel==-1 && pn.getAccount().getId().equals(toAccount)){
+                if (tosel == -1 && pn.getAccount().getId().equals(toAccount)) {
                     tosel = i;
                 }
-                
+
             }
         }
 
         if (fromsel > -1) {
             fromEditor.setSelection(fromsel);
-        }else if(firstfromsel>-1){
+        } else if (firstfromsel > -1) {
             fromEditor.setSelection(firstfromsel);
             workingDetail.setFrom(fromAccountList.get(firstfromsel).getAccount().getId());
-        }else {
+        } else {
             workingDetail.setFrom("");
         }
 
         if (tosel > -1) {
             toEditor.setSelection(tosel);
-        }else if(firsttosel>-1){
+        } else if (firsttosel > -1) {
             toEditor.setSelection(firsttosel);
             workingDetail.setTo(toAccountList.get(firsttosel).getAccount().getId());
-        }else {
+        } else {
             workingDetail.setTo("");
         }
 
@@ -370,28 +371,29 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             doCalculator2();
         }
     }
-    
+
     private void doCalculator2() {
         Intent intent = null;
-        intent = new Intent(this,Calculator.class);
-        intent.putExtra(Calculator.PARAM_NEED_RESULT,true);
-        intent.putExtra(Calculator.PARAM_START_VALUE,moneyEditor.getText().toString());
-        startActivityForResult(intent,Constants.REQUEST_CALCULATOR_CODE);
+        intent = new Intent(this, Calculator.class);
+        intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
+
+        String start = "";
+        try {
+            start = Formats.editorTextNumberDecimalToCal2(moneyEditor.getText().toString());
+        }catch (Exception x){}
+
+        intent.putExtra(Calculator.PARAM_START_VALUE, start);
+        startActivityForResult(intent, Constants.REQUEST_CALCULATOR_CODE);
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode==Activity.RESULT_OK){
+        if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
-            try{
-                double d = Double.parseDouble(result);
-                if(d>0){
-                    moneyEditor.setText(Formats.double2String(d));
-                }else{
-                    moneyEditor.setText("0");
-                }
-            }catch(Exception x){
+            try {
+                moneyEditor.setText(Formats.cal2ToEditorTextNumberDecimal(result));
+            } catch (Exception x) {
             }
         }
     }
@@ -402,13 +404,13 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
         // verify
         int fromPos = fromEditor.getSelectedItemPosition();
-        if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount()==null) {
+        if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_from_account)));
             return;
         }
         int toPos = toEditor.getSelectedItemPosition();
-        if (Spinner.INVALID_POSITION == toPos || toAccountList.get(toPos).getAccount()==null) {
+        if (Spinner.INVALID_POSITION == toPos || toAccountList.get(toPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_to_account)));
             return;
@@ -436,23 +438,22 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             return;
         }
         double money = Formats.string2Double(moneystr);
-        if (money==0) {
+        if (money <= 0) {
             GUIs.alert(this, i18n.string(R.string.cmsg_field_zero, i18n.string(R.string.label_money)));
             return;
         }
-        
+
         String note = noteEditor.getText().toString();
 
         Account fromAcc = fromAccountList.get(fromPos).getAccount();
-        Account toAcc =  toAccountList.get(toPos).getAccount();
+        Account toAcc = toAccountList.get(toPos).getAccount();
 
         if (fromAcc.getId().equals(toAcc.getId())) {
             GUIs.alert(this, i18n.string(R.string.msg_same_from_to));
             return;
         }
 
-        
-        
+
         workingDetail.setFrom(fromAcc.getId());
         workingDetail.setTo(toAcc.getId());
 
@@ -461,10 +462,10 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         workingDetail.setNote(note.trim());
         IDataProvider idp = contexts().getDataProvider();
         if (modeCreate) {
-            
+
             idp.newDetail(workingDetail);
             setResult(RESULT_OK);
-            
+
             workingDetail = clone(workingDetail);
             workingDetail.setMoney(0D);
             workingDetail.setNote("");
@@ -477,9 +478,9 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             closeBtn.setVisibility(Button.VISIBLE);
             trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
-            
-            idp.updateDetail(detail.getId(),workingDetail);
-            
+
+            idp.updateDetail(detail.getId(), workingDetail);
+
             GUIs.shortToast(this, i18n.string(R.string.msg_detail_updated));
             setResult(RESULT_OK);
             finish();
@@ -495,12 +496,12 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 
     private void doClose() {
         setResult(RESULT_OK);
-        GUIs.shortToast(this,i18n().string(R.string.msg_created_detail,counterCreate));
+        GUIs.shortToast(this, i18n().string(R.string.msg_created_detail, counterCreate));
         finish();
     }
-    
-    
-    private class SimpleAdapterEx extends SimpleAdapter{
+
+
+    private class SimpleAdapterEx extends SimpleAdapter {
 
         public SimpleAdapterEx(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
             super(context, data, resource, from, to);
@@ -519,35 +520,35 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
 //            return pn.account!=null;
 //        }
     }
-    
+
     private int ddPaddingLeftBase;
     private float ddPaddingIntentBase;
     private boolean ddPaddingBase_set;
-//    private Drawable ddDisabled;
+    //    private Drawable ddDisabled;
     private Drawable ddSelected;
-    
-    private class AccountViewBinder implements SimpleAdapter.ViewBinder{
-        
-        
-        public Account getSelectedAccount(){
+
+    private class AccountViewBinder implements SimpleAdapter.ViewBinder {
+
+
+        public Account getSelectedAccount() {
             return null;
         }
-        
+
         @Override
         public boolean setViewValue(View view, Object data, String text) {
 
             I18N i18n = i18n();
-            
-            NamedItem item = (NamedItem)data;
+
+            NamedItem item = (NamedItem) data;
             String name = item.getName();
-            IndentNode tn = (IndentNode)item.getValue();
-            
-            if(!(view instanceof TextView)){
-               return false;
+            IndentNode tn = (IndentNode) item.getValue();
+
+            if (!(view instanceof TextView)) {
+                return false;
             }
             AccountType at = tn.getType();
-            TextView tv = (TextView)view;
-            if(!ddPaddingBase_set){
+            TextView tv = (TextView) view;
+            if (!ddPaddingBase_set) {
                 ddPaddingBase_set = true;
                 ddPaddingIntentBase = 15 * GUIs.getDPRatio(DetailEditorActivity.this);
                 ddPaddingLeftBase = tv.getPaddingLeft();
@@ -556,45 +557,45 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
                 ddSelected = DetailEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
                 ddSelected.setAlpha(128);
             }
-            
-            if(Constants.DISPLAY.equals(name)){
+
+            if (Constants.DISPLAY.equals(name)) {
                 int tcolor;
                 tv.setBackgroundDrawable(null);
-                if(AccountType.INCOME == at){
+                if (AccountType.INCOME == at) {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.income_fgl);
-                }else if(AccountType.ASSET == at){
+                } else if (AccountType.ASSET == at) {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.asset_fgl);
-                }else if(AccountType.EXPENSE == at){
+                } else if (AccountType.EXPENSE == at) {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.expense_fgl);
-                }else if(AccountType.LIABILITY == at){
+                } else if (AccountType.LIABILITY == at) {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.liability_fgl);
-                }else if(AccountType.OTHER == at){
+                } else if (AccountType.OTHER == at) {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.other_fgl);
-                }else{
+                } else {
                     tcolor = DetailEditorActivity.this.getResources().getColor(R.color.unknow_fgl);
                 }
                 tv.setTextColor(tcolor);
                 StringBuilder display = new StringBuilder();
-                if(tv.getId()==R.id.simple_spinner_dropdown_item_display){
-                    tv.setPadding((int)(ddPaddingLeftBase+tn.getIndent()*ddPaddingIntentBase), tv.getPaddingTop(), tv.getPaddingRight(),tv.getPaddingBottom());
-                    if(tn.getAccount()==null){
+                if (tv.getId() == R.id.simple_spinner_dropdown_item_display) {
+                    tv.setPadding((int) (ddPaddingLeftBase + tn.getIndent() * ddPaddingIntentBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
+                    if (tn.getAccount() == null) {
 //                        tv.setBackgroundDrawable(ddDisabled);
-                        tv.setTextColor(tcolor&0x6FFFFFFF);
-                    }else if(tn.getAccount() == getSelectedAccount()){
+                        tv.setTextColor(tcolor & 0x6FFFFFFF);
+                    } else if (tn.getAccount() == getSelectedAccount()) {
                         tv.setBackgroundDrawable(ddSelected);
-                    }else{
+                    } else {
                         tv.setBackgroundDrawable(null);
                     }
-                    
-                    if(tn.getIndent()==0){
+
+                    if (tn.getIndent() == 0) {
                         display.append(tn.getType().getDisplay(i18n));
                         display.append(" - ");
                     }
                     display.append(tn.getName());
-                }else{
-                    if(tn.getAccount()==null){
+                } else {
+                    if (tn.getAccount() == null) {
                         display.append("");
-                    }else{
+                    } else {
                         display.append(tn.getType().getDisplay(i18n));
                         display.append("-");
                         display.append(tn.getAccount().getName());
