@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.commons.util;
+package com.colaorange.commons.util;
 
 import com.colaorange.commons.util.ComparableVersion;
 
@@ -28,12 +28,12 @@ public class ComparableVersionUnitTest {
         System.out.println(">>>"+v5);
         System.out.println(">>>"+v6);
         System.out.println(">>>"+v7);
-        Assert.assertEquals(-1,v1.compareTo(v2));
-        Assert.assertEquals(-1,v2.compareTo(v3));
-        Assert.assertEquals(-1,v3.compareTo(v4));
-        Assert.assertEquals(-1,v4.compareTo(v5));
-        Assert.assertEquals(-1,v5.compareTo(v6));
-        Assert.assertEquals(-1,v6.compareTo(v7));
+        assertEquals(-1,v1.compareTo(v2));
+        assertEquals(-1,v2.compareTo(v3));
+        assertEquals(-1,v3.compareTo(v4));
+        assertEquals(-1,v4.compareTo(v5));
+        assertEquals(-1,v5.compareTo(v6));
+        assertEquals(-1,v6.compareTo(v7));
     }
 
     @Test
@@ -52,25 +52,25 @@ public class ComparableVersionUnitTest {
         System.out.println(">>>"+v5);
         System.out.println(">>>"+v6);
 
-        Assert.assertEquals(-1,v1.compareTo(v2));
-        Assert.assertEquals(-1,v2.compareTo(v3));
-        Assert.assertEquals(-1,v3.compareTo(v4));
-        Assert.assertEquals(-1,v4.compareTo(v5));
-        Assert.assertEquals(-1,v5.compareTo(v6));
+        assertEquals(-1,v1.compareTo(v2));
+        assertEquals(-1,v2.compareTo(v3));
+        assertEquals(-1,v3.compareTo(v4));
+        assertEquals(-1,v4.compareTo(v5));
+        assertEquals(-1,v5.compareTo(v6));
 
-        Assert.assertEquals("0.9.8",v1.getSemantic());
-        Assert.assertEquals("0.9.8",v2.getSemantic());
-        Assert.assertEquals("0.9.8",v3.getSemantic());
-        Assert.assertEquals("0.9.8",v4.getSemantic());
-        Assert.assertEquals("0.9.9",v5.getSemantic());
-        Assert.assertEquals("0.9.9",v6.getSemantic());
+        assertEquals("0.9.8",v1.getSemantic());
+        assertEquals("0.9.8",v2.getSemantic());
+        assertEquals("0.9.8",v3.getSemantic());
+        assertEquals("0.9.8",v4.getSemantic());
+        assertEquals("0.9.9",v5.getSemantic());
+        assertEquals("0.9.9",v6.getSemantic());
 
-        Assert.assertEquals(false,v1.isSnapshot());
-        Assert.assertEquals(true,v2.isSnapshot());
-        Assert.assertEquals(true,v3.isSnapshot());
-        Assert.assertEquals(false,v4.isSnapshot());
-        Assert.assertEquals(true,v5.isSnapshot());
-        Assert.assertEquals(false,v6.isSnapshot());
+        assertEquals(false,v1.isSnapshot());
+        assertEquals(true,v2.isSnapshot());
+        assertEquals(true,v3.isSnapshot());
+        assertEquals(false,v4.isSnapshot());
+        assertEquals(true,v5.isSnapshot());
+        assertEquals(false,v6.isSnapshot());
 
     }
 }

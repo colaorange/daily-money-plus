@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney;
+package com.colaorange;
 
 import org.junit.Test;
 

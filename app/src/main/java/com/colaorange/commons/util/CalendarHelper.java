@@ -17,6 +17,9 @@ public class CalendarHelper {
 
     private int firstDayOfWeek = 1;//1 SUN, 2 MON..etc
     private int startDayOfMonth = 1;//between 1-28
+    private int startMonthOfYear = 0;//0-11
+    private int startMonthDayOfYear = 1;//between 1-28
+
 
     private TimeZone timeZone;
 
@@ -40,6 +43,28 @@ public class CalendarHelper {
             throw new IllegalArgumentException("the value of startDayOfMonth must between 1-28");
         }
         this.startDayOfMonth = startDayOfMonth;
+    }
+
+    public int getStartMonthOfYear() {
+        return startMonthOfYear;
+    }
+
+    public void setStartMonthOfYear(int startMonthOfYear) {
+        if (startMonthOfYear < 0 || startMonthOfYear > 11) {
+            throw new IllegalArgumentException("the value of startMonthOfYear must between 0-11");
+        }
+        this.startMonthOfYear = startMonthOfYear;
+    }
+
+    public int getStartMonthDayOfYear() {
+        return startMonthDayOfYear;
+    }
+
+    public void setStartMonthDayOfYear(int startMonthDayOfYear) {
+        if (startMonthDayOfYear < 1 || startMonthDayOfYear > 28) {
+            throw new IllegalArgumentException("the value of startMonthDayOfYear must between 1-28");
+        }
+        this.startMonthDayOfYear = startMonthDayOfYear;
     }
 
     public TimeZone getTimeZone() {
@@ -201,12 +226,40 @@ public class CalendarHelper {
     }
 
     public Date yearStartDate(Date d) {
+        if (startMonthOfYear == 0 && startMonthDayOfYear == 1) {
+            return absYearStartDate(d);
+        }
+        Calendar cal = calendar(d);
+
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        if (month < startMonthOfYear || (month == startMonthOfYear && day < startMonthDayOfYear)) {
+            cal.add(Calendar.YEAR, -1);
+        }
+        cal.set(Calendar.MONTH, startMonthOfYear);
+        cal.set(Calendar.DAY_OF_MONTH, startMonthDayOfYear);
+
+        return toDayStart(cal);
+    }
+
+    public Date yearEndDate(Date d) {
+        if (startMonthOfYear == 0 && startMonthDayOfYear == 1) {
+            return absYearEndDate(d);
+        }
+        d = yearStartDate(d);
+        Calendar cal = calendar(d);
+        cal.add(Calendar.YEAR, 1);//add 1 year
+        cal.add(Calendar.DAY_OF_YEAR, -1);//minus 1 day
+        return toDayEnd(cal);
+    }
+
+    public Date absYearStartDate(Date d) {
         Calendar cal = calendar(d);
         cal.set(Calendar.DAY_OF_YEAR, 1);
         return toDayStart(cal);
     }
 
-    public Date yearEndDate(Date d) {
+    public Date absYearEndDate(Date d) {
         Calendar cal = calendar(d);
         int last = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
         cal.set(Calendar.DAY_OF_YEAR, last);
@@ -296,7 +349,7 @@ public class CalendarHelper {
     static public final TimeZone GMT0 = TimeZone.getTimeZone("GMT+0:00");
 
 
-    public static DateFormat getRRC1123Format(){
+    public static DateFormat getRRC1123Format() {
         return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'",
                 new DateFormatSymbols(Locale.ENGLISH));
     }
