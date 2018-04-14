@@ -263,12 +263,11 @@
     <string name="title_pdprotection">Password protection</string>
     <string name="title_prefs">Preferences</string>
 
-    <string name="label_prefs_lang_contriubtion">Contriubte language</string>
-    <string name="label_prefs_lang_contriubtion_sum">Mail me to contribute your language</string>
-
+    <!--new-->
+    <string name="label_prefs_lang_contribution">Contribute language</string>
+    <string name="label_prefs_lang_contribution_sum">Mail me to contribute your language</string>
     <string name="label_prefs_vote_sum">Vote stars (★★★★★) if you like DM+</string>
     <string name="label_prefs_vote">Vote me stars</string>
-
     <string name="label_prefs_like_sum">Like DM+ on Facebook page</string>
     <string name="label_prefs_like">Like DM+ </string>
 

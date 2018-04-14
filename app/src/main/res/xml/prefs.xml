@@ -93,8 +93,8 @@
         android:title="@string/label_prefcat_contribution">
         <Preference
             android:key="mailme_lang" android:persistent="false"
-            android:summary="@string/label_prefs_lang_contriubtion_sum"
-            android:title="@string/label_prefs_lang_contriubtion" >
+            android:summary="@string/label_prefs_lang_contribution_sum"
+            android:title="@string/label_prefs_lang_contribution" >
         </Preference>
         <Preference
             android:key="vote_dm" android:persistent="false"
