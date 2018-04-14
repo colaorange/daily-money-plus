@@ -7,9 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.colaorange.calculator2.Calculator;
-import com.colaorange.dailymoney.data.SymbolPosition;
-
 /**
  * @author dennis
  */
@@ -48,13 +45,9 @@ public class Formats {
         return getDoubleFormat().format(d);
     }
 
-    public static double string2Double(String d) {
-        try {
-            return getDoubleFormat().parse(d).doubleValue();
-        } catch (ParseException e) {
-            Logger.e(e.getMessage(), e);
-            return 0D;
-        }
+    public static double string2Double(String d)  throws ParseException {
+
+        return getDoubleFormat().parse(d).doubleValue();
     }
 
     public static String normalizeDouble2String(Double d) {

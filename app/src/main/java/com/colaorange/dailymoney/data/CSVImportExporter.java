@@ -2,8 +2,8 @@ package com.colaorange.dailymoney.data;
 
 import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.Preference;

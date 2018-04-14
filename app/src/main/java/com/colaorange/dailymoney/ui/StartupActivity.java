@@ -2,7 +2,7 @@ package com.colaorange.dailymoney.ui;
 
 import android.content.Intent;
 
-import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.data.DataCreator;

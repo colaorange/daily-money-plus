@@ -2,10 +2,18 @@
 <resources>
     <string name="app_code" translatable="false">daily-money-plus</string>
     <string name="app_name" translatable="false">Daily Money+</string>
+    <string name="app_market_app" translatable="false">market://details?id=com.colaorange.dailymoney</string>
+    <string name="app_like_page" translatable="false">https://www.facebook.com/co.daily.money</string>
 
     <string name="path_about" translatable="false">en/about.html</string>
     <string name="path_contributor" translatable="false">en/contributor.html</string>
     <string name="path_history" translatable="false">en/history.html</string>
     <string name="path_how2use" translatable="false">en/how2use.html</string>
     <string name="path_what_is_new" translatable="false">en/whatsnew.html</string>
+
+    <string name="mailme_email" translatable="false">cola.orange@gmail.com</string>
+    <string name="mailme_lang_subject" translatable="false">Support my language</string>
+    <string name="mailme_lang_text" translatable="false">Hi Dennis, I would like to contribute my language to DM, Please contact me and provide me further steps</string>
+
+
 </resources>

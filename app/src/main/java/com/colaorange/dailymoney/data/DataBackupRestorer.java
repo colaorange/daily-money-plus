@@ -1,7 +1,7 @@
 package com.colaorange.dailymoney.data;
 
 import com.colaorange.commons.util.Files;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 

@@ -416,7 +416,7 @@ public class ComparableVersion
             if(stack.empty()){
                 StringBuilder sb = new StringBuilder();
                 for(Item i:list){
-                    if(i.getType()==Item.INTEGER_ITEM){
+                    if(i.getType()== Item.INTEGER_ITEM){
                         if(sb.length()!=0){
                             sb.append(".");
                         }

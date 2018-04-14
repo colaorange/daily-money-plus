@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 
 import android.content.ContentValues;

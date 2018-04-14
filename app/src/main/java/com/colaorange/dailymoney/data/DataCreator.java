@@ -3,8 +3,8 @@ package com.colaorange.dailymoney.data;
 import java.util.Date;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 

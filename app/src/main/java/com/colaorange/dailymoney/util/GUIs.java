@@ -1,4 +1,4 @@
-package com.colaorange.commons.util;
+package com.colaorange.dailymoney.util;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.R;
 
 /**

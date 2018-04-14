@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.context;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +21,8 @@ import android.text.Html;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;
@@ -161,7 +160,7 @@ public class Contexts {
         }
     }
 
-    protected void trackEvent(final String category, final String action, final String label, final Long value) {
+    public void trackEvent(final String category, final String action, final String label, final Long value) {
         if (preference.isAllowAnalytics() && sTracker != null) {
             try {
                 Logger.d("track event " + category + ", " + action);

@@ -7,8 +7,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 180413003
-        versionName "0.9.9-freshly-180413"
+        versionCode 180414000
+        versionName "0.9.9-freshly-180414"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions{
@@ -19,6 +19,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
     }
 }
 

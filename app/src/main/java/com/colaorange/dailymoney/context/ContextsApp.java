@@ -2,7 +2,7 @@ package com.colaorange.dailymoney.context;
 
 import android.app.Application;
 
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.Logger;
 
 /**
  * Created by Dennis

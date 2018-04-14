@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 
 /**

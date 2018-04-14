@@ -6,17 +6,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-
-import android.os.Environment;
 
 /**
  * @author Dennis.Chen
@@ -146,7 +139,7 @@ public class Files {
     }
 
     public static Properties loadProperties(File file) {
-        java.util.Properties p = new java.util.Properties();
+        Properties p = new Properties();
         InputStream is = null;
         try {
             is = new FileInputStream(file);

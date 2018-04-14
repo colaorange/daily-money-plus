@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.ui.Constants;
 
@@ -193,7 +193,7 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
-        if (!formatTimeSet.contains(formatDate)) {
+        if (!formatTimeSet.contains(formatTime)) {
             formatTime = formatTimeSet.iterator().next();
         }
         try {

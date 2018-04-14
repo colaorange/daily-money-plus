@@ -3,7 +3,7 @@ package com.colaorange.dailymoney.ui.legacy;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 

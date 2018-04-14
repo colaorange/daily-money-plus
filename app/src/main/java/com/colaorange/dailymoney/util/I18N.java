@@ -1,4 +1,4 @@
-package com.colaorange.commons.util;
+package com.colaorange.dailymoney.util;
 
 import android.content.Context;
 

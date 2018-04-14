@@ -15,9 +15,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.GUIs;
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.GUIs;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;

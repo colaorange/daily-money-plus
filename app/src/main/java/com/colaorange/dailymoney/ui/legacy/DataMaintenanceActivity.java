@@ -1,8 +1,6 @@
 package com.colaorange.dailymoney.ui.legacy;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -17,19 +15,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.GUIs;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.GUIs;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
-import com.colaorange.dailymoney.data.Account;
 import com.colaorange.dailymoney.data.DataBackupRestorer;
 import com.colaorange.dailymoney.data.CSVImportExporter;
 import com.colaorange.dailymoney.data.DataCreator;
-import com.colaorange.dailymoney.data.Detail;
 import com.colaorange.dailymoney.data.IDataProvider;
-import com.csvreader.CsvReader;
 
 /**
  * @author dennis

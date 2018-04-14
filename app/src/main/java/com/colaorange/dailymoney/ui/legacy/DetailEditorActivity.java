@@ -23,9 +23,9 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.GUIs;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.GUIs;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
@@ -380,7 +380,8 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
         String start = "";
         try {
             start = Formats.editorTextNumberDecimalToCal2(moneyEditor.getText().toString());
-        }catch (Exception x){}
+        } catch (Exception x) {
+        }
 
         intent.putExtra(Calculator.PARAM_START_VALUE, start);
         startActivityForResult(intent, Constants.REQUEST_CALCULATOR_CODE);
@@ -437,7 +438,13 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_money)));
             return;
         }
-        double money = Formats.string2Double(moneystr);
+        double money = 0;
+        try {
+            money = Formats.string2Double(moneystr);
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
+
         if (money <= 0) {
             GUIs.alert(this, i18n.string(R.string.cmsg_field_zero, i18n.string(R.string.label_money)));
             return;

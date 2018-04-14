@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
 
 /**

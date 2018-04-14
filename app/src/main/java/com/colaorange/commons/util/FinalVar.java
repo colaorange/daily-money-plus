@@ -5,5 +5,5 @@ package com.colaorange.commons.util;
  * @author Dennis.Chen
  */
 public class FinalVar<T> {
-    T value;
+    public T value;
 }

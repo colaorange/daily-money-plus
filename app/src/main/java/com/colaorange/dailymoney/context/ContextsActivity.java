@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.I18N;
-import com.colaorange.commons.util.Logger;
+import com.colaorange.dailymoney.util.I18N;
+import com.colaorange.dailymoney.util.Logger;
 
 /**
  * provide life cycle and easy access to contexts
@@ -54,7 +54,7 @@ public class ContextsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void trackEvent(String action) {
+    public void trackEvent(String action) {
         Contexts ctxs = Contexts.instance();
         ctxs.trackEvent(getTrackerPath(), action, "", null);
     }

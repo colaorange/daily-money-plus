@@ -1,6 +1,8 @@
-package com.colaorange.commons.util;
+package com.colaorange.dailymoney.util;
 
 import android.util.Log;
+
+import com.colaorange.commons.util.Strings;
 
 /**
  * @author dennis

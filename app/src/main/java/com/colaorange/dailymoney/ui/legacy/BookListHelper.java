@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.colaorange.commons.util.GUIs;
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.GUIs;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Book;

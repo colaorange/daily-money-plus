@@ -1,6 +1,5 @@
 package com.colaorange.dailymoney.ui.legacy;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +18,10 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.calculator2.Calculator;
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -239,7 +237,11 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         //assign
         workingAccount.setType(type);
         workingAccount.setName(name);
-        workingAccount.setInitialValue(Formats.string2Double(initval));
+        try {
+            workingAccount.setInitialValue(Formats.string2Double(initval));
+        }catch (Exception x){
+            workingAccount.setInitialValue(0);
+        }
         workingAccount.setCashAccount(cashAccountEditor.isChecked());
 
         IDataProvider idp = contexts().getDataProvider();

@@ -6,7 +6,7 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.I18N;
 
 import android.content.Context;
 

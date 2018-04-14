@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
 

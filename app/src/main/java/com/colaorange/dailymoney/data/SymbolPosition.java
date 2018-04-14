@@ -4,7 +4,7 @@
 package com.colaorange.dailymoney.data;
 
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.R;
 
 

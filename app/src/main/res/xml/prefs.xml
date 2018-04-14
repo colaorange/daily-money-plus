@@ -4,18 +4,6 @@
 	<CheckBoxPreference android:key="use_improvider" android:title="@string/label_prefs_improvider"
 		android:summary="@string/label_prefs_improvider_sum" android:defaultValue="false" />
 	 -->
-    <PreferenceCategory android:title="@string/label_prefcat_security">
-        <EditTextPreference
-            android:inputType="textPassword"
-            android:key="password"
-            android:summary="@string/label_prefs_password_sum"
-            android:title="@string/label_prefs_password" />
-        <EditTextPreference
-            android:inputType="textPassword"
-            android:key="passwordvd"
-            android:summary="@string/label_prefs_passwordvd_sum"
-            android:title="@string/label_prefs_passwordvd" />
-    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_prefcat_display">
         <ListPreference
@@ -55,6 +43,19 @@
             android:title="@string/label_prefs_maxrecords" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/label_prefcat_security">
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="password"
+            android:summary="@string/label_prefs_password_sum"
+            android:title="@string/label_prefs_password" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="passwordvd"
+            android:summary="@string/label_prefs_passwordvd_sum"
+            android:title="@string/label_prefs_passwordvd" />
+    </PreferenceCategory>
+
 
     <PreferenceCategory android:title="@string/label_prefcat_data">
         <CheckBoxPreference
@@ -64,7 +65,7 @@
             android:title="@string/label_prefs_backup_with_timestamp" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_accounting_period">
+    <PreferenceCategory android:title="@string/label_prefcat_accounting">
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/prefs_firstday_week_label"
@@ -88,15 +89,31 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="@string/label_prefcat_contribution">
+    <PreferenceScreen
+        android:title="@string/label_prefcat_contribution">
+        <Preference
+            android:key="mailme_lang" android:persistent="false"
+            android:summary="@string/label_prefs_lang_contriubtion_sum"
+            android:title="@string/label_prefs_lang_contriubtion" >
+        </Preference>
+        <Preference
+            android:key="vote_dm" android:persistent="false"
+            android:summary="@string/label_prefs_vote_sum"
+            android:title="@string/label_prefs_vote" >
+        </Preference>
+        <Preference
+            android:key="like_dm" android:persistent="false"
+            android:summary="@string/label_prefs_like_sum"
+            android:title="@string/label_prefs_like" >
+        </Preference>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="allow_analytics"
             android:summary="@string/label_prefs_allow_analytics_sum"
             android:title="@string/label_prefs_allow_analytics" />
-    </PreferenceCategory>
+    </PreferenceScreen>
 
-    <PreferenceCategory android:title="@string/label_prefcat_developer" >
+    <PreferenceScreen android:title="@string/label_prefcat_developer" >
         <!-- at the bottom -->
         <ListPreference
             android:defaultValue="UTF8"
@@ -110,5 +127,5 @@
             android:key="open_testsdekstop"
             android:summary="@string/label_prefs_testsdekstop_sum"
             android:title="@string/label_prefs_testsdekstop" />
-    </PreferenceCategory>
+    </PreferenceScreen>
 </PreferenceScreen>

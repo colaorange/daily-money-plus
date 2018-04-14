@@ -25,7 +25,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Formats;
-import com.colaorange.commons.util.GUIs;
+import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;

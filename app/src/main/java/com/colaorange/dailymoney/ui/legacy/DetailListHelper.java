@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.ui.legacy;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.I18N;
+import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.data.Account;
