@@ -437,8 +437,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     private void resetWorkingBook() {
         IDataProvider idp = contexts().getDataProvider();
         idp.reset();
-        if (Contexts.DEBUG) {
-            Logger.d("reset working book");
-        }
+        Logger.d("reset working book");
     }
 }

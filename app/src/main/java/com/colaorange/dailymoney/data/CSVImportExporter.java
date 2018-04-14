@@ -228,9 +228,8 @@ public class CSVImportExporter {
     private void saveCSVFile(String csv, String encoding, File file, File withTimeFolder) throws IOException {
 
         Files.saveString(csv, file, encoding);
-        if (Contexts.DEBUG) {
-            Logger.d("export to " + file.toString());
-        }
+
+        Logger.d("export to {}", file);
 
         if (withTimeFolder != null) {
             Files.copyFileTo(file, new File(withTimeFolder, file.getName()));
@@ -312,9 +311,7 @@ public class CSVImportExporter {
             }
             accountReader.close();
             accountReader = null;
-            if (Contexts.DEBUG) {
-                Logger.d("import from " + accounts + " ver:" + appver);
-            }
+            Logger.d("import from {} ver: {}", accounts , appver);
 
 
             if (!accountOnly) {
@@ -344,9 +341,8 @@ public class CSVImportExporter {
                 }
                 detailReader.close();
                 detailReader = null;
-                if (Contexts.DEBUG) {
-                    Logger.d("import from " + details + " ver:" + appver);
-                }
+
+                Logger.d("import from {} ver:{}", details, appver);
             }
             r.success = true;
         } catch (Exception x) {
@@ -375,9 +371,7 @@ public class CSVImportExporter {
             try {
                 return Integer.parseInt(str.substring(APPVER.length()));
             } catch (Exception x) {
-                if (Contexts.DEBUG) {
-                    Logger.d(x.getMessage());
-                }
+                Logger.d(x.getMessage(), x);
             }
         }
         return 0;

@@ -138,9 +138,8 @@ public class SQLiteDataProvider implements IDataProvider {
     
     @Override
     public void newAccountNoCheck(String id,Account account){
-        if(Contexts.DEBUG){
-            Logger.d("new account "+id);
-        }
+        Logger.d("new account {}", id);
+
         account.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -278,9 +277,8 @@ public class SQLiteDataProvider implements IDataProvider {
     
     @Override
     public void newDetailNoCheck(int id,Detail detail){
-        if(Contexts.DEBUG){
-            Logger.d("new detail "+id+","+detail.getNote());
-        }
+        Logger.d("new detail {}, {}", id, detail.getNote());
+
         first = null;
         detail.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();

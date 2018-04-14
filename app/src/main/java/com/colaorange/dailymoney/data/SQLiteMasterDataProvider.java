@@ -126,9 +126,8 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
     
     @Override
     public void newBookNoCheck(int id,Book book){
-        if(Contexts.DEBUG){
-            Logger.d("new book "+id+","+book.getName());
-        }
+        Logger.d("new book {}, {}", id, book.getName());
+
         book.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();

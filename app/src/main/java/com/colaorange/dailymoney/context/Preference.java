@@ -161,17 +161,17 @@ public class Preference {
             workingBookId = bookid;
         }
 
-        if (Contexts.DEBUG) {
-            Logger.d("preference : working book " + workingBookId);
-            Logger.d("preference : detail layout " + detailListLayout);
-            Logger.d("preference : firstday of week " + firstdayWeek);
-            Logger.d("preference : startday of month " + startdayMonth);
-            Logger.d("preference : max records " + maxRecords);
-            Logger.d("preference : open tests desktop " + openTestsDesktop);
-            Logger.d("preference : backup wiht timestamp " + backupWithTimestamp);
-            Logger.d("preference : csv encoding " + csvEncoding);
-            Logger.d("preference : last backup " + lastbackup);
-        }
+
+        Logger.d("preference : working book {}", workingBookId);
+        Logger.d("preference : detail layout {}", detailListLayout);
+        Logger.d("preference : firstday of week {}", firstdayWeek);
+        Logger.d("preference : startday of month {}", startdayMonth);
+        Logger.d("preference : max records {}", maxRecords);
+        Logger.d("preference : open tests desktop {}", openTestsDesktop);
+        Logger.d("preference : backup wiht timestamp {}", backupWithTimestamp);
+        Logger.d("preference : csv encoding {}", csvEncoding);
+        Logger.d("preference : last backup {}", lastbackup);
+
         calendarHelper.setFirstDayOfWeek(getFirstdayWeek());
         calendarHelper.setStartDayOfMonth(getStartdayMonth());
     }
@@ -208,7 +208,7 @@ public class Preference {
         boolean monthDigital = false;
         yearFormat = "yyyy";
 
-        switch (formatMonth){
+        switch (formatMonth) {
             case FORMAT_MONTH_FULL:
                 monthFormat = "MMMM";
                 break;
@@ -222,7 +222,7 @@ public class Preference {
                 break;
         }
 
-        switch (formatTime){
+        switch (formatTime) {
             case FORMAT_TIME_12:
                 timeFormat = "aa hh:mm:ss";
                 break;
@@ -232,47 +232,47 @@ public class Preference {
                 break;
         }
 
-        if(!monthDigital){
-            monthDateFormat = monthFormat+" dd";
-            yearMonthFormat = yearFormat+" "+monthFormat;
+        if (!monthDigital) {
+            monthDateFormat = monthFormat + " dd";
+            yearMonthFormat = yearFormat + " " + monthFormat;
         }
 
         switch (formatDate) {
             case FORMAT_DATE_DMY:
-                dateFormat = "dd/MM/"+yearFormat;
-                if(monthDigital) {
+                dateFormat = "dd/MM/" + yearFormat;
+                if (monthDigital) {
                     monthDateFormat = "dd/" + monthFormat;
                     yearMonthFormat = monthFormat + "/" + yearFormat;
                 }
                 break;
             case FORMAT_DATE_MDY:
-                dateFormat = "MM/dd/"+yearFormat;
-                if(monthDigital) {
+                dateFormat = "MM/dd/" + yearFormat;
+                if (monthDigital) {
                     monthDateFormat = monthFormat + "/dd";
                     yearMonthFormat = monthFormat + "/" + yearFormat;
                 }
                 break;
             case FORMAT_DATE_YMD:
             default:
-                dateFormat = yearFormat+"/MM/dd";
-                if(monthDigital) {
+                dateFormat = yearFormat + "/MM/dd";
+                if (monthDigital) {
                     monthDateFormat = "dd/" + monthFormat;
                     yearMonthFormat = yearFormat + "/" + monthFormat;
                 }
                 break;
         }
 
-        dateTimeFormat = dateFormat+" "+timeFormat;
+        dateTimeFormat = dateFormat + " " + timeFormat;
 
-        if (Contexts.DEBUG) {
-            Logger.d("preference : dateFormat " + dateFormat);
-            Logger.d("preference : timeFormat " + timeFormat);
-            Logger.d("preference : dateTimeFormat " + dateTimeFormat);
-            Logger.d("preference : monthFormat " + monthFormat);
-            Logger.d("preference : monthDateFormat " + monthDateFormat);
-            Logger.d("preference : yearFormat " + yearFormat);
-            Logger.d("preference : yearMonthFormat " + yearMonthFormat);
-        }
+
+            Logger.d("preference : dateFormat {}", dateFormat);
+            Logger.d("preference : timeFormat {}", timeFormat);
+            Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
+            Logger.d("preference : monthFormat {}", monthFormat);
+            Logger.d("preference : monthDateFormat {}", monthDateFormat);
+            Logger.d("preference : yearFormat {}", yearFormat);
+            Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
+
     }
 
     public int getWorkingBookId() {

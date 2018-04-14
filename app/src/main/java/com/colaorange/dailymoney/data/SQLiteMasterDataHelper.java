@@ -32,17 +32,15 @@ public class SQLiteMasterDataHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        if(Contexts.DEBUG){
-            Logger.d("create master schema " +BOOK_CREATE_SQL);
-        }
+        Logger.d("create master schema {}", BOOK_CREATE_SQL);
+
         db.execSQL(BOOK_CREATE_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(Contexts.DEBUG){
-            Logger.d("update master db from "+oldVersion+" to "+newVersion);
-        }
+        Logger.d("update master db from {} to {}", oldVersion, newVersion);
+
         if(oldVersion<0){
             Logger.i("reset master schema");
             //drop and create.

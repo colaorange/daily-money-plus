@@ -59,7 +59,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                             startActivity(intent);
                         } catch (Exception x) {
                             Logger.w(x.getMessage(), x);
-                            trackEvent(preference.getKey()+"_fail");
+                            trackEvent(preference.getKey() + "_fail");
                         }
                         return true;
                     }
@@ -82,7 +82,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                             startActivity(intent);
                         } catch (Exception x) {
                             Logger.w(x.getMessage(), x);
-                            trackEvent(preference.getKey()+"_fail");
+                            trackEvent(preference.getKey() + "_fail");
                         }
                         return true;
                     }
@@ -96,8 +96,8 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         try {
-                            trackEvent(preference.getKey());
 
+                            String ab = "_a";
                             Intent intent = new Intent();
 
                             String url = i18n.string(R.string.app_like_page);
@@ -108,15 +108,18 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                                 if (applicationInfo.enabled) {
                                     uri = Uri.parse("fb://facewebmodal/f?href=" + url);
                                 }
+                                ab = "_b";
                             } catch (PackageManager.NameNotFoundException ignored) {
                             }
 
                             intent.setAction(Intent.ACTION_VIEW).setData(uri);
 
+                            trackEvent(preference.getKey() + ab);
+
                             startActivity(intent);
                         } catch (Exception x) {
                             Logger.w(x.getMessage(), x);
-                            trackEvent(preference.getKey()+"_fail");
+                            trackEvent(preference.getKey() + "_fail");
                         }
                         return true;
                     }

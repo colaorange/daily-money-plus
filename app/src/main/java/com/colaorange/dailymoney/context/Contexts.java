@@ -69,8 +69,6 @@ public class Contexts {
 
     private String currencySymbol = "$";
 
-    public static final boolean DEBUG = true;
-
     Preference preference;
 
     private Contexts() {
@@ -354,9 +352,9 @@ public class Contexts {
         }
         IDataProvider provider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp, dbname), calHelper);
         provider.init();
-        if (DEBUG) {
-            Logger.d("newDataProvider :" + provider);
-        }
+
+        Logger.d("newDataProvider : {}", provider);
+
         return provider;
     }
 
@@ -366,16 +364,15 @@ public class Contexts {
         int bookid = getWorkingBookId();
         CalendarHelper calHelper = getCalendarHelper();
         dataProvider = newDataProvider(bookid);
-        if (DEBUG) {
-            Logger.d("initDataProvider :" + dataProvider);
-        }
+
+        Logger.d("initDataProvider {}", dataProvider);
 
         String dbname = "dm_master.db";
         masterDataProvider = new SQLiteMasterDataProvider(new SQLiteMasterDataHelper(contextsApp, dbname), calHelper);
         masterDataProvider.init();
-        if (DEBUG) {
-            Logger.d("initMasterDataProvider :" + masterDataProvider);
-        }
+
+        Logger.d("initMasterDataProvider {}", masterDataProvider);
+
         //create selected book if not exist;
 
         Book book = masterDataProvider.findBook(bookid);
@@ -390,17 +387,17 @@ public class Contexts {
 
     private void cleanDataProvider() {
         if (dataProvider != null) {
-            if (DEBUG) {
-                Logger.d("cleanDataProvider :" + dataProvider);
-            }
+
+            Logger.d("cleanDataProvider {}", dataProvider);
+
             dataProvider.destroyed();
             dataProvider = null;
         }
 
         if (masterDataProvider != null) {
-            if (DEBUG) {
-                Logger.d("cleanMasterDataProvider :" + masterDataProvider);
-            }
+
+            Logger.d("cleanMasterDataProvider {}", masterDataProvider);
+
             masterDataProvider.destroyed();
             masterDataProvider = null;
         }

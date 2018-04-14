@@ -47,23 +47,17 @@ public class SQLiteDataHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        if(Contexts.DEBUG){
-            Logger.d("create schema " +ACC_CREATE_SQL);
-        }
+        Logger.d("create schema {}", ACC_CREATE_SQL);
         db.execSQL(ACC_CREATE_SQL);
-        
-        if(Contexts.DEBUG){
-            Logger.d("create schema " +DET_CREATE_SQL);
-        }
-        Logger.i("create schema");
+
+        Logger.d("create schema {}" +DET_CREATE_SQL);
         db.execSQL(DET_CREATE_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(Contexts.DEBUG){
-            Logger.d("update db from "+oldVersion+" to "+newVersion);
-        }
+        Logger.i("update db from {} to {}", oldVersion, newVersion);
+
         if(oldVersion<0){
             Logger.i("reset schema");
             //drop and create.
@@ -76,7 +70,6 @@ public class SQLiteDataHelper extends SQLiteOpenHelper{
         }
         if(oldVersion==4){//schema before 0.9.4
             //upgrade to 0.9.4
-            Logger.i("upgrade schem from "+oldVersion+" to "+newVersion);
             //noinspection SyntaxError
             db.execSQL("ALTER TABLE "+TB_ACC+" ADD "+COL_ACC_CASHACCOUNT+" INTEGER NULL ");
             oldVersion++;

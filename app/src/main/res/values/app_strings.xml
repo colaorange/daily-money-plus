@@ -13,7 +13,7 @@
 
     <string name="mailme_email" translatable="false">cola.orange@gmail.com</string>
     <string name="mailme_lang_subject" translatable="false">Support my language</string>
-    <string name="mailme_lang_text" translatable="false">Hi Dennis, I would like to contribute my language to DM, Please contact me and provide me further steps</string>
+    <string name="mailme_lang_text" translatable="false">Hi, I would like to contribute my language to DM, Please contact me and provide me further steps</string>
 
 
 </resources>
