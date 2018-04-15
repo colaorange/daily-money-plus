@@ -7,15 +7,24 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
+import com.colaorange.dailymoney.ui.Constants;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author dennis
@@ -29,7 +38,30 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs);
 
+        initAccounting();
         initContribution();
+    }
+
+    private void initAccounting() {
+        Preference pref = findPreference(Constants.PREFS_STARTDAY_YEAR_MONTH);
+        if (pref instanceof ListPreference) {
+            try {
+                Calendar baseTime = Calendar.getInstance();
+                SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+                baseTime.setTime(f.parse("20170101"));
+                DateFormat format = Contexts.instance().getPreference().getMonthFormat();
+
+                String[] months = new String[12];
+                for (int i = 0; i < months.length; i++) {
+                    months[i] = format.format(baseTime.getTime());
+                    Logger.d(">>>>>>>>>>>>"+months[i]);
+                    baseTime.add(Calendar.MONTH,1);
+                }
+                ((ListPreference) pref).setEntries(months);
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
+            }
+        }
     }
 
     public void trackEvent(String action) {

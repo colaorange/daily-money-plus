@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.R;
@@ -50,7 +51,9 @@ public class Preference {
     int detailListLayout = 2;
     int maxRecords = -1;//-1 is no limit
     int firstdayWeek = 1;//sunday
-    int startdayMonth = 1;//
+    int startdayMonth = 1;//1-28
+    int startdayYearMonth = 0;//0-11
+    int startdayYearMonthDay = 1;//1-28
     boolean openTestsDesktop = false;
     boolean backupWithTimestamp = true;
     String password = "";
@@ -78,70 +81,22 @@ public class Preference {
         I18N i18n = Contexts.instance().getI18n();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
 
-        int bookid = 0;
+        int bookId = 0;
         try {
-            bookid = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, workingBookId);
+            bookId = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, workingBookId);
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
-        if (bookid < 0) {
-            bookid = 0;
+        if (bookId < 0) {
+            bookId = 0;
         }
 
-        try {
-            String pd1 = prefs.getString(Constants.PREFS_PASSWORD, password);
-            String pd2 = prefs.getString(Constants.PREFS_PASSWORDVD, password);
-            if (pd1.equals(pd2)) {
-                password = pd1;
-            } else {
-                password = "";
-            }
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-
-
-        try {
-            detailListLayout = Integer.parseInt(prefs.getString(Constants.PREFS_DETAIL_LIST_LAYOUT, String.valueOf(detailListLayout)));
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            firstdayWeek = Integer.parseInt(prefs.getString(Constants.PREFS_FIRSTDAY_WEEK, String.valueOf(firstdayWeek)));
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            startdayMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_MONTH, String.valueOf(startdayMonth)));
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            maxRecords = Integer.parseInt(prefs.getString(Constants.PREFS_MAX_RECORDS, String.valueOf(maxRecords)));
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, false);
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-
-        try {
-            backupWithTimestamp = prefs.getBoolean(Constants.PREFS_BACKUP_WITH_TIMESTAMP, backupWithTimestamp);
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            allowAnalytics = prefs.getBoolean(Constants.PREFS_ALLOW_ANALYTICS, allowAnalytics);
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
-        try {
-            csvEncoding = prefs.getString(Constants.PREFS_CSV_ENCODING, csvEncoding);
-        } catch (Exception x) {
-            Logger.e(x.getMessage());
-        }
+        reloadSecurityPref(prefs, i18n);
+        reloadDisplayPref(prefs, i18n);
+        reloadAccountingPref(prefs, i18n);
+        reloadDataPref(prefs, i18n);
+        reloadContributionPref(prefs, i18n);
+        reloadOtherPref(prefs, i18n);
 
         try {
             hierarchicalBalance = prefs.getBoolean(Constants.PREFS_HIERARCHICAL_REPORT, hierarchicalBalance);
@@ -155,28 +110,110 @@ public class Preference {
             Logger.e(x.getMessage());
         }
 
-        reloadFormat(prefs, i18n);
-
-        if (workingBookId != bookid) {
-            workingBookId = bookid;
+        if (workingBookId != bookId) {
+            workingBookId = bookId;
         }
 
-
-        Logger.d("preference : working book {}", workingBookId);
-        Logger.d("preference : detail layout {}", detailListLayout);
-        Logger.d("preference : firstday of week {}", firstdayWeek);
-        Logger.d("preference : startday of month {}", startdayMonth);
-        Logger.d("preference : max records {}", maxRecords);
-        Logger.d("preference : open tests desktop {}", openTestsDesktop);
-        Logger.d("preference : backup wiht timestamp {}", backupWithTimestamp);
-        Logger.d("preference : csv encoding {}", csvEncoding);
         Logger.d("preference : last backup {}", lastbackup);
+        Logger.d("preference : working book {}", workingBookId);
 
         calendarHelper.setFirstDayOfWeek(getFirstdayWeek());
         calendarHelper.setStartDayOfMonth(getStartdayMonth());
+        calendarHelper.setStartMonthOfYear(getStartdayYearMonth());
+        calendarHelper.setStartMonthDayOfYear(getStartdayYearMonthDay());
     }
 
-    private void reloadFormat(SharedPreferences prefs, I18N i18n) {
+    private void reloadContributionPref(SharedPreferences prefs, I18N i18n) {
+        try {
+            allowAnalytics = prefs.getBoolean(Constants.PREFS_ALLOW_ANALYTICS, allowAnalytics);
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+    }
+
+    private void reloadOtherPref(SharedPreferences prefs, I18N i18n) {
+
+        try {
+            csvEncoding = prefs.getString(Constants.PREFS_CSV_ENCODING, csvEncoding);
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
+        try {
+            openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, false);
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        Logger.d("preference : csv encoding {}", csvEncoding);
+
+        Logger.d("preference : open tests desktop {}", openTestsDesktop);
+    }
+
+    private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
+        try {
+            backupWithTimestamp = prefs.getBoolean(Constants.PREFS_BACKUP_WITH_TIMESTAMP, backupWithTimestamp);
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        Logger.d("preference : backup wiht timestamp {}", backupWithTimestamp);
+    }
+
+    private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
+        try {
+            String pd1 = prefs.getString(Constants.PREFS_PASSWORD, password);
+            String pd2 = prefs.getString(Constants.PREFS_PASSWORDVD, password);
+            if (pd1.equals(pd2)) {
+                password = pd1;
+            } else {
+                password = "";
+            }
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        Logger.d("preference : password {}", Strings.isBlank(password) ? "" : "********");
+    }
+
+    private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {
+        try {
+            firstdayWeek = Integer.parseInt(prefs.getString(Constants.PREFS_FIRSTDAY_WEEK, String.valueOf(firstdayWeek)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        try {
+            startdayMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_MONTH, String.valueOf(startdayMonth)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        try {
+            startdayYearMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH, String.valueOf(startdayYearMonth)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        try {
+            startdayYearMonthDay = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH_DAY, String.valueOf(startdayYearMonthDay)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
+
+        Logger.d("preference : firstday of week {}", firstdayWeek);
+        Logger.d("preference : startday of month {}", startdayMonth);
+        Logger.d("preference : startday of year {}/{}", startdayYearMonth,startdayYearMonthDay);
+    }
+
+    private void reloadDisplayPref(SharedPreferences prefs, I18N i18n) {
+
+        try {
+            detailListLayout = Integer.parseInt(prefs.getString(Constants.PREFS_DETAIL_LIST_LAYOUT, String.valueOf(detailListLayout)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+        try {
+            maxRecords = Integer.parseInt(prefs.getString(Constants.PREFS_MAX_RECORDS, String.valueOf(maxRecords)));
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
         String formatDate = i18n.string(R.string.default_prefs_format_date);
         String formatTime = i18n.string(R.string.default_prefs_format_time);
         String formatMonth = i18n.string(R.string.default_prefs_format_month);
@@ -265,13 +302,15 @@ public class Preference {
         dateTimeFormat = dateFormat + " " + timeFormat;
 
 
-            Logger.d("preference : dateFormat {}", dateFormat);
-            Logger.d("preference : timeFormat {}", timeFormat);
-            Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
-            Logger.d("preference : monthFormat {}", monthFormat);
-            Logger.d("preference : monthDateFormat {}", monthDateFormat);
-            Logger.d("preference : yearFormat {}", yearFormat);
-            Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
+        Logger.d("preference : dateFormat {}", dateFormat);
+        Logger.d("preference : timeFormat {}", timeFormat);
+        Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
+        Logger.d("preference : monthFormat {}", monthFormat);
+        Logger.d("preference : monthDateFormat {}", monthDateFormat);
+        Logger.d("preference : yearFormat {}", yearFormat);
+        Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
+        Logger.d("preference : detail layout {}", detailListLayout);
+        Logger.d("preference : max records {}", maxRecords);
 
     }
 
@@ -290,6 +329,14 @@ public class Preference {
             editor.putInt(Constants.PREFS_WORKING_BOOK_ID, id);
             editor.commit();
         }
+    }
+
+    public int getStartdayYearMonth() {
+        return startdayYearMonth;
+    }
+
+    public int getStartdayYearMonthDay() {
+        return startdayYearMonthDay;
     }
 
     public String getPassword() {

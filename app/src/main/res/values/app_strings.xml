@@ -12,8 +12,8 @@
     <string name="path_what_is_new" translatable="false">en/whatsnew.html</string>
 
     <string name="mailme_email" translatable="false">cola.orange@gmail.com</string>
-    <string name="mailme_lang_subject" translatable="false">Contribute a language</string>
-    <string name="mailme_lang_text" translatable="false">Hi, I would like to contribute a language to DM, Please provide me steps to do it</string>
+    <string name="mailme_lang_subject" translatable="false">Contribute languages</string>
+    <string name="mailme_lang_text" translatable="false">Hi, I would like to contribute languages to DM, Please provide me steps to do it</string>
 
 
 </resources>

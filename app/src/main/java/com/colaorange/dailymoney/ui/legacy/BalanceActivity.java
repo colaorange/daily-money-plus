@@ -48,7 +48,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     public static final String PARAM_BALANCE_DATE = "balance.balanceDate";
     public static final String PARAM_MODE = "balance.mode";
-//    public static final String PARAM_TARGET_DATE = "target";
+    //    public static final String PARAM_TARGET_DATE = "target";
     public static final String PARAM_TOTAL_MODE = "balance.modeTotal";
 
     TextView infoView;
@@ -366,21 +366,30 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                 // update info
                 if (totalMode) {
                     if (mode == MODE_MONTH) {
-                        infoView.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(cal.monthStartDate(currentDate)),
-                                monthDateFormat.format(cal.monthEndDate(currentDate))));
+                        Date monthStart = cal.monthStartDate(currentDate);
+                        Date monthEnd = cal.monthEndDate(currentDate);
+                        infoView.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(monthStart),
+                                monthDateFormat.format(monthEnd)));
                     } else if (mode == MODE_YEAR) {
-                        infoView.setText(i18n.string(R.string.label_balance_mode_year_total, yearFormat.format(currentDate)));
+                        Date yearStart = cal.yearStartDate(currentDate);
+                        Date yearEnd = cal.yearEndDate(currentDate);
+
+                        infoView.setText(i18n.string(R.string.label_balance_mode_year_total, yearFormat.format(yearStart),
+                                yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 } else {
                     if (mode == MODE_MONTH) {
-                        infoView.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(cal.monthStartDate(currentDate)),
-                                monthDateFormat.format(cal.monthStartDate(currentDate)), monthDateFormat.format(cal.monthEndDate(currentDate))));
+                        Date monthStart = cal.monthStartDate(currentDate);
+                        Date monthEnd = cal.monthEndDate(currentDate);
+                        infoView.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(monthStart),
+                                monthDateFormat.format(monthStart), monthDateFormat.format(monthEnd)));
                     } else if (mode == MODE_YEAR) {
-                        infoView.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(currentDate)));
+                        Date yearStart = cal.yearStartDate(currentDate);
+                        Date yearEnd = cal.yearEndDate(currentDate);
+                        infoView.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(yearStart),
+                                monthDateFormat.format(yearStart), yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 }
-
-
             }
         });
 
