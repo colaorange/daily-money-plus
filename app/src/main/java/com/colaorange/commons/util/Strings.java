@@ -500,22 +500,16 @@ public class Strings {
         }
         return 0;
     }
-    public static String cat(Object... strs) {
-        StringBuilder sb = new StringBuilder();
-        for(Object s:strs){
-            sb.append(s);
-        }
-        return sb.toString();
-    }
-    public static String cat(Collection<String> collection) {
+
+    public static String cat(Collection collection) {
         return cat(collection,",");
     }
-    public static String cat(Collection<String> collection, String comma) {
+    public static String cat(Collection collection, String comma) {
         if(collection==null || collection.size()==0){
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for(String s:collection){
+        for(Object s:collection){
             if(sb.length()>0){
                 sb.append(comma);
             }

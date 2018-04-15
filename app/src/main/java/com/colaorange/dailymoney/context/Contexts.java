@@ -487,4 +487,8 @@ public class Contexts {
         }
         return f;
     }
+
+    public ContextsApp getApp() {
+         return contextsApp;
+    }
 }

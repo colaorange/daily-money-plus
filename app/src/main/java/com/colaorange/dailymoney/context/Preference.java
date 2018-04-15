@@ -74,7 +74,8 @@ public class Preference {
 
     boolean autoBackup = true;
 
-    Set<Integer> autoBackupAtHours = Collections.asSet(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+    Set<Integer> autoBackupAtHours = Collections.asSet(3);//Collections.asSet(0,2,4,6,8,10,12,14,16,18,20,22);
+    //Set<Integer> autoBackupAtHours = Collections.asSet(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
     Set<Integer> autoBackupWeekDays = Collections.asSet(1, 2, 3, 4, 5, 6, 7);
 
     ContextsApp contextsApp;
@@ -92,7 +93,7 @@ public class Preference {
         try {
             bookId = prefs.getInt(Constants.PREFS_WORKING_BOOK_ID, workingBookId);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         if (bookId < 0) {
             bookId = 0;
@@ -108,13 +109,13 @@ public class Preference {
         try {
             hierarchicalBalance = prefs.getBoolean(Constants.PREFS_HIERARCHICAL_REPORT, hierarchicalBalance);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         try {
             lastbackup = prefs.getString(Constants.PREFS_LAST_BACKUP, lastbackup);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         if (workingBookId != bookId) {
@@ -134,7 +135,7 @@ public class Preference {
         try {
             allowAnalytics = prefs.getBoolean(Constants.PREFS_ALLOW_ANALYTICS, allowAnalytics);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
     }
 
@@ -143,13 +144,13 @@ public class Preference {
         try {
             csvEncoding = prefs.getString(Constants.PREFS_CSV_ENCODING, csvEncoding);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         try {
             openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, openTestsDesktop);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         Logger.d("preference : csv encoding {}", csvEncoding);
 
@@ -160,13 +161,13 @@ public class Preference {
         try {
             backupWithTimestamp = prefs.getBoolean(Constants.PREFS_BACKUP_WITH_TIMESTAMP, backupWithTimestamp);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         try {
             autoBackup = prefs.getBoolean(Constants.PREFS_AUTO_BACKUP, autoBackup);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         try {
@@ -179,7 +180,7 @@ public class Preference {
                 autoBackupAtHours = set;
             }
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         try {
@@ -192,7 +193,7 @@ public class Preference {
                 autoBackupWeekDays = set;
             }
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
 
@@ -212,7 +213,7 @@ public class Preference {
                 password = "";
             }
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         Logger.d("preference : password {}", Strings.isBlank(password) ? "" : "********");
     }
@@ -221,22 +222,22 @@ public class Preference {
         try {
             firstdayWeek = Integer.parseInt(prefs.getString(Constants.PREFS_FIRSTDAY_WEEK, String.valueOf(firstdayWeek)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         try {
             startdayMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_MONTH, String.valueOf(startdayMonth)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         try {
             startdayYearMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH, String.valueOf(startdayYearMonth)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         try {
             startdayYearMonthDay = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH_DAY, String.valueOf(startdayYearMonthDay)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
 
@@ -250,12 +251,12 @@ public class Preference {
         try {
             detailListLayout = Integer.parseInt(prefs.getString(Constants.PREFS_DETAIL_LIST_LAYOUT, String.valueOf(detailListLayout)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         try {
             maxRecords = Integer.parseInt(prefs.getString(Constants.PREFS_MAX_RECORDS, String.valueOf(maxRecords)));
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
 
         String formatDate = i18n.string(R.string.default_prefs_format_date);
@@ -264,7 +265,7 @@ public class Preference {
         try {
             formatDate = prefs.getString(Constants.PREFS_FORMAT_DATE, formatDate);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         if (!formatDateSet.contains(formatDate)) {
             formatDate = formatDateSet.iterator().next();
@@ -272,7 +273,7 @@ public class Preference {
         try {
             formatTime = prefs.getString(Constants.PREFS_FORMAT_TIME, formatTime);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         if (!formatTimeSet.contains(formatTime)) {
             formatTime = formatTimeSet.iterator().next();
@@ -280,7 +281,7 @@ public class Preference {
         try {
             formatMonth = prefs.getString(Constants.PREFS_FORMAT_MONTH, formatMonth);
         } catch (Exception x) {
-            Logger.e(x.getMessage());
+            Logger.e(x.getMessage(), x);
         }
         if (!formatMonthSet.contains(formatMonth)) {
             formatMonth = formatMonthSet.iterator().next();
