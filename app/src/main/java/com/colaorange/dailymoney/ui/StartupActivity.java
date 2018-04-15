@@ -18,6 +18,8 @@ public class StartupActivity extends ContextsActivity {
     private boolean passedProtection = false;
     private boolean firstTime = false;
 
+    private static final String startupAction = "com.colaorange.broadcast.Startup";
+
     @Override
     public void onStart(){
         super.onStart();
@@ -28,6 +30,11 @@ public class StartupActivity extends ContextsActivity {
             doFirstTime();
             firstTime = true;
         }
+
+        Intent intent = new Intent();
+        intent.setAction(startupAction);
+        sendBroadcast(intent);
+
         trackEvent("startup");
     }
 

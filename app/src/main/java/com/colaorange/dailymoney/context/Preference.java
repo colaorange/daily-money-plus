@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
@@ -13,6 +14,7 @@ import com.colaorange.dailymoney.ui.Constants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created by Dennis
@@ -69,6 +71,11 @@ public class Preference {
     String monthDateFormat;
     String yearFormat;
     String yearMonthFormat;
+
+    boolean autoBackup = true;
+
+    Set<Integer> autoBackupAtHours = Collections.asSet(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+    Set<Integer> autoBackupWeekDays = Collections.asSet(1, 2, 3, 4, 5, 6, 7);
 
     ContextsApp contextsApp;
 
@@ -140,7 +147,7 @@ public class Preference {
         }
 
         try {
-            openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, false);
+            openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, openTestsDesktop);
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
@@ -155,7 +162,44 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage());
         }
-        Logger.d("preference : backup wiht timestamp {}", backupWithTimestamp);
+
+        try {
+            autoBackup = prefs.getBoolean(Constants.PREFS_AUTO_BACKUP, autoBackup);
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
+        try {
+            String str = prefs.getString(Constants.PREFS_AUTO_BACKUP_AT_HOURS, Strings.cat(autoBackupAtHours, ","));
+            Set<Integer> set = new LinkedHashSet<>();
+            for (String a : str.split(",")) {
+                set.add(Integer.parseInt(a));
+            }
+            if(set.size()>0){
+                autoBackupAtHours = set;
+            }
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
+        try {
+            String str = prefs.getString(Constants.PREFS_AUTO_BACKUP_WEEK_DAYS, Strings.cat(autoBackupWeekDays, ","));
+            Set<Integer> set = new LinkedHashSet<>();
+            for (String a : str.split(",")) {
+                set.add(Integer.parseInt(a));
+            }
+            if(set.size()>0){
+                autoBackupWeekDays = set;
+            }
+        } catch (Exception x) {
+            Logger.e(x.getMessage());
+        }
+
+
+        Logger.d("preference : backup with timestamp {}", backupWithTimestamp);
+        Logger.d("preference : autoBackup {}", autoBackup);
+        Logger.d("preference : autoBackupAtHours {}", autoBackupAtHours);
+        Logger.d("preference : autoBackupWeekDays {}", autoBackupWeekDays);
     }
 
     private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
@@ -198,7 +242,7 @@ public class Preference {
 
         Logger.d("preference : firstday of week {}", firstdayWeek);
         Logger.d("preference : startday of month {}", startdayMonth);
-        Logger.d("preference : startday of year {}/{}", startdayYearMonth,startdayYearMonthDay);
+        Logger.d("preference : startday of year {}/{}", startdayYearMonth, startdayYearMonthDay);
     }
 
     private void reloadDisplayPref(SharedPreferences prefs, I18N i18n) {
@@ -464,5 +508,17 @@ public class Preference {
         } catch (Exception x) {
         }
         return null;
+    }
+
+    public boolean isAutoBackup() {
+        return autoBackup;
+    }
+
+    public Set<Integer> getAutoBackupAtHours() {
+        return java.util.Collections.unmodifiableSet(autoBackupAtHours);
+    }
+
+    public Set<Integer> getAutoBackupWeekDays() {
+        return java.util.Collections.unmodifiableSet(autoBackupWeekDays);
     }
 }

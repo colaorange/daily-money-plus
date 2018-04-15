@@ -54,7 +54,6 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                 String[] months = new String[12];
                 for (int i = 0; i < months.length; i++) {
                     months[i] = format.format(baseTime.getTime());
-                    Logger.d(">>>>>>>>>>>>"+months[i]);
                     baseTime.add(Calendar.MONTH,1);
                 }
                 ((ListPreference) pref).setEntries(months);

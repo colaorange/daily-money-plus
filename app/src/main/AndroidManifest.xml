@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.colaorange.dailymoney">
 
-    <!--backup-restore-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!--remote backup-->
+    <!-- backup-restore -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- remote backup -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--ga-->
+    <!-- autobackup-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- ga -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -16,65 +17,111 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name">
         android:theme="@style/AppTheme">
-        <!--android:supportsRtl="true">-->
+        <!-- android:supportsRtl="true"> -->
 
-
-        <activity android:name="com.colaorange.calculator2.Calculator" android:theme="@style/AppTheme.NoTitle"/>
-
-        <activity android:name=".ui.StartupActivity" android:theme="@style/AppTheme.Startup"
-            android:label="@string/app_name">
+        <activity
+            android:name="com.colaorange.calculator2.Calculator"
+            android:theme="@style/AppTheme.NoTitle" />
+        <activity
+            android:name=".ui.StartupActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Startup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.LocalWebViewActivity" android:theme="@style/AppTheme"/>
-
-        <activity android:name=".ui.PasswordProtectionActivity" android:theme="@style/AppTheme.Dialog" android:label="@string/title_pdprotection"/>
-
-        <activity android:name=".ui.legacy.DesktopActivity" android:theme="@style/AppTheme.Legacy"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity android:name=".ui.legacy.BookMgntActivity" android:theme="@style/AppTheme.Legacy"
-            android:label="@string/title_bookmgnt" />
-        <activity android:name=".ui.legacy.BookEditorActivity" android:theme="@style/AppTheme.Legacy"
-            />
-
-        <activity android:name=".ui.legacy.DetailListActivity" android:theme="@style/AppTheme.Legacy"
-            android:label="@string/title_detlist" />
-        <activity android:name=".ui.legacy.DetailEditorActivity" android:theme="@style/AppTheme.Legacy">
+        <activity
+            android:name=".ui.LocalWebViewActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.PasswordProtectionActivity"
+            android:label="@string/title_pdprotection"
+            android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".ui.legacy.DesktopActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.BookMgntActivity"
+            android:label="@string/title_bookmgnt"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.BookEditorActivity"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.DetailListActivity"
+            android:label="@string/title_detlist"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.DetailEditorActivity"
+            android:theme="@style/AppTheme.Legacy">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.legacy.AccountMgntActivity"
+            android:label="@string/title_accmgnt"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.AccountEditorActivity"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.AccountDetailListActivity"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.PrefsActivity"
+            android:label="@string/title_prefs"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.DataMaintenanceActivity"
+            android:label="@string/title_datamain"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name=".ui.legacy.BalanceActivity"
+            android:label="@string/label_balance"
+            android:theme="@style/AppTheme.Legacy" />
+        <activity
+            android:name="org.achartengine.GraphicalActivity"
+            android:theme="@style/AppTheme.Legacy.NoTitle" />
 
-
-        <activity android:name=".ui.legacy.AccountMgntActivity" android:label="@string/title_accmgnt" android:theme="@style/AppTheme.Legacy"/>
-        <activity android:name=".ui.legacy.AccountEditorActivity" android:theme="@style/AppTheme.Legacy"/>
-        <activity android:name=".ui.legacy.AccountDetailListActivity" android:theme="@style/AppTheme.Legacy"/>
-        <activity android:name=".ui.legacy.PrefsActivity" android:label="@string/title_prefs" android:theme="@style/AppTheme.Legacy"/>
-        <activity android:name=".ui.legacy.DataMaintenanceActivity" android:label="@string/title_datamain" android:theme="@style/AppTheme.Legacy"/>
-
-        <activity android:name=".ui.legacy.BalanceActivity" android:theme="@style/AppTheme.Legacy" android:label="@string/label_balance"/>
-
-
-        <activity android:name="org.achartengine.GraphicalActivity" android:theme="@style/AppTheme.Legacy.NoTitle"/>
-
-
-
-
-        <!--ga-->
-        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+        <receiver
+            android:name=".bg.StartupReceiver"
             android:enabled="true"
-            android:exported="false"/>
-        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.colaorange.broadcast.Startup" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".bg.TimeTickReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".bg.TimeTickService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- ga -->
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
+
+
     </application>
 
 </manifest>
