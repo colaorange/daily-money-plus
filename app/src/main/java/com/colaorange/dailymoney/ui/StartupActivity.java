@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.ui;
 
 import android.content.Intent;
 
+import com.colaorange.dailymoney.bg.StartupReceiver;
 import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.R;
 import com.colaorange.dailymoney.context.ContextsActivity;
@@ -18,8 +19,6 @@ public class StartupActivity extends ContextsActivity {
     private boolean passedProtection = false;
     private boolean firstTime = false;
 
-    private static final String startupAction = "com.colaorange.broadcast.Startup";
-
     @Override
     public void onStart(){
         super.onStart();
@@ -32,7 +31,7 @@ public class StartupActivity extends ContextsActivity {
         }
 
         Intent intent = new Intent();
-        intent.setAction(startupAction);
+        intent.setAction(StartupReceiver.ACTION_STARTUP);
         sendBroadcast(intent);
 
         trackEvent("startup");

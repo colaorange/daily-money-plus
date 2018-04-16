@@ -93,17 +93,17 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.colaorange.broadcast.Startup" />
+                <action android:name="com.colaorange.dailymoney.broadcast.STARTUP" />
             </intent-filter>
         </receiver>
 
         <receiver
             android:name=".bg.TimeTickReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <service
-            android:name=".bg.TimeTickService"
+            android:name=".bg.StartupService"
             android:enabled="true"
             android:exported="false" />
 

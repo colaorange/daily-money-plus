@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.util.I18N;
@@ -150,7 +149,7 @@ public class Preference {
         }
 
         try {
-            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_testsdekstop),testsDesktop);
+            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_testsdekstop), testsDesktop);
             testsDesktop = prefs.getBoolean(i18n.string(R.string.pref_testsdekstop), testsDesktop);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -163,7 +162,7 @@ public class Preference {
     private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
         try {
             backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_backup_with_timestamp), backupWithTimestamp);
-            backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp),backupWithTimestamp);
+            backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp), backupWithTimestamp);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -176,38 +175,43 @@ public class Preference {
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_at_hours);
-            str = prefs.getString(i18n.string(R.string.pref_auto_backup_at_hours), str);
-            Set<Integer> set = new LinkedHashSet<>();
+            String str = i18n.string(R.string.default_auto_backup_weekdays);
+            Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
-                set.add(Integer.parseInt(a));
+                strs.add(a);
             }
-            if(set.size()>0){
-                autoBackupAtHours = set;
+            strs = prefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
+
+            Set<Integer> set = new LinkedHashSet<>();
+            for (String v : strs) {
+                set.add(Integer.parseInt(v));
             }
+            autoBackupWeekDays = set;
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_weekdays);
-            str = prefs.getString(i18n.string(R.string.pref_auto_backup_week_days), str);
-            Set<Integer> set = new LinkedHashSet<>();
+            String str = i18n.string(R.string.default_auto_backup_at_hours);
+            Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
-                set.add(Integer.parseInt(a));
+                strs.add(a);
             }
-            if(set.size()>0){
-                autoBackupWeekDays = set;
+            strs = prefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
+
+            Set<Integer> set = new LinkedHashSet<>();
+            for (String v : strs) {
+                set.add(Integer.parseInt(v));
             }
+            autoBackupAtHours = set;
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
-
         Logger.d("preference : backup with timestamp {}", backupWithTimestamp);
         Logger.d("preference : autoBackup {}", autoBackup);
-        Logger.d("preference : autoBackupAtHours {}", autoBackupAtHours);
         Logger.d("preference : autoBackupWeekDays {}", autoBackupWeekDays);
+        Logger.d("preference : autoBackupAtHours {}", autoBackupAtHours);
     }
 
     private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
@@ -353,7 +357,7 @@ public class Preference {
             default:
                 dateFormat = yearFormat + "/MM/dd";
                 if (monthDigital) {
-                    monthDateFormat = monthFormat+ "/dd";
+                    monthDateFormat = monthFormat + "/dd";
                     yearMonthFormat = yearFormat + "/" + monthFormat;
                 }
                 break;

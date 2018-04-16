@@ -290,7 +290,7 @@ public class Contexts {
         return i18n;
     }
 
-    public CalendarHelper getCalendarHelper(){
+    public CalendarHelper getCalendarHelper() {
         return getPreference().getCalendarHelper();
     }
 
@@ -316,7 +316,7 @@ public class Contexts {
         initDataProvider();
     }
 
-    public int getWorkingBookId(){
+    public int getWorkingBookId() {
         return preference.getWorkingBookId();
     }
 
@@ -334,7 +334,7 @@ public class Contexts {
     public void reloadPreference() {
         int oid = preference.getWorkingBookId();
         preference.reloadPreference();
-        if(oid!=preference.getWorkingBookId()){
+        if (oid != preference.getWorkingBookId()) {
             refreshDataProvider();
         }
     }
@@ -343,7 +343,7 @@ public class Contexts {
     /**
      * new a dataprovider for a book, the caller has to destroy after using it.
      */
-    public IDataProvider newDataProvider(int bookId){
+    public IDataProvider newDataProvider(int bookId) {
         CalendarHelper calHelper = getCalendarHelper();
 
         String dbname = "dm.db";
@@ -489,6 +489,19 @@ public class Contexts {
     }
 
     public ContextsApp getApp() {
-         return contextsApp;
+        return contextsApp;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static String getTrackerPath(Class clz) {
+        String name = clz.getSimpleName();
+        String pkg = clz.getPackage() == null ? "" : clz.getPackage().getName();
+        StringBuilder sb = new StringBuilder("/a/");
+        int i;
+        if ((i = pkg.lastIndexOf('.')) != -1) {
+            pkg = pkg.substring(i + 1);
+        }
+        sb.append(pkg).append(".").append(name);
+        return sb.toString();
     }
 }

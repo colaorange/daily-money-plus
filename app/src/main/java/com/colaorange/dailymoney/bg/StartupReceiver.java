@@ -11,6 +11,8 @@ import com.colaorange.dailymoney.util.Logger;
  */
 public class StartupReceiver extends BroadcastReceiver {
 
+    public static final String ACTION_STARTUP = "com.colaorange.dailymoney.broadcast.STARTUP";
+
     private static boolean booted = false;
 
     @Override
@@ -19,9 +21,10 @@ public class StartupReceiver extends BroadcastReceiver {
             if(booted){
                 return;
             }
-            Logger.d("startup receiver is on going");
 
-            Intent timeTickIntent = new Intent(context, TimeTickService.class);
+            Logger.d("going to start startup service");
+
+            Intent timeTickIntent = new Intent(context, StartupService.class);
             context.startService(timeTickIntent);
 
             booted = true;

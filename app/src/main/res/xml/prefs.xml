@@ -63,6 +63,23 @@
             android:key="@string/pref_backup_with_timestamp"
             android:summary="@string/label_prefs_backup_with_timestamp_sum"
             android:title="@string/label_prefs_backup_with_timestamp" />
+        <SwitchPreference
+            android:defaultValue="@string/default_auto_backup"
+            android:key="@string/pref_auto_backup"
+            android:summary="@string/label_prefs_auto_backup_sum"
+            android:title="@string/label_prefs_auto_backup" />
+        <MultiSelectListPreference
+            android:key="@string/pref_auto_backup_weekdays"
+            android:entries="@array/prefs_auto_backup_weekdays_values"
+            android:entryValues="@array/prefs_auto_backup_weekdays_values"
+            android:summary="@string/label_prefs_auto_backup_weekdays_sum"
+            android:title="@string/label_prefs_auto_backup_weekdays" />
+        <MultiSelectListPreference
+            android:entries="@array/prefs_auto_backup_at_hours_values"
+            android:entryValues="@array/prefs_auto_backup_at_hours_values"
+            android:key="@string/pref_auto_backup_at_hours"
+            android:summary="@string/label_prefs_auto_backup_at_hours_sum"
+            android:title="@string/label_prefs_auto_backup_at_hours" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_prefcat_accounting">
@@ -84,14 +101,14 @@
             android:summary="@string/label_prefcat_startday_year_sum"
             android:title="@string/label_prefcat_startday_year" >
             <ListPreference
-                android:defaultValue="@string/pref_startday_year_month"
+                android:defaultValue="@string/default_startday_year_month"
                 android:key="@string/pref_startday_year_month"
                 android:entries="@array/prefs_startday_year_month_values"
                 android:entryValues="@array/prefs_startday_year_month_values"
                 android:summary="@string/label_prefs_startday_year_month_sum"
                 android:title="@string/label_prefs_startday_year_month" />
             <ListPreference
-                android:defaultValue="@string/pref_startday_year_month_day"
+                android:defaultValue="@string/default_startday_year_month_day"
                 android:key="@string/pref_startday_year_month_day"
                 android:entries="@array/prefs_startday_year_month_day_values"
                 android:entryValues="@array/prefs_startday_year_month_day_values"
@@ -124,7 +141,7 @@
                 android:title="@string/label_prefs_allow_analytics" />
         </PreferenceScreen>
 
-        <PreferenceScreen android:title="@string/label_prefcat_developer">
+        <PreferenceScreen android:title="@string/label_prefcat_developer" android:key="developer" android:persistent="false">
             <!-- at the bottom -->
             <ListPreference
                 android:defaultValue="@string/default_csv_encoding"

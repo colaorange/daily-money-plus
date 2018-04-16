@@ -56,7 +56,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     public void trackEvent(String action) {
         Contexts ctxs = Contexts.instance();
-        ctxs.trackEvent(getTrackerPath(), action, "", null);
+        ctxs.trackEvent(Contexts.getTrackerPath(getClass()), action, "", null);
     }
 
     protected I18N i18n(){
@@ -71,20 +71,6 @@ public class ContextsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Logger.d("activity destroyed:" + this);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private String getTrackerPath() {
-        Class clz = getClass();
-        String name = clz.getSimpleName();
-        String pkg = clz.getPackage() == null ? "" : clz.getPackage().getName();
-        StringBuilder sb = new StringBuilder("/a/");
-        int i;
-        if ((i = pkg.lastIndexOf('.')) != -1) {
-            pkg = pkg.substring(i + 1);
-        }
-        sb.append(pkg).append(".").append(name);
-        return sb.toString();
     }
 
 

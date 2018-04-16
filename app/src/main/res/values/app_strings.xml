@@ -18,7 +18,7 @@
 
     <string name="pref_auto_backup" translatable="false">auto_backup</string>
     <string name="pref_auto_backup_at_hours" translatable="false">auto_backup_at_hours</string>
-    <string name="pref_auto_backup_week_days" translatable="false">auto_backup_week_days</string>
+    <string name="pref_auto_backup_weekdays" translatable="false">auto_backup_week_days</string>
 
 
     <string name="pref_password" translatable="false">password</string>

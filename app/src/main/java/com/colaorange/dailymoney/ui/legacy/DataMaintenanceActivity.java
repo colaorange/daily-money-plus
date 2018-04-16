@@ -8,13 +8,17 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.colaorange.dailymoney.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.util.Logger;
 import com.colaorange.dailymoney.context.Contexts;
@@ -438,5 +442,17 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         IDataProvider idp = contexts().getDataProvider();
         idp.reset();
         Logger.d("reset working book");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+
+        //simply clear backup error
+        Intent intent = new Intent();
+        intent.setAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
+        sendBroadcast(intent);
+
     }
 }

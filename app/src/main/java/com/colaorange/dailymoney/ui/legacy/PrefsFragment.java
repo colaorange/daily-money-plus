@@ -8,23 +8,25 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.R;
+import com.colaorange.dailymoney.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.context.Contexts;
 import com.colaorange.dailymoney.context.ContextsActivity;
-import com.colaorange.dailymoney.ui.Constants;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author dennis
@@ -37,25 +39,87 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs);
-
-        initAccounting();
-        initContribution();
+        final I18N i18n = Contexts.instance().getI18n();
+        initAccountingPrefs(i18n);
+        initDataPrefs(i18n);
+        initContributionPrefs(i18n);
+        initDeveloperPrefs(i18n);
     }
 
-    private void initAccounting() {
-        final I18N i18n = Contexts.instance().getI18n();
+    private void initDataPrefs(I18N i18n) {
+        SharedPreferences sprefs = getPreferenceManager().getSharedPreferences();
+        Preference pref = findPreference(i18n.string(R.string.pref_auto_backup_weekdays));
+        if (pref instanceof MultiSelectListPreference) {
+            try {
+                Calendar baseTime = Calendar.getInstance();
+                SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+                baseTime.setTime(f.parse("20180107"));//which is sunday, value is 1
+                DateFormat format = new SimpleDateFormat("EEE");
+
+                String[] weekdays = new String[7];
+                for (int i = 0; i < weekdays.length; i++) {
+                    weekdays[i] = format.format(baseTime.getTime());
+                    baseTime.add(Calendar.DAY_OF_MONTH, 1);
+                }
+                ((MultiSelectListPreference) pref).setEntries(weekdays);
+
+                //selected value
+                Set<String> set = new LinkedHashSet<>();
+                String str = sprefs.getString(i18n.string(R.string.pref_auto_backup_weekdays), i18n.string(R.string.default_auto_backup_weekdays));
+                if(str!=null) {
+                    for (String a : str.split(",")) {
+                        set.add(a);
+                    }
+                }
+                ((MultiSelectListPreference)pref).setValues(set);
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
+            }
+        }
+        pref = findPreference(i18n.string(R.string.pref_auto_backup_at_hours));
+        if (pref instanceof MultiSelectListPreference) {
+            try {
+                Calendar baseTime = Calendar.getInstance();
+                SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.ENGLISH);
+                baseTime.setTime(f.parse("20180107 00:00:00"));//which is sunday, value is 1
+                DateFormat format = new SimpleDateFormat("HH");
+
+                String[] weekdays = new String[24];
+                for (int i = 0; i < weekdays.length; i++) {
+                    weekdays[i] = format.format(baseTime.getTime());
+                    baseTime.add(Calendar.HOUR_OF_DAY, 1);
+                }
+                ((MultiSelectListPreference) pref).setEntries(weekdays);
+
+                //selected value
+                Set<String> set = new LinkedHashSet<>();
+                String str = sprefs.getString(i18n.string(R.string.pref_auto_backup_at_hours), i18n.string(R.string.default_auto_backup_at_hours));
+                if(str!=null) {
+                    for (String a : str.split(",")) {
+                        set.add(a);
+                    }
+                }
+                ((MultiSelectListPreference)pref).setValues(set);
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
+            }
+        }
+    }
+
+
+    private void initAccountingPrefs(final I18N i18n) {
         Preference pref = findPreference(i18n.string(R.string.pref_startday_year_month));
         if (pref instanceof ListPreference) {
             try {
                 Calendar baseTime = Calendar.getInstance();
                 SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-                baseTime.setTime(f.parse("20170101"));
+                baseTime.setTime(f.parse("20180101"));
                 DateFormat format = Contexts.instance().getPreference().getMonthFormat();
 
                 String[] months = new String[12];
                 for (int i = 0; i < months.length; i++) {
                     months[i] = format.format(baseTime.getTime());
-                    baseTime.add(Calendar.MONTH,1);
+                    baseTime.add(Calendar.MONTH, 1);
                 }
                 ((ListPreference) pref).setEntries(months);
             } catch (Exception x) {
@@ -71,8 +135,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         }
     }
 
-    private void initContribution() {
-        final I18N i18n = Contexts.instance().getI18n();
+    private void initContributionPrefs(final I18N i18n) {
         try {
             Preference pref = findPreference("mailme_lang");
             if (pref != null) {
@@ -163,6 +226,14 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         }
     }
 
+    private void initDeveloperPrefs(final I18N i18n) {
+        try {
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
+    }
+
+
     public void onResume() {
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
@@ -175,6 +246,10 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         }
         dirty = false;
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
+
+        Intent intent = new Intent();
+        intent.setAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
+        getActivity().sendBroadcast(intent);
     }
 
     @Override

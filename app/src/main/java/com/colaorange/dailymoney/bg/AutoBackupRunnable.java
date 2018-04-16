@@ -21,14 +21,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AutoBackupRunnable implements Runnable {
 
+    private static AutoBackupRunnable instance;
+
+
     AtomicBoolean running = new AtomicBoolean(false);
 
     String errorDayHour;
 
+    private AutoBackupRunnable() {
+    }
+
+    ;
+
     @Override
     public void run() {
         if (!running.compareAndSet(false, true)) {
-            Logger.d("time ticker still running");
+            Logger.d("autobackup is still running");
             return;
         }
 
@@ -57,9 +65,11 @@ public class AutoBackupRunnable implements Runnable {
         Long lastBackup = pref.getLastBackupTime();
 
         //don't backup again in same err hour
-        if (errorDayHour != null && errorDayHour.equals(format.format(cal.getTime()))) {
-            Logger.d("same errorDayhour, skip");
-            return;
+        synchronized (this) {
+            if (errorDayHour != null && errorDayHour.equals(format.format(cal.getTime()))) {
+                Logger.d("same errorDayhour {}, skip", errorDayHour);
+                return;
+            }
         }
 
         Set<Integer> autoBackupWeekDays = pref.getAutoBackupWeekDays();
@@ -86,6 +96,9 @@ public class AutoBackupRunnable implements Runnable {
         }
 
         Logger.d("start to backup");
+
+        contexts.trackEvent(Contexts.getTrackerPath(getClass()), "backup", "", null);
+
         DataBackupRestorer.Result r = DataBackupRestorer.backup();
         if (r.isSuccess()) {
             pref.setLastBackupTime(cal.getTime().getTime());
@@ -102,7 +115,19 @@ public class AutoBackupRunnable implements Runnable {
             errorDayHour = format.format(cal.getTime());
             GUIs.sendNotification(contexts.getApp(), GUIs.NotificationTarget.SYSTEM_BAR, GUIs.NotificationLevel.WARN,
                     i18n.string(R.string.label_backup_data), r.getErr(), null, 0);
+            contexts.trackEvent(Contexts.getTrackerPath(getClass()), "backup-fail", "", null);
         }
 
+    }
+
+    public synchronized void clearErrorDayHour() {
+        errorDayHour = null;
+    }
+
+    public static synchronized AutoBackupRunnable singleton() {
+        if (instance == null) {
+            instance = new AutoBackupRunnable();
+        }
+        return instance;
     }
 }
