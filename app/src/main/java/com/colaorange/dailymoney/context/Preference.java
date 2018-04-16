@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Collections;
+import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
@@ -56,7 +57,7 @@ public class Preference {
     int startdayMonth = 1;//1-28
     int startdayYearMonth = 0;//0-11
     int startdayYearMonthDay = 1;//1-28
-    boolean openTestsDesktop = false;
+    boolean testsDesktop = false;
     boolean backupWithTimestamp = true;
     String password = "";
     boolean allowAnalytics = true;
@@ -74,9 +75,8 @@ public class Preference {
 
     boolean autoBackup = true;
 
-    Set<Integer> autoBackupAtHours = Collections.asSet(3);//Collections.asSet(0,2,4,6,8,10,12,14,16,18,20,22);
-    //Set<Integer> autoBackupAtHours = Collections.asSet(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
-    Set<Integer> autoBackupWeekDays = Collections.asSet(1, 2, 3, 4, 5, 6, 7);
+    Set<Integer> autoBackupAtHours;
+    Set<Integer> autoBackupWeekDays;
 
     ContextsApp contextsApp;
 
@@ -133,7 +133,8 @@ public class Preference {
 
     private void reloadContributionPref(SharedPreferences prefs, I18N i18n) {
         try {
-            allowAnalytics = prefs.getBoolean(Constants.PREFS_ALLOW_ANALYTICS, allowAnalytics);
+            allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_allow_analytics), allowAnalytics);
+            allowAnalytics = prefs.getBoolean(i18n.string(R.string.pref_allow_analytics), allowAnalytics);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -142,36 +143,41 @@ public class Preference {
     private void reloadOtherPref(SharedPreferences prefs, I18N i18n) {
 
         try {
-            csvEncoding = prefs.getString(Constants.PREFS_CSV_ENCODING, csvEncoding);
+            csvEncoding = i18n.string(R.string.default_csv_encoding, csvEncoding);
+            csvEncoding = prefs.getString(i18n.string(R.string.pref_csv_encoding), csvEncoding);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            openTestsDesktop = prefs.getBoolean(Constants.PREFS_OPEN_TESTS_DESKTOP, openTestsDesktop);
+            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_testsdekstop),testsDesktop);
+            testsDesktop = prefs.getBoolean(i18n.string(R.string.pref_testsdekstop), testsDesktop);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         Logger.d("preference : csv encoding {}", csvEncoding);
 
-        Logger.d("preference : open tests desktop {}", openTestsDesktop);
+        Logger.d("preference : open tests desktop {}", testsDesktop);
     }
 
     private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
         try {
-            backupWithTimestamp = prefs.getBoolean(Constants.PREFS_BACKUP_WITH_TIMESTAMP, backupWithTimestamp);
+            backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_backup_with_timestamp), backupWithTimestamp);
+            backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp),backupWithTimestamp);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            autoBackup = prefs.getBoolean(Constants.PREFS_AUTO_BACKUP, autoBackup);
+            autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_auto_backup), autoBackup);
+            autoBackup = prefs.getBoolean(i18n.string(R.string.pref_auto_backup), autoBackup);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            String str = prefs.getString(Constants.PREFS_AUTO_BACKUP_AT_HOURS, Strings.cat(autoBackupAtHours, ","));
+            String str = i18n.string(R.string.default_auto_backup_at_hours);
+            str = prefs.getString(i18n.string(R.string.pref_auto_backup_at_hours), str);
             Set<Integer> set = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 set.add(Integer.parseInt(a));
@@ -184,7 +190,8 @@ public class Preference {
         }
 
         try {
-            String str = prefs.getString(Constants.PREFS_AUTO_BACKUP_WEEK_DAYS, Strings.cat(autoBackupWeekDays, ","));
+            String str = i18n.string(R.string.default_auto_backup_weekdays);
+            str = prefs.getString(i18n.string(R.string.pref_auto_backup_week_days), str);
             Set<Integer> set = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 set.add(Integer.parseInt(a));
@@ -205,8 +212,8 @@ public class Preference {
 
     private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
         try {
-            String pd1 = prefs.getString(Constants.PREFS_PASSWORD, password);
-            String pd2 = prefs.getString(Constants.PREFS_PASSWORDVD, password);
+            String pd1 = prefs.getString(i18n.string(R.string.pref_password), "");
+            String pd2 = prefs.getString(i18n.string(R.string.pref_passwordvd), "");
             if (pd1.equals(pd2)) {
                 password = pd1;
             } else {
@@ -219,23 +226,28 @@ public class Preference {
     }
 
     private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {
+        String str;
         try {
-            firstdayWeek = Integer.parseInt(prefs.getString(Constants.PREFS_FIRSTDAY_WEEK, String.valueOf(firstdayWeek)));
+            str = i18n.string(R.string.default_firstday_week);
+            firstdayWeek = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_firstday_week), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            startdayMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_MONTH, String.valueOf(startdayMonth)));
+            str = i18n.string(R.string.default_startday_month);
+            startdayMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            startdayYearMonth = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH, String.valueOf(startdayYearMonth)));
+            str = i18n.string(R.string.default_startday_year_month);
+            startdayYearMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            startdayYearMonthDay = Integer.parseInt(prefs.getString(Constants.PREFS_STARTDAY_YEAR_MONTH_DAY, String.valueOf(startdayYearMonthDay)));
+            str = i18n.string(R.string.default_startday_year_month_day);
+            startdayYearMonthDay = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month_day), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -247,23 +259,26 @@ public class Preference {
     }
 
     private void reloadDisplayPref(SharedPreferences prefs, I18N i18n) {
+        String str;
 
         try {
-            detailListLayout = Integer.parseInt(prefs.getString(Constants.PREFS_DETAIL_LIST_LAYOUT, String.valueOf(detailListLayout)));
+            str = i18n.string(R.string.default_detail_list_layout);
+            detailListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_detail_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            maxRecords = Integer.parseInt(prefs.getString(Constants.PREFS_MAX_RECORDS, String.valueOf(maxRecords)));
+            str = i18n.string(R.string.default_max_records);
+            maxRecords = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_max_records), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
-        String formatDate = i18n.string(R.string.default_prefs_format_date);
-        String formatTime = i18n.string(R.string.default_prefs_format_time);
-        String formatMonth = i18n.string(R.string.default_prefs_format_month);
+        String formatDate = i18n.string(R.string.default_pref_format_date);
+        String formatTime = i18n.string(R.string.default_pref_format_time);
+        String formatMonth = i18n.string(R.string.default_pref_format_month);
         try {
-            formatDate = prefs.getString(Constants.PREFS_FORMAT_DATE, formatDate);
+            formatDate = prefs.getString(i18n.string(R.string.pref_format_date), formatDate);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -271,7 +286,7 @@ public class Preference {
             formatDate = formatDateSet.iterator().next();
         }
         try {
-            formatTime = prefs.getString(Constants.PREFS_FORMAT_TIME, formatTime);
+            formatTime = prefs.getString(i18n.string(R.string.pref_format_time), formatTime);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -279,7 +294,7 @@ public class Preference {
             formatTime = formatTimeSet.iterator().next();
         }
         try {
-            formatMonth = prefs.getString(Constants.PREFS_FORMAT_MONTH, formatMonth);
+            formatMonth = prefs.getString(i18n.string(R.string.pref_format_month), formatMonth);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -338,7 +353,7 @@ public class Preference {
             default:
                 dateFormat = yearFormat + "/MM/dd";
                 if (monthDigital) {
-                    monthDateFormat = "dd/" + monthFormat;
+                    monthDateFormat = monthFormat+ "/dd";
                     yearMonthFormat = yearFormat + "/" + monthFormat;
                 }
                 break;
@@ -428,8 +443,8 @@ public class Preference {
         return startdayMonth > 28 ? 28 : (startdayMonth < 1 ? 1 : startdayMonth);
     }
 
-    public boolean isOpenTestsDesktop() {
-        return openTestsDesktop;
+    public boolean isTestsDesktop() {
+        return testsDesktop;
     }
 
     public CalendarHelper getCalendarHelper() {

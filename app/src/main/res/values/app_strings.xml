@@ -5,11 +5,50 @@
     <string name="app_market_app" translatable="false">market://details?id=com.colaorange.dailymoney</string>
     <string name="app_like_page" translatable="false">https://www.facebook.com/co.daily.money</string>
 
+
+    <string name="pref_firstday_week" translatable="false">firstday_week</string>
+    <string name="pref_startday_month" translatable="false">startday_month</string>
+    <string name="pref_startday_year_month" translatable="false">startday_year_month</string>
+    <string name="pref_startday_year_month_day" translatable="false">startday_year_month_day</string>
+    <string name="pref_backup_with_timestamp" translatable="false">backup_with_timestamp</string>
+
+    <string name="pref_format_date" translatable="false">format_date</string>
+    <string name="pref_format_time" translatable="false">format_time</string>
+    <string name="pref_format_month" translatable="false">format_month</string>
+
+    <string name="pref_auto_backup" translatable="false">auto_backup</string>
+    <string name="pref_auto_backup_at_hours" translatable="false">auto_backup_at_hours</string>
+    <string name="pref_auto_backup_week_days" translatable="false">auto_backup_week_days</string>
+
+
+    <string name="pref_password" translatable="false">password</string>
+    <string name="pref_passwordvd" translatable="false">passwordvd</string>
+    <string name="pref_detail_list_layout" translatable="false">detail_list_layout</string>
+    <string name="pref_max_records" translatable="false">max_records</string>
+    <string name="pref_testsdekstop" translatable="false">testsdekstop</string>
+    <string name="pref_allow_analytics" translatable="false">allow_analytics</string>
+    <string name="pref_csv_encoding" translatable="false">csv_encoding</string>
+
+    <string name="default_detail_list_layout" translatable="false">1</string>
+    <string name="default_max_records" translatable="false">-1</string>
+    <string name="default_backup_with_timestamp" translatable="false">true</string>
+    <string name="default_firstday_week" translatable="false">1</string>
+    <string name="default_startday_month" translatable="false">1</string>
+    <string name="default_startday_year_month" translatable="false">0</string>
+    <string name="default_startday_year_month_day" translatable="false">1</string>
+    <string name="default_allow_analytics" translatable="false">true</string>
+    <string name="default_csv_encoding" translatable="false">UTF8</string>
+    <string name="default_testsdekstop" translatable="false">false</string>
+    <string name="default_auto_backup" translatable="false">true</string>
+    <string name="default_auto_backup_weekdays" translatable="false">1,4</string>
+    <string name="default_auto_backup_at_hours" translatable="false">2</string>
+
     <string name="path_about" translatable="false">en/about.html</string>
     <string name="path_contributor" translatable="false">en/contributor.html</string>
     <string name="path_history" translatable="false">en/history.html</string>
     <string name="path_how2use" translatable="false">en/how2use.html</string>
     <string name="path_what_is_new" translatable="false">en/whatsnew.html</string>
+
 
     <string name="mailme_email" translatable="false">cola.orange@gmail.com</string>
     <string name="mailme_lang_subject" translatable="false">Contribute languages</string>

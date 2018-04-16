@@ -43,7 +43,8 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     }
 
     private void initAccounting() {
-        Preference pref = findPreference(Constants.PREFS_STARTDAY_YEAR_MONTH);
+        final I18N i18n = Contexts.instance().getI18n();
+        Preference pref = findPreference(i18n.string(R.string.pref_startday_year_month));
         if (pref instanceof ListPreference) {
             try {
                 Calendar baseTime = Calendar.getInstance();
