@@ -21,6 +21,8 @@ import java.util.Set;
  */
 public class Preference {
 
+    public static final String PWD_SALT = "icandoit";
+
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
     public static final String FORMAT_DATE_DMY = "D/M/Y";
@@ -59,6 +61,7 @@ public class Preference {
     boolean testsDesktop = false;
     boolean backupWithTimestamp = true;
     String password = "";
+    String passwordHash = "";
     boolean allowAnalytics = true;
     String csvEncoding = "UTF8";
     boolean hierarchicalBalance = true;
@@ -226,7 +229,14 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
+        try {
+            passwordHash = prefs.getString(i18n.string(R.string.pref_passwordHash), "");
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
         Logger.d("preference : password {}", Strings.isBlank(password) ? "" : "********");
+        //TODO
+        Logger.d("preference : passwordHash {}", Strings.isBlank(passwordHash) ? "" : passwordHash);//"********");
     }
 
     private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {

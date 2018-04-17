@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-    <LinearLayout
+
+    <EditText
+        android:id="@+id/pwd_protection_text"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:minWidth="150dp" />
 
-        <EditText
-            android:id="@+id/pwd_protection_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:minWidth="150dp" />
+    <Button
+        android:id="@+id/pwd_protection_ok"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/cact_ok" />
 
-        <Button
-            android:id="@+id/pwd_protection_ok"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/cact_ok" />
-    </LinearLayout>
 </LinearLayout>

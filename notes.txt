@@ -27,3 +27,5 @@
 * Material design component
     https://material.io/components/android/catalog/text-input-layout/
     https://romannurik.github.io/AndroidAssetStudio/index.html
+* Dialog close prevent
+    https://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked

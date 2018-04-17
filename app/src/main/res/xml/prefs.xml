@@ -44,16 +44,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_prefcat_security">
-        <EditTextPreference
-            android:inputType="textPassword"
-            android:key="@string/pref_password"
+        <com.colaorange.dailymoney.ui.pref.PasswordPreference
+            android:key="@string/pref_passwordHash"
             android:summary="@string/label_prefs_password_sum"
             android:title="@string/label_prefs_password" />
-        <EditTextPreference
-            android:inputType="textPassword"
-            android:key="@string/pref_passwordvd"
-            android:summary="@string/label_prefs_passwordvd_sum"
-            android:title="@string/label_prefs_passwordvd" />
     </PreferenceCategory>
 
 
