@@ -1,7 +1,10 @@
 package com.colaorange.dailymoney.util;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -30,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.R;
 
@@ -381,15 +386,37 @@ public class GUIs {
         SYSTEM_BAR, APP_ICON
     }
 
+    public static final String CHANNEL_ID_SYSTEM = "com.colaorange.dailymoney.system";
+    public static final String CHANNEL_ID_APP_ICON = "com.colaorange.dailymoney.appicon";
+
+    private static final Set<String> channelIdCreated = java.util.Collections.synchronizedSet(new HashSet<String>());
+
     public static void sendNotification(Context context, NotificationTarget target, NotificationLevel level, String msg, @Nullable String title, @Nullable Intent intent, int groupId) {
+        String channelId;
+        switch (target) {
+            case APP_ICON:
+                channelId = CHANNEL_ID_APP_ICON;
+                break;
+            case SYSTEM_BAR:
+            default:
+                channelId = CHANNEL_ID_SYSTEM;
+                break;
+        }
+
+        NotificationManager manager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        initChannel(channelId, manager);
+
+
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, channelId)
                         .setContentTitle(msg)
                         .setContentText(title);
 
         mBuilder.setSmallIcon(R.drawable.ic_notification);
 
-        //TODO different level
+        //TODO different level, icon coloring.
         switch (level) {
             case INFO:
                 break;
@@ -398,27 +425,44 @@ public class GUIs {
             case ERROR:
                 break;
         }
-        //TODO different target implementation
 
         PendingIntent notifyPendingIntent = null;
         if (intent != null) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            notifyPendingIntent =
-                    PendingIntent.getActivity(
-                            context,
-                            0,
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
+            notifyPendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
             mBuilder.setContentIntent(notifyPendingIntent);
         }
 
 
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(groupId, mBuilder.build());
+
+        manager.notify(groupId, mBuilder.build());
+    }
+
+    private synchronized static void initChannel(String channelId, NotificationManager manager) {
+        //api 26, android 8.0 only
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
+
+        if (channelIdCreated.contains(channelId)) {
+            return;
+        }
+
+        try {
+            NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }catch(Exception x){
+            Logger.e(x.getMessage(), x);
+        }
+
+        channelIdCreated.add(channelId);
+
     }
 }
