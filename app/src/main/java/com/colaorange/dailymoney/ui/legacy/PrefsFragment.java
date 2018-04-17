@@ -63,15 +63,15 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                 }
                 ((MultiSelectListPreference) pref).setEntries(weekdays);
 
-                //selected value
-                Set<String> set = new LinkedHashSet<>();
-                String str = sprefs.getString(i18n.string(R.string.pref_auto_backup_weekdays), i18n.string(R.string.default_auto_backup_weekdays));
-                if(str!=null) {
-                    for (String a : str.split(",")) {
-                        set.add(a);
-                    }
+                //selected value with default
+                String str = i18n.string(R.string.default_auto_backup_weekdays);
+                Set<String> strs = new LinkedHashSet<>();
+                for (String a : str.split(",")) {
+                    strs.add(a);
                 }
-                ((MultiSelectListPreference)pref).setValues(set);
+                strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
+
+                ((MultiSelectListPreference)pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
@@ -91,15 +91,15 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
                 }
                 ((MultiSelectListPreference) pref).setEntries(weekdays);
 
-                //selected value
-                Set<String> set = new LinkedHashSet<>();
-                String str = sprefs.getString(i18n.string(R.string.pref_auto_backup_at_hours), i18n.string(R.string.default_auto_backup_at_hours));
-                if(str!=null) {
-                    for (String a : str.split(",")) {
-                        set.add(a);
-                    }
+                //selected value with default
+                String str = i18n.string(R.string.default_auto_backup_at_hours);
+                Set<String> strs = new LinkedHashSet<>();
+                for (String a : str.split(",")) {
+                    strs.add(a);
                 }
-                ((MultiSelectListPreference)pref).setValues(set);
+                strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
+
+                ((MultiSelectListPreference)pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
