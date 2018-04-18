@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 
+	<CheckBoxPreference android:key="use_improvider" android:title="@string/label_prefs_improvider"
+		android:summary="@string/label_prefs_improvider_sum" android:defaultValue="false" />
+	 -->
+
+    <PreferenceCategory android:title="@string/label_prefcat_display">
+        <ListPreference
+            android:defaultValue="@string/default_detail_list_layout"
+            android:entries="@array/prefs_detlayout_labels"
+            android:entryValues="@array/prefs_detlayout_values"
+            android:key="@string/pref_detail_list_layout"
+            android:summary="@string/label_prefs_detlayout_sum"
+            android:title="@string/label_prefs_detlayout" />
+
+        <ListPreference
+            android:defaultValue="@string/default_pref_format_date"
+            android:entries="@array/prefs_format_date_labels"
+            android:entryValues="@array/prefs_format_date_values"
+            android:key="@string/pref_format_date"
+            android:summary="@string/label_prefs_format_date_sum"
+            android:title="@string/label_prefs_format_date" />
+        <ListPreference
+            android:defaultValue="@string/default_pref_format_time"
+            android:entries="@array/prefs_format_time_val"
+            android:entryValues="@array/prefs_format_time_val"
+            android:key="@string/pref_format_time"
+            android:summary="@string/label_prefs_format_time_sum"
+            android:title="@string/label_prefs_format_time" />
+        <ListPreference
+            android:defaultValue="@string/default_pref_format_month"
+            android:entries="@array/prefs_format_month_labels"
+            android:entryValues="@array/prefs_format_month_values"
+            android:key="@string/pref_format_month"
+            android:summary="@string/label_prefs_format_month_sum"
+            android:title="@string/label_prefs_format_month" />
+        <EditTextPreference
+            android:defaultValue="@string/default_max_records"
+            android:key="@string/pref_max_records"
+            android:numeric="signed"
+            android:summary="@string/label_prefs_maxrecords_sum"
+            android:title="@string/label_prefs_maxrecords" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/label_prefcat_security">
+        <com.colaorange.dailymoney.core.ui.pref.PasswordPreference
+            android:key="@string/pref_password_hash"
+            android:summary="@string/label_prefs_password_sum"
+            android:title="@string/label_prefs_password" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/label_prefcat_data">
+        <SwitchPreference
+            android:defaultValue="@string/default_backup_with_timestamp"
+            android:key="@string/pref_backup_with_timestamp"
+            android:summary="@string/label_prefs_backup_with_timestamp_sum"
+            android:title="@string/label_prefs_backup_with_timestamp" />
+        <SwitchPreference
+            android:defaultValue="@string/default_auto_backup"
+            android:key="@string/pref_auto_backup"
+            android:summary="@string/label_prefs_auto_backup_sum"
+            android:title="@string/label_prefs_auto_backup" />
+        <MultiSelectListPreference
+            android:key="@string/pref_auto_backup_weekdays"
+            android:entries="@array/prefs_auto_backup_weekdays_values"
+            android:entryValues="@array/prefs_auto_backup_weekdays_values"
+            android:summary="@string/label_prefs_auto_backup_weekdays_sum"
+            android:title="@string/label_prefs_auto_backup_weekdays" />
+        <MultiSelectListPreference
+            android:entries="@array/prefs_auto_backup_at_hours_values"
+            android:entryValues="@array/prefs_auto_backup_at_hours_values"
+            android:key="@string/pref_auto_backup_at_hours"
+            android:summary="@string/label_prefs_auto_backup_at_hours_sum"
+            android:title="@string/label_prefs_auto_backup_at_hours" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/label_prefcat_accounting">
+        <ListPreference
+            android:defaultValue="@string/default_firstday_week"
+            android:entries="@array/prefs_firstday_week_labels"
+            android:entryValues="@array/prefs_firstday_week_values"
+            android:key="@string/pref_firstday_week"
+            android:summary="@string/label_prefs_firstday_week_sum"
+            android:title="@string/label_prefs_firstday_week" />
+        <ListPreference
+            android:defaultValue="@string/default_startday_month"
+            android:entries="@array/prefs_startday_month_values"
+            android:entryValues="@array/prefs_startday_month_values"
+            android:key="@string/pref_startday_month"
+            android:summary="@string/label_prefs_startday_month_sum"
+            android:title="@string/label_prefs_startday_month" />
+        <PreferenceScreen
+            android:summary="@string/label_prefcat_startday_year_sum"
+            android:title="@string/label_prefcat_startday_year" >
+            <ListPreference
+                android:defaultValue="@string/default_startday_year_month"
+                android:key="@string/pref_startday_year_month"
+                android:entries="@array/prefs_startday_year_month_values"
+                android:entryValues="@array/prefs_startday_year_month_values"
+                android:summary="@string/label_prefs_startday_year_month_sum"
+                android:title="@string/label_prefs_startday_year_month" />
+            <ListPreference
+                android:defaultValue="@string/default_startday_year_month_day"
+                android:key="@string/pref_startday_year_month_day"
+                android:entries="@array/prefs_startday_year_month_day_values"
+                android:entryValues="@array/prefs_startday_year_month_day_values"
+                android:summary="@string/label_prefs_startday_year_month_day_sum"
+                android:title="@string/label_prefs_startday_year_month_day" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/label_prefcat_others">
+        <PreferenceScreen android:title="@string/label_prefcat_contribution">
+            <Preference
+                android:key="mailme_lang"
+                android:persistent="false"
+                android:summary="@string/label_prefs_lang_contribution_sum"
+                android:title="@string/label_prefs_lang_contribution" />
+            <Preference
+                android:key="vote_dm"
+                android:persistent="false"
+                android:summary="@string/label_prefs_vote_sum"
+                android:title="@string/label_prefs_vote" />
+            <Preference
+                android:key="like_dm"
+                android:persistent="false"
+                android:summary="@string/label_prefs_like_sum"
+                android:title="@string/label_prefs_like" />
+            <SwitchPreference
+                android:defaultValue="@string/default_allow_analytics"
+                android:key="@string/pref_allow_analytics"
+                android:summary="@string/label_prefs_allow_analytics_sum"
+                android:title="@string/label_prefs_allow_analytics" />
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="@string/label_prefcat_developer" android:key="developer" android:persistent="false">
+            <!-- at the bottom -->
+            <ListPreference
+                android:defaultValue="@string/default_csv_encoding"
+                android:entries="@array/prefs_csv_encoding_values"
+                android:entryValues="@array/prefs_csv_encoding_values"
+                android:key="@string/pref_csv_encoding"
+                android:summary="@string/label_prefs_csv_encoding_sum"
+                android:title="@string/label_prefs_csv_encoding" />
+            <CheckBoxPreference
+                android:defaultValue="@string/default_testsdekstop"
+                android:key="@string/pref_testsdekstop"
+                android:summary="@string/label_prefs_testsdekstop_sum"
+                android:title="@string/label_prefs_testsdekstop" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>
