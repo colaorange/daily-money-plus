@@ -213,6 +213,8 @@ public class DetailListHelper implements OnItemClickListener {
                 if (toAcc != null) {
                     if (AccountType.EXPENSE.getType().equals(toAcc.getType())) {
                         flag |= 1;
+                    } else if (AccountType.INCOME.getType().equals(toAcc.getType())) {
+                        flag |= 2;
                     } else if (AccountType.ASSET.getType().equals(toAcc.getType())) {
                         flag |= 4;
                     } else if (AccountType.LIABILITY.getType().equals(toAcc.getType())) {

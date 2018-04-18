@@ -41,7 +41,7 @@
     <string name="default_csv_encoding" translatable="false">UTF8</string>
     <string name="default_testsdekstop" translatable="false">false</string>
     <string name="default_auto_backup" translatable="false">true</string>
-    <string name="default_auto_backup_weekdays" translatable="false">1,4</string>
+    <string name="default_auto_backup_weekdays" translatable="false">1</string>
     <string name="default_auto_backup_at_hours" translatable="false">2</string>
 
     <string name="path_about" translatable="false">en/about.html</string>
