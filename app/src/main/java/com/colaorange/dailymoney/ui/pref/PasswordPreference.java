@@ -80,8 +80,8 @@ public class PasswordPreference extends ValidatableDialogPreference {
     public boolean onValidation() {
         boolean enabled = this.enable.isChecked();
         if(enabled) {
-            String pwd = this.pwd.getText().toString().trim();
-            String pwdvd = this.pwdvd.getText().toString().trim();
+            String pwd = this.pwd.getText().toString();
+            String pwdvd = this.pwdvd.getText().toString();
             if (pwd.isEmpty() || !pwd.equals(pwdvd)) {
                 GUIs.alert(getContext(), R.string.msg_wrong_password_validation);
                 return false;

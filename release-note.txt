@@ -1,6 +1,7 @@
 
 == 0.9.9 ==
 === Features ===
+ # Enhance password protection data
  # Implemented customizable start date of year
  # Fix decimal separator issue in some language when using calculator (current our calculator always use '.' as decimal separator)
  # Enhance data backup & csv export

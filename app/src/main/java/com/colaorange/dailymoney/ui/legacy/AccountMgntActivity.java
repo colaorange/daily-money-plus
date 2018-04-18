@@ -37,32 +37,32 @@ import com.colaorange.dailymoney.ui.Constants;
 /**
  * this activity manages the account (of detail) with tab widgets of android,
  * there are 4 type of account, income, expense, asset and liability.
- * 
+ *
  * @author dennis
  * @see {@link AccountType}
  */
-public class AccountMgntActivity extends ContextsActivity implements OnTabChangeListener,OnItemClickListener{
-    
-    private static String[] bindingFrom = new String[] { "name", "initvalue", "id" };
-    
-    private static int[] bindingTo = new int[] { R.id.account_mgnt_item_name, R.id.account_mgnt_item_initvalue, R.id.account_mgnt_item_id};
-    
+public class AccountMgntActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
+
+    private static String[] bindingFrom = new String[]{"name", "initvalue", "id"};
+
+    private static int[] bindingTo = new int[]{R.id.account_mgnt_item_name, R.id.account_mgnt_item_initvalue, R.id.account_mgnt_item_id};
+
     private List<Account> listViewData = new ArrayList<Account>();
-    
+
     private List<Map<String, Object>> listViewMapList = new ArrayList<Map<String, Object>>();
 
     private ListView listView;
-    
+
     private SimpleAdapter listViewAdapter;
-    
+
     private String currTab = null;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_mgnt);
         initMembers();
-        
+
         refreshUI();
     }
 
@@ -71,20 +71,20 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         //tabs
         TabHost tabs = findViewById(R.id.account_mgnt_tabs);
         tabs.setup();
-        
+
         AccountType[] ata = AccountType.getSupportedType();
         Resources r = getResources();
-        for(AccountType at:ata){
+        for (AccountType at : ata) {
             TabSpec tab = tabs.newTabSpec(at.getType());
-            tab.setIndicator(AccountType.getDisplay(i18n(), tab.getTag()),r.getDrawable(at.getDrawable()));
+            tab.setIndicator(AccountType.getDisplay(i18n(), tab.getTag()));
             tab.setContent(R.id.accmgnt_list);
             tabs.addTab(tab);
-            if(currTab==null){
+            if (currTab == null) {
                 currTab = tab.getTag();
             }
         }
         // workaround, force refresh
-        if(ata.length>1){
+        if (ata.length > 1) {
             tabs.setCurrentTab(1);
             tabs.setCurrentTab(0);
         }
@@ -93,70 +93,72 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
         //
         listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.account_mgnt_item, bindingFrom, bindingTo);
-        listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder(){
+        listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
 
             @Override
             public boolean setViewValue(View view, Object data, String text) {
-                NamedItem item = (NamedItem)data;
+                NamedItem item = (NamedItem) data;
                 String name = item.getName();
-                Account acc = (Account)item.getValue();
+                Account acc = (Account) item.getValue();
                 //not textview, not initval
-                if(!(view instanceof TextView)){
+                if (!(view instanceof TextView)) {
                     return false;
                 }
                 AccountType at = AccountType.find(acc.getType());
-                TextView tv = (TextView)view;
-                
-                if(at==AccountType.INCOME){
-                    tv.setTextColor(getResources().getColor(R.color.income_fgl)); 
-                }else if(at==AccountType.EXPENSE){
+                TextView tv = (TextView) view;
+
+                if (at == AccountType.INCOME) {
+                    tv.setTextColor(getResources().getColor(R.color.income_fgl));
+                } else if (at == AccountType.EXPENSE) {
                     tv.setTextColor(getResources().getColor(R.color.expense_fgl));
-                }else if(at==AccountType.ASSET){
+                } else if (at == AccountType.ASSET) {
                     tv.setTextColor(getResources().getColor(R.color.asset_fgl));
-                }else if(at==AccountType.LIABILITY){
+                } else if (at == AccountType.LIABILITY) {
                     tv.setTextColor(getResources().getColor(R.color.liability_fgl));
-                }else if(at==AccountType.OTHER){
+                } else if (at == AccountType.OTHER) {
                     tv.setTextColor(getResources().getColor(R.color.other_fgl));
-                }else{
+                } else {
                     tv.setTextColor(getResources().getColor(R.color.unknow_fgl));
                 }
-                
+
                 //reset
 //                tv.setVisibility(View.VISIBLE);
-                
-                if(!name.equals(bindingFrom[1])){
+
+                if (!name.equals(bindingFrom[1])) {
                     return false;
                 }
 //                if(at==AccountType.INCOME || at==AccountType.EXPENSE){
 //                    tv.setVisibility(View.INVISIBLE);
 //                    return true;
 //                }
-                
-                text = i18n().string(R.string.label_initial_value)+" : "+data.toString();
+
+                text = i18n().string(R.string.label_initial_value) + " : " + data.toString();
                 tv.setText(text);
                 return true;
-            }});
-        
+            }
+        });
+
         listView = findViewById(R.id.accmgnt_list);
         listView.setAdapter(listViewAdapter);
-        
-        
+
+
         listView.setOnItemClickListener(this);
-        
+
         registerForContextMenu(listView);
     }
-    
-    
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode==Activity.RESULT_OK){
-            GUIs.delayPost(new Runnable(){
+        if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
+            GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
                     refreshUI();
-                }});
-            
+                }
+            });
+
         }
     }
 
@@ -171,9 +173,9 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         for (Account acc : listViewData) {
             Map<String, Object> row = new HashMap<String, Object>();
             listViewMapList.add(row);
-            row.put(bindingFrom[0], new NamedItem(bindingFrom[0],acc,acc.getName()));
-            row.put(bindingFrom[1], new NamedItem(bindingFrom[1],acc,Formats.double2String(acc.getInitialValue())));
-            row.put(bindingFrom[2], new NamedItem(bindingFrom[2],acc,acc.getId()));
+            row.put(bindingFrom[0], new NamedItem(bindingFrom[0], acc, acc.getName()));
+            row.put(bindingFrom[1], new NamedItem(bindingFrom[1], acc, Formats.double2String(acc.getInitialValue())));
+            row.put(bindingFrom[2], new NamedItem(bindingFrom[2], acc, acc.getId()));
         }
 
         listViewAdapter.notifyDataSetChanged();
@@ -241,33 +243,33 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     private void doEditAccount(int pos) {
         Account acc = listViewData.get(pos);
         Intent intent = null;
-        intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,false);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
-        startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, false);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
-    
+
     private void doCopyAccount(int pos) {
         Account acc = listViewData.get(pos);
         Intent intent = null;
-        intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,true);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
-        startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
     private void doNewAccount() {
         Account acc = new Account(currTab, "", 0D);
         Intent intent = null;
-        intent = new Intent(this,AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE,true);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT,acc);
-        startActivityForResult(intent,Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-        if(parent == listView){
+        if (parent == listView) {
             doEditAccount(pos);
         }
     }
