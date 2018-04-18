@@ -44,7 +44,6 @@ public class PasswordPreference extends ValidatableDialogPreference {
         pwd = view.findViewById(R.id.pwd_preference_pwd);
         pwdvd = view.findViewById(R.id.pwd_preference_pwdvd);
         String pwdhash = getPersistedString("");
-        System.out.println(">>>>getPersistedString>"+pwdhash);
         boolean hasPwd = !Strings.isEmpty(pwdhash);
 
         enable.setChecked(hasPwd);
@@ -74,7 +73,6 @@ public class PasswordPreference extends ValidatableDialogPreference {
     public void onCloseDialog(boolean positiveResult) {
         if(positiveResult){
             persistString(passwordHash);
-            System.out.println(">>>>>>>>>>"+passwordHash);
         }
     }
 
@@ -88,8 +86,7 @@ public class PasswordPreference extends ValidatableDialogPreference {
                 GUIs.alert(getContext(), R.string.msg_wrong_password_validation);
                 return false;
             }
-
-            passwordHash = Security.md5String(pwd + Preference.PWD_SALT);
+            passwordHash = Preference.passwordMD5(pwd);
         }else{
             passwordHash = "";
         }

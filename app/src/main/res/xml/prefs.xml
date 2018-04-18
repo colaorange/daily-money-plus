@@ -45,7 +45,7 @@
 
     <PreferenceCategory android:title="@string/label_prefcat_security">
         <com.colaorange.dailymoney.ui.pref.PasswordPreference
-            android:key="@string/pref_passwordHash"
+            android:key="@string/pref_password_hash"
             android:summary="@string/label_prefs_password_sum"
             android:title="@string/label_prefs_password" />
     </PreferenceCategory>

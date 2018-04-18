@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.Security;
+import com.colaorange.dailymoney.context.Preference;
 import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.context.ContextsActivity;
 import com.colaorange.dailymoney.R;
@@ -29,13 +31,14 @@ public class PasswordProtectionActivity extends ContextsActivity implements OnCl
     }
 
     private void doPasswordOk() {
-        String password = preference().getPassword();
-        String pd = ((TextView) findViewById(R.id.pwd_protection_text)).getText().toString();
-        if (password.equals(pd)) {
+        String pwdHash = preference().getPasswordHash();
+        String pwd = ((TextView) findViewById(R.id.pwd_protection_text)).getText().toString();
+        if (Preference.passwordMD5(pwd).equals(pwdHash)) {
             setResult(RESULT_OK);
             finish();
         } else {
             GUIs.shortToast(this, R.string.msg_wrong_password);
+            ((TextView) findViewById(R.id.pwd_protection_text)).setText("");
         }
     }
 }

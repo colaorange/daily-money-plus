@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Objects;
+import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.util.I18N;
 import com.colaorange.dailymoney.util.Logger;
@@ -21,7 +22,8 @@ import java.util.Set;
  */
 public class Preference {
 
-    public static final String PWD_SALT = "icandoit";
+    /**DON'T CHANGE SALT, it effect all old password**/
+    private static final String PASSWORD_SALT = "powerpuffgirls";
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
@@ -60,7 +62,6 @@ public class Preference {
     int startdayYearMonthDay = 1;//1-28
     boolean testsDesktop = false;
     boolean backupWithTimestamp = true;
-    String password = "";
     String passwordHash = "";
     boolean allowAnalytics = true;
     String csvEncoding = "UTF8";
@@ -218,25 +219,42 @@ public class Preference {
     }
 
     private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
+        String oldPwdHash = null;
         try {
+            //since 0.9.9-180418 we enhance it to password hahsh
+            //clear them, they are plaintext in old version
+            SharedPreferences.Editor editor = null;
             String pd1 = prefs.getString(i18n.string(R.string.pref_password), "");
             String pd2 = prefs.getString(i18n.string(R.string.pref_passwordvd), "");
-            if (pd1.equals(pd2)) {
-                password = pd1;
-            } else {
-                password = "";
+            if (!Strings.isBlank(pd1)) {
+                editor = editor == null ? prefs.edit() : editor;
+                editor.remove(i18n.string(R.string.pref_password));
             }
+            if (!Strings.isBlank(pd2)) {
+                editor = editor == null ? prefs.edit() : editor;
+                editor.remove(i18n.string(R.string.pref_passwordvd));
+            }
+
+            if (!Strings.isBlank(pd1) && pd1.equals(pd2)) {
+                //set to new password hash
+                editor = editor == null ? prefs.edit() : editor;
+                editor.putString(i18n.string(R.string.pref_password_hash), oldPwdHash = Preference.passwordMD5(pd1));
+            }
+
+            if (editor != null) {
+                editor.commit();
+            }
+
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            passwordHash = prefs.getString(i18n.string(R.string.pref_passwordHash), "");
+            passwordHash = oldPwdHash == null ? prefs.getString(i18n.string(R.string.pref_password_hash), "") : oldPwdHash;
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
-        Logger.d("preference : password {}", Strings.isBlank(password) ? "" : "********");
-        //TODO
-        Logger.d("preference : passwordHash {}", Strings.isBlank(passwordHash) ? "" : passwordHash);//"********");
+
+        Logger.d("preference : passwordHash {}", Strings.isBlank(passwordHash) ? "NO" : "********");
     }
 
     private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {
@@ -413,8 +431,8 @@ public class Preference {
         return startdayYearMonthDay;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     public boolean isAllowAnalytics() {
@@ -550,5 +568,12 @@ public class Preference {
 
     public Set<Integer> getAutoBackupWeekDays() {
         return java.util.Collections.unmodifiableSet(autoBackupWeekDays);
+    }
+
+    public static String passwordMD5(String pwd) {
+        if (Strings.isEmpty(pwd)) {
+            return "";
+        }
+        return Security.md5String(pwd + Preference.PASSWORD_SALT);
     }
 }

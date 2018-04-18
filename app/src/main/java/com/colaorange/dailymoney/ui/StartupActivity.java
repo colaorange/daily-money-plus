@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.ui;
 
 import android.content.Intent;
 
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.bg.StartupReceiver;
 import com.colaorange.dailymoney.util.GUIs;
 import com.colaorange.dailymoney.R;
@@ -20,12 +21,12 @@ public class StartupActivity extends ContextsActivity {
     private boolean firstTime = false;
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-        if(isFinishing()) {
+        if (isFinishing()) {
             return;
         }
-        if(contexts().getAndSetFirstTime()){
+        if (contexts().getAndSetFirstTime()) {
             doFirstTime();
             firstTime = true;
         }
@@ -38,15 +39,15 @@ public class StartupActivity extends ContextsActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(isFinishing()) {
+        if (isFinishing()) {
             return;
         }
-        if(handleProtection()){
+        if (handleProtection()) {
             return;
         }
-        if(!passedProtection){
+        if (!passedProtection) {
             finish();
         }
 
@@ -54,7 +55,7 @@ public class StartupActivity extends ContextsActivity {
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         //for the desktop activity back
         finish();
@@ -62,22 +63,21 @@ public class StartupActivity extends ContextsActivity {
 
 
     /**
-     *
-     * @return true if handling
+     * @return true if handled
      */
     private boolean handleProtection() {
-        final String password = preference().getPassword();
-        if("".equals(password)||passedProtection){
+        final String passwordHash = preference().getPasswordHash();
+        if (Strings.isBlank(passwordHash) || passedProtection) {
             return false;
         }
         Intent intent = null;
-        intent = new Intent(this,PasswordProtectionActivity.class);
+        intent = new Intent(this, PasswordProtectionActivity.class);
         startActivityForResult(intent, Constants.REQUEST_PASSWORD_PROTECTION_CODE);
         trackEvent("protection");
         return true;
     }
 
-    private void doNextActivity(){
+    private void doNextActivity() {
         Intent intent = new Intent(StartupActivity.this, DesktopActivity.class);
         intent.putExtra(PARAM_FIRST_TIME, firstTime);
         startActivity(intent);
@@ -96,11 +96,11 @@ public class StartupActivity extends ContextsActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                 Intent data){
-        if(requestCode == Constants.REQUEST_PASSWORD_PROTECTION_CODE){
-            if(resultCode!=RESULT_OK){
+                                 Intent data) {
+        if (requestCode == Constants.REQUEST_PASSWORD_PROTECTION_CODE) {
+            if (resultCode != RESULT_OK) {
                 finish();
-            }else{
+            } else {
                 passedProtection = true;
             }
             return;
