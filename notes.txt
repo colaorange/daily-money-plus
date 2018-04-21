@@ -29,3 +29,8 @@
     https://romannurik.github.io/AndroidAssetStudio/index.html
 * Dialog close prevent
     https://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked
+
+* country flags
+    https://github.com/MikeFot/Android--Library-Country-Flags/tree/master/countryflags/src/main/res/drawable-mdpi
+    https://commons.wikimedia.org/wiki/Category:Flags_of_languages
+    https://en.wikipedia.org/wiki/Category:National_flags
