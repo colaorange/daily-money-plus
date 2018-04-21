@@ -19,25 +19,7 @@
     <string name="cal2_clear">"СБРОС"</string>
     <string name="cal2_clear_history">"Очистить историю"</string>
     <string name="cal2_close">Закрыть</string>
-    <string name="cal2_cos">"cos"</string>
     <string name="cal2_del">"Удалить"</string>
-    <string name="cal2_digit0">"0"</string>
-    <string name="cal2_digit1">"1"</string>
-    <string name="cal2_digit2">"2"</string>
-    <string name="cal2_digit3">"3"</string>
-    <string name="cal2_digit4">"4"</string>
-    <string name="cal2_digit5">"5"</string>
-    <string name="cal2_digit6">"6"</string>
-    <string name="cal2_digit7">"7"</string>
-    <string name="cal2_digit8">"8"</string>
-    <string name="cal2_digit9">"9"</string>
-    <string name="cal2_e">"e"</string>
     <string name="cal2_error">"Ошибка"</string>
-    <string name="cal2_leftParen">"("</string>
-    <string name="cal2_lg">"log"</string>
-    <string name="cal2_ln">"ln"</string>
     <string name="cal2_ok">OK</string>
-    <string name="cal2_rightParen">")"</string>
-    <string name="cal2_sin">"sin"</string>
-    <string name="cal2_tan">"tan"</string>
 </resources>

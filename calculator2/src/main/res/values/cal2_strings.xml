@@ -14,43 +14,43 @@
 --><!--
  the source is come from andorid - 2.1 calculator2
 -->
-<resources>
-    <string name="cal2_advanced">Advanced panel</string>
-    <string name="cal2_app_name">Calculator</string>
-    <string name="cal2_basic">Basic panel</string>
-    <string name="cal2_clear">CLEAR</string>
-    <string name="cal2_clear_history">Clear history</string>
-    <string name="cal2_close">CLOSE</string>
-    <string name="cal2_cos">cos</string>
-    <string name="cal2_del">DELETE</string>
-    <string name="cal2_digit0">0</string>
-    <string name="cal2_digit1">1</string>
-    <string name="cal2_digit2">2</string>
-    <string name="cal2_digit3">3</string>
-    <string name="cal2_digit4">4</string>
-    <string name="cal2_digit5">5</string>
-    <string name="cal2_digit6">6</string>
-    <string name="cal2_digit7">7</string>
-    <string name="cal2_digit8">8</string>
-    <string name="cal2_digit9">9</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="cal2_advanced" tools:ignore="MissingTranslation">Advanced panel</string>
+    <string name="cal2_app_name" tools:ignore="MissingTranslation">Calculator</string>
+    <string name="cal2_basic" tools:ignore="MissingTranslation">Basic panel</string>
+    <string name="cal2_clear" tools:ignore="MissingTranslation">CLEAR</string>
+    <string name="cal2_clear_history" tools:ignore="MissingTranslation">Clear history</string>
+    <string name="cal2_close" tools:ignore="MissingTranslation">CLOSE</string>
+    <string name="cal2_cos" translatable="false">cos</string>
+    <string name="cal2_del" tools:ignore="MissingTranslation">DELETE</string>
+    <string name="cal2_digit0" translatable="false">0</string>
+    <string name="cal2_digit1" translatable="false">1</string>
+    <string name="cal2_digit2" translatable="false">2</string>
+    <string name="cal2_digit3" translatable="false">3</string>
+    <string name="cal2_digit4" translatable="false">4</string>
+    <string name="cal2_digit5" translatable="false">5</string>
+    <string name="cal2_digit6" translatable="false">6</string>
+    <string name="cal2_digit7" translatable="false">7</string>
+    <string name="cal2_digit8" translatable="false">8</string>
+    <string name="cal2_digit9" translatable="false">9</string>
     <string name="cal2_div" translatable="false">\u00f7</string>
     <string name="cal2_dot" translatable="false">.</string>
-    <string name="cal2_e">e</string>
+    <string name="cal2_e" translatable="false">e</string>
     <string name="cal2_enter" translatable="false">\u2193</string>
     <string name="cal2_equal" translatable="false">=</string>
-    <string name="cal2_error">Error</string>
-    <string name="cal2_factorial">!</string>
-    <string name="cal2_leftParen">(</string>
-    <string name="cal2_lg">log</string>
-    <string name="cal2_ln">ln</string>
+    <string name="cal2_error" tools:ignore="MissingTranslation">Error</string>
+    <string name="cal2_factorial" translatable="false">!</string>
+    <string name="cal2_leftParen" translatable="false">(</string>
+    <string name="cal2_lg" translatable="false">log</string>
+    <string name="cal2_ln" translatable="false">ln</string>
     <string name="cal2_minus" translatable="false">\u2212</string>
     <string name="cal2_mul" translatable="false">\u00d7</string>
-    <string name="cal2_ok">OK</string>
-    <string name="cal2_pi">\u03c0</string>
+    <string name="cal2_ok" tools:ignore="MissingTranslation">OK</string>
+    <string name="cal2_pi" translatable="false">\u03c0</string>
     <string name="cal2_plus" translatable="false">+</string>
-    <string name="cal2_power">^</string>
-    <string name="cal2_rightParen">)</string>
-    <string name="cal2_sin">sin</string>
-    <string name="cal2_sqrt">\u221a</string>
-    <string name="cal2_tan">tan</string>
+    <string name="cal2_power" translatable="false">^</string>
+    <string name="cal2_rightParen" translatable="false">)</string>
+    <string name="cal2_sin" translatable="false">sin</string>
+    <string name="cal2_sqrt" translatable="false">\u221a</string>
+    <string name="cal2_tan" translatable="false">tan</string>
 </resources>
