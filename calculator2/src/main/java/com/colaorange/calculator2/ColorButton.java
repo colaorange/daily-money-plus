@@ -23,9 +23,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
+import android.util.TypedValue;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.MotionEvent;
@@ -35,7 +36,9 @@ import android.content.res.Resources;
  * Button with click-animation effect.
  */
 class ColorButton extends AppCompatButton implements OnClickListener {
+    @ColorInt
     int CLICK_FEEDBACK_COLOR;
+
     static final int CLICK_FEEDBACK_INTERVAL = 10;
     static final int CLICK_FEEDBACK_DURATION = 350;
     
@@ -58,13 +61,19 @@ class ColorButton extends AppCompatButton implements OnClickListener {
     }
 
     private void init(Calculator calc) {
-        Resources res = getResources();
+        Resources.Theme theme = getContext().getTheme();
+        TypedValue color = new TypedValue();
+        theme.resolveAttribute(R.attr.cal2BtnFrameBgColor, color, true);
 
-        CLICK_FEEDBACK_COLOR = res.getColor(R.color.cal2_magic_flame);
+        CLICK_FEEDBACK_COLOR = color.data;
         mFeedbackPaint = new Paint();
         mFeedbackPaint.setStyle(Style.STROKE);
         mFeedbackPaint.setStrokeWidth(2);
-        getPaint().setColor(res.getColor(R.color.cal2_button_text));
+
+        color = new TypedValue();
+        theme.resolveAttribute(R.attr.cal2BtnFgColor, color, true);
+
+        getPaint().setColor(color.data);
         
         mAnimStart = -1;
 

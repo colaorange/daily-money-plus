@@ -25,6 +25,9 @@ public class Preference {
     /**DON'T CHANGE SALT, it effect all old password**/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
+    public static final String THEME_DARK = "dark";
+    public static final String THEME_LIGHT = "light";
+
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
     public static final String FORMAT_DATE_DMY = "D/M/Y";
@@ -575,5 +578,13 @@ public class Preference {
             return "";
         }
         return Security.md5String(pwd + Preference.PASSWORD_SALT);
+    }
+
+    public boolean isDarkTheme(){
+        return getTheme().startsWith(THEME_DARK);
+    }
+
+    public String getTheme(){
+        return THEME_DARK;
     }
 }

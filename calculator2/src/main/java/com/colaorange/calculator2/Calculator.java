@@ -35,12 +35,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class Calculator extends Activity implements OnClickListener {
-    
+
     public static final String PARAM_START_VALUE = "cal2.startValue";
     public static final String PARAM_NEED_RESULT = "cal2.needResult";
     public static final String PARAM_RESULT_VALUE = "cal2.resultValue";
-    
-    
+
+    //"dark" or "light"
+    public static final String PARAM_THEME = "cal2.theme";
+
+
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
     private Persist mPersist;
@@ -48,23 +51,32 @@ public class Calculator extends Activity implements OnClickListener {
     private Logic mLogic;
     private PanelSwitcher mPanelSwitcher;
 
-    private static final int CMD_CLEAR_HISTORY  = 1;
-    private static final int CMD_BASIC_PANEL    = 2;
+    private static final int CMD_CLEAR_HISTORY = 1;
+    private static final int CMD_BASIC_PANEL = 2;
     private static final int CMD_ADVANCED_PANEL = 3;
 
     private static final int HVGA_HEIGHT_PIXELS = 480;
-    private static final int HVGA_WIDTH_PIXELS  = 320;
+    private static final int HVGA_WIDTH_PIXELS = 320;
 
-    static final int BASIC_PANEL    = 0;
+    static final int BASIC_PANEL = 0;
     static final int ADVANCED_PANEL = 1;
 
     private static final String LOG_TAG = "Calculator";
-    private static final boolean DEBUG  = false;
+    private static final boolean DEBUG = false;
     private static final boolean LOG_ENABLED = DEBUG ? Config.LOGD : Config.LOGV;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        String theme = getIntent().getExtras().getString(PARAM_THEME, "dark");
+
+        if(theme.startsWith("light")){
+            setTheme(R.style.Cal2Theme_Light);
+        }else {
+            setTheme(R.style.Cal2Theme);
+        }
+
         setContentView(R.layout.cal2_main);
 
         mPersist = new Persist(this);
@@ -77,7 +89,7 @@ public class Calculator extends Activity implements OnClickListener {
         mHistory.setObserver(historyAdapter);
         View view;
         mPanelSwitcher = findViewById(R.id.cal2_panelswitch);
-                                       
+
         mListener.setHandler(mLogic, mPanelSwitcher);
 
         mDisplay.setOnKeyListener(mListener);
@@ -86,22 +98,22 @@ public class Calculator extends Activity implements OnClickListener {
         if ((view = findViewById(R.id.cal2_del)) != null) {
             view.setOnLongClickListener(mListener);
         }
-        
-        
-        
+
+
+
         /*modify by dennis, provide initial value  */
-        boolean needresult = getIntent().getExtras().getBoolean(PARAM_NEED_RESULT,false);
+        boolean needresult = getIntent().getExtras().getBoolean(PARAM_NEED_RESULT, false);
         String startValue = getIntent().getExtras().getString(PARAM_START_VALUE);
-        
-        if(startValue!=null){
+
+        if (startValue != null) {
             mLogic.setNumbericResult(startValue);
         }
-        
-        if(needresult){
+
+        if (needresult) {
             findViewById(R.id.cal2_span).setVisibility(View.GONE);
             findViewById(R.id.cal2_ok).setOnClickListener(this);
             findViewById(R.id.cal2_close).setOnClickListener(this);
-        }else{
+        } else {
             findViewById(R.id.cal2_ok).setVisibility(View.GONE);
             findViewById(R.id.cal2_close).setVisibility(View.GONE);
         }
@@ -112,51 +124,51 @@ public class Calculator extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuItem item;
-        
+
         item = menu.add(0, CMD_CLEAR_HISTORY, 0, R.string.cal2_clear_history);
         item.setIcon(R.drawable.cal2_clear_history);
-        
+
         item = menu.add(0, CMD_ADVANCED_PANEL, 0, R.string.cal2_advanced);
         item.setIcon(R.drawable.cal2_advanced);
-        
+
         item = menu.add(0, CMD_BASIC_PANEL, 0, R.string.cal2_basic);
         item.setIcon(R.drawable.cal2_simple);
 
         return true;
     }
-    
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(CMD_BASIC_PANEL).setVisible(mPanelSwitcher != null && 
-                          mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL);
-        
-        menu.findItem(CMD_ADVANCED_PANEL).setVisible(mPanelSwitcher != null && 
-                          mPanelSwitcher.getCurrentIndex() == BASIC_PANEL);
-        
+        menu.findItem(CMD_BASIC_PANEL).setVisible(mPanelSwitcher != null &&
+                mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL);
+
+        menu.findItem(CMD_ADVANCED_PANEL).setVisible(mPanelSwitcher != null &&
+                mPanelSwitcher.getCurrentIndex() == BASIC_PANEL);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case CMD_CLEAR_HISTORY:
-            mHistory.clear();
-            break;
+            case CMD_CLEAR_HISTORY:
+                mHistory.clear();
+                break;
 
-        case CMD_BASIC_PANEL:
-            if (mPanelSwitcher != null && 
-                mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL) {
-                mPanelSwitcher.moveRight();
-            }
-            break;
+            case CMD_BASIC_PANEL:
+                if (mPanelSwitcher != null &&
+                        mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL) {
+                    mPanelSwitcher.moveRight();
+                }
+                break;
 
-        case CMD_ADVANCED_PANEL:
-            if (mPanelSwitcher != null && 
-                mPanelSwitcher.getCurrentIndex() == BASIC_PANEL) {
-                mPanelSwitcher.moveLeft();
-            }
-            break;
+            case CMD_ADVANCED_PANEL:
+                if (mPanelSwitcher != null &&
+                        mPanelSwitcher.getCurrentIndex() == BASIC_PANEL) {
+                    mPanelSwitcher.moveLeft();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -199,13 +211,13 @@ public class Calculator extends Activity implements OnClickListener {
         float fontPixelSize = view.getTextSize();
         Display display = getWindowManager().getDefaultDisplay();
         int h = Math.min(display.getWidth(), display.getHeight());
-        float ratio = 0; 
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            ratio = (float)h/HVGA_WIDTH_PIXELS;
-        }else{
-            ratio = (float)h/HVGA_HEIGHT_PIXELS;
+        float ratio = 0;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ratio = (float) h / HVGA_WIDTH_PIXELS;
+        } else {
+            ratio = (float) h / HVGA_HEIGHT_PIXELS;
         }
-        view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize*ratio);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize * ratio);
     }
 
     @Override
@@ -213,7 +225,7 @@ public class Calculator extends Activity implements OnClickListener {
         if (v.getId() == R.id.cal2_ok) {
             String result = mLogic.getNumbericResult();
             Intent intent = new Intent();
-            intent.putExtra(PARAM_RESULT_VALUE,result);
+            intent.putExtra(PARAM_RESULT_VALUE, result);
             setResult(RESULT_OK, intent);
             finish();
         } else if (v.getId() == R.id.cal2_close) {

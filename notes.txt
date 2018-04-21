@@ -34,3 +34,5 @@
     https://github.com/MikeFot/Android--Library-Country-Flags/tree/master/countryflags/src/main/res/drawable-mdpi
     https://commons.wikimedia.org/wiki/Category:Flags_of_languages
     https://en.wikipedia.org/wiki/Category:National_flags
+* Theme
+    https://stackoverflow.com/questions/6352318/let-the-user-choose-a-theme-android
