@@ -16,12 +16,12 @@
 -->
 <resources>
 
-    <color name="cal2_background_dark">#ff101010</color>
-    <color name="cal2_dispaly_text_dark">#ffffffff</color>
-    <color name="cal2_btn_bg_dark">#77666666</color>
-    <color name="cal2_btn_digit_bg_dark">#aa666666</color>
-    <color name="cal2_btn_flame_dark">#00ffffff</color>
-    <color name="cal2_btn_fg_dark">#ffffffff</color>
+    <color name="cal2_background">#ff101010</color>
+    <color name="cal2_dispaly_text">#ffffffff</color>
+    <color name="cal2_btn_bg">#77666666</color>
+    <color name="cal2_btn_digit_bg">#aa666666</color>
+    <color name="cal2_btn_flame">#00ffffff</color>
+    <color name="cal2_btn_fg">#ffffffff</color>
 
 
     <color name="cal2_background_light">#fff0f0f0</color>

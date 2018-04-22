@@ -24,12 +24,12 @@
     <attr name="cal2BtnFrameBgColor" format="color"/>
 
     <style name="Cal2Theme" parent="Theme.AppCompat.NoActionBar">
-        <item name="cal2BackgroundColor">@color/cal2_background_dark</item>
-        <item name="cal2BtnBgColor">@color/cal2_btn_bg_dark</item>
-        <item name="cal2BtnFgColor">@color/cal2_btn_fg_dark</item>
-        <item name="cal2BtnDigitBgColor">@color/cal2_btn_digit_bg_dark</item>
-        <item name="cal2BtnFrameBgColor">@color/cal2_btn_flame_dark</item>
-        <item name="cal2DisplayTextColor">@color/cal2_dispaly_text_dark</item>
+        <item name="cal2BackgroundColor">@color/cal2_background</item>
+        <item name="cal2BtnBgColor">@color/cal2_btn_bg</item>
+        <item name="cal2BtnFgColor">@color/cal2_btn_fg</item>
+        <item name="cal2BtnDigitBgColor">@color/cal2_btn_digit_bg</item>
+        <item name="cal2BtnFrameBgColor">@color/cal2_btn_flame</item>
+        <item name="cal2DisplayTextColor">@color/cal2_dispaly_text</item>
     </style>
 
     <style name="Cal2Theme.Light" parent="Theme.AppCompat.Light.NoActionBar">
