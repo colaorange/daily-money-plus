@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="appPrimaryColor" format="color"/>
+    <attr name="appPrimaryDarkColor" format="color"/>
+    <attr name="appPrimaryLightColor" format="color"/>
+    <attr name="appPrimaryTextColor" format="color"/>
+    <attr name="appSecondaryColor" format="color"/>
+    <attr name="appSecondaryDarkColor" format="color"/>
+    <attr name="appSecondaryLightColor" format="color"/>
+    <attr name="appSecondaryTextColor" format="color"/>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="appPrimaryColor">@color/appPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/appSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/appPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/appSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/appPrimaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/appSecondaryLight</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/appPrimaryLight</item>
+        <!--
+        <item name="colorButtonNormal">@color/button_material_dark</item>
+        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
+
+        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+
+        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
+
+        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+
+        <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
+        <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
+        <item name="ratingBarStyleSmall">@style/Widget.AppCompat.RatingBar.Small</item>
+        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar</item>
+        -->
+    </style>
+
+
+    <style name="StartupTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:visibility">invisible</item>
+    </style>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="appPrimaryColor">@color/appPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/appSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/appPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/appSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/appPrimaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/appSecondaryLight</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/appPrimaryLight</item>
+    </style>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="windowNoTitle">true</item>
+
+        <item name="appPrimaryColor">@color/appPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/appSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/appPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/appSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/appPrimaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/appSecondaryLight</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/appPrimaryLight</item>
+    </style>
+
+
+
+
+
+</resources>

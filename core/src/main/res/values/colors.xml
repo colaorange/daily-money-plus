@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--
+    <color name="appPrimary">#212121</color>
+    <color name="appPrimaryDark">#000000</color>
+    <color name="appPrimaryLight">#484848</color>
+    <color name="appPrimaryText">#ffffff</color>
+
+    <color name="appSecondary">#0091ea</color>
+    <color name="appSecondaryDark">#0064b7</color>
+    <color name="appSecondaryLight">#64c1ff</color>
+    <color name="appSecondaryText">#000000</color>
+    -->
+
+
+    <color name="appPrimary">#f0f4c3</color>
+    <color name="appPrimaryDark">#bdc192</color>
+    <color name="appPrimaryLight">#fffff6</color>
+    <color name="appPrimaryText">#000000</color>
+
+    <color name="appSecondary">#ffab91</color>
+    <color name="appSecondaryDark">#c97b63</color>
+    <color name="appSecondaryLight">#ffddc1</color>
+    <color name="appSecondaryText">#000000</color>
+
+
     <!-- FF - no transparent -->
 
 	<color name="simple_spinner_item">#FF000000</color>
 	<color name="simple_spinner_dropdown">#FF000000</color>
 	<color name="list_selected">#E0DDDDDD</color>
 	
-	<color name="desktop_bg">#FF000000</color>
-	<color name="desktop_item_fg">#FFEEEEEE</color>
-	<color name="desktop_item_bg_s">#cc555555</color>
-	<color name="desktop_item_bg_e">#aa555555</color>
+
 	
 	<color name="detail_mgnt_info_bg">#FF303030</color>
 	<color name="detail_mgnt_info_fg">#FFF5B800</color>
@@ -62,8 +84,6 @@
     <color name="unknow_fg">#FF000000</color>
 
     <color name="symbolpos_fgl">#CCFFFFFF</color>
-    
-    <color name="desktop_info_bg">#FF383838</color>
 
     <color name="account_detail_list_info_bg">#FF303030</color>
     <color name="account_detail_list_info_fg">#FFF5B800</color>

@@ -4,7 +4,7 @@
     android:id="@+id/dt_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/desktop_bg"
+    android:background="?attr/appPrimaryColor"
     android:orientation="vertical">
 
     <TabHost
@@ -47,7 +47,7 @@
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/desktop_info_bg"
+        android:background="?attr/appPrimaryLightColor"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         app:flexWrap="wrap"
