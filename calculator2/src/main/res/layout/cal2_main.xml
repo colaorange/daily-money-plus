@@ -96,11 +96,11 @@
                     android:id="@+id/cal2_plus"
 					android:text="@string/cal2_plus" style="@style/cal2_btn" />
 			</LinearLayout>
-			
-            <LinearLayout android:layout_width="fill_parent" android:layout_height="0dp" android:layout_weight="2">
 
-                <View android:background="@drawable/cal2_btn_span"  android:id="@+id/cal2_span" android:layout_width="0dp" android:layout_height="fill_parent"
-                    android:layout_weight="3" />
+            <LinearLayout android:layout_width="fill_parent" android:layout_height="0dp" android:layout_weight="2">
+				<Button
+					android:id="@+id/cal2_span" android:layout_width="0dp" android:layout_height="fill_parent"
+					android:layout_weight="3" android:enabled="false" style="@style/cal2_btn" />
 
                 <!-- marginRight has to be 0 to catch border-touch -->
                 <com.colaorange.calculator2.ColorButton
@@ -115,7 +115,7 @@
                     android:id="@+id/cal2_del"
                     android:text="@string/cal2_clear" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"
                     android:layout_marginRight="0dp" android:textSize="15dp" style="@style/cal2_btn" />
-            </LinearLayout>			
+            </LinearLayout>
 		</LinearLayout>
 
 		<LinearLayout android:id="@+id/cal2_advancedPad" android:layout_width="fill_parent" android:layout_height="fill_parent"
