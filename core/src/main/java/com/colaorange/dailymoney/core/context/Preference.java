@@ -22,11 +22,16 @@ import java.util.Set;
  */
 public class Preference {
 
-    /**DON'T CHANGE SALT, it effect all old password**/
+    /**
+     * DON'T CHANGE SALT, it effect all old password
+     **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
-    public static final String THEME_DARK = "dark";
-    public static final String THEME_LIGHT = "light";
+    private static final String THEME_DARK_PREFIX = "dark-";
+    private static final String THEME_LIGHT_PREFIX = "light-";
+
+    public static final String THEME_BALCK_CAT = THEME_DARK_PREFIX + "black-cat";
+    public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
@@ -80,6 +85,9 @@ public class Preference {
     String yearMonthFormat;
 
     boolean autoBackup = true;
+
+    //    String theme = THEME_BALCK_CAT;
+    String theme = THEME_LEMON;
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
@@ -580,11 +588,11 @@ public class Preference {
         return Security.md5String(pwd + Preference.PASSWORD_SALT);
     }
 
-    public boolean isDarkTheme(){
-        return getTheme().startsWith(THEME_DARK);
+    public boolean isLightTheme() {
+        return getTheme().startsWith(THEME_LIGHT_PREFIX);
     }
 
-    public String getTheme(){
-        return THEME_DARK;
+    public String getTheme() {
+        return theme;
     }
 }

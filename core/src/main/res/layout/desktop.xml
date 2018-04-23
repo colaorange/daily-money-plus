@@ -3,11 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.legacy.DesktopActivity"
-    android:id="@+id/dt_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/appToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <TabHost
         android:id="@+id/desktop_tabs"

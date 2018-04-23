@@ -18,8 +18,12 @@ import com.colaorange.dailymoney.core.ui.legacy.DesktopActivity;
 public class StartupActivity extends ContextsActivity {
 
     public static final String PARAM_FIRST_TIME = "startup.firstTime";
-    private boolean passedProtection = false;
     private boolean firstTime = false;
+
+    @Override
+    protected boolean isNoActionBarTheme(){
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -37,6 +41,7 @@ public class StartupActivity extends ContextsActivity {
             firstTime = true;
         }
 
+        //notify app is startup
         Intent intent = new Intent();
         intent.setAction(StartupReceiver.ACTION_STARTUP);
         sendBroadcast(intent);
@@ -53,17 +58,12 @@ public class StartupActivity extends ContextsActivity {
         if (handleProtection()) {
             return;
         }
-        if (!passedProtection) {
-            finish();
-        }
-
         doNextActivity();
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
-        //for the desktop activity back
         finish();
     }
 
@@ -73,7 +73,7 @@ public class StartupActivity extends ContextsActivity {
      */
     private boolean handleProtection() {
         final String passwordHash = preference().getPasswordHash();
-        if (Strings.isBlank(passwordHash) || passedProtection) {
+        if (Strings.isBlank(passwordHash)) {
             return false;
         }
         Intent intent = null;
@@ -104,11 +104,10 @@ public class StartupActivity extends ContextsActivity {
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent data) {
         if (requestCode == Constants.REQUEST_PASSWORD_PROTECTION_CODE) {
-            if (resultCode != RESULT_OK) {
-                finish();
-            } else {
-                passedProtection = true;
+            if (resultCode == RESULT_OK) {
+                doNextActivity();
             }
+            finish();
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);

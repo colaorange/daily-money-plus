@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="appPrimary">#212121</color>
-    <color name="appPrimaryDark">#000000</color>
-    <color name="appPrimaryLight">#484848</color>
-    <color name="appPrimaryText">#ffffff</color>
-
-    <color name="appSecondary">#0091ea</color>
-    <color name="appSecondaryDark">#0064b7</color>
-    <color name="appSecondaryLight">#64c1ff</color>
-    <color name="appSecondaryText">#000000</color>
-
-
+    <!--light-->
     <color name="appLightPrimary">#f0f4c3</color>
     <color name="appLightPrimaryDark">#bdc192</color>
     <color name="appLightPrimaryLight">#fffff6</color>
@@ -22,8 +12,20 @@
     <color name="appLightSecondaryLight">#ffddc1</color>
     <color name="appLightSecondaryText">#101010</color>
 
-
     <color name="lightSelectingMask">#10101010</color>
+
+    <!--dark-->
+    <color name="appDarkPrimary">#212121</color>
+    <color name="appDarkPrimaryDark">#000000</color>
+    <color name="appDarkPrimaryLight">#484848</color>
+    <color name="appDarkPrimaryText">#ffffff</color>
+
+    <color name="appDarkSecondary">#0091ea</color>
+    <color name="appDarkSecondaryDark">#0064b7</color>
+    <color name="appDarkSecondaryLight">#64c1ff</color>
+    <color name="appDarkSecondaryText">#000000</color>
+
+    <color name="darkSelectingMask">#10e0e0e0</color>
 
 
     <!-- http://colorschemedesigner.com/csd-3.5/ -->
@@ -37,7 +39,7 @@
     <color name="incomeTextLight">#b6ffcc</color>
     <color name="incomeTextDark">#18963e</color>
     <color name="incomeBgLight">#9bffb9</color>
-    <color name="incomeBgBark">#74bf8b</color>
+    <color name="incomeBgDark">#74bf8b</color>
 
     <color name="assetText">#f6d174</color>
     <color name="assetTextLight">#fede97</color>
@@ -49,7 +51,7 @@
     <color name="liabilityTextLight">#9bafff</color>
     <color name="liabilityTextDark">#6473af</color>
     <color name="liabilityBgLight">#b6c4ff</color>
-    <color name="liabilityBGDark">#2840a6</color>
+    <color name="liabilityBgDark">#2840a6</color>
 
     <color name="otherText">#61cfff</color>
     <color name="otherTextLight">#89dbff</color>

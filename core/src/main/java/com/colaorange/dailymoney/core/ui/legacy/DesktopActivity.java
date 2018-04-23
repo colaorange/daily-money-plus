@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -61,7 +62,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     private TextView infoMonthlyExpense;
     private TextView infoCumulativeCash;
     private TabHost tabs;
-    private View dtLayout;
 
     private HashMap<Object, DesktopItem> dtHashMap = new HashMap<Object, DesktopItem>();
 
@@ -69,7 +69,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desktop);
-        dtLayout = findViewById(R.id.dt_layout);
+
+        setSupportActionBar((Toolbar)findViewById(R.id.appToolbar));
+
 
         initParams();
         initMembers();

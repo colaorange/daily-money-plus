@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.core.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,11 @@ public class LocalWebViewActivity extends ContextsActivity {
     WebView webView;
 
     String uri;
+
+    @Override
+    protected boolean isNoActionBarTheme() {
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -55,6 +61,7 @@ public class LocalWebViewActivity extends ContextsActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(this, "wvif");
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void refreshUI() {

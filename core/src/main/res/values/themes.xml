@@ -26,7 +26,17 @@
     <attr name="textSizeSmall" format="dimension"/>
     <attr name="textSizeLarge" format="dimension"/>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme">
+        <!--we implement dynamically in code-->
+    </style>
+
+    <style name="noActionBar" >
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="themeLemon">
         <item name="appPrimaryColor">@color/appLightPrimary</item>
         <item name="appPrimaryDarkColor">@color/appLightPrimaryDark</item>
         <item name="appPrimaryLightColor">@color/appLightPrimaryLight</item>
@@ -52,8 +62,6 @@
         <item name="accountOtherBgColor">@color/liabilityBgLight</item>
 
 
-
-
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
         <item name="colorPrimary">@color/appLightPrimary</item>
@@ -67,11 +75,15 @@
         <item name="colorControlActivated">@color/appLightSecondaryLight</item>
         <!-- optional for ripple of control -->
         <item name="colorControlHighlight">@color/appLightPrimaryDark</item>
-        <!--
-        <item name="colorButtonNormal">@color/button_material_dark</item>
-        <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
 
+        <item name="colorButtonNormal">@color/appLightPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/appLightSecondaryLight</item>
+
+        <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+        -->
+        <!--
 
         <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
 
@@ -86,18 +98,56 @@
         -->
     </style>
 
-    <style name="AppTheme.NoActionBar" >
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <!--todo, copy from apptheme-->
+    <style name="themeBlackCat">
+        <item name="appPrimaryColor">@color/appDarkPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appDarkPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appDarkPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appDarkPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/appDarkSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appDarkSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appDarkSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appDarkSecondaryText</item>
+
+        <item name="selectorLight">@drawable/selector_dark</item>
+
+        <item name="accountAssetTextColor">@color/assetTextLight</item>
+        <item name="accountIncomeTextColor">@color/incomeTextLight</item>
+        <item name="accountExpenseTextColor">@color/expenseTextLight</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextLight</item>
+        <item name="accountOtherTextColor">@color/otherTextLight</item>
+
+        <item name="accountAssetBgColor">@color/assetBgDark</item>
+        <item name="accountIncomeBgColor">@color/incomeBgDark</item>
+        <item name="accountExpenseBgColor">@color/expenseBgDark</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgDark</item>
+        <item name="accountOtherBgColor">@color/otherBgDark</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/appDarkPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/appDarkPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/appDarkSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/appDarkPrimaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/appDarkSecondaryLight</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/appDarkPrimaryDark</item>
+
+        <item name="colorButtonNormal">@color/appDarkPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/appDarkSecondaryLight</item>
+
+        <!--
+        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+        -->
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="textSize">
+    <style name="textSizeNormal">
         <item name="textSize">@dimen/textSize</item>
         <item name="textSizeSmall">@dimen/textSizeSmall</item>
         <item name="textSizeLarge">@dimen/textSizeLarge</item>

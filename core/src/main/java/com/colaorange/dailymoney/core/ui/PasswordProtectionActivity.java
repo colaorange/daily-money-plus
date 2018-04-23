@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Security;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -15,10 +14,21 @@ import com.colaorange.dailymoney.core.R;
  * @author dennis
  */
 public class PasswordProtectionActivity extends ContextsActivity implements OnClickListener {
+
+    @Override
+    protected boolean isDialogTheme(){
+        return true;
+    }
+    @Override
+    protected boolean isNoActionBarTheme() {
+        return false;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pwd_protection);
+        setContentView(R.layout.password_protection);
         findViewById(R.id.pwd_protection_ok).setOnClickListener(this);
     }
 

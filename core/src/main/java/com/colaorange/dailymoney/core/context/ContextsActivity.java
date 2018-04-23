@@ -2,8 +2,10 @@ package com.colaorange.dailymoney.core.context;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -20,13 +22,73 @@ public class ContextsActivity extends AppCompatActivity {
 
     public static final String PARAM_TITLE = "activity.title";
 
-
     @Override
     protected void onCreate(Bundle bundle) {
+        applyTheme();//do before super on create;
         super.onCreate(bundle);
-        //todo , from config
-        getTheme().applyStyle(R.style.textSizeLarge, true);
+
         Logger.d("activity created:" + this);
+    }
+
+    protected void restartApp(boolean passedProtection){
+        //TODO
+        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        i = (Intent) i.clone();
+//        String bypassId = Strings.randomUUID();
+//        i.putExtra(StartupActivity.PARAM_BYPASS_PROTECTION,true);
+
+        startActivity(i);
+    }
+
+    private void applyTheme() {
+        Resources.Theme theme = getTheme();
+
+        boolean light = isLightTheme();
+
+        if (light) {
+
+            if (isDialogTheme()) {
+                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light_Dialog, true);
+            } else {
+                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light, true);
+            }
+        } else {
+
+            if (isDialogTheme()) {
+                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Dialog, true);
+            } else {
+                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat, true);
+            }
+        }
+
+        if (isNoActionBarTheme()) {
+            theme.applyStyle(R.style.noActionBar, true);
+        }
+
+
+        Preference preference = preference();
+        String userTheme = preference.getTheme();
+        switch(userTheme){
+            case Preference.THEME_LEMON:
+                theme.applyStyle(R.style.themeLemon, true);
+                break;
+            case Preference.THEME_BALCK_CAT:
+            default:
+                theme.applyStyle(R.style.themeBlackCat, true);
+        }
+
+        //TODO, font
+        theme.applyStyle(R.style.textSizeNormal, true);
+
+
+
+        //appbar
+        AppBarLayout appbar = findViewById(R.id.appbar);
+        if(appbar!=null){
+            //todo style, theme
+        }
     }
 
     @Override
@@ -37,6 +99,18 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    protected boolean isLightTheme() {
+        return preference().isLightTheme();
+    }
+
+    protected boolean isNoActionBarTheme() {
+        return true;
+    }
+
+    protected boolean isDialogTheme() {
+        return false;
     }
 
 
@@ -62,11 +136,11 @@ public class ContextsActivity extends AppCompatActivity {
         ctxs.trackEvent(Contexts.getTrackerPath(getClass()), action, "", null);
     }
 
-    protected I18N i18n(){
+    protected I18N i18n() {
         return contexts().getI18n();
     }
 
-    protected CalendarHelper calendarHelper(){
+    protected CalendarHelper calendarHelper() {
         return preference().getCalendarHelper();
     }
 
@@ -106,7 +180,7 @@ public class ContextsActivity extends AppCompatActivity {
         return Contexts.instance();
     }
 
-    protected Preference preference(){
+    protected Preference preference() {
         return contexts().getPreference();
     }
 

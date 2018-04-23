@@ -1,17 +1,12 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Preference;
@@ -31,7 +26,7 @@ public class PasswordPreference extends ValidatableDialogPreference {
     public PasswordPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setDialogLayoutResource(R.layout.pwd_preference);
+        setDialogLayoutResource(R.layout.password_preference_dlg);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 

@@ -42,3 +42,5 @@
     workaround of drawable reference ?attr/
     https://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable
     http://jgilfelt.github.io/android-actionbarstylegenerator/
+    change theme
+    https://stackoverflow.com/questions/8811594/implementing-user-choice-of-theme

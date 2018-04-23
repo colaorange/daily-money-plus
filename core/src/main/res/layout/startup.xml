@@ -8,7 +8,9 @@
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    android:visibility="gone"
     android:background="?appPrimaryColor">
+    <!--visibility gone is for screen flash in real phone-->
 
 
 </LinearLayout>
