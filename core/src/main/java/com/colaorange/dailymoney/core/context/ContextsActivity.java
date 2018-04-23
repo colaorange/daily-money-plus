@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -23,6 +24,8 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        //todo , from config
+        getTheme().applyStyle(R.style.textSizeLarge, true);
         Logger.d("activity created:" + this);
     }
 

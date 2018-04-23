@@ -23,11 +23,11 @@
         <item name="android:layout_weight">1</item>
         <item name="android:focusable">true</item>
         <item name="android:layout_marginLeft">1dp</item>
-        <item name="android:background">?attr/cal2BtnBgColor</item>
+        <item name="android:background">?cal2BtnBgColor</item>
     </style>
 
     <style name="cal2_digit_btn" parent="cal2_btn">
-        <item name="android:background">?attr/cal2BtnDigitBgColor</item>
+        <item name="android:background">?cal2BtnDigitBgColor</item>
     </style>
 
     <style name="cal2_btn_small" parent="cal2_btn">
@@ -43,7 +43,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:padding">6dp</item>
-        <item name="android:textColor">?attr/cal2DisplayTextColor</item>
+        <item name="android:textColor">?cal2DisplayTextColor</item>
     </style>
 
 </resources>

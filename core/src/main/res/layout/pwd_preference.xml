@@ -14,7 +14,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:text="@string/label_prefs_password" />
     <EditText
         android:id="@+id/pwd_preference_pwd"

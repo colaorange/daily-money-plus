@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
@@ -20,6 +21,11 @@ public class StartupActivity extends ContextsActivity {
     private boolean passedProtection = false;
     private boolean firstTime = false;
 
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        this.setContentView(R.layout.startup);
+    }
     @Override
     public void onStart() {
         super.onStart();

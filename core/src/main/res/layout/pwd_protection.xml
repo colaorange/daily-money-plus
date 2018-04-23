@@ -6,7 +6,6 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-
     <EditText
         android:id="@+id/pwd_protection_text"
         android:layout_width="fill_parent"

@@ -9,32 +9,64 @@
     <attr name="appSecondaryDarkColor" format="color"/>
     <attr name="appSecondaryLightColor" format="color"/>
     <attr name="appSecondaryTextColor" format="color"/>
+    <attr name="selectorLight" format="reference"/>
+    <attr name="accountAssetTextColor" format="color"/>
+    <attr name="accountIncomeTextColor" format="color"/>
+    <attr name="accountExpenseTextColor" format="color"/>
+    <attr name="accountLiabilityTextColor" format="color"/>
+    <attr name="accountOtherTextColor" format="color"/>
+    <attr name="accountAssetBgColor" format="color"/>
+    <attr name="accountIncomeBgColor" format="color"/>
+    <attr name="accountExpenseBgColor" format="color"/>
+    <attr name="accountLiabilityBgColor" format="color"/>
+    <attr name="accountOtherBgColor" format="color"/>
 
 
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="appPrimaryColor">@color/appPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
+    <attr name="textSize" format="dimension"/>
+    <attr name="textSizeSmall" format="dimension"/>
+    <attr name="textSizeLarge" format="dimension"/>
 
-        <item name="appSecondaryColor">@color/appSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="appPrimaryColor">@color/appLightPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appLightPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appLightPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appLightPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/appLightSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appLightSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appLightSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appLightSecondaryText</item>
+
+        <item name="selectorLight">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/liabilityTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+
+
+
 
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appPrimary</item>
+        <item name="colorPrimary">@color/appLightPrimary</item>
         <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/appLightPrimaryDark</item>
         <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appSecondary</item>
+        <item name="colorAccent">@color/appLightSecondary</item>
         <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appPrimaryLight</item>
+        <item name="colorControlNormal">@color/appLightPrimary</item>
         <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appSecondaryLight</item>
+        <item name="colorControlActivated">@color/appLightSecondaryLight</item>
         <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appPrimaryLight</item>
+        <item name="colorControlHighlight">@color/appLightPrimaryDark</item>
         <!--
         <item name="colorButtonNormal">@color/button_material_dark</item>
         <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
@@ -54,64 +86,27 @@
         -->
     </style>
 
-
-    <style name="StartupTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:visibility">invisible</item>
-    </style>
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="appPrimaryColor">@color/appPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
-
-        <item name="appSecondaryColor">@color/appSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
-
-        <!--overwrite color pallet -->
-        <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appPrimary</item>
-        <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
-        <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appSecondary</item>
-        <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appPrimaryLight</item>
-        <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appSecondaryLight</item>
-        <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appPrimaryLight</item>
-    </style>
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+    <style name="AppTheme.NoActionBar" >
+        <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
-        <item name="appPrimaryColor">@color/appPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appPrimaryText</item>
-
-        <item name="appSecondaryColor">@color/appSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appSecondaryText</item>
-
-        <!--overwrite color pallet -->
-        <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appPrimary</item>
-        <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appPrimaryDark</item>
-        <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appSecondary</item>
-        <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appPrimaryLight</item>
-        <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appSecondaryLight</item>
-        <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appPrimaryLight</item>
+    </style>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!--todo, copy from apptheme-->
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="textSize">
+        <item name="textSize">@dimen/textSize</item>
+        <item name="textSizeSmall">@dimen/textSizeSmall</item>
+        <item name="textSizeLarge">@dimen/textSizeLarge</item>
+    </style>
+    <style name="textSizeLarge">
+        <item name="textSize">@dimen/largeTextSize</item>
+        <item name="textSizeSmall">@dimen/largeTextSizeSmall</item>
+        <item name="textSizeLarge">@dimen/largeTextSizeLarge</item>
+    </style>
 
 
 

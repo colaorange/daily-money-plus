@@ -42,7 +42,7 @@ import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
  *
  * @author dennis
  */
-public class DetailEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
+public class RecordEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
     public static final String PARAM_MODE_CREATE = "dteditor.modeCreate";
     public static final String PARAM_DETAIL = "dteditor.detail";
@@ -85,7 +85,7 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_editor);
+        setContentView(R.layout.record_editor);
         dateFormat = preference().getDateFormat();
         initParams();
         initMembers();
@@ -557,11 +557,11 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
             TextView tv = (TextView) view;
             if (!ddPaddingBase_set) {
                 ddPaddingBase_set = true;
-                ddPaddingIntentBase = 15 * GUIs.getDPRatio(DetailEditorActivity.this);
+                ddPaddingIntentBase = 15 * GUIs.getDPRatio(RecordEditorActivity.this);
                 ddPaddingLeftBase = tv.getPaddingLeft();
-//                ddDisabled = DetailEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
+//                ddDisabled = RecordEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
 //                ddDisabled.setAlpha(32);
-                ddSelected = DetailEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
+                ddSelected = RecordEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
                 ddSelected.setAlpha(128);
             }
 
@@ -569,17 +569,17 @@ public class DetailEditorActivity extends ContextsActivity implements android.vi
                 int tcolor;
                 tv.setBackgroundDrawable(null);
                 if (AccountType.INCOME == at) {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.income_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.income_fgl);
                 } else if (AccountType.ASSET == at) {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.asset_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.asset_fgl);
                 } else if (AccountType.EXPENSE == at) {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.expense_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.expense_fgl);
                 } else if (AccountType.LIABILITY == at) {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.liability_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.liability_fgl);
                 } else if (AccountType.OTHER == at) {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.other_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.other_fgl);
                 } else {
-                    tcolor = DetailEditorActivity.this.getResources().getColor(R.color.unknow_fgl);
+                    tcolor = RecordEditorActivity.this.getResources().getColor(R.color.unknow_fgl);
                 }
                 tv.setTextColor(tcolor);
                 StringBuilder display = new StringBuilder();

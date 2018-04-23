@@ -145,9 +145,9 @@ public class DetailListHelper implements OnItemClickListener {
     public void doNewDetail(Date date) {
         Detail d = new Detail("", "", date == null ? new Date() : date, 0D, "");
         Intent intent = null;
-        intent = new Intent(activity, DetailEditorActivity.class);
-        intent.putExtra(DetailEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(DetailEditorActivity.PARAM_DETAIL, d);
+        intent = new Intent(activity, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
@@ -155,9 +155,9 @@ public class DetailListHelper implements OnItemClickListener {
     public void doEditDetail(int pos) {
         Detail d = listViewData.get(pos);
         Intent intent = null;
-        intent = new Intent(activity, DetailEditorActivity.class);
-        intent.putExtra(DetailEditorActivity.PARAM_MODE_CREATE, false);
-        intent.putExtra(DetailEditorActivity.PARAM_DETAIL, d);
+        intent = new Intent(activity, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, false);
+        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
@@ -179,9 +179,9 @@ public class DetailListHelper implements OnItemClickListener {
     public void doCopyDetail(int pos) {
         Detail d = listViewData.get(pos);
         Intent intent = null;
-        intent = new Intent(activity, DetailEditorActivity.class);
-        intent.putExtra(DetailEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(DetailEditorActivity.PARAM_DETAIL, d);
+        intent = new Intent(activity, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 

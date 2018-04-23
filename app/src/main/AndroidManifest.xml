@@ -23,7 +23,7 @@
         <activity
             android:name=".core.ui.StartupActivity"
             android:label="@string/app_name"
-            android:theme="@style/StartupTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +35,7 @@
             />
         <activity
             android:name=".core.ui.PasswordProtectionActivity"
-            android:label="@string/title_pdprotection"
+            android:label="@string/label_pwd_protection"
             android:theme="@style/AppTheme.Dialog"
             />
         <activity
@@ -48,7 +48,7 @@
         <activity
             android:name=".core.ui.legacy.DetailListActivity"
             android:label="@string/title_detlist" />
-        <activity android:name=".core.ui.legacy.DetailEditorActivity">
+        <activity android:name=".core.ui.legacy.RecordEditorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

@@ -32,9 +32,9 @@ public class MainDesktop extends AbstractDesktop {
             public void run() {
                 Detail d = new Detail("", "", new Date(), 0D, "");
                 Intent intent = null;
-                intent = new Intent(activity,DetailEditorActivity.class);
-                intent.putExtra(DetailEditorActivity.PARAM_MODE_CREATE,true);
-                intent.putExtra(DetailEditorActivity.PARAM_DETAIL,d);
+                intent = new Intent(activity,RecordEditorActivity.class);
+                intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE,true);
+                intent.putExtra(RecordEditorActivity.PARAM_DETAIL,d);
                 activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
             }
         }, i18n.string(R.string.dtitem_adddetail), R.drawable.dtitem_adddetail,999);

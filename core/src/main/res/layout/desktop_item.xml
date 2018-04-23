@@ -19,6 +19,6 @@
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="2"
-        android:textColor="?attr/appPrimaryTextColor"
-        android:textSize="14sp" />
+        android:textColor="?appPrimaryTextColor"
+        android:textSize="?textSize" />
 </LinearLayout>

@@ -39,3 +39,6 @@
     https://stackoverflow.com/questions/6352318/let-the-user-choose-a-theme-android
     https://developer.android.com/reference/android/R.styleable.html#Theme
     https://medium.com/google-developers/theming-with-appcompat-1a292b754b35
+    workaround of drawable reference ?attr/
+    https://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable
+    http://jgilfelt.github.io/android-actionbarstylegenerator/

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.legacy.DesktopActivity"
     android:id="@+id/dt_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="?attr/appPrimaryColor"
+    android:background="?appPrimaryLightColor"
     android:orientation="vertical">
 
     <TabHost
@@ -21,7 +23,8 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -35,7 +38,7 @@
                     android:columnWidth="80dp"
                     android:gravity="center"
                     android:horizontalSpacing="5dp"
-                    android:listSelector="@drawable/selector_dtitem"
+                    android:listSelector="?selectorLight"
                     android:numColumns="auto_fit"
                     android:padding="5dp"
                     android:stretchMode="columnWidth"
@@ -47,7 +50,7 @@
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/appPrimaryLightColor"
+        android:background="?appPrimaryColor"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         app:flexWrap="wrap"
@@ -61,8 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/expense_fgl"
-            android:textSize="14sp"
+            android:textColor="?accountExpenseTextColor"
+            android:textSize="?textSize"
             android:paddingHorizontal="20dp"
             android:paddingTop="5dp"
             />
@@ -73,8 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/expense_fgl"
-            android:textSize="14sp"
+            android:textColor="?accountExpenseTextColor"
+            android:textSize="?textSize"
             android:paddingHorizontal="20dp"
             android:paddingTop="5dp"
             />
@@ -84,8 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/asset_fgl"
-            android:textSize="14sp"
+            android:textColor="?accountAssetTextColor"
+            android:textSize="?textSize"
             android:paddingHorizontal="20dp"
             android:paddingTop="5dp"
             />

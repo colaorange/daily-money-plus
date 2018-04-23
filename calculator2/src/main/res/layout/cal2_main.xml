@@ -19,7 +19,7 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="?attr/cal2BackgroundColor">
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="?cal2BackgroundColor">
 
 	<com.colaorange.calculator2.CalculatorDisplay
 		android:id="@+id/cal2_display" android:layout_width="fill_parent" android:layout_height="0dp" android:layout_weight="1">
