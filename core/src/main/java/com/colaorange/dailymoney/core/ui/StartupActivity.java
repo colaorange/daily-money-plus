@@ -21,7 +21,7 @@ public class StartupActivity extends ContextsActivity {
     private boolean firstTime = false;
 
     @Override
-    protected boolean isNoActionBarTheme(){
+    public boolean isNoActionBarTheme(){
         return true;
     }
 

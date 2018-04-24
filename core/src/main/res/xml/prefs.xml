@@ -144,7 +144,7 @@
                 android:key="@string/pref_csv_encoding"
                 android:summary="@string/label_prefs_csv_encoding_sum"
                 android:title="@string/label_prefs_csv_encoding" />
-            <CheckBoxPreference
+            <SwitchPreference
                 android:defaultValue="@string/default_testsdekstop"
                 android:key="@string/pref_testsdekstop"
                 android:summary="@string/label_prefs_testsdekstop_sum"

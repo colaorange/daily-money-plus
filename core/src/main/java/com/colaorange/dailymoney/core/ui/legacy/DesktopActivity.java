@@ -70,9 +70,6 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desktop);
 
-        setSupportActionBar((Toolbar)findViewById(R.id.appToolbar));
-
-
         initParams();
         initMembers();
         initDesktopItems();

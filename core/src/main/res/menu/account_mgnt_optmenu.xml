@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/account_mgnt_menu_new"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="?ic_add"
         android:title="@string/cact_new"></item>
 </menu>

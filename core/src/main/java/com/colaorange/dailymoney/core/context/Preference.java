@@ -30,7 +30,7 @@ public class Preference {
     private static final String THEME_DARK_PREFIX = "dark-";
     private static final String THEME_LIGHT_PREFIX = "light-";
 
-    public static final String THEME_BALCK_CAT = THEME_DARK_PREFIX + "black-cat";
+    public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
     public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
@@ -86,7 +86,7 @@ public class Preference {
 
     boolean autoBackup = true;
 
-    //    String theme = THEME_BALCK_CAT;
+//    String theme = THEME_COLA;
     String theme = THEME_LEMON;
 
     Set<Integer> autoBackupAtHours;

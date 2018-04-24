@@ -174,11 +174,11 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle icicle) {
-        // as work-around for ClassCastException in TextView on restart
-        // avoid calling superclass, to keep icicle empty
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle icicle) {
+//        // as work-around for ClassCastException in TextView on restart
+//        // avoid calling superclass, to keep icicle empty
+//    }
 
     @Override
     public void onPause() {

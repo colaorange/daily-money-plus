@@ -3,12 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.legacy.RecordEditorActivity"
+    android:background="?appPrimaryLightColor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="10dp"
     android:orientation="vertical">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/appToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat" />
+
+    </android.support.design.widget.AppBarLayout>
+
     <ScrollView
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -68,22 +84,22 @@
                 <ImageButton
                     android:id="@+id/detail_editor_prev"
                     style="@style/editorToolIconBtn"
-                    android:src="@drawable/ic_arrow_back_white_24dp" />
+                    android:src="?ic_arrow_back" />
 
                 <ImageButton
                     android:id="@+id/detail_editor_today"
                     style="@style/editorToolIconBtn"
-                    android:src="@drawable/ic_today_white_24dp" />
+                    android:src="?ic_today" />
 
                 <ImageButton
                     android:id="@+id/detail_editor_next"
                     style="@style/editorToolIconBtn"
-                    android:src="@drawable/ic_arrow_forward_white_24dp" />
+                    android:src="?ic_arrow_forward" />
 
                 <ImageButton
                     android:id="@+id/detail_editor_datepicker"
                     style="@style/editorToolIconBtn"
-                    android:src="@drawable/ic_date_range_white_24dp" />
+                    android:src="?ic_date_range" />
             </LinearLayout>
 
             <TextView
@@ -114,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/editorToolIconBtn"
-                    android:src="@drawable/ic_grid_on_white_24dp" />
+                    android:src="?ic_grid_on" />
             </LinearLayout>
 
             <TextView
@@ -141,19 +157,19 @@
         <Button
             android:id="@+id/detail_editor_ok"
             style="@style/editorActionBtn"
-            android:drawableLeft="@drawable/ic_add_white_24dp"
+            android:drawableLeft="?ic_add"
             android:text="@string/cact_ok" />
 
         <Button
             android:id="@+id/detail_editor_cancel"
             style="@style/editorActionBtn"
-            android:drawableLeft="@drawable/ic_clear_white_24dp"
+            android:drawableLeft="?ic_clear"
             android:text="@string/cact_cancel" />
 
         <Button
             android:id="@+id/detail_editor_close"
             style="@style/editorActionBtn"
-            android:drawableLeft="@drawable/ic_clear_white_24dp"
+            android:drawableLeft="?ic_clear"
             android:text="@string/cact_close"
             android:visibility="gone" />
     </LinearLayout>

@@ -1,84 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="appPrimaryColor" format="color"/>
-    <attr name="appPrimaryDarkColor" format="color"/>
-    <attr name="appPrimaryLightColor" format="color"/>
-    <attr name="appPrimaryTextColor" format="color"/>
-    <attr name="appSecondaryColor" format="color"/>
-    <attr name="appSecondaryDarkColor" format="color"/>
-    <attr name="appSecondaryLightColor" format="color"/>
-    <attr name="appSecondaryTextColor" format="color"/>
-    <attr name="selectorLight" format="reference"/>
-    <attr name="accountAssetTextColor" format="color"/>
-    <attr name="accountIncomeTextColor" format="color"/>
-    <attr name="accountExpenseTextColor" format="color"/>
-    <attr name="accountLiabilityTextColor" format="color"/>
-    <attr name="accountOtherTextColor" format="color"/>
-    <attr name="accountAssetBgColor" format="color"/>
-    <attr name="accountIncomeBgColor" format="color"/>
-    <attr name="accountExpenseBgColor" format="color"/>
-    <attr name="accountLiabilityBgColor" format="color"/>
-    <attr name="accountOtherBgColor" format="color"/>
+    <attr name="appPrimaryColor" format="color" />
+    <attr name="appPrimaryDarkColor" format="color" />
+    <attr name="appPrimaryLightColor" format="color" />
+    <attr name="appPrimaryTextColor" format="color" />
+    <attr name="appSecondaryColor" format="color" />
+    <attr name="appSecondaryDarkColor" format="color" />
+    <attr name="appSecondaryLightColor" format="color" />
+    <attr name="appSecondaryTextColor" format="color" />
+    <attr name="defaultSelector" format="reference" />
 
+    <attr name="accountAssetTextColor" format="color" />
+    <attr name="accountIncomeTextColor" format="color" />
+    <attr name="accountExpenseTextColor" format="color" />
+    <attr name="accountLiabilityTextColor" format="color" />
+    <attr name="accountOtherTextColor" format="color" />
+    <attr name="accountUnknownTextColor" format="color" />
+    <attr name="accountAssetBgColor" format="color" />
+    <attr name="accountIncomeBgColor" format="color" />
+    <attr name="accountExpenseBgColor" format="color" />
+    <attr name="accountLiabilityBgColor" format="color" />
+    <attr name="accountOtherBgColor" format="color" />
+    <attr name="accountUnknownBgColor" format="color" />
 
-    <attr name="textSize" format="dimension"/>
-    <attr name="textSizeSmall" format="dimension"/>
-    <attr name="textSizeLarge" format="dimension"/>
+    <attr name="textSize" format="dimension" />
+    <attr name="textSizeSmall" format="dimension" />
+    <attr name="textSizeLarge" format="dimension" />
+
+    <attr name="ic_add" format="reference" />
+    <attr name="ic_apps" format="reference" />
+    <attr name="ic_arrow_back" format="reference" />
+    <attr name="ic_arrow_forward" format="reference" />
+    <attr name="ic_calendar" format="reference" />
+    <attr name="ic_clear" format="reference" />
+    <attr name="ic_content_copy" format="reference" />
+    <attr name="ic_date_range" format="reference" />
+    <attr name="ic_delete_forever" format="reference" />
+    <attr name="ic_edit" format="reference" />
+    <attr name="ic_grid_on" format="reference" />
+    <attr name="ic_import_export" format="reference" />
+    <attr name="ic_save" format="reference" />
+    <attr name="ic_settings_backup_restore" format="reference" />
+    <attr name="ic_share" format="reference" />
+    <attr name="ic_today" format="reference" />
+
 
     <style name="AppTheme">
         <!--we implement dynamically in code-->
     </style>
 
-    <style name="noActionBar" >
+    <style name="noActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
 
     <style name="themeLemon">
-        <item name="appPrimaryColor">@color/appLightPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appLightPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appLightPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appLightPrimaryText</item>
+        <item name="appPrimaryColor">@color/appLemonPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appLemonPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appLemonPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appLemonPrimaryText</item>
 
-        <item name="appSecondaryColor">@color/appLightSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appLightSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appLightSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appLightSecondaryText</item>
+        <item name="appSecondaryColor">@color/appLemonSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appLemonSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appLemonSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appLemonSecondaryText</item>
 
-        <item name="selectorLight">@drawable/selector_light</item>
+        <item name="defaultSelector">@drawable/selector_light</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
         <item name="accountExpenseTextColor">@color/expenseTextDark</item>
         <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
         <item name="accountOtherTextColor">@color/liabilityTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
 
         <item name="accountAssetBgColor">@color/assetBgLight</item>
         <item name="accountIncomeBgColor">@color/incomeBgLight</item>
         <item name="accountExpenseBgColor">@color/expenseBgLight</item>
         <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
         <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
 
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appLightPrimary</item>
+        <item name="colorPrimary">@color/appLemonPrimary</item>
         <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appLightPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/appLemonPrimaryDark</item>
         <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appLightSecondary</item>
+        <item name="colorAccent">@color/appLemonSecondary</item>
         <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appLightPrimary</item>
+        <item name="colorControlNormal">@color/appLemonSecondaryLight</item>
         <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appLightSecondaryLight</item>
+        <item name="colorControlActivated">@color/appLemonSecondary</item>
         <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appLightPrimaryDark</item>
+        <item name="colorControlHighlight">@color/appLemonSecondaryDark</item>
 
-        <item name="colorButtonNormal">@color/appLightPrimary</item>
+        <item name="colorButtonNormal">@color/appLemonPrimary</item>
 
-        <item name="colorSwitchThumbNormal">@color/appLightSecondaryLight</item>
+        <item name="colorSwitchThumbNormal">@color/appLemonSecondary</item>
 
         <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
@@ -98,49 +120,52 @@
         -->
     </style>
 
-    <style name="themeBlackCat">
-        <item name="appPrimaryColor">@color/appDarkPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appDarkPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appDarkPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appDarkPrimaryText</item>
+    <style name="themeCola">
+        <item name="appPrimaryColor">@color/appColaPrimary</item>
+        <item name="appPrimaryDarkColor">@color/appColaPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/appColaPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/appColaPrimaryText</item>
 
-        <item name="appSecondaryColor">@color/appDarkSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appDarkSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appDarkSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appDarkSecondaryText</item>
+        <item name="appSecondaryColor">@color/appColaSecondary</item>
+        <item name="appSecondaryDarkColor">@color/appColaSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/appColaSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/appColaSecondaryText</item>
 
-        <item name="selectorLight">@drawable/selector_dark</item>
+        <item name="defaultSelector">@drawable/selector_dark</item>
 
         <item name="accountAssetTextColor">@color/assetTextLight</item>
         <item name="accountIncomeTextColor">@color/incomeTextLight</item>
         <item name="accountExpenseTextColor">@color/expenseTextLight</item>
         <item name="accountLiabilityTextColor">@color/liabilityTextLight</item>
         <item name="accountOtherTextColor">@color/otherTextLight</item>
+        <item name="accountUnknownTextColor">@color/unknownTextLight</item>
 
         <item name="accountAssetBgColor">@color/assetBgDark</item>
         <item name="accountIncomeBgColor">@color/incomeBgDark</item>
         <item name="accountExpenseBgColor">@color/expenseBgDark</item>
         <item name="accountLiabilityBgColor">@color/liabilityBgDark</item>
         <item name="accountOtherBgColor">@color/otherBgDark</item>
+        <item name="accountUnknownBgColor">@color/unknownBgDark</item>
 
 
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appDarkPrimary</item>
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/appColaPrimary</item>
         <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appDarkPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/appColaPrimaryDark</item>
         <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appDarkSecondary</item>
+        <item name="colorAccent">@color/appColaSecondary</item>
         <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appDarkPrimaryLight</item>
+        <item name="colorControlNormal">@color/appColaSecondaryLight</item>
         <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appDarkSecondaryLight</item>
+        <item name="colorControlActivated">@color/appColaSecondary</item>
         <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appDarkPrimaryDark</item>
+        <item name="colorControlHighlight">@color/appColaSecondaryDark</item>
 
-        <item name="colorButtonNormal">@color/appDarkPrimary</item>
+        <item name="colorButtonNormal">@color/appColaPrimary</item>
 
-        <item name="colorSwitchThumbNormal">@color/appDarkSecondaryLight</item>
+        <item name="colorSwitchThumbNormal">@color/appColaSecondary</item>
 
         <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
@@ -152,12 +177,52 @@
         <item name="textSizeSmall">@dimen/textSizeSmall</item>
         <item name="textSizeLarge">@dimen/textSizeLarge</item>
     </style>
+
     <style name="textSizeLarge">
         <item name="textSize">@dimen/largeTextSize</item>
         <item name="textSizeSmall">@dimen/largeTextSizeSmall</item>
         <item name="textSizeLarge">@dimen/largeTextSizeLarge</item>
     </style>
 
+    <style name="lightIconSet">
+        <item name="ic_add">@drawable/ic_add_light_24dp</item>
+        <item name="ic_apps">@drawable/ic_apps_light_24dp</item>
+        <item name="ic_arrow_back">@drawable/ic_arrow_back_light_24dp</item>
+        <item name="ic_arrow_forward">@drawable/ic_arrow_forward_light_24dp</item>
+        <item name="ic_calendar">@drawable/ic_calendar_light_24dp</item>
+        <item name="ic_clear">@drawable/ic_clear_light_24dp</item>
+        <item name="ic_content_copy">@drawable/ic_content_copy_light_24dp</item>
+        <item name="ic_date_range">@drawable/ic_date_range_light_24dp</item>
+        <item name="ic_delete_forever">@drawable/ic_delete_forever_light_24dp</item>
+        <item name="ic_edit">@drawable/ic_edit_light_24dp</item>
+        <item name="ic_grid_on">@drawable/ic_grid_on_light_24dp</item>
+        <item name="ic_import_export">@drawable/ic_import_export_light_24dp</item>
+        <item name="ic_save">@drawable/ic_save_light_24dp</item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp
+        </item>
+        <item name="ic_share">@drawable/ic_share_light_24dp</item>
+        <item name="ic_today">@drawable/ic_today_light_24dp</item>
+    </style>
+
+    <style name="darkIconSet">
+        <item name="ic_add">@drawable/ic_add_dark_24dp</item>
+        <item name="ic_apps">@drawable/ic_apps_dark_24dp</item>
+        <item name="ic_arrow_back">@drawable/ic_arrow_back_dark_24dp</item>
+        <item name="ic_arrow_forward">@drawable/ic_arrow_forward_dark_24dp</item>
+        <item name="ic_calendar">@drawable/ic_calendar_dark_24dp</item>
+        <item name="ic_clear">@drawable/ic_clear_dark_24dp</item>
+        <item name="ic_content_copy">@drawable/ic_content_copy_dark_24dp</item>
+        <item name="ic_date_range">@drawable/ic_date_range_dark_24dp</item>
+        <item name="ic_delete_forever">@drawable/ic_delete_forever_dark_24dp</item>
+        <item name="ic_edit">@drawable/ic_edit_dark_24dp</item>
+        <item name="ic_grid_on">@drawable/ic_grid_on_dark_24dp</item>
+        <item name="ic_import_export">@drawable/ic_import_export_dark_24dp</item>
+        <item name="ic_save">@drawable/ic_save_dark_24dp</item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp
+        </item>
+        <item name="ic_share">@drawable/ic_share_dark_24dp</item>
+        <item name="ic_today">@drawable/ic_today_dark_24dp</item>
+    </style>
 
 
 </resources>

@@ -71,7 +71,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_mgnt);
+        setContentView(R.layout.record_list);
         initParams();
         initMembers();
         refreshUI();
@@ -97,15 +97,15 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
         yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
         yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
 
-        infoView = findViewById(R.id.detail_mgnt_infobar);
-        toolbarView = findViewById(R.id.detail_mgnt_toolbar);
-        sumIncomeView = findViewById(R.id.detail_mgnt_sum_income);
-        sumExpenseView = findViewById(R.id.detail_mgnt_sum_expense);
-        sumAssetView = findViewById(R.id.detail_mgnt_sum_asset);
-        sumLiabilityView = findViewById(R.id.detail_mgnt_sum_liability);
-        sumOtherView = findViewById(R.id.detail_mgnt_sum_other);
-        sumUnknowView = findViewById(R.id.detail_mgnt_sum_unknow);
-        modeBtn = findViewById(R.id.detail_mgnt_mode);
+        infoView = findViewById(R.id.record_list_infobar);
+        toolbarView = findViewById(R.id.record_list_toolbar);
+        sumIncomeView = findViewById(R.id.sum_income);
+        sumExpenseView = findViewById(R.id.sum_expense);
+        sumAssetView = findViewById(R.id.sum_asset);
+        sumLiabilityView = findViewById(R.id.sum_liability);
+        sumOtherView = findViewById(R.id.sum_other);
+        sumUnknowView = findViewById(R.id.sum_unknow);
+        modeBtn = findViewById(R.id.toolbar_btn_mode);
 
         modeBtn.setOnClickListener(this);
 
@@ -117,13 +117,13 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
-        ListView listView = findViewById(R.id.detail_mgnt_list);
+        ListView listView = findViewById(R.id.recorder_list_list);
         detailListHelper.setup(listView);
 
 
-        findViewById(R.id.detail_mgnt_prev).setOnClickListener(this);
-        findViewById(R.id.detail_mgnt_next).setOnClickListener(this);
-        findViewById(R.id.detail_mgnt_today).setOnClickListener(this);
+        findViewById(R.id.toolbar_btn_prev).setOnClickListener(this);
+        findViewById(R.id.toolbar_btn_next).setOnClickListener(this);
+        findViewById(R.id.toolbar_btn_today).setOnClickListener(this);
 
         registerForContextMenu(listView);
     }
@@ -359,7 +359,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.detail_mgnt_list) {
+        if (v.getId() == R.id.recorder_list_list) {
             getMenuInflater().inflate(R.menu.detail_mgnt_ctxmenu, menu);
         }
 
@@ -383,13 +383,13 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.detail_mgnt_prev) {
+        if (v.getId() == R.id.toolbar_btn_prev) {
             onPrev();
-        } else if (v.getId() == R.id.detail_mgnt_next) {
+        } else if (v.getId() == R.id.toolbar_btn_next) {
             onNext();
-        } else if (v.getId() == R.id.detail_mgnt_today) {
+        } else if (v.getId() == R.id.toolbar_btn_today) {
             onToday();
-        } else if (v.getId() == R.id.detail_mgnt_mode) {
+        } else if (v.getId() == R.id.toolbar_btn_mode) {
             onMode();
         }
     }

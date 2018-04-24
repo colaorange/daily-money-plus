@@ -16,11 +16,11 @@ import com.colaorange.dailymoney.core.R;
 public class PasswordProtectionActivity extends ContextsActivity implements OnClickListener {
 
     @Override
-    protected boolean isDialogTheme(){
+    public boolean isDialogTheme(){
         return true;
     }
     @Override
-    protected boolean isNoActionBarTheme() {
+    public boolean isNoActionBarTheme() {
         return false;
     }
 

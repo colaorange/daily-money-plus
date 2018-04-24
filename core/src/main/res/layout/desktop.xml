@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.legacy.DesktopActivity"
+    android:background="?appPrimaryLightColor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="?appPrimaryLightColor"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -52,7 +52,7 @@
                     android:columnWidth="80dp"
                     android:gravity="center"
                     android:horizontalSpacing="5dp"
-                    android:listSelector="?selectorLight"
+                    android:listSelector="?defaultSelector"
                     android:numColumns="auto_fit"
                     android:padding="5dp"
                     android:stretchMode="columnWidth"

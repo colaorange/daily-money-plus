@@ -26,7 +26,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     String uri;
 
     @Override
-    protected boolean isNoActionBarTheme() {
+    public boolean isNoActionBarTheme() {
         return false;
     }
 

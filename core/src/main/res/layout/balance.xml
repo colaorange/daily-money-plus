@@ -15,22 +15,22 @@
         <ImageButton
             android:id="@+id/balance_prev"
             style="@style/editorActionBtn"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
+            android:src="?ic_arrow_back" />
 
         <ImageButton
             android:id="@+id/balance_today"
             style="@style/editorActionBtn"
-            android:src="@drawable/ic_today_white_24dp" />
+            android:src="?ic_today" />
 
         <ImageButton
             android:id="@+id/balance_next"
             style="@style/editorActionBtn"
-            android:src="@drawable/ic_arrow_forward_white_24dp" />
+            android:src="?ic_arrow_forward" />
 
         <ImageButton
             android:id="@+id/balance_mode"
             style="@style/editorActionBtn"
-            android:src="@drawable/ic_date_range_white_24dp" />
+            android:src="?ic_date_range" />
 
     </LinearLayout>
 

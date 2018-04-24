@@ -149,10 +149,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         okBtn = findViewById(R.id.detail_editor_ok);
         if (modeCreate) {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
             okBtn.setText(R.string.cact_create);
         } else {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp, 0, 0, 0);
+            okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
             okBtn.setText(R.string.cact_update);
             moneyEditor.requestFocus();
         }

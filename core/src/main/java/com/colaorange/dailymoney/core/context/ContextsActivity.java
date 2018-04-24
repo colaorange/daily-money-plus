@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
@@ -30,9 +33,21 @@ public class ContextsActivity extends AppCompatActivity {
         Logger.d("activity created:" + this);
     }
 
-    protected void restartApp(boolean passedProtection){
+    /*
+     * for quick provide action bar in all sub class
+     */
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        super.setContentView(layoutResID);
+        Toolbar toolbar = findViewById(R.id.appToolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+    }
+
+    protected void restartApp(boolean passedProtection) {
         //TODO
-        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         i = (Intent) i.clone();
@@ -48,19 +63,19 @@ public class ContextsActivity extends AppCompatActivity {
         boolean light = isLightTheme();
 
         if (light) {
-
             if (isDialogTheme()) {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light_Dialog, true);
             } else {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light, true);
             }
+            theme.applyStyle(R.style.darkIconSet, true);
         } else {
-
             if (isDialogTheme()) {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Dialog, true);
             } else {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat, true);
             }
+            theme.applyStyle(R.style.lightIconSet, true);
         }
 
         if (isNoActionBarTheme()) {
@@ -70,23 +85,22 @@ public class ContextsActivity extends AppCompatActivity {
 
         Preference preference = preference();
         String userTheme = preference.getTheme();
-        switch(userTheme){
+        switch (userTheme) {
             case Preference.THEME_LEMON:
                 theme.applyStyle(R.style.themeLemon, true);
                 break;
-            case Preference.THEME_BALCK_CAT:
+            case Preference.THEME_COLA:
             default:
-                theme.applyStyle(R.style.themeBlackCat, true);
+                theme.applyStyle(R.style.themeCola, true);
         }
 
         //TODO, font
         theme.applyStyle(R.style.textSizeNormal, true);
 
 
-
         //appbar
         AppBarLayout appbar = findViewById(R.id.appbar);
-        if(appbar!=null){
+        if (appbar != null) {
             //todo style, theme
         }
     }
@@ -101,16 +115,29 @@ public class ContextsActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    protected boolean isLightTheme() {
+    public boolean isLightTheme() {
         return preference().isLightTheme();
     }
 
-    protected boolean isNoActionBarTheme() {
+    public boolean isNoActionBarTheme() {
         return true;
     }
 
-    protected boolean isDialogTheme() {
+    public boolean isDialogTheme() {
         return false;
+    }
+
+    public int resolveThemeAttrResId(int resId) {
+        Resources.Theme theme = getTheme();
+        TypedValue attr = new TypedValue();
+        theme.resolveAttribute(resId, attr, true);
+        return attr.resourceId;
+    }
+    public int resolveThemeAttrResData(int resId) {
+        Resources.Theme theme = getTheme();
+        TypedValue attr = new TypedValue();
+        theme.resolveAttribute(resId, attr, true);
+        return attr.data;
     }
 
 

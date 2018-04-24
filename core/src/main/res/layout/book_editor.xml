@@ -79,13 +79,13 @@
         <Button
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
-            android:drawableLeft="@drawable/ic_add_white_24dp"
+            android:drawableLeft="?ic_add"
             android:text="@string/cact_ok" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
-            android:drawableLeft="@drawable/ic_clear_white_24dp"
+            android:drawableLeft="?ic_clear"
             android:text="@string/cact_cancel" />
     </LinearLayout>
 </LinearLayout>
