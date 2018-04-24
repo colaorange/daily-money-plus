@@ -74,7 +74,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     /**
      * need to mapping twice to do different mapping in spitem and spdropdown item
      */
-    private static String[] spfrom = new String[]{Constants.DISPLAY, Constants.DISPLAY};
+    private static String[] spfrom = new String[]{Constants.LABEL, Constants.LABEL};
     private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
 
     EditText nameEditor;
@@ -207,7 +207,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             if (!(view instanceof TextView)) {
                 return false;
             }
-            if (Constants.DISPLAY.equals(name)) {
+            if (Constants.LABEL.equals(name)) {
                 TextView tv = (TextView) view;
                 tv.setTextColor(getResources().getColor(R.color.symbolpos_fgl));
                 tv.setText(item.getToString());

@@ -71,8 +71,6 @@
 
     <!-- FF - no transparent -->
 
-	<color name="simple_spinner_item">#FF000000</color>
-	<color name="simple_spinner_dropdown">#FF000000</color>
 	<color name="list_selected">#E0DDDDDD</color>
 	
 

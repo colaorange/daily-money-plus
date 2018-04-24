@@ -3,19 +3,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal">
-
     <TextView
-        android:id="@+id/simple_spinner_item_display"
+        android:id="@+id/simple_spinner_item_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:paddingBottom="10sp"
-        android:paddingTop="10sp"
-        android:textColor="@color/simple_spinner_dropdown" />
-
-    <TextView
-        android:id="@+id/simple_spinner_dropdown_item_display"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:ellipsize="middle"
+        android:tag="item"
+        android:paddingVertical="10dp"/>
 </LinearLayout>

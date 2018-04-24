@@ -342,7 +342,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.detail_mgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.record_list_optmenu, menu);
         return true;
     }
 
@@ -360,7 +360,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.recorder_list_list) {
-            getMenuInflater().inflate(R.menu.detail_mgnt_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.record_list_ctxmenu, menu);
         }
 
     }
