@@ -1,13 +1,5 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -20,21 +12,30 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Formats;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.calculator2.Calculator;
+import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Colors;
+import com.colaorange.commons.util.Formats;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Detail;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Edit or create a record
@@ -43,14 +44,14 @@ import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
  */
 public class RecordEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "dteditor.modeCreate";
-    public static final String PARAM_DETAIL = "dteditor.record";
+    public static final String PARAM_MODE_CREATE = "recordEditor.modeCreate";
+    public static final String PARAM_RECORD = "recordEditor.record";
 
 
     private boolean modeCreate;
     private int counterCreate;
     private Detail record;
-    private Detail workingDetail;
+    private Detail workingRecord;
 
     private DateFormat dateFormat;
 
@@ -69,19 +70,19 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private static String[] accountMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
     private static int[] accountMappingResIds = new int[]{R.id.simple_spinner_item_label};
 
-    Spinner fromAccount;
-    Spinner toAccount;
+    Spinner spFromAccount;
+    Spinner spToAccount;
 
-    EditText recordDate;
-    EditText recordNote;
-    EditText recordMoney;
+    EditText editRecordDate;
+    EditText editRecordNote;
+    EditText editRecordMoney;
 
     Button btnOk;
     Button btnCancel;
     Button btnClose;
 
-    private float ddPaddingIntentBase;
-    private Drawable ddSelected;
+    private float ddItemPaddingBase;
+    private Drawable ddSelectedBg;
 
 
     @Override
@@ -108,14 +109,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private void initParams() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
-        record = (Detail) bundle.get(PARAM_DETAIL);
+        record = (Detail) bundle.get(PARAM_RECORD);
 
         //issue 51, for direct call from outside action, 
         if (record == null) {
             record = new Detail("", "", new Date(), 0D, "");
         }
 
-        workingDetail = clone(record);
+        workingRecord = clone(record);
 
         if (modeCreate) {
             setTitle(R.string.title_deteditor_create);
@@ -127,19 +128,19 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private void initMembers() {
 
-        boolean archived = workingDetail.isArchived();
+        boolean archived = workingRecord.isArchived();
 
 
-        recordDate = findViewById(R.id.record_date);
-        recordDate.setText(dateFormat.format(workingDetail.getDate()));
-        recordDate.setEnabled(!archived);
+        editRecordDate = findViewById(R.id.record_date);
+        editRecordDate.setText(dateFormat.format(workingRecord.getDate()));
+        editRecordDate.setEnabled(!archived);
 
-        recordMoney = findViewById(R.id.record_money);
-        recordMoney.setText(workingDetail.getMoney() <= 0 ? "" : Formats.double2String(workingDetail.getMoney()));
-        recordMoney.setEnabled(!archived);
+        editRecordMoney = findViewById(R.id.record_money);
+        editRecordMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
+        editRecordMoney.setEnabled(!archived);
 
-        recordNote = findViewById(R.id.record_note);
-        recordNote.setText(workingDetail.getNote());
+        editRecordNote = findViewById(R.id.record_note);
+        editRecordNote.setText(workingRecord.getNote());
 
         if (!archived) {
             findViewById(R.id.btn_prev).setOnClickListener(this);
@@ -156,7 +157,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } else {
             btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
             btnOk.setText(R.string.cact_update);
-            recordMoney.requestFocus();
+            editRecordMoney.requestFocus();
         }
         btnOk.setOnClickListener(this);
 
@@ -166,40 +167,40 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         btnCancel.setOnClickListener(this);
         btnClose.setOnClickListener(this);
 
-        fromAccount = findViewById(R.id.record_from_account);
+        spFromAccount = findViewById(R.id.record_from_account);
 
         fromAccountList = new ArrayList<IndentNode>();
         fromAccountMapList = new ArrayList<Map<String, Object>>();
-        fromAccountAdapter = new SimpleAdapter(this, fromAccountMapList, R.layout.simple_spinner_dropdown_item, accountMappingKeys, accountMappingResIds);
-        fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        fromAccountAdapter = new SimpleAdapter(this, fromAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds);
+        fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         fromAccountAdapter.setViewBinder(new AccountViewBinder() {
             public Account getSelectedAccount() {
-                int pos = fromAccount.getSelectedItemPosition();
+                int pos = spFromAccount.getSelectedItemPosition();
                 if (pos >= 0) {
                     return fromAccountList.get(pos).getAccount();
                 }
                 return null;
             }
         });
-        fromAccount.setAdapter(fromAccountAdapter);
+        spFromAccount.setAdapter(fromAccountAdapter);
 
-        toAccount = findViewById(R.id.record_to_account);
+        spToAccount = findViewById(R.id.record_to_account);
         toAccountList = new ArrayList<IndentNode>();
         toAccountMapList = new ArrayList<Map<String, Object>>();
-        toAccountAdapter = new SimpleAdapter(this, toAccountMapList, R.layout.simple_spinner_dropdown_item, accountMappingKeys, accountMappingResIds);
-        toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        toAccountAdapter = new SimpleAdapter(this, toAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds);
+        toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         toAccountAdapter.setViewBinder(new AccountViewBinder() {
             public Account getSelectedAccount() {
-                int pos = toAccount.getSelectedItemPosition();
+                int pos = spToAccount.getSelectedItemPosition();
                 if (pos >= 0) {
                     return toAccountList.get(pos).getAccount();
                 }
                 return null;
             }
         });
-        toAccount.setAdapter(toAccountAdapter);
+        spToAccount.setAdapter(toAccountAdapter);
 
-        fromAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spFromAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 IndentNode tn = fromAccountList.get(pos);
@@ -213,7 +214,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        toAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spToAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 IndentNode tn = toAccountList.get(pos);
@@ -227,11 +228,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        ddPaddingIntentBase = 15 * GUIs.getDPRatio(RecordEditorActivity.this);
-//                ddDisabled = RecordEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
-//                ddDisabled.setAlpha(32);
-        ddSelected = RecordEditorActivity.this.getResources().getDrawable(android.R.color.darker_gray).mutate();
-        ddSelected.setAlpha(128);
+        ddItemPaddingBase = 15 * GUIs.getDPRatio(RecordEditorActivity.this);
+        ddSelectedBg = getResources().getDrawable(resolveThemeAttrResId(R.attr.colorControlNormal));//.mutate();
     }
 
     private void refreshUI() {
@@ -247,7 +245,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             List<Account> list = idp.listAccount(at);
             fromAccountList.addAll(AccountUtil.toIndentNode(list));
         }
-        String fromAccountId = workingDetail.getFrom();
+        String fromAccountId = workingRecord.getFrom();
         int fromSel, firstFromSel, i;
         fromSel = firstFromSel = i = -1;
         String fromType = null;
@@ -278,7 +276,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             List<Account> list = idp.listAccount(at);
             toAccountList.addAll(AccountUtil.toIndentNode(list));
         }
-        String toAccountId = workingDetail.getTo();
+        String toAccountId = workingRecord.getTo();
         int toSel, firstToSel;
         toSel = firstToSel = i = -1;
         // String toType = null;
@@ -302,21 +300,21 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         }
 
         if (fromSel > -1) {
-            this.fromAccount.setSelection(fromSel);
+            this.spFromAccount.setSelection(fromSel);
         } else if (firstFromSel > -1) {
-            this.fromAccount.setSelection(firstFromSel);
-            workingDetail.setFrom(fromAccountList.get(firstFromSel).getAccount().getId());
+            this.spFromAccount.setSelection(firstFromSel);
+            workingRecord.setFrom(fromAccountList.get(firstFromSel).getAccount().getId());
         } else {
-            workingDetail.setFrom("");
+            workingRecord.setFrom("");
         }
 
         if (toSel > -1) {
-            this.toAccount.setSelection(toSel);
+            this.spToAccount.setSelection(toSel);
         } else if (firstToSel > -1) {
-            this.toAccount.setSelection(firstToSel);
-            workingDetail.setTo(toAccountList.get(firstToSel).getAccount().getId());
+            this.spToAccount.setSelection(firstToSel);
+            workingRecord.setTo(toAccountList.get(firstToSel).getAccount().getId());
         } else {
-            workingDetail.setTo("");
+            workingRecord.setTo("");
         }
 
         fromAccountAdapter.notifyDataSetChanged();
@@ -325,16 +323,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
 
     private void onFromChanged(Account acc) {
-        workingDetail.setFrom(acc.getId());
+        workingRecord.setFrom(acc.getId());
         refreshSpinner();
     }
 
     private void onToChanged(Account acc) {
-        workingDetail.setTo(acc.getId());
+        workingRecord.setTo(acc.getId());
     }
 
     private void updateDateEditor(Date d) {
-        recordDate.setText(dateFormat.format(d));
+        editRecordDate.setText(dateFormat.format(d));
     }
 
     @Override
@@ -348,14 +346,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             doClose();
         } else if (v.getId() == R.id.btn_prev) {
             try {
-                Date d = dateFormat.parse(recordDate.getText().toString());
+                Date d = dateFormat.parse(editRecordDate.getText().toString());
                 updateDateEditor(cal.yesterday(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
         } else if (v.getId() == R.id.btn_next) {
             try {
-                Date d = dateFormat.parse(recordDate.getText().toString());
+                Date d = dateFormat.parse(editRecordDate.getText().toString());
                 updateDateEditor(cal.tomorrow(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
@@ -364,7 +362,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             updateDateEditor(cal.today());
         } else if (v.getId() == R.id.btn_datepicker) {
             try {
-                Date d = dateFormat.parse(recordDate.getText().toString());
+                Date d = dateFormat.parse(editRecordDate.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
                     public boolean onFinish(Object data) {
@@ -384,10 +382,11 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
         intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
+        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
-            start = Formats.editorTextNumberDecimalToCal2(recordMoney.getText().toString());
+            start = Formats.editorTextNumberDecimalToCal2(editRecordMoney.getText().toString());
         } catch (Exception x) {
         }
 
@@ -401,7 +400,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
             try {
-                recordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
+                editRecordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
             }
         }
@@ -412,21 +411,21 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         I18N i18n = i18n();
 
         // verify
-        int fromPos = fromAccount.getSelectedItemPosition();
+        int fromPos = spFromAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_from_account)));
             return;
         }
-        int toPos = toAccount.getSelectedItemPosition();
+        int toPos = spToAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == toPos || toAccountList.get(toPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_to_account)));
             return;
         }
-        String datestr = recordDate.getText().toString().trim();
+        String datestr = editRecordDate.getText().toString().trim();
         if ("".equals(datestr)) {
-            recordDate.requestFocus();
+            editRecordDate.requestFocus();
             GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_date)));
             return;
         }
@@ -440,9 +439,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String moneystr = recordMoney.getText().toString();
+        String moneystr = editRecordMoney.getText().toString();
         if ("".equals(moneystr)) {
-            recordMoney.requestFocus();
+            editRecordMoney.requestFocus();
             GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_money)));
             return;
         }
@@ -458,7 +457,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String note = recordNote.getText().toString();
+        String note = editRecordNote.getText().toString();
 
         Account fromAcc = fromAccountList.get(fromPos).getAccount();
         Account toAcc = toAccountList.get(toPos).getAccount();
@@ -469,24 +468,24 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         }
 
 
-        workingDetail.setFrom(fromAcc.getId());
-        workingDetail.setTo(toAcc.getId());
+        workingRecord.setFrom(fromAcc.getId());
+        workingRecord.setTo(toAcc.getId());
 
-        workingDetail.setDate(date);
-        workingDetail.setMoney(money);
-        workingDetail.setNote(note.trim());
+        workingRecord.setDate(date);
+        workingRecord.setMoney(money);
+        workingRecord.setNote(note.trim());
         IDataProvider idp = contexts().getDataProvider();
         if (modeCreate) {
 
-            idp.newDetail(workingDetail);
+            idp.newDetail(workingRecord);
             setResult(RESULT_OK);
 
-            workingDetail = clone(workingDetail);
-            workingDetail.setMoney(0D);
-            workingDetail.setNote("");
-            recordMoney.setText("");
-            recordMoney.requestFocus();
-            recordNote.setText("");
+            workingRecord = clone(workingRecord);
+            workingRecord.setMoney(0D);
+            workingRecord.setNote("");
+            editRecordMoney.setText("");
+            editRecordMoney.requestFocus();
+            editRecordNote.setText("");
             counterCreate++;
             btnOk.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);
@@ -494,7 +493,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
 
-            idp.updateDetail(record.getId(), workingDetail);
+            idp.updateDetail(record.getId(), workingRecord);
 
             GUIs.shortToast(this, i18n.string(R.string.msg_detail_updated));
             setResult(RESULT_OK);
@@ -528,32 +527,40 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             IndentNode node = (IndentNode) data;
 
             if (view.getId() == accountMappingResIds[0]) {
+
                 AccountType at = node.getType();
                 TextView tv = (TextView) view;
                 int textColor;
                 tv.setBackgroundDrawable(null);
                 if (AccountType.INCOME == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.income_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountIncomeTextColor));
                 } else if (AccountType.ASSET == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.asset_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountAssetTextColor));
                 } else if (AccountType.EXPENSE == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.expense_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountExpenseTextColor));
                 } else if (AccountType.LIABILITY == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.liability_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountLiabilityTextColor));
                 } else if (AccountType.OTHER == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.other_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountOtherTextColor));
                 } else {
-                    textColor = RecordEditorActivity.this.getResources().getColor(R.color.unknow_fgl);
+                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountUnknownTextColor));
                 }
                 tv.setTextColor(textColor);
 
+
                 StringBuilder display = new StringBuilder();
                 if (Constants.SIMPLE_SPINNER_ITEM_TAG.equals(tv.getTag())) {
-                    tv.setPadding((int) (tv.getPaddingLeft() + node.getIndent() * ddPaddingIntentBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
+                    tv.setPadding((int) ((1 + node.getIndent()) * ddItemPaddingBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
+
                     if (node.getAccount() == null) {
-                        tv.setTextColor(textColor & 0x6FFFFFFF);
-                    } else if (node.getAccount() == getSelectedAccount()) {
-                        tv.setBackgroundDrawable(ddSelected);
+                        if (isLightTheme()) {
+                            textColor = Colors.lighten(textColor, 0.3f);
+                        } else {
+                            textColor = Colors.darken(textColor, 0.3f);
+                        }
+                        tv.setTextColor(textColor);
+                    } else if (node.getAccount().equals(getSelectedAccount())) {
+                        tv.setBackgroundDrawable(ddSelectedBg);
                     } else {
                         tv.setBackgroundDrawable(null);
                     }

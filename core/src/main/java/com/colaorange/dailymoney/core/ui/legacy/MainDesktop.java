@@ -34,7 +34,7 @@ public class MainDesktop extends AbstractDesktop {
                 Intent intent = null;
                 intent = new Intent(activity,RecordEditorActivity.class);
                 intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE,true);
-                intent.putExtra(RecordEditorActivity.PARAM_DETAIL,d);
+                intent.putExtra(RecordEditorActivity.PARAM_RECORD,d);
                 activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
             }
         }, i18n.string(R.string.dtitem_adddetail), R.drawable.dtitem_adddetail,999);

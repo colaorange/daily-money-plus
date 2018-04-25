@@ -9,6 +9,8 @@
     <attr name="appSecondaryDarkColor" format="color" />
     <attr name="appSecondaryLightColor" format="color" />
     <attr name="appSecondaryTextColor" format="color" />
+    <attr name="disabledTextColor" format="color" />
+
     <attr name="defaultSelector" format="reference" />
 
     <attr name="accountAssetTextColor" format="color" />

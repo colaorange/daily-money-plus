@@ -21,6 +21,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;
@@ -56,7 +57,7 @@ public class DetailListHelper implements OnItemClickListener {
 
     private Activity activity;
 
-    public DetailListHelper(Activity activity,boolean clickeditable, OnDetailListener listener) {
+    public DetailListHelper(Activity activity, boolean clickeditable, OnDetailListener listener) {
         this.activity = activity;
         this.clickeditable = clickeditable;
         this.listener = listener;
@@ -107,16 +108,18 @@ public class DetailListHelper implements OnItemClickListener {
     public void reloadData(List<Detail> data) {
         listViewData = data;
         listViewMapList.clear();
-        DateFormat dateFormat = Contexts.instance().getPreference().getDateFormat();//for 2010/01/01
+        Preference preference = Contexts.instance().getPreference();
+        DateFormat dateFormat = preference.getDateFormat();//for 2010/01/01
+        DateFormat weekDayFormat = preference.getWeekDayFormat();// Wed.
         for (Detail det : listViewData) {
-            Map<String, Object> row = toDetailMap(det, dateFormat);
+            Map<String, Object> row = toDetailMap(det, dateFormat, weekDayFormat);
             listViewMapList.add(row);
         }
 
         listViewAdapter.notifyDataSetChanged();
     }
 
-    private Map<String, Object> toDetailMap(Detail det, DateFormat dateFormat) {
+    private Map<String, Object> toDetailMap(Detail det, DateFormat dateFormat, DateFormat weekDayFormat) {
         CalendarHelper calHelper = Contexts.instance().getCalendarHelper();
         I18N i18n = Contexts.instance().getI18n();
 
@@ -133,7 +136,7 @@ public class DetailListHelper implements OnItemClickListener {
         row.put(bindingFrom[3], new NamedItem(bindingFrom[3], det, to));
         row.put(bindingFrom[4], new NamedItem(bindingFrom[4], det, money));
         row.put(bindingFrom[5], new NamedItem(bindingFrom[5], det, det.getNote()));
-        row.put(bindingFrom[6], new NamedItem(bindingFrom[6], det, dateFormat.format(det.getDate())));
+        row.put(bindingFrom[6], new NamedItem(bindingFrom[6], det, dateFormat.format(det.getDate()) + " " + weekDayFormat.format(det.getDate())));
 
         return row;
     }
@@ -147,7 +150,7 @@ public class DetailListHelper implements OnItemClickListener {
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
+        intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
@@ -157,7 +160,7 @@ public class DetailListHelper implements OnItemClickListener {
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, false);
-        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
+        intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
@@ -181,7 +184,7 @@ public class DetailListHelper implements OnItemClickListener {
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(RecordEditorActivity.PARAM_DETAIL, d);
+        intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 

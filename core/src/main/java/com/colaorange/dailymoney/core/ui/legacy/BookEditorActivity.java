@@ -74,8 +74,8 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     /**
      * need to mapping twice to do different mapping in spitem and spdropdown item
      */
-    private static String[] spfrom = new String[]{Constants.LABEL, Constants.LABEL};
-    private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
+    private static String[] positionMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
+    private static int[] positionMappingResIds = new int[]{R.id.simple_spinner_item_label};
 
     EditText nameEditor;
     EditText symbolEditor;
@@ -103,14 +103,14 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             i++;
             Map<String, Object> row = new HashMap<String, Object>();
             data.add(row);
-            row.put(spfrom[0], new NamedItem(spfrom[0], sp, sp.getDisplay(i18n())));
+            row.put(positionMappingKeys[0], new NamedItem(positionMappingKeys[0], sp, sp.getDisplay(i18n())));
 
             if (sp.equals(symbolPos)) {
                 selpos = i;
             }
         }
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown_item, spfrom, spto);
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown, positionMappingKeys, positionMappingResIds);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         adapter.setViewBinder(new SymbolPositionViewBinder());
         positionEditor.setAdapter(adapter);
         if (selpos > -1) {
@@ -201,13 +201,8 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     class SymbolPositionViewBinder implements SimpleAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Object data, String text) {
-
-            NamedItem item = (NamedItem) data;
-            String name = item.getName();
-            if (!(view instanceof TextView)) {
-                return false;
-            }
-            if (Constants.LABEL.equals(name)) {
+            if (view.getId() == positionMappingResIds[0]) {
+                NamedItem item = (NamedItem) data;
                 TextView tv = (TextView) view;
                 tv.setTextColor(getResources().getColor(R.color.symbolpos_fgl));
                 tv.setText(item.getToString());

@@ -524,6 +524,11 @@ public class Preference {
         return new SimpleDateFormat(dateFormat);
     }
 
+    public DateFormat getWeekDayFormat(){
+        //TODO config? do we need to ?
+        return new SimpleDateFormat("EEE");
+    }
+
     public DateFormat getTimeFormat() {
         return new SimpleDateFormat(timeFormat);
     }

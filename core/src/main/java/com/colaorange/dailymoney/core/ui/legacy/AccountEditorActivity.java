@@ -84,8 +84,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     /**
      * need to mapping twice to do different mapping in spitem and spdropdown item
      */
-    private static String[] spfrom = new String[]{Constants.LABEL, Constants.LABEL};
-    private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
+    private static String[] typeMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
+    private static int[] typeMappingResIds = new int[]{R.id.simple_spinner_item_label};
 
     EditText nameEditor;
     EditText initvalEditor;
@@ -116,7 +116,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         for (AccountType at : AccountType.getSupportedType()) {
             Map<String, Object> row = new HashMap<>();
             data.add(row);
-            row.put(spfrom[0], new NamedItem(spfrom[0], at, at.getDisplay(i18n)));
+            row.put(typeMappingKeys[0], new NamedItem(typeMappingKeys[0], at, at.getDisplay(i18n)));
 
             if (at.getType().equals(type)) {
                 selpos = i;
@@ -126,8 +126,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         }
 
 
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown_item, spfrom, spto);
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown, typeMappingKeys, typeMappingResIds);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         adapter.setViewBinder(new AccountTypeViewBinder());
         typeEditor.setAdapter(adapter);
         typeEditor.setSelection(selpos);
@@ -313,13 +313,9 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         @Override
         public boolean setViewValue(View view, Object data, String text) {
 
-            NamedItem item = (NamedItem) data;
-            String name = item.getName();
-            AccountType at = (AccountType) item.getValue();
-            if (!(view instanceof TextView)) {
-                return false;
-            }
-            if (Constants.LABEL.equals(name)) {
+            if (view.getId() == typeMappingResIds[0]) {
+                NamedItem item = (NamedItem) data;
+                AccountType at = (AccountType) item.getValue();
                 if (AccountType.INCOME == at) {
                     ((TextView) view).setTextColor(getResources().getColor(R.color.income_fgl));
                 } else if (AccountType.ASSET == at) {

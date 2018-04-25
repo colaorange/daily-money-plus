@@ -15,7 +15,6 @@
     <color name="appLemonSecondaryLight">#60ad5e</color>
     <color name="appLemonSecondaryText">#e0e0e0</color>
 
-
     <!--dark-->
     <!--cola-->
     <color name="appColaPrimary">#171411</color>
@@ -29,7 +28,7 @@
     <color name="appColaSecondaryText">#333333</color>
 
 
-
+    <!--common-->
 
     <!-- http://colorschemedesigner.com/csd-3.5/ -->
     <color name="expenseText">#ff9ab5</color>
