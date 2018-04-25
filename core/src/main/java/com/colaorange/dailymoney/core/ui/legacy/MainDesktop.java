@@ -5,10 +5,10 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.data.Detail;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 
@@ -30,34 +30,34 @@ public class MainDesktop extends AbstractDesktop {
 
         DesktopItem adddetdt = new DesktopItem(new Runnable() {
             public void run() {
-                Detail d = new Detail("", "", new Date(), 0D, "");
+                Record d = new Record("", "", new Date(), 0D, "");
                 Intent intent = null;
                 intent = new Intent(activity,RecordEditorActivity.class);
                 intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE,true);
                 intent.putExtra(RecordEditorActivity.PARAM_RECORD,d);
                 activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
             }
-        }, i18n.string(R.string.dtitem_adddetail), R.drawable.dtitem_adddetail,999);
+        }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_adddetail,999);
 
-        Intent intent = new Intent(activity, DetailListActivity.class);
-        intent.putExtra(DetailListActivity.PARAM_MODE, DetailListActivity.MODE_DAY);
+        Intent intent = new Intent(activity, RecordlListActivity.class);
+        intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_DAY);
         DesktopItem daylist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_detlist_day), R.drawable.dtitem_detail_day);
+                i18n.string(R.string.dtitem_reclist_day), R.drawable.dtitem_detail_day);
         
-        intent = new Intent(activity, DetailListActivity.class);
-        intent.putExtra(DetailListActivity.PARAM_MODE, DetailListActivity.MODE_WEEK);
+        intent = new Intent(activity, RecordlListActivity.class);
+        intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_WEEK);
         DesktopItem weeklist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_detlist_week), R.drawable.dtitem_detail_week);
+                i18n.string(R.string.dtitem_reclist_week), R.drawable.dtitem_detail_week);
 
-        intent = new Intent(activity, DetailListActivity.class);
-        intent.putExtra(DetailListActivity.PARAM_MODE, DetailListActivity.MODE_MONTH);
+        intent = new Intent(activity, RecordlListActivity.class);
+        intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_MONTH);
         DesktopItem monthlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_detlist_month), R.drawable.dtitem_detail_month);
+                i18n.string(R.string.dtitem_reclist_month), R.drawable.dtitem_detail_month);
 
-        intent = new Intent(activity, DetailListActivity.class);
-        intent.putExtra(DetailListActivity.PARAM_MODE, DetailListActivity.MODE_YEAR);
+        intent = new Intent(activity, RecordlListActivity.class);
+        intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_YEAR);
         DesktopItem yearlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_detlist_year), R.drawable.dtitem_detail_year);
+                i18n.string(R.string.dtitem_reclist_year), R.drawable.dtitem_detail_year);
 
         DesktopItem accmgntdt = new DesktopItem(new ActivityRun(activity, AccountMgntActivity.class),
                 i18n.string(R.string.dtitem_accmgnt), R.drawable.dtitem_account);

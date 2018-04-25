@@ -72,7 +72,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuItem mi = menu.add(i18n().string(R.string.cact_close));
+        MenuItem mi = menu.add(i18n().string(R.string.act_close));
         mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

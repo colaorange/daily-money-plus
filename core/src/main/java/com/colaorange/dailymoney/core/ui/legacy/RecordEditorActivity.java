@@ -21,7 +21,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.Detail;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
@@ -50,8 +50,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private boolean modeCreate;
     private int counterCreate;
-    private Detail record;
-    private Detail workingRecord;
+    private Record record;
+    private Record workingRecord;
 
     private DateFormat dateFormat;
 
@@ -99,9 +99,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     /**
      * clone a record without id
      **/
-    private Detail clone(Detail detail) {
-        Detail d = new Detail(detail.getFrom(), detail.getTo(), detail.getDate(), detail.getMoney(), detail.getNote());
-        d.setArchived(detail.isArchived());
+    private Record clone(Record record) {
+        Record d = new Record(record.getFrom(), record.getTo(), record.getDate(), record.getMoney(), record.getNote());
+        d.setArchived(record.isArchived());
         return d;
     }
 
@@ -109,19 +109,19 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private void initParams() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
-        record = (Detail) bundle.get(PARAM_RECORD);
+        record = (Record) bundle.get(PARAM_RECORD);
 
         //issue 51, for direct call from outside action, 
         if (record == null) {
-            record = new Detail("", "", new Date(), 0D, "");
+            record = new Record("", "", new Date(), 0D, "");
         }
 
         workingRecord = clone(record);
 
         if (modeCreate) {
-            setTitle(R.string.title_deteditor_create);
+            setTitle(R.string.title_receditor_create);
         } else {
-            setTitle(R.string.title_deteditor_update);
+            setTitle(R.string.title_receditor_update);
         }
     }
 
@@ -153,10 +153,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         btnOk = findViewById(R.id.btn_ok);
         if (modeCreate) {
             btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
-            btnOk.setText(R.string.cact_create);
+            btnOk.setText(R.string.act_create);
         } else {
             btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
-            btnOk.setText(R.string.cact_update);
+            btnOk.setText(R.string.act_update);
             editRecordMoney.requestFocus();
         }
         btnOk.setOnClickListener(this);
@@ -414,19 +414,19 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         int fromPos = spFromAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount() == null) {
             GUIs.alert(this,
-                    i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_from_account)));
+                    i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_from_account)));
             return;
         }
         int toPos = spToAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == toPos || toAccountList.get(toPos).getAccount() == null) {
             GUIs.alert(this,
-                    i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_to_account)));
+                    i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_to_account)));
             return;
         }
         String datestr = editRecordDate.getText().toString().trim();
         if ("".equals(datestr)) {
             editRecordDate.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_date)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_date)));
             return;
         }
 
@@ -442,7 +442,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         String moneystr = editRecordMoney.getText().toString();
         if ("".equals(moneystr)) {
             editRecordMoney.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_money)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_money)));
             return;
         }
         double money = 0;
@@ -453,7 +453,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         }
 
         if (money <= 0) {
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_zero, i18n.string(R.string.label_money)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_zero, i18n.string(R.string.label_money)));
             return;
         }
 
@@ -477,7 +477,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         IDataProvider idp = contexts().getDataProvider();
         if (modeCreate) {
 
-            idp.newDetail(workingRecord);
+            idp.newRecord(workingRecord);
             setResult(RESULT_OK);
 
             workingRecord = clone(workingRecord);
@@ -487,15 +487,15 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             editRecordMoney.requestFocus();
             editRecordNote.setText("");
             counterCreate++;
-            btnOk.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
+            btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);
             btnClose.setVisibility(Button.VISIBLE);
             trackEvent(Contexts.TRACKER_EVT_CREATE);
         } else {
 
-            idp.updateDetail(record.getId(), workingRecord);
+            idp.updateRecord(record.getId(), workingRecord);
 
-            GUIs.shortToast(this, i18n.string(R.string.msg_detail_updated));
+            GUIs.shortToast(this, i18n.string(R.string.msg_record_updated));
             setResult(RESULT_OK);
             finish();
 

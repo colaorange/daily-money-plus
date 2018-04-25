@@ -226,7 +226,7 @@ public class Contexts {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, parcels);
         }
         try {
-            activity.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
+            activity.startActivity(Intent.createChooser(intent, i18n.string(R.string.label_share)));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
             return false;

@@ -17,20 +17,20 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.Detail;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
  * @author dennis
  */
-public class AccountDetailListActivity extends ContextsActivity {
+public class AccountRecordListActivity extends ContextsActivity {
 
     public static final String PARAM_START = "accdet.start";
     public static final String PARAM_END = "accdet.end";
@@ -38,7 +38,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     public static final String PARAM_TARGET_INFO = "accdet.targetInfo";
 
 
-    DetailListHelper detailListHelper;
+    RecordListHelper recordListHelper;
 
     TextView infoView;
 
@@ -51,7 +51,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_detail_mgnt);
+        setContentView(R.layout.account_record_list);
         initParams();
         initMembers();
         GUIs.delayPost(new Runnable() {
@@ -77,7 +77,7 @@ public class AccountDetailListActivity extends ContextsActivity {
         String fromStr = startDate == null ? "" : format.format(startDate);
         String toStr = endDate == null ? "" : format.format(endDate);
 
-        info = info + i18n.string(R.string.label_accdetlist_dateinfo, fromStr, toStr);
+        info = info + i18n.string(R.string.label_acc_reclist_dateinfo, fromStr, toStr);
 
         //TODO
         if (target instanceof AccountType) {
@@ -92,11 +92,11 @@ public class AccountDetailListActivity extends ContextsActivity {
 
     private void initMembers() {
 
-        detailListHelper = new DetailListHelper(this, true, new DetailListHelper.OnDetailListener() {
+        recordListHelper = new RecordListHelper(this, true, new RecordListHelper.OnRecordListener() {
             @Override
-            public void onDetailDeleted(Detail detail) {
+            public void onRecordDeleted(Record record) {
                 I18N i18n = i18n();
-                GUIs.shortToast(AccountDetailListActivity.this, i18n.string(R.string.msg_detail_deleted));
+                GUIs.shortToast(AccountRecordListActivity.this, i18n.string(R.string.msg_record_deleted));
                 refreshUI();
                 setResult(RESULT_OK);
             }
@@ -105,7 +105,7 @@ public class AccountDetailListActivity extends ContextsActivity {
         infoView = findViewById(R.id.account_detail_list_infobar);
 
         ListView listView = findViewById(R.id.account_detail_list_list);
-        detailListHelper.setup(listView);
+        recordListHelper.setup(listView);
         registerForContextMenu(listView);
     }
 
@@ -127,29 +127,29 @@ public class AccountDetailListActivity extends ContextsActivity {
     private void refreshUI() {
         infoView.setText(info);
         final IDataProvider idp = contexts().getDataProvider();
-//        detailListHelper.refreshUI(idp.listAllDetail());
+//        recordListHelper.refreshUI(idp.listAllRecord());
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @SuppressWarnings("unchecked")
-            List<Detail> data = Collections.EMPTY_LIST;
+            List<Record> data = Collections.EMPTY_LIST;
             int count = 0;
 
             @Override
             public void run() {
                 if (target instanceof Account) {
-                    data = idp.listDetail((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countDetail((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
                 } else if (target instanceof AccountType) {
-                    data = idp.listDetail((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countDetail((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
                 } else if (target instanceof String) {
-                    data = idp.listDetail((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countDetail((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
                 }
             }
 
             @Override
             public void onBusyFinish() {
-                detailListHelper.reloadData(data);
+                recordListHelper.reloadData(data);
                 infoView.setText(info + i18n().string(R.string.label_count, count));
             }
         });
@@ -165,7 +165,7 @@ public class AccountDetailListActivity extends ContextsActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.account_detail_mgnt_menu_new) {
-            detailListHelper.doNewDetail();
+            recordListHelper.doNewRecord();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -184,13 +184,13 @@ public class AccountDetailListActivity extends ContextsActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         if (item.getItemId() == R.id.account_detail_mgnt_menu_edit) {
-            detailListHelper.doEditDetail(info.position);
+            recordListHelper.doEditRecord(info.position);
             return true;
         } else if (item.getItemId() == R.id.account_detail_mgnt_menu_delete) {
-            detailListHelper.doDeleteDetail(info.position);
+            recordListHelper.doDeleteRecord(info.position);
             return true;
         } else if (item.getItemId() == R.id.account_detail_mgnt_menu_copy) {
-            detailListHelper.doCopyDetail(info.position);
+            recordListHelper.doCopyRecord(info.position);
             return true;
         }
         return super.onContextItemSelected(item);

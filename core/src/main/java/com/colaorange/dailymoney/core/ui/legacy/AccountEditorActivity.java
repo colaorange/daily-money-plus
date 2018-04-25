@@ -151,10 +151,10 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         okBtn = findViewById(R.id.acceditor_ok);
         if (modeCreate) {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
-            okBtn.setText(R.string.cact_create);
+            okBtn.setText(R.string.act_create);
         } else {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
-            okBtn.setText(R.string.cact_update);
+            okBtn.setText(R.string.act_update);
         }
         okBtn.setOnClickListener(this);
 
@@ -218,19 +218,19 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         I18N i18n = i18n();
         //verify
         if (Spinner.INVALID_POSITION == typeEditor.getSelectedItemPosition()) {
-            GUIs.shortToast(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_type)));
+            GUIs.shortToast(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_type)));
             return;
         }
         String name = nameEditor.getText().toString().trim();
         if ("".equals(name)) {
             nameEditor.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_name)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_name)));
             return;
         }
         String initval = initvalEditor.getText().toString();
         if ("".equals(initval)) {
             initvalEditor.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_initial_value)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_initial_value)));
             return;
         }
         String type = AccountType.getSupportedType()[typeEditor.getSelectedItemPosition()].getType();
@@ -258,7 +258,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
                     idp.newAccount(workingAccount);
                     GUIs.shortToast(this, i18n.string(R.string.msg_account_created, name, AccountType.getDisplay(i18n, workingAccount.getType())));
                 } catch (DuplicateKeyException e) {
-                    GUIs.alert(this, i18n.string(R.string.cmsg_error, e.getMessage()));
+                    GUIs.alert(this, i18n.string(R.string.msg_error, e.getMessage()));
                     return;
                 }
             }
@@ -268,7 +268,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             nameEditor.setText("");
             nameEditor.requestFocus();
             counterCreate++;
-            okBtn.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
+            okBtn.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             cancelBtn.setVisibility(Button.GONE);
             closeBtn.setVisibility(Button.VISIBLE);
             trackEvent(Contexts.TRACKER_EVT_CREATE);

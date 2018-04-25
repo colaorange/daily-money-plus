@@ -27,7 +27,7 @@ public interface IDataProvider {
     
     void deleteAllAccount();
     
-    void deleteAllDetail();
+    void deleteAllRecord();
 
     Account findAccount(String id);
     
@@ -49,36 +49,36 @@ public interface IDataProvider {
     List<Account> listAccount(AccountType type);
     
     
-    /** detail apis **/
+    /** record apis **/
     
-    Detail findDetail(int id);
+    Record findRecord(int id);
     
-    void newDetail(Detail detail);
-    void newDetail(int id,Detail detail)throws DuplicateKeyException;
-    void newDetailNoCheck(int id,Detail detail);
+    void newRecord(Record record);
+    void newRecord(int id, Record record)throws DuplicateKeyException;
+    void newRecordNoCheck(int id, Record record);
     
-    boolean updateDetail(int id,Detail detail);
+    boolean updateRecord(int id, Record record);
     
-    boolean deleteDetail(int id);
+    boolean deleteRecord(int id);
 
-    List<Detail> listAllDetail();
+    List<Record> listAllRecord();
 
-    int countDetail(Date start, Date end);
+    int countRecord(Date start, Date end);
     /**
      * mode : 0 both, 1 from, 2 to;
      */
-    int countDetail(AccountType type,int mode,Date start, Date end);
-    int countDetail(Account account,int mode,Date start, Date end);
-    int countDetail(String accountId,int mode,Date start, Date end);
+    int countRecord(AccountType type, int mode, Date start, Date end);
+    int countRecord(Account account, int mode, Date start, Date end);
+    int countRecord(String accountId, int mode, Date start, Date end);
     
-    List<Detail> listDetail(Date start, Date end, int max);
-    List<Detail> listDetail(Date start, Date end, String note, int max);
+    List<Record> listRecord(Date start, Date end, int max);
+    List<Record> listRecord(Date start, Date end, String note, int max);
     /**
      * mode : 0 both, 1 from, 2 to;
      */
-    List<Detail> listDetail(AccountType type,int mode,Date start, Date end, int max);
-    List<Detail> listDetail(Account account,int mode,Date start, Date end, int max);
-    List<Detail> listDetail(String accountId,int mode,Date start, Date end, int max);
+    List<Record> listRecord(AccountType type, int mode, Date start, Date end, int max);
+    List<Record> listRecord(Account account, int mode, Date start, Date end, int max);
+    List<Record> listRecord(String accountId, int mode, Date start, Date end, int max);
 
     double sumFrom(AccountType type,Date start, Date end);
     double sumFrom(Account account,Date start, Date end);
@@ -88,7 +88,7 @@ public interface IDataProvider {
     double sumTo(Account account,Date start, Date end);
     
     
-    Detail getFirstDetail();
+    Record getFirstRecord();
 
     double sumInitialValue(AccountType type);
     

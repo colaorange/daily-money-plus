@@ -123,10 +123,10 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         okBtn = findViewById(R.id.btn_ok);
         if (modeCreate) {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
-            okBtn.setText(R.string.cact_create);
+            okBtn.setText(R.string.act_create);
         } else {
             okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
-            okBtn.setText(R.string.cact_update);
+            okBtn.setText(R.string.act_update);
         }
         okBtn.setOnClickListener(this);
 
@@ -156,14 +156,14 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         I18N i18n = i18n();
 
         if (Spinner.INVALID_POSITION == positionEditor.getSelectedItemPosition()) {
-            GUIs.shortToast(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_symbol_position)));
+            GUIs.shortToast(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_symbol_position)));
             return;
         }
 
         String name = nameEditor.getText().toString().trim();
         if ("".equals(name)) {
             nameEditor.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_name)));
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_name)));
             return;
         }
 

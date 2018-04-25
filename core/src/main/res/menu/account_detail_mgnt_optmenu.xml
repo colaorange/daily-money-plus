@@ -3,5 +3,5 @@
     <item
         android:id="@+id/account_detail_mgnt_menu_new"
         android:icon="?ic_add"
-        android:title="@string/cact_new"></item>
+        android:title="@string/act_new"></item>
 </menu>

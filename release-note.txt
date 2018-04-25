@@ -33,7 +33,7 @@
  * 35: Daily List
  * 21: Allow to store application in SD card
  -- not released version
- * 52: allow to add, copy detail in detail list in report activity 
+ * 52: allow to add, copy record in record list in report activity
  * 38: i18n, zh_rCN
  * 49: Russian translation
  * 51: Allow ADW-Launcher to directly open DetailEditorActivity
@@ -59,8 +59,8 @@
  
 == 0.9.4 ==
 === Features ===
- * 14:  Make today, future's detail more light in detail list
- * 15:  Add more detail layout to list
+ * 14:  Make today, future's record more light in record list
+ * 15:  Add more record layout to list
  * 16:  Yearly cumulative time chart
  * 17:  Needs asset-liability run chart 
  * 19:  Add google analytics and allow user to disable it
@@ -73,7 +73,7 @@
  
 == 0.9.3 ==
 === Features ===
- * 12:  Needs detail list linking in balance report  
+ * 12:  Needs record list linking in balance report
  * 11:  Provide password protection
  * 13:  Supports pie chart of balance
 === Bugs ===
@@ -97,11 +97,11 @@
  * 1:   Import & export should have a option for All/Account only/Detail only
  * 6:   Backup CSV when do export.
 === Bugs ===
- * 2:   Wrong display in detail list if account not found
+ * 2:   Wrong display in record list if account not found
 
 == 0.9.0 ==
 === Features ===
  * Edit/Update account
- * Edit/Update detail
- * List weekly/monthly/weekly detail
+ * Edit/Update record
+ * List weekly/monthly/weekly record
  * Export/Import to CSV 

@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.core.util;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +16,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,14 +25,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.core.R;
 
@@ -68,19 +64,19 @@ public class GUIs {
     }
 
     static public void alert(Context context, String msg) {
-        alert(context, null, msg, context.getString(R.string.cact_ok), NO_ICON_RES);
+        alert(context, null, msg, context.getString(R.string.act_ok), NO_ICON_RES);
     }
 
     static public void alert(Context context, int msg) {
-        alert(context, null, context.getString(msg), context.getString(R.string.cact_ok), NO_ICON_RES);
+        alert(context, null, context.getString(msg), context.getString(R.string.act_ok), NO_ICON_RES);
     }
 
     static public void confirm(Context context, int msg, OnFinishListener listener) {
-        confirm(context, null, context.getString(msg), context.getString(R.string.cact_ok), context.getString(R.string.cact_cancel), NO_ICON_RES, listener);
+        confirm(context, null, context.getString(msg), context.getString(R.string.act_ok), context.getString(R.string.act_cancel), NO_ICON_RES, listener);
     }
 
     static public void confirm(Context context, String msg, OnFinishListener listener) {
-        confirm(context, null, msg, context.getString(R.string.cact_ok), context.getString(R.string.cact_cancel), NO_ICON_RES, listener);
+        confirm(context, null, msg, context.getString(R.string.act_ok), context.getString(R.string.act_cancel), NO_ICON_RES, listener);
     }
 
     static public void confirm(Context context, String title, String msg, String oktext, String canceltext, int icon, final OnFinishListener listener) {
@@ -131,11 +127,11 @@ public class GUIs {
     }
 
     static public void errorToast(Context context, Throwable e) {
-        shortToast(context, context.getString(R.string.cmsg_error, e.getMessage()));
+        shortToast(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
     static public void error(Context context, Throwable e) {
-        alert(context, context.getString(R.string.cmsg_error, e.getMessage()));
+        alert(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
     static public View inflateView(Context context, ViewGroup parent, int resourceid) {
@@ -177,7 +173,7 @@ public class GUIs {
     }
 
     static public void doBusy(Context context, Runnable r) {
-        doBusy(context, context.getString(R.string.cmsg_busy), r);
+        doBusy(context, context.getString(R.string.msg_busy), r);
     }
 
     //lock & release rotation!! not work in sdk(2.1,2.2) but work fine in my i9000

@@ -305,8 +305,8 @@ public class Preference {
         String str;
 
         try {
-            str = i18n.string(R.string.default_detail_list_layout);
-            detailListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_detail_list_layout), str));
+            str = i18n.string(R.string.default_record_list_layout);
+            detailListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }

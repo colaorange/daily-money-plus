@@ -7,12 +7,12 @@
 
     <PreferenceCategory android:title="@string/label_prefcat_display">
         <ListPreference
-            android:defaultValue="@string/default_detail_list_layout"
+            android:defaultValue="@string/default_record_list_layout"
             android:entries="@array/prefs_detlayout_labels"
             android:entryValues="@array/prefs_detlayout_values"
-            android:key="@string/pref_detail_list_layout"
-            android:summary="@string/label_prefs_detlayout_sum"
-            android:title="@string/label_prefs_detlayout" />
+            android:key="@string/pref_record_list_layout"
+            android:summary="@string/label_prefs_reclayout_sum"
+            android:title="@string/label_prefs_reclayout" />
 
         <ListPreference
             android:defaultValue="@string/default_pref_format_date"

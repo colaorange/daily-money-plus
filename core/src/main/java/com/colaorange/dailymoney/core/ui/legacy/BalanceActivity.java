@@ -294,35 +294,35 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
 
                 if (hierarchical) {
-                    asset = BalanceHelper.adjustNestedTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_tasset)
+                    asset = BalanceHelper.adjustNestedTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_total_asset)
                             : i18n.string(R.string.label_asset), asset);
-                    income = BalanceHelper.adjustNestedTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_tincome)
+                    income = BalanceHelper.adjustNestedTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_total_income)
                             : i18n.string(R.string.label_income), income);
                     expense = BalanceHelper.adjustNestedTotalBalance(
                             AccountType.EXPENSE,
-                            totalMode ? i18n.string(R.string.label_balance_texpense) : i18n
+                            totalMode ? i18n.string(R.string.label_balance_total_expense) : i18n
                                     .string(R.string.label_expense), expense);
                     liability = BalanceHelper.adjustNestedTotalBalance(
                             AccountType.LIABILITY,
-                            totalMode ? i18n.string(R.string.label_balance_tliability) : i18n
+                            totalMode ? i18n.string(R.string.label_balance_total_liability) : i18n
                                     .string(R.string.label_liability), liability);
-                    other = BalanceHelper.adjustNestedTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_tother)
+                    other = BalanceHelper.adjustNestedTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_total_other)
                             : i18n.string(R.string.label_other), other);
 
                 } else {
-                    asset = BalanceHelper.adjustTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_tasset)
+                    asset = BalanceHelper.adjustTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_total_asset)
                             : i18n.string(R.string.label_asset), asset);
-                    income = BalanceHelper.adjustTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_tincome)
+                    income = BalanceHelper.adjustTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_total_income)
                             : i18n.string(R.string.label_income), income);
                     expense = BalanceHelper.adjustTotalBalance(
                             AccountType.EXPENSE,
-                            totalMode ? i18n.string(R.string.label_balance_texpense) : i18n
+                            totalMode ? i18n.string(R.string.label_balance_total_expense) : i18n
                                     .string(R.string.label_expense), expense);
                     liability = BalanceHelper.adjustTotalBalance(
                             AccountType.LIABILITY,
-                            totalMode ? i18n.string(R.string.label_balance_tliability) : i18n
+                            totalMode ? i18n.string(R.string.label_balance_total_liability) : i18n
                                     .string(R.string.label_liability), liability);
-                    other = BalanceHelper.adjustTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_tother)
+                    other = BalanceHelper.adjustTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_total_other)
                             : i18n.string(R.string.label_other), other);
 
                 }
@@ -500,15 +500,15 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         }
 
         Intent intent = null;
-        intent = new Intent(this, AccountDetailListActivity.class);
+        intent = new Intent(this, AccountRecordListActivity.class);
         if (currentStartDate != null) {
-            intent.putExtra(AccountDetailListActivity.PARAM_START, currentStartDate);
+            intent.putExtra(AccountRecordListActivity.PARAM_START, currentStartDate);
         }
         if (currentEndDate != null) {
-            intent.putExtra(AccountDetailListActivity.PARAM_END, currentEndDate);
+            intent.putExtra(AccountRecordListActivity.PARAM_END, currentEndDate);
         }
-        intent.putExtra(AccountDetailListActivity.PARAM_TARGET, b.getTarget());
-        intent.putExtra(AccountDetailListActivity.PARAM_TARGET_INFO, b.getName());
+        intent.putExtra(AccountRecordListActivity.PARAM_TARGET, b.getTarget());
+        intent.putExtra(AccountRecordListActivity.PARAM_TARGET_INFO, b.getName());
         this.startActivityForResult(intent, Constants.REQUEST_ACCOUNT_DETAIL_LIST_CODE);
     }
 

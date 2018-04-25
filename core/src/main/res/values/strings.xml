@@ -24,13 +24,13 @@
     <string name="pref_password" translatable="false">password</string>
     <string name="pref_passwordvd" translatable="false">passwordvd</string>
     <string name="pref_password_hash" translatable="false">password_hash</string>
-    <string name="pref_detail_list_layout" translatable="false">detail_list_layout</string>
+    <string name="pref_record_list_layout" translatable="false">record_list_layout</string>
     <string name="pref_max_records" translatable="false">max_records</string>
     <string name="pref_testsdekstop" translatable="false">testsdekstop</string>
     <string name="pref_allow_analytics" translatable="false">allow_analytics</string>
     <string name="pref_csv_encoding" translatable="false">csv_encoding</string>
 
-    <string name="default_detail_list_layout" translatable="false">1</string>
+    <string name="default_record_list_layout" translatable="false">1</string>
     <string name="default_max_records" translatable="false">-1</string>
     <string name="default_backup_with_timestamp" translatable="false">true</string>
     <string name="default_firstday_week" translatable="false">1</string>

@@ -8,7 +8,7 @@ import java.util.Date;
  * @author dennis
  * 
  */
-public class Detail implements Serializable{
+public class Record implements Serializable{
 
     private static final long serialVersionUID = 1L;
     private int id;
@@ -24,10 +24,10 @@ public class Detail implements Serializable{
     
     private boolean archived;
 
-    Detail(){}
+    Record(){}
 
-    public Detail(String from,String to,Date date, Double money,
-            String note) {
+    public Record(String from, String to, Date date, Double money,
+                  String note) {
         this.date = date;
         this.money = money;
         this.note = note;
@@ -123,7 +123,7 @@ public class Detail implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Detail other = (Detail) obj;
+        Record other = (Record) obj;
         return id == other.id;
     }
 

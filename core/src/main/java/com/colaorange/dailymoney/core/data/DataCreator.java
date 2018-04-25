@@ -83,9 +83,9 @@ public class DataCreator {
 
     }
 
-    private Detail createDetail(Account from, Account to, Date date, Double money, String note) {
-        Detail det = new Detail(from.getId(),to.getId(), date, money, note);
-        idp.newDetail(det);
+    private Record createDetail(Account from, Account to, Date date, Double money, String note) {
+        Record det = new Record(from.getId(),to.getId(), date, money, note);
+        idp.newRecord(det);
         return det;
     }
 

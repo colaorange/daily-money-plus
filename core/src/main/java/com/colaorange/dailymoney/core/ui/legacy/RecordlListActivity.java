@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -27,14 +28,13 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.Detail;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
  * @author dennis
  */
-public class DetailListActivity extends ContextsActivity implements OnClickListener {
+public class RecordlListActivity extends ContextsActivity implements OnClickListener {
 
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
@@ -45,7 +45,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     public static final String PARAM_MODE = "dtlist.mode";
     public static final String PARAM_TARGET_DATE = "dtlist.target";
 
-    DetailListHelper detailListHelper;
+    RecordListHelper recordListHelper;
 
     TextView infoView;
     TextView sumIncomeView;
@@ -109,16 +109,16 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
         modeBtn.setOnClickListener(this);
 
-        detailListHelper = new DetailListHelper(this, true, new DetailListHelper.OnDetailListener() {
+        recordListHelper = new RecordListHelper(this, true, new RecordListHelper.OnRecordListener() {
             @Override
-            public void onDetailDeleted(Detail detail) {
-                GUIs.shortToast(DetailListActivity.this, i18n().string(R.string.msg_detail_deleted));
+            public void onRecordDeleted(Record record) {
+                GUIs.shortToast(RecordlListActivity.this, i18n().string(R.string.msg_record_deleted));
                 refreshUI();
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
         ListView listView = findViewById(R.id.recorder_list_list);
-        detailListHelper.setup(listView);
+        recordListHelper.setup(listView);
 
 
         findViewById(R.id.toolbar_btn_prev).setOnClickListener(this);
@@ -163,19 +163,19 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                 toolbarView.setVisibility(TextView.GONE);
                 break;
             case MODE_MONTH:
-                setTitle(R.string.dtitem_detlist_month);
+                setTitle(R.string.dtitem_reclist_month);
                 break;
             case MODE_WEEK:
-                setTitle(R.string.dtitem_detlist_week);
+                setTitle(R.string.dtitem_reclist_week);
                 break;
             case MODE_DAY:
-                setTitle(R.string.dtitem_detlist_day);
+                setTitle(R.string.dtitem_reclist_day);
                 break;
             case MODE_YEAR:
-                setTitle(R.string.dtitem_detlist_year);
+                setTitle(R.string.dtitem_reclist_year);
                 break;
             default:
-                setTitle(R.string.dtitem_detlist_month);
+                setTitle(R.string.dtitem_reclist_month);
                 break;
         }
     }
@@ -239,9 +239,9 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                 break;
         }
         final IDataProvider idp = contexts().getDataProvider();
-//        detailListHelper.refreshData(idp.listAllDetail());
+//        recordListHelper.refreshData(idp.listAllRecord());
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
-            List<Detail> data = null;
+            List<Record> data = null;
 
             double expense;
             double income;
@@ -252,8 +252,8 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
             @Override
             public void run() {
-                data = idp.listDetail(start, end, preference().getMaxRecords());
-                count = idp.countDetail(start, end);
+                data = idp.listRecord(start, end, preference().getMaxRecords());
+                count = idp.countRecord(start, end);
                 income = idp.sumFrom(AccountType.INCOME, start, end);
                 expense = idp.sumTo(AccountType.EXPENSE, start, end);//nagivate
                 asset = idp.sumTo(AccountType.ASSET, start, end) - idp.sumFrom(AccountType.ASSET, start, end);
@@ -269,30 +269,30 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
 
                 sumUnknowView.setVisibility(TextView.GONE);
                 //update data
-                detailListHelper.reloadData(data);
+                recordListHelper.reloadData(data);
                 int showcount = 0;
                 if (income != 0) {
-                    sumIncomeView.setText(i18n.string(R.string.label_detlist_sum_income, contexts().toFormattedMoneyString((income))));
+                    sumIncomeView.setText(i18n.string(R.string.label_reclist_sum_income, contexts().toFormattedMoneyString((income))));
                     sumIncomeView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if (expense != 0) {
-                    sumExpenseView.setText(i18n.string(R.string.label_detlist_sum_expense, contexts().toFormattedMoneyString((expense))));
+                    sumExpenseView.setText(i18n.string(R.string.label_reclist_sum_expense, contexts().toFormattedMoneyString((expense))));
                     sumExpenseView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if (asset != 0) {
-                    sumAssetView.setText(i18n.string(R.string.label_detlist_sum_asset, contexts().toFormattedMoneyString((asset))));
+                    sumAssetView.setText(i18n.string(R.string.label_reclist_sum_asset, contexts().toFormattedMoneyString((asset))));
                     sumAssetView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if (liability != 0) {
-                    sumLiabilityView.setText(i18n.string(R.string.label_detlist_sum_liability, contexts().toFormattedMoneyString((liability))));
+                    sumLiabilityView.setText(i18n.string(R.string.label_reclist_sum_liability, contexts().toFormattedMoneyString((liability))));
                     sumLiabilityView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
                 if (other != 0) {
-                    sumOtherView.setText(i18n.string(R.string.label_detlist_sum_other, contexts().toFormattedMoneyString((other))));
+                    sumOtherView.setText(i18n.string(R.string.label_reclist_sum_other, contexts().toFormattedMoneyString((other))));
                     sumOtherView.setVisibility(TextView.VISIBLE);
                     showcount++;
                 }
@@ -306,13 +306,13 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
                 //update info
                 switch (mode) {
                     case MODE_ALL:
-                        infoView.setText(i18n.string(R.string.label_all_details, Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_all_records, Integer.toString(count)));
                         break;
                     case MODE_MONTH:
                         infoView.setText(i18n.string(R.string.label_month_details, yearMonthFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
                         break;
                     case MODE_DAY:
-                        infoView.setText(i18n.string(R.string.label_day_details, dateFormat.format(currentDate), Integer.toString(count)));
+                        infoView.setText(i18n.string(R.string.label_day_records, dateFormat.format(currentDate), Integer.toString(count)));
                         break;
                     case MODE_YEAR:
                         infoView.setText(i18n.string(R.string.label_year_details, yearFormat.format(currentDate), Integer.toString(count)));
@@ -349,7 +349,7 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.detail_mgnt_menu_new) {
-            detailListHelper.doNewDetail(currentDate);
+            recordListHelper.doNewRecord(currentDate);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -369,13 +369,13 @@ public class DetailListActivity extends ContextsActivity implements OnClickListe
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         if (item.getItemId() == R.id.detail_mgnt_menu_edit) {
-            detailListHelper.doEditDetail(info.position);
+            recordListHelper.doEditRecord(info.position);
             return true;
         } else if (item.getItemId() == R.id.detail_mgnt_menu_delete) {
-            detailListHelper.doDeleteDetail(info.position);
+            recordListHelper.doDeleteRecord(info.position);
             return true;
         } else if (item.getItemId() == R.id.detail_mgnt_menu_copy) {
-            detailListHelper.doCopyDetail(info.position);
+            recordListHelper.doCopyRecord(info.position);
             return true;
         }
         return super.onContextItemSelected(item);

@@ -93,7 +93,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;
@@ -120,7 +120,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;
@@ -147,7 +147,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;

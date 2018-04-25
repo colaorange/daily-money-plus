@@ -18,7 +18,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="@string/clabel_name" />
+                android:text="@string/label_name" />
 
             <EditText
                 android:id="@+id/book_editor_name"
@@ -80,12 +80,12 @@
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
-            android:text="@string/cact_ok" />
+            android:text="@string/act_ok" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
-            android:text="@string/cact_cancel" />
+            android:text="@string/act_cancel" />
     </LinearLayout>
 </LinearLayout>

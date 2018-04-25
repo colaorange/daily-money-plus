@@ -7,9 +7,9 @@
     <item
         android:id="@+id/book_mgnt_menu_edit"
         android:icon="?ic_edit"
-        android:title="@string/cact_edit"></item>
+        android:title="@string/act_edit"></item>
     <item
         android:id="@+id/book_mgnt_menu_delete"
         android:icon="?ic_delete_forever"
-        android:title="@string/cact_delete"></item>
+        android:title="@string/act_delete"></item>
 </menu>

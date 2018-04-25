@@ -22,26 +22,26 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.Detail;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
  * @author dennis
  */
-public class DetailListHelper implements OnItemClickListener {
+public class RecordListHelper implements OnItemClickListener {
 
-    private static String[] bindingFrom = new String[]{"layout", "layout_inner", "from", "to", "money", "note", "date"};
+    private static String[] mappingKeys = new String[]{"layout", "layout_inner", "from", "to", "money", "note", "date"};
 
-    private static int[] bindingTo = new int[]{R.id.detail_mgnt_item_layout, R.id.detail_mgnt_item_layout_inner, R.id.detail_mgnt_item_from, R.id.detail_mgnt_item_to, R.id.detail_mgnt_item_money, R.id.detail_mgnt_item_note, R.id.detail_mgnt_item_date};
+    private static int[] mappingResIds = new int[]{R.id.detail_mgnt_item_layout, R.id.detail_mgnt_item_layout_inner, R.id.detail_mgnt_item_from, R.id.detail_mgnt_item_to, R.id.detail_mgnt_item_money, R.id.detail_mgnt_item_note, R.id.detail_mgnt_item_date};
 
 
-    private List<Detail> listViewData = new ArrayList<Detail>();
+    private List<Record> listViewData = new ArrayList<Record>();
 
     private List<Map<String, Object>> listViewMapList = new ArrayList<Map<String, Object>>();
 
@@ -53,11 +53,11 @@ public class DetailListHelper implements OnItemClickListener {
 
     private boolean clickeditable;
 
-    private OnDetailListener listener;
+    private OnRecordListener listener;
 
     private Activity activity;
 
-    public DetailListHelper(Activity activity, boolean clickeditable, OnDetailListener listener) {
+    public RecordListHelper(Activity activity, boolean clickeditable, OnRecordListener listener) {
         this.activity = activity;
         this.clickeditable = clickeditable;
         this.listener = listener;
@@ -81,7 +81,7 @@ public class DetailListHelper implements OnItemClickListener {
                 layout = R.layout.record_list_item1;
         }
 
-        listViewAdapter = new SimpleAdapter(activity, listViewMapList, layout, bindingFrom, bindingTo);
+        listViewAdapter = new SimpleAdapter(activity, listViewMapList, layout, mappingKeys, mappingResIds);
         listViewAdapter.setViewBinder(new ListViewBinder());
 
         listView = listview;
@@ -100,26 +100,26 @@ public class DetailListHelper implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
         if (parent == listView) {
-            doEditDetail(pos);
+            doEditRecord(pos);
         }
     }
 
 
-    public void reloadData(List<Detail> data) {
+    public void reloadData(List<Record> data) {
         listViewData = data;
         listViewMapList.clear();
         Preference preference = Contexts.instance().getPreference();
         DateFormat dateFormat = preference.getDateFormat();//for 2010/01/01
         DateFormat weekDayFormat = preference.getWeekDayFormat();// Wed.
-        for (Detail det : listViewData) {
-            Map<String, Object> row = toDetailMap(det, dateFormat, weekDayFormat);
+        for (Record det : listViewData) {
+            Map<String, Object> row = toRecordMap(det, dateFormat, weekDayFormat);
             listViewMapList.add(row);
         }
 
         listViewAdapter.notifyDataSetChanged();
     }
 
-    private Map<String, Object> toDetailMap(Detail det, DateFormat dateFormat, DateFormat weekDayFormat) {
+    private Map<String, Object> toRecordMap(Record det, DateFormat dateFormat, DateFormat weekDayFormat) {
         CalendarHelper calHelper = Contexts.instance().getCalendarHelper();
         I18N i18n = Contexts.instance().getI18n();
 
@@ -127,26 +127,26 @@ public class DetailListHelper implements OnItemClickListener {
         Account fromAcc = accountCache.get(det.getFrom());
         Account toAcc = accountCache.get(det.getTo());
 
-        String from = fromAcc == null ? det.getFrom() : (i18n.string(R.string.label_detlist_from, fromAcc.getName(), AccountType.getDisplay(i18n, fromAcc.getType())));
-        String to = toAcc == null ? det.getTo() : (i18n.string(R.string.label_detlist_to, toAcc.getName(), AccountType.getDisplay(i18n, toAcc.getType())));
+        String from = fromAcc == null ? det.getFrom() : (i18n.string(R.string.label_reclist_from, fromAcc.getName(), AccountType.getDisplay(i18n, fromAcc.getType())));
+        String to = toAcc == null ? det.getTo() : (i18n.string(R.string.label_reclist_to, toAcc.getName(), AccountType.getDisplay(i18n, toAcc.getType())));
         String money = Contexts.instance().toFormattedMoneyString(det.getMoney());
-        row.put(bindingFrom[0], new NamedItem(bindingFrom[0], det, bindingFrom[0]));
-        row.put(bindingFrom[1], new NamedItem(bindingFrom[1], det, bindingFrom[1]));
-        row.put(bindingFrom[2], new NamedItem(bindingFrom[2], det, from));
-        row.put(bindingFrom[3], new NamedItem(bindingFrom[3], det, to));
-        row.put(bindingFrom[4], new NamedItem(bindingFrom[4], det, money));
-        row.put(bindingFrom[5], new NamedItem(bindingFrom[5], det, det.getNote()));
-        row.put(bindingFrom[6], new NamedItem(bindingFrom[6], det, dateFormat.format(det.getDate()) + " " + weekDayFormat.format(det.getDate())));
+        row.put(mappingKeys[0], new NamedItem(mappingKeys[0], det, mappingKeys[0]));
+        row.put(mappingKeys[1], new NamedItem(mappingKeys[1], det, mappingKeys[1]));
+        row.put(mappingKeys[2], new NamedItem(mappingKeys[2], det, from));
+        row.put(mappingKeys[3], new NamedItem(mappingKeys[3], det, to));
+        row.put(mappingKeys[4], new NamedItem(mappingKeys[4], det, money));
+        row.put(mappingKeys[5], new NamedItem(mappingKeys[5], det, det.getNote()));
+        row.put(mappingKeys[6], new NamedItem(mappingKeys[6], det, dateFormat.format(det.getDate()) + " " + weekDayFormat.format(det.getDate())));
 
         return row;
     }
 
-    public void doNewDetail() {
-        doNewDetail(null);
+    public void doNewRecord() {
+        doNewRecord(null);
     }
 
-    public void doNewDetail(Date date) {
-        Detail d = new Detail("", "", date == null ? new Date() : date, 0D, "");
+    public void doNewRecord(Date date) {
+        Record d = new Record("", "", date == null ? new Date() : date, 0D, "");
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
@@ -155,8 +155,8 @@ public class DetailListHelper implements OnItemClickListener {
     }
 
 
-    public void doEditDetail(int pos) {
-        Detail d = listViewData.get(pos);
+    public void doEditRecord(int pos) {
+        Record d = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, false);
@@ -164,12 +164,12 @@ public class DetailListHelper implements OnItemClickListener {
         activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
     }
 
-    public void doDeleteDetail(int pos) {
-        Detail d = listViewData.get(pos);
-        boolean r = Contexts.instance().getDataProvider().deleteDetail(d.getId());
+    public void doDeleteRecord(int pos) {
+        Record d = listViewData.get(pos);
+        boolean r = Contexts.instance().getDataProvider().deleteRecord(d.getId());
         if (r) {
             if (listener != null) {
-                listener.onDetailDeleted(d);
+                listener.onRecordDeleted(d);
             } else {
                 listViewData.remove(pos);
                 listViewMapList.remove(pos);
@@ -179,8 +179,8 @@ public class DetailListHelper implements OnItemClickListener {
     }
 
 
-    public void doCopyDetail(int pos) {
-        Detail d = listViewData.get(pos);
+    public void doCopyRecord(int pos) {
+        Record d = listViewData.get(pos);
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
@@ -189,8 +189,8 @@ public class DetailListHelper implements OnItemClickListener {
     }
 
 
-    public interface OnDetailListener {
-        void onDetailDeleted(Detail detail);
+    public interface OnRecordListener {
+        void onRecordDeleted(Record record);
     }
 
     class ListViewBinder implements SimpleAdapter.ViewBinder {
@@ -202,7 +202,7 @@ public class DetailListHelper implements OnItemClickListener {
         public boolean setViewValue(View view, Object data, String text) {
             NamedItem item = (NamedItem) data;
             String name = item.getName();
-            Detail det = (Detail) item.getValue();
+            Record record = (Record) item.getValue();
 
             CalendarHelper calHelper = Contexts.instance().getCalendarHelper();
 
@@ -210,8 +210,8 @@ public class DetailListHelper implements OnItemClickListener {
 
                 RelativeLayout layout = (RelativeLayout) view;
 
-                Account fromAcc = accountCache.get(det.getFrom());
-                Account toAcc = accountCache.get(det.getTo());
+                Account fromAcc = accountCache.get(record.getFrom());
+                Account toAcc = accountCache.get(record.getTo());
                 int flag = 0;
                 if (toAcc != null) {
                     if (AccountType.EXPENSE.getType().equals(toAcc.getType())) {
@@ -266,7 +266,7 @@ public class DetailListHelper implements OnItemClickListener {
             if ("layout_inner".equals(name)) {
                 //make it light
                 LinearLayout inner = (LinearLayout) view;
-                Date ddate = det.getDate();
+                Date ddate = record.getDate();
                 Date now = new Date();
                 Date day3 = calHelper.dateBefore(now, 3);
                 Date day7 = calHelper.dateBefore(now, 7);
