@@ -158,7 +158,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.account_detail_mgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_record_list_optmenu, menu);
         return true;
     }
 
@@ -175,7 +175,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.account_detail_list_list) {
-            getMenuInflater().inflate(R.menu.account_detail_mgnt_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.account_record_list_ctxmenu, menu);
         }
 
     }

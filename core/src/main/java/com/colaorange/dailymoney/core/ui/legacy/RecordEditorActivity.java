@@ -228,8 +228,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        ddItemPaddingBase = 15 * GUIs.getDPRatio(RecordEditorActivity.this);
-        ddSelectedBg = getResources().getDrawable(resolveThemeAttrResId(R.attr.colorControlNormal));//.mutate();
+        ddItemPaddingBase = 15 * GUIs.getDPRatio(this);
+        ddSelectedBg = getResources().getDrawable(resolveThemeAttrResId(R.attr.colorControlNormal));
     }
 
     private void refreshUI() {

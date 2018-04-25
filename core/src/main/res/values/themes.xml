@@ -75,7 +75,7 @@
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
         <item name="accountExpenseTextColor">@color/expenseTextDark</item>
         <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
-        <item name="accountOtherTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
         <item name="accountUnknownTextColor">@color/unknownTextDark</item>
 
         <item name="accountAssetBgColor">@color/assetBgLight</item>

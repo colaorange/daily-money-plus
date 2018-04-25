@@ -1,15 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -27,11 +19,9 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
@@ -40,6 +30,15 @@ import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author dennis
@@ -160,7 +159,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     }
 
     private boolean handleFirstTime() {
-        boolean fv = contexts().getAndSetFirstVersionTime();
+        boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime){
             firstTime = false;
             GUIs.post(new Runnable(){
@@ -173,7 +172,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 }
             });
             return true;
-        }else if(fv){
+        }else if(fvt){
             GUIs.post(new Runnable(){
                 @Override
                 public void run() {

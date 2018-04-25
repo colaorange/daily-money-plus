@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.AccountEditorActivity">
 
     <ScrollView
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -15,66 +20,47 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_name" />
 
             <EditText
-                android:id="@+id/account_editor_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:id="@+id/account_name"
+                style="@style/editorFieldInput"
                 android:inputType="text" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_type" />
 
             <Spinner
-                android:id="@+id/account_editor_type"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                android:id="@+id/account_type"
+                style="@style/editorFieldInput" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_initial_value" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
+                style="@style/editorFieldInput"
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/account_editor_initval"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/account_initval"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:inputType="numberDecimal"
-                    android:digits="0123456789.,"/>
+                    android:layout_weight="1"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal" />
 
                 <ImageButton
-                    android:id="@+id/account_editor_cal2"
+                    android:id="@+id/btn_cal2"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_grid_on" />
             </LinearLayout>
 
             <CheckBox
-                android:id="@+id/account_editor_cash_account"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:id="@+id/account_cash"
+                style="@style/editorFieldInput"
                 android:text="@string/label_cash_account" />
 
         </LinearLayout>
@@ -86,19 +72,19 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/acceditor_ok"
+            android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
             android:text="@string/act_ok" />
 
         <Button
-            android:id="@+id/acceditor_cancel"
+            android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
             android:text="@string/act_cancel" />
 
         <Button
-            android:id="@+id/acceditor_close"
+            android:id="@+id/btn_close"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
             android:text="@string/act_close"

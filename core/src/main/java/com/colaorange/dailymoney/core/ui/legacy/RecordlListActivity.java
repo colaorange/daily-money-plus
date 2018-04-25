@@ -117,7 +117,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                 trackEvent(Contexts.TRACKER_EVT_DELETE);
             }
         });
-        ListView listView = findViewById(R.id.recorder_list_list);
+        ListView listView = findViewById(R.id.record_list_list);
         recordListHelper.setup(listView);
 
 
@@ -359,7 +359,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.recorder_list_list) {
+        if (v.getId() == R.id.record_list_list) {
             getMenuInflater().inflate(R.menu.record_list_ctxmenu, menu);
         }
 

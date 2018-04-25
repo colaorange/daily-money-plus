@@ -2,31 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.legacy.RecordEditorActivity"
-    android:background="?appPrimaryLightColor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/appToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat" />
-
-    </android.support.design.widget.AppBarLayout>
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.RecordEditorActivity">
 
     <ScrollView
-        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -35,48 +20,33 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_from_account" />
 
             <Spinner
                 android:id="@+id/record_from_account"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                style="@style/editorFieldInput" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_to_account" />
 
             <Spinner
                 android:id="@+id/record_to_account"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                style="@style/editorFieldInput" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_date" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                style="@style/editorFieldInput"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/record_date"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:editable="false" />
@@ -103,49 +73,35 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_money" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
+                style="@style/editorFieldInput"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/record_money"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="numberDecimal"
                     android:digits="0123456789.,"
-                    />
+                    android:inputType="numberDecimal" />
 
                 <ImageButton
                     android:id="@+id/btn_cal2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_grid_on" />
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_note" />
 
             <EditText
                 android:id="@+id/record_note"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:maxLines="2" />
+                style="@style/editorFieldInput"
+                android:maxLines="3" />
         </LinearLayout>
     </ScrollView>
 
