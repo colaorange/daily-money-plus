@@ -9,15 +9,15 @@ public class Colors {
 
     /**
      * @param color  the color rgb
-     * @param factor 0-1f
+     * @param distance 0-1f
      * @return
      */
-    public static int darken(int color, float factor) {
+    public static int darken(int color, float distance) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        hsv[2] = hsv[2] * factor;
-        if (hsv[2] > 1f) {
-            hsv[2] = 1f;
+        hsv[2] = hsv[2] - distance;
+        if (hsv[2] < 0f) {
+            hsv[2] = 0f;
         }
         color = Color.HSVToColor(hsv);
         return color;
@@ -25,15 +25,28 @@ public class Colors {
 
     /**
      * @param color  the color rgb
-     * @param factor 0-1f
+     * @param distance 0-1f
      * @return
      */
-    public static int lighten(int color, float factor) {
+    public static int lighten(int color, float distance) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        hsv[2] = 1.0f - factor * (1.0f - hsv[2]);
+        hsv[2] = hsv[2] + distance;
+        if (hsv[2] > 1f) {
+            hsv[2] = 1f;
+        }
+        color = Color.HSVToColor(hsv);
+        return color;
+    }
+
+    public static int saturation(int color, float s){
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] = s;
         if (hsv[2] < 0f) {
             hsv[2] = 0f;
+        }else if (hsv[2] > 1f) {
+            hsv[2] = 1f;
         }
         color = Color.HSVToColor(hsv);
         return color;

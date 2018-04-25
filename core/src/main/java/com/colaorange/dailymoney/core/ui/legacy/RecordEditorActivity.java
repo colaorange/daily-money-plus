@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -171,7 +172,12 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         fromAccountList = new ArrayList<IndentNode>();
         fromAccountMapList = new ArrayList<Map<String, Object>>();
-        fromAccountAdapter = new SimpleAdapter(this, fromAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds);
+        fromAccountAdapter = new AccountViewAdapter(this, fromAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds){
+            @Override
+            public Account getAccount(int position) {
+                return fromAccountList.get(position).getAccount();
+            }
+        };
         fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         fromAccountAdapter.setViewBinder(new AccountViewBinder() {
             public Account getSelectedAccount() {
@@ -187,7 +193,12 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         spToAccount = findViewById(R.id.record_to_account);
         toAccountList = new ArrayList<IndentNode>();
         toAccountMapList = new ArrayList<Map<String, Object>>();
-        toAccountAdapter = new SimpleAdapter(this, toAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds);
+        toAccountAdapter = new AccountViewAdapter(this, toAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds){
+            @Override
+            public Account getAccount(int position) {
+                return toAccountList.get(position).getAccount();
+            }
+        };
         toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         toAccountAdapter.setViewBinder(new AccountViewBinder() {
             public Account getSelectedAccount() {
@@ -514,6 +525,22 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         finish();
     }
 
+    abstract class AccountViewAdapter extends SimpleAdapter{
+
+        abstract public Account getAccount(int position);
+
+        public AccountViewAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+            super(context, data, resource, from, to);
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return getAccount(position) != null;
+        }
+
+
+    }
+
 
     abstract class AccountViewBinder implements SimpleAdapter.ViewBinder {
 
@@ -531,7 +558,6 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 AccountType at = node.getType();
                 TextView tv = (TextView) view;
                 int textColor;
-                tv.setBackgroundDrawable(null);
                 if (AccountType.INCOME == at) {
                     textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountIncomeTextColor));
                 } else if (AccountType.ASSET == at) {
@@ -552,14 +578,20 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 if (Constants.SIMPLE_SPINNER_ITEM_TAG.equals(tv.getTag())) {
                     tv.setPadding((int) ((1 + node.getIndent()) * ddItemPaddingBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
 
-                    if (node.getAccount() == null) {
+                    if (node.getAccount() == null) {//pseudo node
                         if (isLightTheme()) {
-                            textColor = Colors.lighten(textColor, 0.3f);
+                            textColor = Colors.lighten(textColor, 0.2f);
                         } else {
-                            textColor = Colors.darken(textColor, 0.3f);
+                            textColor = Colors.darken(textColor, 0.2f);
                         }
                         tv.setTextColor(textColor);
                     } else if (node.getAccount().equals(getSelectedAccount())) {
+                        if (isLightTheme()) {
+                            textColor = Colors.darken(textColor, 0.2f);
+                        } else {
+                            textColor = Colors.lighten(textColor, 0.2f);
+                        }
+                        tv.setTextColor(textColor);
                         tv.setBackgroundDrawable(ddSelectedBg);
                     } else {
                         tv.setBackgroundDrawable(null);

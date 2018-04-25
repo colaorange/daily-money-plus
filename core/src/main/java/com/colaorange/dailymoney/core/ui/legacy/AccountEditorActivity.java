@@ -19,6 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.calculator2.Calculator;
@@ -325,26 +326,34 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
                 NamedItem item = (NamedItem) data;
                 AccountType at = (AccountType) item.getValue();
                 TextView tv = (TextView) view;
+                int textColor;
                 if (AccountType.INCOME == at) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountIncomeTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountIncomeTextColor);
                 } else if (AccountType.ASSET == at) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountAssetTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountAssetTextColor);
                 } else if (AccountType.EXPENSE == at) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountExpenseTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountExpenseTextColor);
                 } else if (AccountType.LIABILITY == at) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountLiabilityTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountLiabilityTextColor);
                 } else if (AccountType.OTHER == at) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountOtherTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountOtherTextColor);
                 } else {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountUnknownTextColor));
+                    textColor = resolveThemeAttrResData(R.attr.accountUnknownTextColor);
                 }
+                tv.setTextColor(textColor);
                 tv.setText(item.getToString());
 
                 if (Constants.SIMPLE_SPINNER_ITEM_TAG.equals(tv.getTag())) {
 
                     int pos = spType.getSelectedItemPosition();
                     if (pos >= 0 && AccountType.getSupportedType()[spType.getSelectedItemPosition()].equals(at)) {
+                        if (isLightTheme()) {
+                            textColor = Colors.darken(textColor, 0.2f);
+                        } else {
+                            textColor = Colors.lighten(textColor, 0.2f);
+                        }
                         tv.setBackgroundDrawable(ddSelectedBg);
+                        tv.setTextColor(textColor);
                     }
 
                     tv.setPadding((int) ddItemPaddingBase, tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());

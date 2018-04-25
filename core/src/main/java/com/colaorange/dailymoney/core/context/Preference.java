@@ -86,8 +86,8 @@ public class Preference {
 
     boolean autoBackup = true;
 
-//    String theme = THEME_COLA;
-    String theme = THEME_LEMON;
+    String theme = THEME_COLA;
+//    String theme = THEME_LEMON;
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
