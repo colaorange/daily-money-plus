@@ -5,9 +5,9 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
+import com.colaorange.dailymoney.core.util.Notifications;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -108,12 +108,12 @@ public class AutoBackupRunnable implements Runnable {
             String count = "" + (r.getDb() + r.getPref());
             String msg = i18n.string(R.string.msg_db_backuped, count, r.getLastFolder());
 
-            GUIs.sendNotification(contexts.getApp(), GUIs.NotificationTarget.SYSTEM_BAR, GUIs.NotificationLevel.INFO,
+            Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.INFO,
                     i18n.string(R.string.label_backup_data), msg, null, 0);
         } else {
             Logger.w(r.getErr());
             errorDayHour = format.format(cal.getTime());
-            GUIs.sendNotification(contexts.getApp(), GUIs.NotificationTarget.SYSTEM_BAR, GUIs.NotificationLevel.WARN,
+            Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.WARN,
                     i18n.string(R.string.label_backup_data), r.getErr(), null, 0);
             contexts.trackEvent(Contexts.getTrackerPath(getClass()), "backup-fail", "", null);
         }
