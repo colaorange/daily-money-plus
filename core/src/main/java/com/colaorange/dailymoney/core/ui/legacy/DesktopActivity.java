@@ -88,7 +88,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initParams() {
         Bundle bundle = getIntentExtras();
-        firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME,false);
+        firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
     }
 
 
@@ -160,9 +160,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private boolean handleFirstTime() {
         boolean fvt = contexts().getAndSetFirstVersionTime();
-        if (firstTime){
+        if (firstTime) {
             firstTime = false;
-            GUIs.post(new Runnable(){
+            GUIs.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
@@ -172,8 +172,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 }
             });
             return true;
-        }else if(fvt){
-            GUIs.post(new Runnable(){
+        } else if (fvt) {
+            GUIs.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
@@ -237,21 +237,20 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        List<DesktopItem> importants = new ArrayList<DesktopItem>();
+        List<DesktopItem> menuItems = new ArrayList<DesktopItem>();
         for (Desktop d : desktops) {
-            for (DesktopItem item : d.getItems()) {
-                if (item.getImportance() >= 0) {
-                    importants.add(item);
-                }
+            for (DesktopItem item : d.getMenuItems()) {
+                menuItems.add(item);
             }
         }
-        //sort
-        Collections.sort(importants, new Comparator<DesktopItem>() {
+
+        Collections.sort(menuItems, new Comparator<DesktopItem>() {
             public int compare(DesktopItem item1, DesktopItem item2) {
-                return Integer.valueOf(item2.getImportance()).compareTo(Integer.valueOf(item1.getImportance()));
+                return Integer.valueOf(item2.getPriority()).compareTo(Integer.valueOf(item1.getPriority()));
             }
         });
-        for (DesktopItem item : importants) {
+
+        for (DesktopItem item : menuItems) {
             MenuItem mi = menu.add(item.getLabel());
             mi.setOnMenuItemClickListener(new DesktopItemClickListener(item));
         }
@@ -274,10 +273,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
 
     @SuppressWarnings("unchecked")
-    List<DesktopItem> getCurrentVisibleDesktopItems() {
+    List<DesktopItem> getCurrentDesktopItems() {
         for (Desktop d : desktops) {
             if (d.getLabel().equals(currTab)) {
-                return d.getVisibleItems();
+                return d.getDesktopItems();
             }
         }
         return Collections.EMPTY_LIST;
@@ -314,7 +313,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     public class DesktopItemAdapter extends BaseAdapter {
 
         public int getCount() {
-            return getCurrentVisibleDesktopItems().size();
+            return getCurrentDesktopItems().size();
         }
 
         public Object getItem(int position) {
@@ -342,7 +341,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             iv = view.findViewById(R.id.desktop_icon);
             tv = view.findViewById(R.id.desktop_label);
 
-            DesktopItem item = getCurrentVisibleDesktopItems().get(position);
+            DesktopItem item = getCurrentDesktopItems().get(position);
             iv.setImageResource(item.getIcon());
             tv.setText(item.getLabel());
             dtHashMap.put(view, item);

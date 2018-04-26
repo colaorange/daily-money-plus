@@ -13,9 +13,7 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 
 /**
- * 
  * @author dennis
- *
  */
 public class MainDesktop extends AbstractDesktop {
 
@@ -32,18 +30,18 @@ public class MainDesktop extends AbstractDesktop {
             public void run() {
                 Record d = new Record("", "", new Date(), 0D, "");
                 Intent intent = null;
-                intent = new Intent(activity,RecordEditorActivity.class);
-                intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE,true);
-                intent.putExtra(RecordEditorActivity.PARAM_RECORD,d);
+                intent = new Intent(activity, RecordEditorActivity.class);
+                intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
+                intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
                 activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
             }
-        }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_adddetail,999);
+        }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_adddetail, true, false, 999);
 
         Intent intent = new Intent(activity, RecordlListActivity.class);
         intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_DAY);
         DesktopItem daylist = new DesktopItem(new IntentRun(activity, intent),
                 i18n.string(R.string.dtitem_reclist_day), R.drawable.dtitem_detail_day);
-        
+
         intent = new Intent(activity, RecordlListActivity.class);
         intent.putExtra(RecordlListActivity.PARAM_MODE, RecordlListActivity.MODE_WEEK);
         DesktopItem weeklist = new DesktopItem(new IntentRun(activity, intent),
@@ -61,13 +59,13 @@ public class MainDesktop extends AbstractDesktop {
 
         DesktopItem accmgntdt = new DesktopItem(new ActivityRun(activity, AccountMgntActivity.class),
                 i18n.string(R.string.dtitem_accmgnt), R.drawable.dtitem_account);
-        
+
         DesktopItem bookmgntdt = new DesktopItem(new ActivityRun(activity, BookMgntActivity.class),
                 i18n.string(R.string.dtitem_books), R.drawable.dtitem_books);
-        
+
         DesktopItem datamaindt = new DesktopItem(new ActivityRun(activity, DataMaintenanceActivity.class),
                 i18n.string(R.string.dtitem_datamain), R.drawable.dtitem_datamain);
-        
+
         DesktopItem prefdt = new DesktopItem(new ActivityRun(activity, PrefsActivity.class),
                 i18n.string(R.string.dtitem_prefs), R.drawable.dtitem_prefs);
 
@@ -86,28 +84,26 @@ public class MainDesktop extends AbstractDesktop {
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_how2use);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.label_how2use));
         DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_how2use),R.drawable.dtitem_how2use,0);
+                i18n.string(R.string.label_how2use), R.drawable.dtitem_how2use, true, true, -998);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, Contexts.instance().getAppVerName());
         DesktopItem about = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_about),R.drawable.dtitem_about,0);
+                i18n.string(R.string.label_about), R.drawable.dtitem_about, true, true, -999);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_contributor);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.label_contributor));
         DesktopItem contributor = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_contributor),-1,0);
-        contributor.setHidden(true);
+                i18n.string(R.string.label_contributor));
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_history);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.label_history));
         DesktopItem history = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_history),-1,0);
-        history.setHidden(true);
-        
+                i18n.string(R.string.label_history));
+
         addItem(how2use);
         addItem(contributor);
         addItem(history);

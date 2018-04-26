@@ -26,11 +26,6 @@ public class LocalWebViewActivity extends ContextsActivity {
     String uri;
 
     @Override
-    public boolean isNoActionBarTheme() {
-        return false;
-    }
-
-    @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.local_webview);

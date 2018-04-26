@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    android:padding="5dp">
+    tools:context=".ui.legacy.DataMaintenanceActivity">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <include layout="@layout/app_bar" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
@@ -22,10 +29,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
                 android:drawableLeft="@android:drawable/ic_dialog_info"
                 android:drawablePadding="10sp"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
                 android:text="@string/label_prefs_workingfolder" />
 
             <Button
@@ -51,6 +58,7 @@
                     android:gravity="center"
                     android:paddingRight="5sp"
                     android:text="@string/label_prefs_lastbackup" />
+
                 <TextView
                     android:id="@+id/datamain_lastbackup"
                     android:layout_width="wrap_content"
@@ -109,11 +117,10 @@
                 android:id="@+id/data_maintenance_reset"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
-                android:text="@string/label_reset_working_book"
-                android:layout_marginTop="10dp"
-                />
+                android:text="@string/label_reset_working_book" />
 
             <!--TODO should move to developer-->
 
@@ -134,8 +141,8 @@
                 android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_create_default"
-                android:visibility="gone"></Button>
+                android:visibility="gone" />
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

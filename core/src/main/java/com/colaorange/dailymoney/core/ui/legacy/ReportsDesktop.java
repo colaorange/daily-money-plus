@@ -8,9 +8,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 
 /**
- * 
  * @author dennis
- *
  */
 public class ReportsDesktop extends AbstractDesktop {
 
@@ -23,28 +21,28 @@ public class ReportsDesktop extends AbstractDesktop {
         I18N i18n = Contexts.instance().getI18n();
 
         label = i18n.string(R.string.dt_reports);
-        
+
         Intent intent = null;
-        
+
         intent = new Intent(activity, BalanceActivity.class);
         intent.putExtra(BalanceActivity.PARAM_TOTAL_MODE, false);
         intent.putExtra(BalanceActivity.PARAM_MODE, BalanceActivity.MODE_MONTH);
         DesktopItem monthBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_monthly_balance), R.drawable.dtitem_balance_month);
+                i18n.string(R.string.dtitem_report_monthly_balance), R.drawable.dtitem_balance_month, true, false, 199);
         addItem(monthBalance);
-        
+
         intent = new Intent(activity, BalanceActivity.class);
         intent.putExtra(BalanceActivity.PARAM_TOTAL_MODE, false);
         intent.putExtra(BalanceActivity.PARAM_MODE, BalanceActivity.MODE_YEAR);
         DesktopItem yearBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_yearly_balance), R.drawable.dtitem_balance_year);
+                i18n.string(R.string.dtitem_report_yearly_balance), R.drawable.dtitem_balance_year, true, false, 199);
         addItem(yearBalance);
-        
+
         intent = new Intent(activity, BalanceActivity.class);
         intent.putExtra(BalanceActivity.PARAM_TOTAL_MODE, true);
         intent.putExtra(BalanceActivity.PARAM_MODE, BalanceActivity.MODE_MONTH);
         DesktopItem totalBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month,99);
+                i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month, true,true, 197);
         addItem(totalBalance);
     }
 
