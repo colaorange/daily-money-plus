@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/book_mgnt_menu_set_working"
+        android:id="@+id/menu_set_working"
         android:icon="?ic_edit"
-        android:title="@string/act_set_working_book"></item>
+        android:title="@string/act_set_working_book"/>
     <item
-        android:id="@+id/book_mgnt_menu_edit"
+        android:id="@+id/menu_edit"
         android:icon="?ic_edit"
-        android:title="@string/act_edit"></item>
+        android:title="@string/act_edit"/>
     <item
-        android:id="@+id/book_mgnt_menu_delete"
+        android:id="@+id/menu_delete"
         android:icon="?ic_delete_forever"
-        android:title="@string/act_delete"></item>
+        android:title="@string/act_delete"/>
 </menu>

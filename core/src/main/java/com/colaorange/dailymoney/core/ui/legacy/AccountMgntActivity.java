@@ -189,13 +189,13 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.account_mgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_mgnt_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.account_mgnt_menu_new) {
+        if (item.getItemId() == R.id.menu_new) {
             doNewAccount();
             return true;
         }
@@ -214,13 +214,13 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.account_mgnt_menu_edit) {
+        if (item.getItemId() == R.id.menu_edit) {
             doEditAccount(info.position);
             return true;
-        } else if (item.getItemId() == R.id.account_mgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.menu_delete) {
             doDeleteAccount(info.position);
             return true;
-        } else if (item.getItemId() == R.id.account_mgnt_menu_copy) {
+        } else if (item.getItemId() == R.id.menu_copy) {
             doCopyAccount(info.position);
             return true;
         } else {

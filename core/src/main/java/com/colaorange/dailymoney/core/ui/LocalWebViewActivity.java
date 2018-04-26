@@ -68,20 +68,21 @@ public class LocalWebViewActivity extends ContextsActivity {
         webView.loadUrl(Constants.LOCAL_URL_PREFIX + uri);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        MenuItem mi = menu.add(i18n().string(R.string.act_close));
-        mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                LocalWebViewActivity.this.finish();
-                return true;
-            }
-        });
-
+        getMenuInflater().inflate(R.menu.close_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_close) {
+            LocalWebViewActivity.this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @JavascriptInterface

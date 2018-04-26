@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/balance_menu_detlist"
-        android:title="@string/act_balance_reclist"></item>
+        android:id="@+id/menu_reclist"
+        android:title="@string/act_balance_reclist"/>
     <item
-        android:id="@+id/balance_menu_piechart"
-        android:title="@string/act_balance_piechart"></item>
+        android:id="@+id/menu_piechart"
+        android:title="@string/act_balance_piechart"/>
     <item
-        android:id="@+id/balance_menu_yearly_timechart"
-        android:title="@string/act_balance_yearly_timechart"></item>
+        android:id="@+id/menu_yearly_serieschart"
+        android:title="@string/act_balance_yearly_timechart"/>
     <item
-        android:id="@+id/balance_menu_yearly_cumulative_timechart"
-        android:title="@string/act_balance_yearly_cumulative_timechart"></item>
+        android:id="@+id/menu_yearly_cumulative_serieschart"
+        android:title="@string/act_balance_yearly_cumulative_timechart"/>
     <item
-        android:id="@+id/balance_menu_yearly_runchart"
-        android:title="@string/act_balance_yearly_runchart"></item>
+        android:id="@+id/menu_yearly_runchart"
+        android:title="@string/act_balance_yearly_runchart"/>
 
 </menu>

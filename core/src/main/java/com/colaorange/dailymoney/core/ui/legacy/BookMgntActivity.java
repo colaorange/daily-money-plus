@@ -104,13 +104,13 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.book_mgnt_optmenu, menu);
+        getMenuInflater().inflate(R.menu.book_mgnt_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.book_mgnt_menu_new) {
+        if (item.getItemId() == R.id.menu_new) {
             bookListHelper.doNewBook();
             return true;
         }
@@ -130,13 +130,13 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.book_mgnt_menu_edit) {
+        if (item.getItemId() == R.id.menu_edit) {
             bookListHelper.doEditBook(info.position);
             return true;
-        } else if (item.getItemId() == R.id.book_mgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.menu_delete) {
             bookListHelper.doDeleteBook(info.position);
             return true;
-        } else if (item.getItemId() == R.id.book_mgnt_menu_set_working) {
+        } else if (item.getItemId() == R.id.menu_set_working) {
             bookListHelper.doSetWorkingBook(info.position);
             finish();
             return true;

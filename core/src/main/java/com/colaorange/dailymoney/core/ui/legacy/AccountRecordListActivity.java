@@ -158,13 +158,13 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.account_record_list_optmenu, menu);
+        getMenuInflater().inflate(R.menu.account_reclist_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.account_detail_mgnt_menu_new) {
+        if (item.getItemId() == R.id.menu_new) {
             recordListHelper.doNewRecord();
             return true;
         }
@@ -175,7 +175,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.account_detail_list_list) {
-            getMenuInflater().inflate(R.menu.account_record_list_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.account_reclist_ctxmenu, menu);
         }
 
     }
@@ -183,13 +183,13 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.account_detail_mgnt_menu_edit) {
+        if (item.getItemId() == R.id.menu_edit) {
             recordListHelper.doEditRecord(info.position);
             return true;
-        } else if (item.getItemId() == R.id.account_detail_mgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.menu_delete) {
             recordListHelper.doDeleteRecord(info.position);
             return true;
-        } else if (item.getItemId() == R.id.account_detail_mgnt_menu_copy) {
+        } else if (item.getItemId() == R.id.menu_copy) {
             recordListHelper.doCopyRecord(info.position);
             return true;
         }

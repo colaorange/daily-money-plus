@@ -9,20 +9,7 @@
     android:orientation="vertical"
     >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/appToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat" />
-
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/app_bar" />
 
     <TabHost
         android:id="@+id/account_mgnt_tabs"

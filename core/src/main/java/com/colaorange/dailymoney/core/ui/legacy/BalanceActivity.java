@@ -462,16 +462,16 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.balance_optmenu, menu);
+        getMenuInflater().inflate(R.menu.balance_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.balance_menu_yearly_runchart) {
+        if (item.getItemId() == R.id.menu_yearly_runchart) {
             doYearlyRunChart();
             return true;
-        } else if (item.getItemId() == R.id.balance_menu_toggle_hierarchy) {
+        } else if (item.getItemId() == R.id.menu_toggle_hierarchy) {
             preference().setHierarchicalBalance(!preference().isHierarchicalBalance());
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -539,19 +539,19 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.balance_menu_piechart) {
+        if (item.getItemId() == R.id.menu_piechart) {
             doPieChart(info.position);
             return true;
-        } else if (item.getItemId() == R.id.balance_menu_yearly_timechart) {
+        } else if (item.getItemId() == R.id.menu_yearly_serieschart) {
             doYearlyTimeChart(info.position);
             return true;
-        } else if (item.getItemId() == R.id.balance_menu_yearly_cumulative_timechart) {
+        } else if (item.getItemId() == R.id.menu_yearly_cumulative_serieschart) {
             doYearlyCumulativeTimeChart(info.position);
             return true;
-        } else if (item.getItemId() == R.id.balance_menu_yearly_runchart) {
+        } else if (item.getItemId() == R.id.menu_yearly_runchart) {
             doYearlyRunChart();
             return true;
-        } else if (item.getItemId() == R.id.balance_menu_detlist) {
+        } else if (item.getItemId() == R.id.menu_reclist) {
             doDetailList(info.position);
             return true;
         }

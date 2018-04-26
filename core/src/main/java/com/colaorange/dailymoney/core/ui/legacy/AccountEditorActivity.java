@@ -48,12 +48,27 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     private Account account;
     private Account workingAccount;
 
-    Activity activity;
+    private Activity activity;
 
-    ImageButton btnCal2;
+    private ImageButton btnCal2;
 
     private float ddItemPaddingBase;
     private Drawable ddSelectedBg;
+
+    /**
+     * need to mapping twice to do different mapping in spitem and spdropdown item
+     */
+    private static String[] typeMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
+    private static int[] typeMappingResIds = new int[]{R.id.simple_spinner_item_label};
+
+    private EditText editName;
+    private EditText editInitval;
+    private Spinner spType;
+    private CheckBox ckCash;
+
+    private Button okBtn;
+    private Button cancelBtn;
+    private Button closeBtn;
 
     /**
      * clone account without id
@@ -84,21 +99,6 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             setTitle(R.string.title_acceditor_update);
         }
     }
-
-    /**
-     * need to mapping twice to do different mapping in spitem and spdropdown item
-     */
-    private static String[] typeMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
-    private static int[] typeMappingResIds = new int[]{R.id.simple_spinner_item_label};
-
-    EditText editName;
-    EditText editInitval;
-    Spinner spType;
-    CheckBox ckCash;
-
-    Button okBtn;
-    Button cancelBtn;
-    Button closeBtn;
 
     private void initMembers() {
         I18N i18n = i18n();

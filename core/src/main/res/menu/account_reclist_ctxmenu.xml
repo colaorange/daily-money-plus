@@ -3,13 +3,13 @@
     <item
         android:id="@+id/menu_edit"
         android:icon="?ic_edit"
-        android:title="@string/act_edit"/>
+        android:title="@string/act_edit" />
     <item
         android:id="@+id/menu_copy"
         android:icon="?ic_content_copy"
-        android:title="@string/act_copy"/>
+        android:title="@string/act_copy" />
     <item
         android:id="@+id/menu_delete"
         android:icon="?ic_delete_forever"
-        android:title="@string/act_delete"/>
+        android:title="@string/act_delete" />
 </menu>

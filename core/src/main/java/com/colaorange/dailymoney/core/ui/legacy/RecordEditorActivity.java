@@ -56,13 +56,13 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private DateFormat dateFormat;
 
-    boolean archived = false;
+    private boolean archived = false;
 
     private List<IndentNode> fromAccountList;
     private List<IndentNode> toAccountList;
 
-    List<Map<String, Object>> fromAccountMapList;
-    List<Map<String, Object>> toAccountMapList;
+    private List<Map<String, Object>> fromAccountMapList;
+    private List<Map<String, Object>> toAccountMapList;
 
     private SimpleAdapter fromAccountAdapter;
     private SimpleAdapter toAccountAdapter;
@@ -71,16 +71,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private static String[] accountMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
     private static int[] accountMappingResIds = new int[]{R.id.simple_spinner_item_label};
 
-    Spinner spFromAccount;
-    Spinner spToAccount;
+    private Spinner spFromAccount;
+    private Spinner spToAccount;
 
-    EditText editRecordDate;
-    EditText editRecordNote;
-    EditText editRecordMoney;
+    private EditText editRecordDate;
+    private EditText editRecordNote;
+    private EditText editRecordMoney;
 
-    Button btnOk;
-    Button btnCancel;
-    Button btnClose;
+    private Button btnOk;
+    private Button btnCancel;
+    private Button btnClose;
 
     private float ddItemPaddingBase;
     private Drawable ddSelectedBg;

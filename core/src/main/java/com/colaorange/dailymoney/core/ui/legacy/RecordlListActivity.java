@@ -342,13 +342,13 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.record_list_optmenu, menu);
+        getMenuInflater().inflate(R.menu.record_list_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.detail_mgnt_menu_new) {
+        if (item.getItemId() == R.id.menu_new) {
             recordListHelper.doNewRecord(currentDate);
             return true;
         }
@@ -368,13 +368,13 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.detail_mgnt_menu_edit) {
+        if (item.getItemId() == R.id.menu_edit) {
             recordListHelper.doEditRecord(info.position);
             return true;
-        } else if (item.getItemId() == R.id.detail_mgnt_menu_delete) {
+        } else if (item.getItemId() == R.id.menu_delete) {
             recordListHelper.doDeleteRecord(info.position);
             return true;
-        } else if (item.getItemId() == R.id.detail_mgnt_menu_copy) {
+        } else if (item.getItemId() == R.id.menu_copy) {
             recordListHelper.doCopyRecord(info.position);
             return true;
         }
