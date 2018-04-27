@@ -1,30 +1,14 @@
 package com.colaorange.dailymoney.core.util;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +18,15 @@ import android.widget.Toast;
 import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.core.R;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Utitls to help use handling guis opersation, make sure all api are using in GUI scope.
  * @author dennis
  */
 public class GUIs {
@@ -43,6 +35,8 @@ public class GUIs {
 
     public static final int OK_BUTTON = AlertDialog.BUTTON_POSITIVE;
     public static final int CANCEL_BUTTON = AlertDialog.BUTTON_NEGATIVE;
+
+    private static Handler guiHandler;
 
     static public void alert(Context context, String title, String msg, String oktext, int icon) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
@@ -160,8 +154,23 @@ public class GUIs {
         }, delay, TimeUnit.MILLISECONDS);
     }
 
+    static public void touch(){
+        getHandler();
+    }
+
+    /**
+     *
+     * @return
+     */
+    static synchronized private Handler getHandler() {
+        if (guiHandler == null) {
+            guiHandler = new Handler();
+        }
+        return guiHandler;
+    }
+
     static public void post(Runnable r) {
-        Handler guiHandler = new Handler();
+
         guiHandler.post(new NothrowRunnable(r));
     }
 

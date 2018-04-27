@@ -13,6 +13,7 @@ import android.util.TypedValue;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -29,6 +30,8 @@ public class ContextsActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         applyTheme();//do before super on create;
         super.onCreate(bundle);
+        //for init ui related resource in ui thread
+        GUIs.touch();
 
         Logger.d("activity created:" + this);
     }
