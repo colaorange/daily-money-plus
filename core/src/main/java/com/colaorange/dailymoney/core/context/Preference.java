@@ -23,7 +23,7 @@ import java.util.Set;
 public class Preference {
 
     /**
-     * DON'T CHANGE SALT, it effect all old password
+     * WARN, DON'T CHANGE SALT, it effect all old password
      **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 

@@ -161,6 +161,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     private boolean handleFirstTime() {
         boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime) {
+            //TODO minor bug, firstTime to false is no usage when onStop be called, have to save to savedInstanceState
             firstTime = false;
             GUIs.post(new Runnable() {
                 @Override

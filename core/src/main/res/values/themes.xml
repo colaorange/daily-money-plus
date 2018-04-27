@@ -26,6 +26,9 @@
     <attr name="accountOtherBgColor" format="color" />
     <attr name="accountUnknownBgColor" format="color" />
 
+    <attr name="balanceH1BgColor" format="reference" />
+    <attr name="balanceH2BgColor" format="reference" />
+
     <attr name="textSize" format="dimension" />
     <attr name="textSizeSmall" format="dimension" />
     <attr name="textSizeLarge" format="dimension" />
@@ -59,15 +62,15 @@
 
 
     <style name="themeLemon">
-        <item name="appPrimaryColor">@color/appLemonPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appLemonPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appLemonPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appLemonPrimaryText</item>
+        <item name="appPrimaryColor">@color/themeLemonPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeLemonPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeLemonPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeLemonPrimaryText</item>
 
-        <item name="appSecondaryColor">@color/appLemonSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appLemonSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appLemonSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appLemonSecondaryText</item>
+        <item name="appSecondaryColor">@color/themeLemonSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeLemonSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeLemonSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeLemonSecondaryText</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 
@@ -85,24 +88,27 @@
         <item name="accountOtherBgColor">@color/liabilityBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
+        <item name="balanceH1BgColor">@color/themeLemonBalanceH1Bg</item>
+        <item name="balanceH2BgColor">@color/themeLemonBalanceH2Bg</item>
+
 
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appLemonPrimary</item>
+        <item name="colorPrimary">@color/themeLemonPrimary</item>
         <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appLemonPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/themeLemonPrimaryDark</item>
         <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appLemonSecondary</item>
+        <item name="colorAccent">@color/themeLemonSecondary</item>
         <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appLemonSecondaryLight</item>
+        <item name="colorControlNormal">@color/themeLemonSecondaryLight</item>
         <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appLemonSecondary</item>
+        <item name="colorControlActivated">@color/themeLemonSecondary</item>
         <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appLemonSecondaryDark</item>
+        <item name="colorControlHighlight">@color/themeLemonSecondaryDark</item>
 
-        <item name="colorButtonNormal">@color/appLemonPrimary</item>
+        <item name="colorButtonNormal">@color/themeLemonPrimary</item>
 
-        <item name="colorSwitchThumbNormal">@color/appLemonSecondary</item>
+        <item name="colorSwitchThumbNormal">@color/themeLemonSecondary</item>
 
         <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
@@ -123,15 +129,15 @@
     </style>
 
     <style name="themeCola">
-        <item name="appPrimaryColor">@color/appColaPrimary</item>
-        <item name="appPrimaryDarkColor">@color/appColaPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/appColaPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/appColaPrimaryText</item>
+        <item name="appPrimaryColor">@color/themeColaPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeColaPrimaryText</item>
 
-        <item name="appSecondaryColor">@color/appColaSecondary</item>
-        <item name="appSecondaryDarkColor">@color/appColaSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/appColaSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/appColaSecondaryText</item>
+        <item name="appSecondaryColor">@color/themeColaSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeColaSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
 
         <item name="defaultSelector">@drawable/selector_dark</item>
 
@@ -149,25 +155,28 @@
         <item name="accountOtherBgColor">@color/otherBgDark</item>
         <item name="accountUnknownBgColor">@color/unknownBgDark</item>
 
+        <item name="balanceH1BgColor">@color/themeColaBalanceH1BgDark</item>
+        <item name="balanceH2BgColor">@color/themeColaBalanceH2Bg</item>
+
 
         <!--overwrite color pallet -->
         <!-- app branding color for the app bar-->
         <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/appColaPrimary</item>
+        <item name="colorPrimary">@color/themeColaPrimary</item>
         <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/appColaPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/themeColaPrimaryDark</item>
         <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/appColaSecondary</item>
+        <item name="colorAccent">@color/themeColaSecondary</item>
         <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/appColaSecondaryLight</item>
+        <item name="colorControlNormal">@color/themeColaSecondaryLight</item>
         <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/appColaSecondary</item>
+        <item name="colorControlActivated">@color/themeColaSecondary</item>
         <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/appColaSecondaryDark</item>
+        <item name="colorControlHighlight">@color/themeColaSecondaryDark</item>
 
-        <item name="colorButtonNormal">@color/appColaPrimary</item>
+        <item name="colorButtonNormal">@color/themeColaPrimary</item>
 
-        <item name="colorSwitchThumbNormal">@color/appColaSecondary</item>
+        <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
 
         <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>

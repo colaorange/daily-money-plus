@@ -1,61 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.BalanceActivity">
+
+    <include layout="@layout/app_bar" />
 
     <LinearLayout
         android:id="@+id/balance_toolbar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/balance_info_bg"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/balance_prev"
-            style="@style/editorActionBtn"
+            android:id="@+id/btn_prev"
+            style="@style/navActionBtn"
             android:src="?ic_arrow_back" />
 
         <ImageButton
-            android:id="@+id/balance_today"
-            style="@style/editorActionBtn"
+            android:id="@+id/btn_today"
+            style="@style/navActionBtn"
             android:src="?ic_today" />
 
         <ImageButton
-            android:id="@+id/balance_next"
-            style="@style/editorActionBtn"
+            android:id="@+id/btn_next"
+            style="@style/navActionBtn"
             android:src="?ic_arrow_forward" />
 
         <ImageButton
-            android:id="@+id/balance_mode"
-            style="@style/editorActionBtn"
+            android:id="@+id/btn_mode"
+            style="@style/navActionBtn"
             android:src="?ic_date_range" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/balance_infobar"
-        android:layout_width="fill_parent"
+        android:id="@+id/balance_info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/balance_info_bg"
         android:ellipsize="end"
         android:gravity="center"
+        android:paddingVertical="5dp"
         android:singleLine="true"
-        android:text=""
-        android:textColor="@color/balance_info_fg"
-        android:textSize="18sp" />
+        android:textSize="?textSizeLarge" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/balance_bg">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ListView
             android:id="@+id/balance_list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"
+            />
     </LinearLayout>
 
 </LinearLayout>

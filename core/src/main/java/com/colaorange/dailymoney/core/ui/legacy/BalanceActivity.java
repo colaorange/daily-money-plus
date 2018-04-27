@@ -9,7 +9,9 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Dimension;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -80,6 +82,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private SimpleAdapter listViewAdapter;
 
+    private float dpRatio;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,85 +108,24 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void initMembers() {
+        dpRatio = GUIs.getDPRatio(BalanceActivity.this);
         Preference pref = preference();
         monthDateFormat = pref.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
         yearMonthFormat = pref.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM");
         yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
 
-        infoView = findViewById(R.id.balance_infobar);
+        infoView = findViewById(R.id.balance_info);
         toolbarView = findViewById(R.id.balance_toolbar);
 
-        findViewById(R.id.balance_prev).setOnClickListener(this);
-        findViewById(R.id.balance_next).setOnClickListener(this);
-        findViewById(R.id.balance_today).setOnClickListener(this);
-        modeBtn = findViewById(R.id.balance_mode);
+        findViewById(R.id.btn_prev).setOnClickListener(this);
+        findViewById(R.id.btn_next).setOnClickListener(this);
+        findViewById(R.id.btn_today).setOnClickListener(this);
+        modeBtn = findViewById(R.id.btn_mode);
         modeBtn.setOnClickListener(this);
 
 
         listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.balance_item, bindingFrom, bindingTo);
-        listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-
-            @Override
-            public boolean setViewValue(View view, Object data, String text) {
-                NamedItem item = (NamedItem) data;
-                String name = item.getName();
-                Balance b = (Balance) item.getValue();
-
-
-                if ("layout".equals(name)) {
-                    LinearLayout layout = (LinearLayout) view;
-                    adjustLayout(layout, b);
-                    return true;
-                }
-
-                //not textview, not initval
-                if (!(view instanceof TextView)) {
-                    return false;
-                }
-                AccountType at = AccountType.find(b.getType());
-                TextView tv = (TextView) view;
-
-                if (at == AccountType.INCOME) {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.income_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.income_fgd));
-                    }
-                } else if (at == AccountType.EXPENSE) {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.expense_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.expense_fgd));
-                    }
-                } else if (at == AccountType.ASSET) {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.asset_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.asset_fgd));
-                    }
-                } else if (at == AccountType.LIABILITY) {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.liability_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.liability_fgd));
-                    }
-                } else if (at == AccountType.OTHER) {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.other_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.other_fgd));
-                    }
-                } else {
-                    if (b.getIndent() == 0) {
-                        tv.setTextColor(getResources().getColor(R.color.unknow_fgl));
-                    } else {
-                        tv.setTextColor(getResources().getColor(R.color.unknow_fgd));
-                    }
-                }
-                adjustItem(tv, b, GUIs.getDPRatio(BalanceActivity.this));
-                return false;
-            }
-        });
+        listViewAdapter.setViewBinder(new BalanceViewBinder());
 
         listView = findViewById(R.id.balance_list);
         listView.setAdapter(listViewAdapter);
@@ -202,46 +145,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             }
         }, 25);
 
-    }
-
-    protected void adjustLayout(LinearLayout layout, Balance b) {
-        switch (b.getIndent()) {
-            case 0:
-                layout.setBackgroundDrawable((getResources().getDrawable(R.drawable.selector_balance_indent0)));
-                break;
-            case 1:
-                layout.setBackgroundDrawable((getResources().getDrawable(R.drawable.selector_balance_indent)));
-                break;
-            default:
-                layout.setBackgroundDrawable((getResources().getDrawable(R.drawable.selector_balance_indent)));
-                break;
-        }
-    }
-
-    protected void adjustItem(TextView tv, Balance b, float dp) {
-        float fontPixelSize = 18;
-        float ratio = 0;
-        int marginLeft = 0;
-        int marginRight = 5;
-        int paddingTB = 0;
-
-
-        int indent = b.getIndent();
-
-        if (indent <= 0) {
-            ratio = 1F;
-            paddingTB = 5;
-            marginLeft = 5;
-        } else {
-            ratio = 0.85F;
-            paddingTB = 3;
-            marginLeft = 5 + 10 * indent;
-        }
-
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontPixelSize * ratio);
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tv.getLayoutParams();
-        lp.setMargins((int) (marginLeft * dp), lp.topMargin, (int) (marginRight * dp), lp.bottomMargin);
-        tv.setPadding(tv.getPaddingLeft(), (int) (paddingTB * dp), tv.getPaddingRight(), (int) (paddingTB * dp));
     }
 
 
@@ -397,13 +300,13 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.balance_prev) {
+        if (v.getId() == R.id.btn_prev) {
             onPrev();
-        } else if (v.getId() == R.id.balance_next) {
+        } else if (v.getId() == R.id.btn_next) {
             onNext();
-        } else if (v.getId() == R.id.balance_today) {
+        } else if (v.getId() == R.id.btn_today) {
             onToday();
-        } else if (v.getId() == R.id.balance_mode) {
+        } else if (v.getId() == R.id.btn_mode) {
             onMode();
         }
     }
@@ -722,4 +625,99 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         });
     }
 
+    private class BalanceViewBinder implements SimpleAdapter.ViewBinder {
+
+        @Override
+        public boolean setViewValue(View view, Object data, String text) {
+            NamedItem item = (NamedItem) data;
+            String name = item.getName();
+            Balance b = (Balance) item.getValue();
+
+            if ("layout".equals(name)) {
+                LinearLayout layout = (LinearLayout) view;
+                adjustLayout(layout, b);
+                return true;
+            }
+
+            //not textview, not initval
+            if (!(view instanceof TextView)) {
+                return false;
+            }
+            AccountType at = AccountType.find(b.getType());
+            TextView tv = (TextView) view;
+
+            if (at == AccountType.INCOME) {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.income_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.income_fgd));
+                }
+            } else if (at == AccountType.EXPENSE) {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.expense_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.expense_fgd));
+                }
+            } else if (at == AccountType.ASSET) {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.asset_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.asset_fgd));
+                }
+            } else if (at == AccountType.LIABILITY) {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.liability_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.liability_fgd));
+                }
+            } else if (at == AccountType.OTHER) {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.other_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.other_fgd));
+                }
+            } else {
+                if (b.getIndent() == 0) {
+                    tv.setTextColor(getResources().getColor(R.color.unknow_fgl));
+                } else {
+                    tv.setTextColor(getResources().getColor(R.color.unknow_fgd));
+                }
+            }
+            adjustItem(tv, b);
+            return false;
+        }
+    }
+
+    protected void adjustLayout(LinearLayout layout, Balance balance) {
+        int indent = balance.getIndent();
+        switch (indent) {
+            case 0:
+                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceH1BgColor));
+                break;
+            default:
+                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceH2BgColor));
+                break;
+        }
+        layout.setPadding((int) ((1 + indent) * 10 * dpRatio), (int) (5 * dpRatio), layout.getPaddingRight(), (int) (5 * dpRatio));
+    }
+
+    protected void adjustItem(TextView tv, Balance balance) {
+
+        int indent = balance.getIndent();
+        TypedValue val;
+        switch (indent) {
+            case 0:
+                val = resolveThemeAttr(R.attr.textSizeLarge);
+                break;
+            default:
+                val = resolveThemeAttr(R.attr.textSize);
+                break;
+        }
+//        tv.setTextSize(getResources().getDimension(R.dimen.textSize));
+////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+////            tv.setTextSize(val.getComplexUnit(), val.getFloat());
+////        }else{
+////            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, val.getFloat());
+////        }
+    }
 }

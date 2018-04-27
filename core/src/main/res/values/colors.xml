@@ -5,28 +5,33 @@
     <color name="darkSelectingMask">#10e0e0e0</color>
     <!--light-->
     <!--lemon-->
-    <color name="appLemonPrimary">#f0f4c3</color>
-    <color name="appLemonPrimaryDark">#bdc192</color>
-    <color name="appLemonPrimaryLight">#fffff6</color>
-    <color name="appLemonPrimaryText">#333333</color>
+    <color name="themeLemonPrimary">#f0f4c3</color>
+    <color name="themeLemonPrimaryDark">#bdc192</color>
+    <color name="themeLemonPrimaryLight">#fffff6</color>
+    <color name="themeLemonPrimaryText">#333333</color>
 
-    <color name="appLemonSecondary">#2e7d32</color>
-    <color name="appLemonSecondaryDark">#005005</color>
-    <color name="appLemonSecondaryLight">#60ad5e</color>
-    <color name="appLemonSecondaryText">#e0e0e0</color>
+    <color name="themeLemonSecondary">#2e7d32</color>
+    <color name="themeLemonSecondaryDark">#005005</color>
+    <color name="themeLemonSecondaryLight">#60ad5e</color>
+    <color name="themeLemonSecondaryText">#e0e0e0</color>
+
+    <color name="themeLemonBalanceH1Bg">#7e4646</color>
+    <color name="themeLemonBalanceH2Bg">#efe8d0</color>
 
     <!--dark-->
     <!--cola-->
-    <color name="appColaPrimary">#171411</color>
-    <color name="appColaPrimaryDark">#0b0806</color>
-    <color name="appColaPrimaryLight">#1f1914</color>
-    <color name="appColaPrimaryText">#e0e0e0</color>
+    <color name="themeColaPrimary">#171411</color>
+    <color name="themeColaPrimaryDark">#0b0806</color>
+    <color name="themeColaPrimaryLight">#27211c</color>
+    <color name="themeColaPrimaryText">#e0e0e0</color>
 
-    <color name="appColaSecondary">#0ad2df</color>
-    <color name="appColaSecondaryDark">#257ca3</color>
-    <color name="appColaSecondaryLight">#dcf3ff</color>
-    <color name="appColaSecondaryText">#333333</color>
+    <color name="themeColaSecondary">#0ad2df</color>
+    <color name="themeColaSecondaryDark">#257ca3</color>
+    <color name="themeColaSecondaryLight">#dcf3ff</color>
+    <color name="themeColaSecondaryText">#333333</color>
 
+    <color name="themeColaBalanceH1BgDark">#505050</color>
+    <color name="themeColaBalanceH2Bg">#fff8e0</color>
 
     <!--common-->
 
@@ -66,7 +71,6 @@
     <color name="unknownTextDark">#404040</color>
     <color name="unknownBgLight">#bbbbbb</color>
     <color name="unknownBgDark">#303030</color>
-
 
     <!-- FF - no transparent -->
 

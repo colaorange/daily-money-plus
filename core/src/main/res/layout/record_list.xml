@@ -20,22 +20,22 @@
 
         <ImageButton
             android:id="@+id/toolbar_btn_prev"
-            style="@style/editorActionBtn"
+            style="@style/navActionBtn"
             android:src="?ic_arrow_back" />
 
         <ImageButton
             android:id="@+id/toolbar_btn_today"
-            style="@style/editorActionBtn"
+            style="@style/navActionBtn"
             android:src="?ic_today" />
 
         <ImageButton
             android:id="@+id/toolbar_btn_next"
-            style="@style/editorActionBtn"
+            style="@style/navActionBtn"
             android:src="?ic_arrow_forward" />
 
         <ImageButton
             android:id="@+id/toolbar_btn_mode"
-            style="@style/editorActionBtn"
+            style="@style/navActionBtn"
             android:src="?ic_date_range" />
 
     </LinearLayout>

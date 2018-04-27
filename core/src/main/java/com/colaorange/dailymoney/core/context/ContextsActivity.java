@@ -130,17 +130,23 @@ public class ContextsActivity extends AppCompatActivity {
         return false;
     }
 
-    public int resolveThemeAttrResId(int resId) {
+    public int resolveThemeAttrResId(int attrId) {
         Resources.Theme theme = getTheme();
         TypedValue attr = new TypedValue();
-        theme.resolveAttribute(resId, attr, true);
+        theme.resolveAttribute(attrId, attr, true);
         return attr.resourceId;
     }
-    public int resolveThemeAttrResData(int resId) {
+    public int resolveThemeAttrResData(int attrId) {
         Resources.Theme theme = getTheme();
         TypedValue attr = new TypedValue();
-        theme.resolveAttribute(resId, attr, true);
+        theme.resolveAttribute(attrId, attr, true);
         return attr.data;
+    }
+    public TypedValue resolveThemeAttr(int attrId) {
+        Resources.Theme theme = getTheme();
+        TypedValue attr = new TypedValue();
+        theme.resolveAttribute(attrId, attr, true);
+        return attr;
     }
 
 
