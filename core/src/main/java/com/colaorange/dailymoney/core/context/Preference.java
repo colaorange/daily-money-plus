@@ -27,11 +27,17 @@ public class Preference {
      **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
-    private static final String THEME_DARK_PREFIX = "dark-";
-    private static final String THEME_LIGHT_PREFIX = "light-";
 
-    public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
-    public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
+    public static final String THEME_COLA = "cola";
+    public static final String THEME_ORANGE = "orange";
+    public static final String THEME_LEMON = "lemon";
+
+    private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
+    static{
+        themeSet.add(THEME_COLA);
+//        themeSet.add(THEME_ORANGE);
+        themeSet.add(THEME_LEMON);
+    }
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
@@ -86,8 +92,7 @@ public class Preference {
 
     boolean autoBackup = true;
 
-//    String theme = THEME_COLA;
-    String theme = THEME_LEMON;
+    String theme = THEME_COLA;
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
@@ -404,7 +409,17 @@ public class Preference {
 
         dateTimeFormat = dateFormat + " " + timeFormat;
 
+        try {
+            theme = prefs.getString(i18n.string(R.string.pref_theme), theme);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+        if (!themeSet.contains(theme)) {
+            theme = themeSet.iterator().next();
+        }
 
+
+        Logger.d("preference : theme {}", theme);
         Logger.d("preference : dateFormat {}", dateFormat);
         Logger.d("preference : timeFormat {}", timeFormat);
         Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
@@ -593,9 +608,6 @@ public class Preference {
         return Security.md5String(pwd + Preference.PASSWORD_SALT);
     }
 
-    public boolean isLightTheme() {
-        return getTheme().startsWith(THEME_LIGHT_PREFIX);
-    }
 
     public String getTheme() {
         return theme;

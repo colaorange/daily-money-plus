@@ -197,7 +197,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
         intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
-        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
+        intent.putExtra(Calculator.PARAM_THEME, isAppLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
@@ -347,7 +347,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
                     int pos = spType.getSelectedItemPosition();
                     if (pos >= 0 && AccountType.getSupportedType()[spType.getSelectedItemPosition()].equals(at)) {
-                        if (isLightTheme()) {
+                        if (isAppLightTheme()) {
                             textColor = Colors.darken(textColor, 0.2f);
                         } else {
                             textColor = Colors.lighten(textColor, 0.2f);

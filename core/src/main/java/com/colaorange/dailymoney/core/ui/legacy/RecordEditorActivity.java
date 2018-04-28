@@ -393,7 +393,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
         intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
-        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
+        intent.putExtra(Calculator.PARAM_THEME, isAppLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
@@ -579,14 +579,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                     tv.setPadding((int) ((1 + node.getIndent()) * ddItemPaddingBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
 
                     if (node.getAccount() == null) {//pseudo node
-                        if (isLightTheme()) {
+                        if (isAppLightTheme()) {
                             textColor = Colors.lighten(textColor, 0.2f);
                         } else {
                             textColor = Colors.darken(textColor, 0.2f);
                         }
                         tv.setTextColor(textColor);
                     } else if (node.getAccount().equals(getSelectedAccount())) {
-                        if (isLightTheme()) {
+                        if (isAppLightTheme()) {
                             textColor = Colors.darken(textColor, 0.2f);
                         } else {
                             textColor = Colors.lighten(textColor, 0.2f);

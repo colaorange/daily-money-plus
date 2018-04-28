@@ -16,6 +16,8 @@
     <string name="pref_format_time" translatable="false">format_time</string>
     <string name="pref_format_month" translatable="false">format_month</string>
 
+    <string name="pref_theme" translatable="false">theme</string>
+
     <string name="pref_auto_backup" translatable="false">auto_backup</string>
     <string name="pref_auto_backup_at_hours" translatable="false">auto_backup_at_hours</string>
     <string name="pref_auto_backup_weekdays" translatable="false">auto_backup_week_days</string>
@@ -43,6 +45,7 @@
     <string name="default_auto_backup" translatable="false">true</string>
     <string name="default_auto_backup_weekdays" translatable="false">1</string>
     <string name="default_auto_backup_at_hours" translatable="false">2</string>
+    <string name="default_theme" translatable="false">cola</string>
 
     <string name="path_about" translatable="false">en/about.html</string>
     <string name="path_contributor" translatable="false">en/contributor.html</string>
@@ -54,6 +57,13 @@
     <string name="mailme_email" translatable="false">cola.orange@gmail.com</string>
     <string name="mailme_lang_subject" translatable="false">Contribute languages</string>
     <string name="mailme_lang_text" translatable="false">Hi, I would like to contribute languages to DM, Please provide me steps to do it</string>
+
+    <!-- new -20180428-->
+    <string name="label_theme_cola">Cola</string>
+    <string name="label_theme_orange">Orange</string>
+    <string name="label_theme_lemon">Lemon</string>
+    <string name="label_prefs_theme_sum">Sets the theme</string>
+    <string name="label_prefs_theme">Theme</string>
 
 
 </resources>

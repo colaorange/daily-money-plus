@@ -15,8 +15,8 @@
     <color name="themeLemonSecondaryLight">#60ad5e</color>
     <color name="themeLemonSecondaryText">#e0e0e0</color>
 
-    <color name="themeLemonBalanceH1Bg">#7e4646</color>
-    <color name="themeLemonBalanceH2Bg">#efe8d0</color>
+    <color name="themeLemonBalanceHeadBg">#cc9b50</color>
+    <color name="themeLemonBalanceItemBg">#efe8d0</color>
 
     <!--dark-->
     <!--cola-->
@@ -30,8 +30,8 @@
     <color name="themeColaSecondaryLight">#dcf3ff</color>
     <color name="themeColaSecondaryText">#333333</color>
 
-    <color name="themeColaBalanceH1BgDark">#505050</color>
-    <color name="themeColaBalanceH2Bg">#fff8e0</color>
+    <color name="themeColaBalanceHeadBgDark">#505050</color>
+    <color name="themeColaBalanceItemBg">#fff8e0</color>
 
     <!--common-->
 

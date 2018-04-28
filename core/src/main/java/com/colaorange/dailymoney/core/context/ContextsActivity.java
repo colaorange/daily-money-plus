@@ -26,6 +26,9 @@ public class ContextsActivity extends AppCompatActivity {
 
     public static final String PARAM_TITLE = "activity.title";
 
+    private long onCreateTime;
+    private static long recreateTimeMark;
+
     @Override
     protected void onCreate(Bundle bundle) {
         applyTheme();//do before super on create;
@@ -34,6 +37,11 @@ public class ContextsActivity extends AppCompatActivity {
         GUIs.touch();
 
         Logger.d("activity created:" + this);
+        onCreateTime = System.currentTimeMillis();
+    }
+
+    public void markRecreate(){
+        recreateTimeMark = System.currentTimeMillis();
     }
 
     /*
@@ -63,7 +71,7 @@ public class ContextsActivity extends AppCompatActivity {
     private void applyTheme() {
         Resources.Theme theme = getTheme();
 
-        boolean light = isLightTheme();
+        boolean light = isAppLightTheme();
 
         if (light) {
             if (isDialogTheme()) {
@@ -108,18 +116,10 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    public boolean isLightTheme() {
-        return preference().isLightTheme();
+    public boolean isAppLightTheme() {
+        TypedValue v = resolveThemeAttr(R.attr.isAppLightTheme);
+        System.out.println(">>>>>>>>>>"+v+","+v.data);
+        return true;
     }
 
     public boolean isNoActionBarTheme() {
@@ -131,15 +131,11 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     public int resolveThemeAttrResId(int attrId) {
-        Resources.Theme theme = getTheme();
-        TypedValue attr = new TypedValue();
-        theme.resolveAttribute(attrId, attr, true);
+        TypedValue attr = resolveThemeAttr(attrId);
         return attr.resourceId;
     }
     public int resolveThemeAttrResData(int attrId) {
-        Resources.Theme theme = getTheme();
-        TypedValue attr = new TypedValue();
-        theme.resolveAttribute(attrId, attr, true);
+        TypedValue attr = resolveThemeAttr(attrId);
         return attr.data;
     }
     public TypedValue resolveThemeAttr(int attrId) {
@@ -186,6 +182,17 @@ public class ContextsActivity extends AppCompatActivity {
         Logger.d("activity destroyed:" + this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkRecreate();
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     protected void onResume() {
@@ -196,6 +203,18 @@ public class ContextsActivity extends AppCompatActivity {
         if (t != null) {
             setTitle(t);
         }
+
+        checkRecreate();
+    }
+
+    private void checkRecreate() {
+        if(recreateTimeMark > onCreateTime){
+            recreate();
+        }
+    }
+
+    protected void makeRecreate(){
+        recreateTimeMark = System.currentTimeMillis();
     }
 
 

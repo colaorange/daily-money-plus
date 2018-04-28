@@ -7,6 +7,13 @@
 
     <PreferenceCategory android:title="@string/label_prefcat_display">
         <ListPreference
+            android:defaultValue="@string/default_theme"
+            android:entries="@array/prefs_theme_labels"
+            android:entryValues="@array/prefs_theme_values"
+            android:key="@string/pref_theme"
+            android:summary="@string/label_prefs_theme_sum"
+            android:title="@string/label_prefs_theme" />
+        <ListPreference
             android:defaultValue="@string/default_record_list_layout"
             android:entries="@array/prefs_detlayout_labels"
             android:entryValues="@array/prefs_detlayout_values"

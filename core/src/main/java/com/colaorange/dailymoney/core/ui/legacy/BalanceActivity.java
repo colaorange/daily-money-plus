@@ -692,10 +692,10 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         int indent = balance.getIndent();
         switch (indent) {
             case 0:
-                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceH1BgColor));
+                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceHeadBgColor));
                 break;
             default:
-                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceH2BgColor));
+                layout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceItemBgColor));
                 break;
         }
         layout.setPadding((int) ((1 + indent) * 10 * dpRatio), (int) (5 * dpRatio), layout.getPaddingRight(), (int) (5 * dpRatio));

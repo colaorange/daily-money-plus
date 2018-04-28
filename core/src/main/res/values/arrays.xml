@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="prefs_theme_values" translatable="false">
+        <item>cola</item>
+        <item>orange</item>
+        <item>lemon</item>
+    </string-array>
+    <string-array name="prefs_theme_labels" translatable="false">
+        <item>@string/label_theme_cola</item>
+        <item>@string/label_theme_orange</item>
+        <item>@string/label_theme_lemon</item>
+    </string-array>
+
 	<string-array name="prefs_detlayout_values" translatable="false">
 		<item>1</item>
 		<item>2</item>
