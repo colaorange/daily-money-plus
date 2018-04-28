@@ -11,9 +11,9 @@ public class Constants {
 
 
     public static final int REQUEST_CALCULATOR_CODE = 1;
-    public static final int REQUEST_DETAIL_EDITOR_CODE = 2;
+    public static final int REQUEST_RECORD_EDITOR_CODE = 2;
     public static final int REQUEST_ACCOUNT_EDITOR_CODE = 3;
-    public static final int REQUEST_ACCOUNT_DETAIL_LIST_CODE = 4;
+    public static final int REQUEST_ACCOUNT_RECORD_LIST_CODE = 4;
     public static final int REQUEST_PASSWORD_PROTECTION_CODE = 5;
     public static final int REQUEST_BOOK_EDITOR_CODE = 6;
 

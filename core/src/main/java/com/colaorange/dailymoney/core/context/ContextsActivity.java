@@ -13,9 +13,13 @@ import android.util.TypedValue;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * provide life cycle and easy access to contexts
@@ -29,6 +33,9 @@ public class ContextsActivity extends AppCompatActivity {
     private long onCreateTime;
     private static long recreateTimeMark;
 
+    private Map<AccountType, Integer> accountTextColorMap;
+    private Map<AccountType, Integer> accountBgColorMap;
+
     @Override
     protected void onCreate(Bundle bundle) {
         applyTheme();//do before super on create;
@@ -40,7 +47,7 @@ public class ContextsActivity extends AppCompatActivity {
         onCreateTime = System.currentTimeMillis();
     }
 
-    public void markRecreate(){
+    public void markWholeRecreate() {
         recreateTimeMark = System.currentTimeMillis();
     }
 
@@ -71,7 +78,7 @@ public class ContextsActivity extends AppCompatActivity {
     private void applyTheme() {
         Resources.Theme theme = getTheme();
 
-        boolean light = isAppLightTheme();
+        boolean light = isLightTheme();
 
         if (light) {
             if (isDialogTheme()) {
@@ -116,10 +123,8 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isAppLightTheme() {
-        TypedValue v = resolveThemeAttr(R.attr.isAppLightTheme);
-        System.out.println(">>>>>>>>>>"+v+","+v.data);
-        return true;
+    public boolean isLightTheme() {
+        return preference().isLightTheme();
     }
 
     public boolean isNoActionBarTheme() {
@@ -134,10 +139,12 @@ public class ContextsActivity extends AppCompatActivity {
         TypedValue attr = resolveThemeAttr(attrId);
         return attr.resourceId;
     }
+
     public int resolveThemeAttrResData(int attrId) {
         TypedValue attr = resolveThemeAttr(attrId);
         return attr.data;
     }
+
     public TypedValue resolveThemeAttr(int attrId) {
         Resources.Theme theme = getTheme();
         TypedValue attr = new TypedValue();
@@ -208,12 +215,12 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     private void checkRecreate() {
-        if(recreateTimeMark > onCreateTime){
+        if (recreateTimeMark > onCreateTime) {
             recreate();
         }
     }
 
-    protected void makeRecreate(){
+    protected void makeRecreate() {
         recreateTimeMark = System.currentTimeMillis();
     }
 
@@ -239,5 +246,31 @@ public class ContextsActivity extends AppCompatActivity {
         return contexts().getPreference();
     }
 
+    public Map<AccountType, Integer> getAccountTextColorMap() {
+        if (accountTextColorMap != null) {
+            return accountTextColorMap;
+        }
+        Map<AccountType, Integer> map = new HashMap<>();
+        map.put(AccountType.INCOME, resolveThemeAttrResData(R.attr.accountIncomeTextColor));
+        map.put(AccountType.EXPENSE, resolveThemeAttrResData(R.attr.accountExpenseTextColor));
+        map.put(AccountType.ASSET, resolveThemeAttrResData(R.attr.accountAssetTextColor));
+        map.put(AccountType.LIABILITY, resolveThemeAttrResData(R.attr.accountLiabilityTextColor));
+        map.put(AccountType.OTHER, resolveThemeAttrResData(R.attr.accountOtherTextColor));
+        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountOtherTextColor));
+        return this.accountTextColorMap = map;
+    }
 
+    public Map<AccountType, Integer> getAccountBgColorMap() {
+        if (accountBgColorMap != null) {
+            return accountBgColorMap;
+        }
+        Map<AccountType, Integer> map = new HashMap<>();
+        map.put(AccountType.INCOME, resolveThemeAttrResData(R.attr.accountIncomeBgColor));
+        map.put(AccountType.EXPENSE, resolveThemeAttrResData(R.attr.accountExpenseBgColor));
+        map.put(AccountType.ASSET, resolveThemeAttrResData(R.attr.accountAssetBgColor));
+        map.put(AccountType.LIABILITY, resolveThemeAttrResData(R.attr.accountLiabilityBgColor));
+        map.put(AccountType.OTHER, resolveThemeAttrResData(R.attr.accountOtherBgColor));
+        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountOtherBgColor));
+        return this.accountBgColorMap = map;
+    }
 }

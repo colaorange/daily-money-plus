@@ -151,7 +151,7 @@ public class RecordListHelper implements OnItemClickListener {
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
         intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
-        activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
+        activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
 
@@ -161,7 +161,7 @@ public class RecordListHelper implements OnItemClickListener {
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, false);
         intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
-        activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
+        activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
     public void doDeleteRecord(int pos) {
@@ -185,7 +185,7 @@ public class RecordListHelper implements OnItemClickListener {
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
         intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
-        activity.startActivityForResult(intent, Constants.REQUEST_DETAIL_EDITOR_CODE);
+        activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
 

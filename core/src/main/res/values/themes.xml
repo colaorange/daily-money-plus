@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="isAppLightTheme" format="boolean"/>
     <attr name="appPrimaryColor" format="color" />
     <attr name="appPrimaryDarkColor" format="color" />
     <attr name="appPrimaryLightColor" format="color" />
@@ -28,7 +27,6 @@
 
     <attr name="balanceHeadBgColor" format="reference" />
     <attr name="balanceItemBgColor" format="reference" />
-    <attr name="isLightBalanceHeadBg" format="boolean" />
 
 
     <attr name="textSize" format="dimension" />
@@ -64,7 +62,6 @@
 
 
     <style name="themeLemon">
-        <item name="isAppLightTheme">true</item>
 
         <item name="appPrimaryColor">@color/themeLemonPrimary</item>
         <item name="appPrimaryDarkColor">@color/themeLemonPrimaryDark</item>
@@ -133,7 +130,7 @@
     </style>
 
     <style name="themeCola">
-        <item name="isAppLightTheme">false</item>
+
         <item name="appPrimaryColor">@color/themeColaPrimary</item>
         <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
         <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
@@ -160,7 +157,7 @@
         <item name="accountOtherBgColor">@color/otherBgDark</item>
         <item name="accountUnknownBgColor">@color/unknownBgDark</item>
 
-        <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBgDark</item>
+        <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeColaBalanceItemBg</item>
 
 

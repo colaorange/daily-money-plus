@@ -23,7 +23,6 @@ import com.colaorange.dailymoney.core.util.Logger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -35,11 +34,18 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
 
     boolean dirty = false;
 
+    boolean themeChanged = false;
+
+    String themeKey;
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs);
         final I18N i18n = Contexts.instance().getI18n();
+
+        themeKey = i18n.string(R.string.pref_theme);
+
         initAccountingPrefs(i18n);
         initDataPrefs(i18n);
         initContributionPrefs(i18n);
@@ -247,6 +253,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         dirty = false;
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
 
+        //clear backup error mark, since preference of backup might change.
         Intent intent = new Intent();
         intent.setAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
         getActivity().sendBroadcast(intent);
@@ -255,5 +262,10 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         dirty = true;
+        if(key.equals(themeKey)){
+            themeChanged = true;
+            ((ContextsActivity)getActivity()).markWholeRecreate();
+            getActivity().recreate();
+        }
     }
 }

@@ -28,9 +28,13 @@ public class Preference {
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
 
-    public static final String THEME_COLA = "cola";
-    public static final String THEME_ORANGE = "orange";
-    public static final String THEME_LEMON = "lemon";
+    private static final String THEME_DARK_PREFIX = "dark-";
+    private static final String THEME_LIGHT_PREFIX = "light-";
+
+    public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
+    public static final String THEME_ORANGE = THEME_DARK_PREFIX+ "orange";
+    public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
+
 
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
     static{
@@ -611,5 +615,9 @@ public class Preference {
 
     public String getTheme() {
         return theme;
+    }
+
+    public boolean isLightTheme() {
+        return getTheme().startsWith(THEME_LIGHT_PREFIX);
     }
 }

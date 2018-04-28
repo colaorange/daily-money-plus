@@ -412,7 +412,6 @@ public class ComparableVersion
         while (!stack.isEmpty()) {
             list = (ListItem) stack.pop();
             list.normalize();
-            System.out.println(":>>>>>>>"+list.toString());
             if(stack.empty()){
                 StringBuilder sb = new StringBuilder();
                 for(Item i:list){
