@@ -34,6 +34,7 @@ public class Preference {
     public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
     public static final String THEME_ORANGE = THEME_DARK_PREFIX+ "orange";
     public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
+    public static final String THEME_SAKURA = THEME_DARK_PREFIX+ "sakura";
 
 
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
@@ -41,6 +42,7 @@ public class Preference {
         themeSet.add(THEME_COLA);
 //        themeSet.add(THEME_ORANGE);
         themeSet.add(THEME_LEMON);
+//        themeSet.add(THEME_SAKURA);
     }
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";

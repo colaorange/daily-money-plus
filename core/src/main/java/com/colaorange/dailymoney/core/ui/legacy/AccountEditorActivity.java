@@ -109,7 +109,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         editInitval = findViewById(R.id.account_initval);
         editInitval.setText(Formats.double2String(workingAccount.getInitialValue()));
 
-        //initial spinner
+        //initial regular_spinner
         spType = findViewById(R.id.account_type);
         List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         String type = workingAccount.getType();

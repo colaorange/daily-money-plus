@@ -1,78 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.BookEditorActivity">
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_name" />
 
             <EditText
-                android:id="@+id/book_editor_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:id="@+id/book_name"
+                style="@style/editorFieldInput"
                 android:inputType="text" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_symbol" />
 
             <EditText
-                android:id="@+id/book_editor_symbol"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:id="@+id/book_symbol"
+                style="@style/editorFieldInput"
                 android:inputType="text" />
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_symbol_position" />
 
             <Spinner
-                android:id="@+id/book_editor_symbol_position"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
+                android:id="@+id/book_symbol_position"
+                style="@style/editorFieldInput" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                style="@style/editorFieldTitle"
                 android:text="@string/label_note" />
 
             <EditText
-                android:id="@+id/book_editor_note"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:id="@+id/book_note"
+                style="@style/editorFieldInput"
                 android:maxLines="2" />
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 

@@ -1,29 +1,33 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.commons.util.Collections;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
-import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+
+import java.util.List;
 
 /**
  * Edit or create a book
@@ -32,14 +36,26 @@ import com.colaorange.dailymoney.core.ui.Constants;
  */
 public class BookEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "bkeditor.modeCreate";
-    public static final String PARAM_BOOK = "bkeditor.book";
+    public static final String PARAM_MODE_CREATE = "modeCreate";
+    public static final String PARAM_BOOK = "book";
 
     private boolean modeCreate;
     private Book book;
     private Book workingBook;
 
     Activity activity;
+
+
+    EditText vName;
+    EditText vSymbol;
+    EditText vNote;
+    Spinner vPosition;
+
+
+    Button okBtn;
+    Button cancelBtn;
+
+    private float dpRatio;
 
 
     /**
@@ -71,54 +87,38 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         }
     }
 
-    /**
-     * need to mapping twice to do different mapping in spitem and spdropdown item
-     */
-    private static String[] positionMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
-    private static int[] positionMappingResIds = new int[]{R.id.simple_spinner_item_label};
-
-    EditText nameEditor;
-    EditText symbolEditor;
-    EditText noteEditor;
-    Spinner positionEditor;
-
-
-    Button okBtn;
-    Button cancelBtn;
 
     private void initMembers() {
-        nameEditor = findViewById(R.id.book_editor_name);
-        nameEditor.setText(workingBook.getName());
+        vName = findViewById(R.id.book_name);
+        vName.setText(workingBook.getName());
 
-        symbolEditor = findViewById(R.id.book_editor_symbol);
-        symbolEditor.setText(workingBook.getSymbol());
+        vSymbol = findViewById(R.id.book_symbol);
+        vSymbol.setText(workingBook.getSymbol());
 
-        //initial spinner
-        positionEditor = findViewById(R.id.book_editor_symbol_position);
-        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        SymbolPosition symbolPos = workingBook.getSymbolPosition();
-        int selpos, i;
-        selpos = i = -1;
-        for (SymbolPosition sp : SymbolPosition.getAvailable()) {
-            i++;
-            Map<String, Object> row = new HashMap<String, Object>();
-            data.add(row);
-            row.put(positionMappingKeys[0], new NamedItem(positionMappingKeys[0], sp, sp.getDisplay(i18n())));
+        //initial regular_spinner
+        vPosition = findViewById(R.id.book_symbol_position);
+        List<SymbolPosition> data = Collections.asList(SymbolPosition.getAvailable());
 
-            if (sp.equals(symbolPos)) {
-                selpos = i;
+        int selpos = data.indexOf(workingBook.getSymbolPosition());
+        RegularSpinnerAdapter<SymbolPosition> adapter = new RegularSpinnerAdapter<SymbolPosition>(this, data) {
+
+            public boolean isSelected(int position) {
+                return vPosition.getSelectedItemPosition() == position;
             }
-        }
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown, positionMappingKeys, positionMappingResIds);
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        adapter.setViewBinder(new SymbolPositionViewBinder());
-        positionEditor.setAdapter(adapter);
+
+            @Override
+            public ViewHolder<SymbolPosition> createViewHolder() {
+                return new SymbolPositionViewBinder(this);
+            }
+        };
+
+        vPosition.setAdapter(adapter);
         if (selpos > -1) {
-            positionEditor.setSelection(selpos);
+            vPosition.setSelection(selpos);
         }
 
-        noteEditor = findViewById(R.id.book_editor_note);
-        noteEditor.setText(workingBook.getNote());
+        vNote = findViewById(R.id.book_note);
+        vNote.setText(workingBook.getNote());
 
         okBtn = findViewById(R.id.btn_ok);
         if (modeCreate) {
@@ -132,9 +132,9 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
 
         cancelBtn = findViewById(R.id.btn_cancel);
-
-
         cancelBtn.setOnClickListener(this);
+
+        dpRatio = GUIs.getDPRatio(this);
     }
 
     @Override
@@ -155,24 +155,24 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     private void doOk() {
         I18N i18n = i18n();
 
-        if (Spinner.INVALID_POSITION == positionEditor.getSelectedItemPosition()) {
+        if (Spinner.INVALID_POSITION == vPosition.getSelectedItemPosition()) {
             GUIs.shortToast(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_symbol_position)));
             return;
         }
 
-        String name = nameEditor.getText().toString().trim();
+        String name = vName.getText().toString().trim();
         if ("".equals(name)) {
-            nameEditor.requestFocus();
+            vName.requestFocus();
             GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_name)));
             return;
         }
 
-        SymbolPosition pos = SymbolPosition.getAvailable()[positionEditor.getSelectedItemPosition()];
+        SymbolPosition pos = SymbolPosition.getAvailable()[vPosition.getSelectedItemPosition()];
 
         //assign
         workingBook.setName(name);
-        workingBook.setSymbol(symbolEditor.getText().toString().trim());
-        workingBook.setNote(noteEditor.getText().toString().trim());
+        workingBook.setSymbol(vSymbol.getText().toString().trim());
+        workingBook.setNote(vNote.getText().toString().trim());
         workingBook.setSymbolPosition(pos);
 
         IMasterDataProvider idp = contexts().getMasterDataProvider();
@@ -198,17 +198,17 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         finish();
     }
 
-    class SymbolPositionViewBinder implements SimpleAdapter.ViewBinder {
+    public class SymbolPositionViewBinder extends RegularSpinnerAdapter.ViewHolder<SymbolPosition> {
+
+        public SymbolPositionViewBinder(RegularSpinnerAdapter adapter) {
+            super(adapter);
+        }
+
         @Override
-        public boolean setViewValue(View view, Object data, String text) {
-            if (view.getId() == positionMappingResIds[0]) {
-                NamedItem item = (NamedItem) data;
-                TextView tv = (TextView) view;
-                tv.setTextColor(getResources().getColor(R.color.symbolpos_fgl));
-                tv.setText(item.getToString());
-                return true;
-            }
-            return false;
+        public void bindViewValue(SymbolPosition item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
+
+            vtext.setText(item.getDisplay(i18n()));
+
         }
     }
 }

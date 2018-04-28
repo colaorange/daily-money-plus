@@ -76,7 +76,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private ListView listView;
 
-    private BalanceArrayAdapter listViewAdapter;
+    private BalanceAdapter listViewAdapter;
 
     private float dpRatio;
 
@@ -123,7 +123,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         modeBtn.setOnClickListener(this);
 
 
-        listViewAdapter = new BalanceArrayAdapter(this, listViewData);
+        listViewAdapter = new BalanceAdapter(this, listViewData);
 
         listView = findViewById(R.id.balance_list);
         listView.setAdapter(listViewAdapter);
@@ -617,11 +617,11 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
 
-    private class BalanceArrayAdapter extends ArrayAdapter<Balance> {
+    private class BalanceAdapter extends ArrayAdapter<Balance> {
 
         LayoutInflater inflater;
 
-        public BalanceArrayAdapter(@NonNull Context context, List<Balance> balances) {
+        public BalanceAdapter(@NonNull Context context, List<Balance> balances) {
             super(context, R.layout.balance_item, balances);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -629,12 +629,12 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            BalanceArrayAdapterViewHolder holder;
+            BalanceViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.balance_item, null);
-                convertView.setTag(holder = new BalanceArrayAdapterViewHolder());
+                convertView.setTag(holder = new BalanceViewHolder());
             } else {
-                holder = (BalanceArrayAdapterViewHolder) convertView.getTag();
+                holder = (BalanceViewHolder) convertView.getTag();
             }
 
             holder.bindViewValue(getItem(position), convertView);
@@ -645,9 +645,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     }
 
-    public class BalanceArrayAdapterViewHolder {
+    public class BalanceViewHolder {
 
-        public void bindViewValue(Balance item, View convertView) {
+        public void bindViewValue(Balance balance, View convertView) {
 
             Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
             Map<AccountType,Integer> bgColorMap = getAccountBgColorMap();
@@ -655,8 +655,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             LinearLayout vlayout = convertView.findViewById(R.id.balance_item_layout);
             TextView vname = convertView.findViewById(R.id.balance_item_name);
             TextView vmoney = convertView.findViewById(R.id.balance_item_money);
-
-            Balance balance = item;
 
             AccountType at = AccountType.find(balance.getType());
             int indent = balance.getIndent();

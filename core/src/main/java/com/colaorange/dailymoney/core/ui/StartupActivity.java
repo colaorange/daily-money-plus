@@ -47,6 +47,9 @@ public class StartupActivity extends ContextsActivity {
         sendBroadcast(intent);
 
         trackEvent("startup");
+        if(!firstTime){
+            trackEvent("theme-"+preference().getTheme());
+        }
     }
 
     @Override
