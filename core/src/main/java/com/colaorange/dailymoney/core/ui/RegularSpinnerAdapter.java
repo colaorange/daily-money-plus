@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.core.ui;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -25,7 +24,8 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
 
     protected LayoutInflater inflater;
 
-    protected Drawable selectedBg;
+    protected int selectedBgColor;
+    protected int selectedTexColor;
 
     abstract public ViewHolder<T> createViewHolder();
 
@@ -41,7 +41,8 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
     public RegularSpinnerAdapter(@NonNull ContextsActivity context, List<T> items) {
         super(context, R.layout.regular_spinner, items);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        selectedBg = context.getResources().getDrawable(context.resolveThemeAttrResId(R.attr.colorControlNormal));
+        selectedBgColor = context.resolveThemeAttrResData(R.attr.appSecondaryLightColor);
+        selectedTexColor = context.resolveThemeAttrResData(R.attr.appSecondaryTextColor);
     }
 
     @NonNull
@@ -88,7 +89,9 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
             LinearLayout vlayout = convertView.findViewById(R.id.spinner_layout);
             TextView vtext = convertView.findViewById(R.id.spinner_text);
             if (isSelected) {
-                vlayout.setBackgroundDrawable(adapter.selectedBg);
+                //todo keep ripple
+                vlayout.setBackgroundColor(adapter.selectedBgColor);
+                vtext.setTextColor(adapter.selectedTexColor);
             }
             this.bindViewValue(item, vlayout, vtext, isDropdown, isSelected);
         }

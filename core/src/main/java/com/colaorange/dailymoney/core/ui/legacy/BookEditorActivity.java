@@ -1,15 +1,9 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,17 +37,17 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     private Book book;
     private Book workingBook;
 
-    Activity activity;
+    private Activity activity;
 
 
-    EditText vName;
-    EditText vSymbol;
-    EditText vNote;
-    Spinner vPosition;
+    private EditText vName;
+    private EditText vSymbol;
+    private EditText vNote;
+    private Spinner vPosition;
 
 
-    Button okBtn;
-    Button cancelBtn;
+    private Button btnOk;
+    private Button btnCancel;
 
     private float dpRatio;
 
@@ -97,10 +91,10 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
         //initial regular_spinner
         vPosition = findViewById(R.id.book_symbol_position);
-        List<SymbolPosition> data = Collections.asList(SymbolPosition.getAvailable());
+        List<SymbolPosition> list = Collections.asList(SymbolPosition.getAvailable());
 
-        int selpos = data.indexOf(workingBook.getSymbolPosition());
-        RegularSpinnerAdapter<SymbolPosition> adapter = new RegularSpinnerAdapter<SymbolPosition>(this, data) {
+        int selpos = list.indexOf(workingBook.getSymbolPosition());
+        RegularSpinnerAdapter<SymbolPosition> adapter = new RegularSpinnerAdapter<SymbolPosition>(this, list) {
 
             public boolean isSelected(int position) {
                 return vPosition.getSelectedItemPosition() == position;
@@ -120,19 +114,19 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         vNote = findViewById(R.id.book_note);
         vNote.setText(workingBook.getNote());
 
-        okBtn = findViewById(R.id.btn_ok);
+        btnOk = findViewById(R.id.btn_ok);
         if (modeCreate) {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
-            okBtn.setText(R.string.act_create);
+            btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
+            btnOk.setText(R.string.act_create);
         } else {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
-            okBtn.setText(R.string.act_update);
+            btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
+            btnOk.setText(R.string.act_update);
         }
-        okBtn.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
 
 
-        cancelBtn = findViewById(R.id.btn_cancel);
-        cancelBtn.setOnClickListener(this);
+        btnCancel = findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(this);
 
         dpRatio = GUIs.getDPRatio(this);
     }

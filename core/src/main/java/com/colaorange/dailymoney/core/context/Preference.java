@@ -69,7 +69,7 @@ public class Preference {
 
     }
 
-    int workingBookId = Contexts.WORKING_BOOK_DEFAULT;
+    int workingBookId = Contexts.DEFAULT_BOOK_ID;
 
 
     private CalendarHelper calendarHelper;
@@ -444,7 +444,7 @@ public class Preference {
 
     void setWorkingBookId(int id) {
         if (id < 0) {
-            id = Contexts.WORKING_BOOK_DEFAULT;
+            id = Contexts.DEFAULT_BOOK_ID;
         }
         if (workingBookId != id) {
             workingBookId = id;

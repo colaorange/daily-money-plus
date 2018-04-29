@@ -45,7 +45,7 @@ import com.google.android.gms.analytics.Tracker;
 public class Contexts {
 
     //shold't not modify it, code has some assumption.
-    public static final int WORKING_BOOK_DEFAULT = 0;
+    public static final int DEFAULT_BOOK_ID = 0;
 
     private static Contexts instance;
 
@@ -303,7 +303,7 @@ public class Contexts {
      **/
     public boolean deleteData(Book book) {
         //can't delete default(0) and working book
-        if (book.getId() == WORKING_BOOK_DEFAULT || book.getId() == preference.getWorkingBookId()) {
+        if (book.getId() == DEFAULT_BOOK_ID || book.getId() == preference.getWorkingBookId()) {
             return false;
         }
         String dbname = "dm_" + book.getId() + ".db";
@@ -323,7 +323,7 @@ public class Contexts {
     public void setWorkingBookId(int id) {
         int oid = preference.getWorkingBookId();
         if (id < 0) {
-            id = Contexts.WORKING_BOOK_DEFAULT;
+            id = Contexts.DEFAULT_BOOK_ID;
         }
         if (oid != id) {
             preference.setWorkingBookId(id);
@@ -347,7 +347,7 @@ public class Contexts {
         CalendarHelper calHelper = getCalendarHelper();
 
         String dbname = "dm.db";
-        if (bookId > WORKING_BOOK_DEFAULT) {
+        if (bookId > DEFAULT_BOOK_ID) {
             dbname = "dm_" + bookId + ".db";
         }
         IDataProvider provider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp, dbname), calHelper);

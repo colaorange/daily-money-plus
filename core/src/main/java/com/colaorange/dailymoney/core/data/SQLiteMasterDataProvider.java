@@ -3,6 +3,8 @@ package com.colaorange.dailymoney.core.data;
 import static com.colaorange.dailymoney.core.data.MasterDataMeta.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -14,16 +16,14 @@ import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.context.Contexts;
 
 /**
- * 
  * @author dennis
- * 
  */
 public class SQLiteMasterDataProvider implements IMasterDataProvider {
 
     SQLiteMasterDataHelper helper;
     CalendarHelper calHelper;
 
-    public SQLiteMasterDataProvider(SQLiteMasterDataHelper helper,CalendarHelper calHelper) {
+    public SQLiteMasterDataProvider(SQLiteMasterDataHelper helper, CalendarHelper calHelper) {
         this.helper = helper;
         this.calHelper = calHelper;
     }
@@ -42,11 +42,8 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
     public void reset() {
         SQLiteDatabase db = helper.getWritableDatabase();
         helper.onUpgrade(db, -1, db.getVersion());
-        bookId = Contexts.WORKING_BOOK_DEFAULT;
-        bookId_set = false;
     }
 
-   
 
     /**
      * book impl.
@@ -90,42 +87,37 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
         c.close();
         return book;
     }
-    
-    static int bookId = Contexts.WORKING_BOOK_DEFAULT;
-    static boolean bookId_set;
-    
-    public synchronized int nextBookId(){
-        if(!bookId_set){
-            SQLiteDatabase db = helper.getReadableDatabase();
-            Cursor c = db.rawQuery("SELECT MAX("+MasterDataMeta.COL_BOOK_ID+") FROM "+MasterDataMeta.TB_BOOK,null);
-            if(c.moveToNext()){
-                bookId = c.getInt(0);
-            }
-            bookId_set = true;
-            c.close();
+
+    public synchronized int nextBookId() {
+        int bookId = Contexts.DEFAULT_BOOK_ID;
+
+        //can't use sql max, the book id is text
+        for(Book book:listAllBook()){
+            bookId = Math.max(bookId,book.getId());
         }
-        return ++bookId;
+
+        return bookId+1;
     }
 
     @Override
     public void newBook(Book bookail) {
         int id = nextBookId();
         try {
-            newBook(id,bookail);
+            newBook(id, bookail);
         } catch (DuplicateKeyException e) {
-            Logger.e(e.getMessage(),e);
+            Logger.e(e.getMessage(), e);
         }
     }
-    
-    public void newBook(int id,Book book) throws DuplicateKeyException{
+
+    public void newBook(int id, Book book) throws DuplicateKeyException {
         if (findBook(id) != null) {
             throw new DuplicateKeyException("duplicate book id " + id);
         }
-        newBookNoCheck(id,book);
+        newBookNoCheck(id, book);
     }
-    
+
     @Override
-    public void newBookNoCheck(int id,Book book){
+    public void newBookNoCheck(int id, Book book) {
         Logger.d("new book {}, {}", id, book.getName());
 
         book.setId(id);
@@ -145,17 +137,17 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
         book.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        applyContextValue(book,cv);
-        
+        applyContextValue(book, cv);
+
         //use old id to update
-        int r = db.update(TB_BOOK, cv, COL_BOOK_ID+" = "+id,null);
-        return r>0;
+        int r = db.update(TB_BOOK, cv, COL_BOOK_ID + " = " + id, null);
+        return r > 0;
     }
 
     @Override
     public boolean deleteBook(int id) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        boolean r = db.delete(TB_BOOK, COL_BOOK_ID+" = "+id, null) >0 ;
+        boolean r = db.delete(TB_BOOK, COL_BOOK_ID + " = " + id, null) > 0;
         return r;
     }
 
@@ -163,18 +155,29 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
     public List<Book> listAllBook() {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = null;
-        c = db.query(TB_BOOK,COL_BOOK_ALL,null,null, null, null, BOOK_ORDERBY);
+        c = db.query(TB_BOOK, COL_BOOK_ALL, null, null, null, null, BOOK_ORDERBY);
         List<Book> result = new ArrayList<Book>();
         Book det;
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             det = new Book();
-            applyCursor(det,c);
+            applyCursor(det, c);
             result.add(det);
         }
         c.close();
+
+        Collections.sort(result, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                if (o1.getId() == Contexts.DEFAULT_BOOK_ID || o2.getId() == Contexts.DEFAULT_BOOK_ID) {
+                    return Integer.valueOf(o1.getId()).compareTo(Integer.valueOf(o2.getId()));
+                }
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
+        });
+
         return result;
     }
 
-    static final String BOOK_ORDERBY = COL_BOOK_ID+" ASC";
+    static final String BOOK_ORDERBY = COL_BOOK_ID + " ASC";
 
 }

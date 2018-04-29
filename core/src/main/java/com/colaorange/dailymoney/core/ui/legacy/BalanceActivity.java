@@ -76,7 +76,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private ListView listView;
 
-    private BalanceAdapter listViewAdapter;
+    private BalanceListAdapter listViewAdapter;
 
     private float dpRatio;
 
@@ -123,7 +123,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         modeBtn.setOnClickListener(this);
 
 
-        listViewAdapter = new BalanceAdapter(this, listViewData);
+        listViewAdapter = new BalanceListAdapter(this, listViewData);
 
         listView = findViewById(R.id.balance_list);
         listView.setAdapter(listViewAdapter);
@@ -617,12 +617,12 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
 
-    private class BalanceAdapter extends ArrayAdapter<Balance> {
+    private class BalanceListAdapter extends ArrayAdapter<Balance> {
 
         LayoutInflater inflater;
 
-        public BalanceAdapter(@NonNull Context context, List<Balance> balances) {
-            super(context, R.layout.balance_item, balances);
+        public BalanceListAdapter(@NonNull Context context, List<Balance> list) {
+            super(context, R.layout.balance_item, list);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -645,7 +645,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     }
 
-    public class BalanceViewHolder {
+    private class BalanceViewHolder {
 
         public void bindViewValue(Balance balance, View convertView) {
 
