@@ -22,6 +22,7 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
@@ -43,11 +44,13 @@ import java.util.List;
 /**
  * @author dennis
  */
+@InstanceState
 public class DesktopActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
 
-    private boolean firstTime;
+    @InstanceState
+    private Boolean firstTime;
 
-    private String currTab = null;
+    private String selectedTab = null;
 
     private GridView gridView;
 
@@ -87,8 +90,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     }
 
     private void initParams() {
-        Bundle bundle = getIntentExtras();
-        firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
+        if (firstTime == null) {
+            Bundle bundle = getIntentExtras();
+            firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
+        }
     }
 
 
@@ -117,8 +122,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             }
             tab.setContent(R.id.desktop_grid);
             tabs.addTab(tab);
-            if (currTab == null) {
-                currTab = tab.getTag();
+            if (selectedTab == null) {
+                selectedTab = tab.getTag();
             }
         }
 
@@ -150,7 +155,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void refreshDesktop() {
         for (Desktop d : desktops) {
-            if (d.getLabel().equals(currTab)) {
+            if (d.getLabel().equals(selectedTab)) {
                 d.refresh();
                 break;
             }
@@ -230,7 +235,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     @Override
     public void onTabChanged(String tabId) {
-        currTab = tabId;
+        selectedTab = tabId;
         refreshDesktop();
     }
 
@@ -276,7 +281,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     @SuppressWarnings("unchecked")
     List<DesktopItem> getCurrentDesktopItems() {
         for (Desktop d : desktops) {
-            if (d.getLabel().equals(currTab)) {
+            if (d.getLabel().equals(selectedTab)) {
                 return d.getDesktopItems();
             }
         }

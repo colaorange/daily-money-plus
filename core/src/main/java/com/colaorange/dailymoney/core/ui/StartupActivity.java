@@ -36,6 +36,9 @@ public class StartupActivity extends ContextsActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.startup);
+        if(started){
+            finish();
+        }
     }
     @Override
     public void onStart() {
@@ -99,6 +102,7 @@ public class StartupActivity extends ContextsActivity {
         intent.putExtra(PARAM_FIRST_TIME, firstTime);
         startActivity(intent);
         started = true;
+        firstTime = false;
     }
 
 

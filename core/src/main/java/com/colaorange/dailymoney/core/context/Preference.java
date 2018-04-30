@@ -32,9 +32,9 @@ public class Preference {
     private static final String THEME_LIGHT_PREFIX = "light-";
 
     public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
-    public static final String THEME_ORANGE = THEME_DARK_PREFIX+ "orange";
+    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX+ "orange";
     public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
-    public static final String THEME_SAKURA = THEME_DARK_PREFIX+ "sakura";
+    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX+ "sakura";
 
 
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
@@ -416,7 +416,7 @@ public class Preference {
         dateTimeFormat = dateFormat + " " + timeFormat;
 
         try {
-            theme = prefs.getString(i18n.string(R.string.pref_theme), theme);
+            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_theme));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
