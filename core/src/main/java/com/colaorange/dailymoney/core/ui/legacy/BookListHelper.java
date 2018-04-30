@@ -33,12 +33,12 @@ import com.colaorange.dailymoney.core.ui.Constants;
 public class BookListHelper implements OnItemClickListener {
 
 
-    private List<Book> listViewData = new ArrayList<Book>();
+    private List<Book> listData = new ArrayList<Book>();
 
 
-    private ListView listView;
+    private ListView vList;
 
-    private BookListAdapter listViewAdapter;
+    private BookListAdapter listAdapter;
 
     private boolean clickEditable;
 
@@ -57,31 +57,31 @@ public class BookListHelper implements OnItemClickListener {
 
     public void setup(ListView listview) {
         workingBookId = Contexts.instance().getWorkingBookId();
-        listViewData = new LinkedList<>();
-        listViewAdapter = new BookListAdapter(activity, listViewData);
-        listView = listview;
-        listView.setAdapter(listViewAdapter);
+        listData = new LinkedList<>();
+        listAdapter = new BookListAdapter(activity, listData);
+        vList = listview;
+        vList.setAdapter(listAdapter);
         if (clickEditable) {
-            listView.setOnItemClickListener(this);
+            vList.setOnItemClickListener(this);
         }
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-        if (parent == listView) {
+        if (parent == vList) {
             doEditBook(pos);
         }
     }
 
     public void reloadData(List<Book> data) {
-        if(listViewData!=data) {//not self call
-            listViewData.clear();
-            listViewData.addAll(data);
+        if(listData !=data) {//not self call
+            listData.clear();
+            listData.addAll(data);
         }
 
         workingBookId = Contexts.instance().getWorkingBookId();
-        listViewAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
     }
 
 
@@ -96,7 +96,7 @@ public class BookListHelper implements OnItemClickListener {
 
 
     public void doEditBook(int pos) {
-        Book book = listViewData.get(pos);
+        Book book = listData.get(pos);
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, false);
@@ -105,7 +105,7 @@ public class BookListHelper implements OnItemClickListener {
     }
 
     public void doDeleteBook(final int pos) {
-        final Book book = listViewData.get(pos);
+        final Book book = listData.get(pos);
         final int workingBookId = Contexts.instance().getWorkingBookId();
         final I18N i18n = Contexts.instance().getI18n();
         if (book.getId() == Contexts.DEFAULT_BOOK_ID) {
@@ -125,8 +125,8 @@ public class BookListHelper implements OnItemClickListener {
                         if (listener != null) {
                             listener.onBookDeleted(book);
                         } else {
-                            listViewData.remove(pos);
-                            listViewAdapter.notifyDataSetChanged();
+                            listData.remove(pos);
+                            listAdapter.notifyDataSetChanged();
                         }
                         Contexts.instance().deleteData(book);
                     }
@@ -137,13 +137,13 @@ public class BookListHelper implements OnItemClickListener {
     }
 
     public void doSetWorkingBook(int pos) {
-        Book d = listViewData.get(pos);
+        Book d = listData.get(pos);
         if (Contexts.instance().getWorkingBookId() == d.getId()) {
             return;
         }
         Contexts.instance().setWorkingBookId(d.getId());
 
-        reloadData(listViewData);
+        reloadData(listData);
     }
 
 

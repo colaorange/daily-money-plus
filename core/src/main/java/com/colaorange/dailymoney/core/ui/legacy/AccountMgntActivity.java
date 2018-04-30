@@ -1,42 +1,45 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Formats;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.GUIs;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * this activity manages the account (of detail) with tab widgets of android,
- * there are 4 type of account, income, expense, asset and liability.
+ * this activity manages the account (of record) with tab widgets of android,
  *
  * @author dennis
  * @see {@link AccountType}
@@ -44,21 +47,11 @@ import com.colaorange.dailymoney.core.ui.Constants;
 public class AccountMgntActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
 
 
-    private static String KEY_NAME = "NAME";
-    private static String KEY_INITVAL = "initval";
-    private static String KEY_ID = "NAME";
+    private List<Account> listData = new ArrayList<>();
 
-    private static String[] mappingKeys = new String[]{KEY_NAME, KEY_INITVAL, KEY_ID};
+    private ListView vList;
 
-    private static int[] mappingResIds = new int[]{R.id.account_item_name, R.id.account_item_initvalue, R.id.account_item_id};
-
-    private List<Account> listViewData = new ArrayList<Account>();
-
-    private List<Map<String, Object>> listViewMapList = new ArrayList<Map<String, Object>>();
-
-    private ListView listView;
-
-    private SimpleAdapter listViewAdapter;
+    private AccountListAdapter listAdapter;
 
     private String currTabTag = null;
 
@@ -98,52 +91,15 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         tabs.setOnTabChangedListener(this);
 
 
-        //
-        listViewAdapter = new SimpleAdapter(this, listViewMapList, R.layout.account_mgnt_item, mappingKeys, mappingResIds);
-        listViewAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+        listAdapter = new AccountListAdapter(this, listData);
 
-            @Override
-            public boolean setViewValue(View view, Object data, String text) {
-                NamedItem item = (NamedItem) data;
-                String name = item.getName();
-                Account acc = (Account) item.getValue();
-                //not textview, not initval
-                if (!(view instanceof TextView)) {
-                    return false;
-                }
-                AccountType at = AccountType.find(acc.getType());
-                TextView tv = (TextView) view;
-
-                if (at == AccountType.INCOME) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountIncomeTextColor));
-                } else if (at == AccountType.EXPENSE) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountExpenseTextColor));
-                } else if (at == AccountType.ASSET) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountAssetTextColor));
-                } else if (at == AccountType.LIABILITY) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountLiabilityTextColor));
-                } else if (at == AccountType.OTHER) {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountOtherTextColor));
-                } else {
-                    tv.setTextColor(resolveThemeAttrResData(R.attr.accountUnknownTextColor));
-                }
-
-                if (KEY_INITVAL.equals(name)) {
-                    text = i18n().string(R.string.label_initial_value) + " : " + data.toString();
-                    tv.setText(text);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        listView = findViewById(R.id.account_mgnt_list);
-        listView.setAdapter(listViewAdapter);
+        vList = findViewById(R.id.account_mgnt_list);
+        vList.setAdapter(listAdapter);
 
 
-        listView.setOnItemClickListener(this);
+        vList.setOnItemClickListener(this);
 
-        registerForContextMenu(listView);
+        registerForContextMenu(vList);
     }
 
 
@@ -163,21 +119,12 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
     private void refreshUI() {
         IDataProvider idp = contexts().getDataProvider();
-        listViewData = null;
 
         AccountType type = AccountType.find(currTabTag);
-        listViewData = idp.listAccount(type);
-        listViewMapList.clear();
+        listData.clear();
+        listData.addAll(idp.listAccount(type));
 
-        for (Account acc : listViewData) {
-            Map<String, Object> row = new HashMap<String, Object>();
-            listViewMapList.add(row);
-            row.put(mappingKeys[0], new NamedItem(mappingKeys[0], acc, acc.getName()));
-            row.put(mappingKeys[1], new NamedItem(mappingKeys[1], acc, Formats.double2String(acc.getInitialValue())));
-            row.put(mappingKeys[2], new NamedItem(mappingKeys[2], acc, acc.getId()));
-        }
-
-        listViewAdapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -229,7 +176,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doDeleteAccount(int pos) {
-        Account acc = listViewData.get(pos);
+        Account acc = listData.get(pos);
         String name = acc.getName();
 
         contexts().getDataProvider().deleteAccount(acc.getId());
@@ -240,7 +187,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doEditAccount(int pos) {
-        Account acc = listViewData.get(pos);
+        Account acc = listData.get(pos);
         Intent intent = null;
         intent = new Intent(this, AccountEditorActivity.class);
         intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, false);
@@ -249,7 +196,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doCopyAccount(int pos) {
-        Account acc = listViewData.get(pos);
+        Account acc = listData.get(pos);
         Intent intent = null;
         intent = new Intent(this, AccountEditorActivity.class);
         intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
@@ -268,8 +215,58 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-        if (parent == listView) {
+        if (parent == vList) {
             doEditAccount(pos);
+        }
+    }
+
+    private class AccountListAdapter extends ArrayAdapter<Account> {
+
+        LayoutInflater inflater;
+
+        public AccountListAdapter(@NonNull Context context, List<Account> list) {
+            super(context, R.layout.account_mgnt_item, list);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            AccountViewHolder holder;
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.account_mgnt_item, null);
+                convertView.setTag(holder = new AccountViewHolder());
+            } else {
+                holder = (AccountViewHolder) convertView.getTag();
+            }
+
+            holder.bindViewValue(getItem(position), convertView);
+
+            return convertView;
+        }
+
+
+    }
+
+    private class AccountViewHolder {
+
+        public void bindViewValue(Account account, View convertView) {
+
+            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
+
+            TextView vname = convertView.findViewById(R.id.account_item_name);
+            TextView vid = convertView.findViewById(R.id.account_item_id);
+            TextView initvalue = convertView.findViewById(R.id.account_item_initvalue);
+
+            vname.setText(account.getName());
+            vid.setText(account.getId());
+            initvalue.setText(i18n().string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue()));
+
+            int textColor = textColorMap.get(AccountType.find(account.getType()));
+
+            vname.setTextColor(textColor);
+            vid.setTextColor(textColor);
+            initvalue.setTextColor(textColor);
         }
     }
 

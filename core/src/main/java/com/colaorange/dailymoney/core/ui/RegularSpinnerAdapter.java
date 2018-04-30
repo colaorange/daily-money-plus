@@ -56,7 +56,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
                         @NonNull ViewGroup parent, boolean isDropdown) {
         ViewHolder<T> holder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.regular_spinner, null);
+            convertView = inflater.inflate(isDropdown ? R.layout.regular_spinner_item : R.layout.regular_spinner, null);
             convertView.setTag(holder = createViewHolder());
         } else {
             holder = (ViewHolder<T>) convertView.getTag();
@@ -80,7 +80,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
 
         public ViewHolder(RegularSpinnerAdapter adapter) {
             this.adapter = adapter;
-            this.activity = (ContextsActivity)adapter.getContext();
+            this.activity = (ContextsActivity) adapter.getContext();
         }
 
         abstract public void bindViewValue(T item, LinearLayout layout, TextView text, boolean isDropdown, boolean isSelected);
