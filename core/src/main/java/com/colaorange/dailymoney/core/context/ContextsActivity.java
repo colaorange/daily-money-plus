@@ -26,6 +26,7 @@ import java.util.Map;
  *
  * @author dennis
  */
+@InstanceState
 public class ContextsActivity extends AppCompatActivity {
 
     public static final String PARAM_TITLE = "activity.title";
@@ -36,15 +37,25 @@ public class ContextsActivity extends AppCompatActivity {
     private Map<AccountType, Integer> accountTextColorMap;
     private Map<AccountType, Integer> accountBgColorMap;
 
+    private InstanceStateHelper instanceStateHelper;
+
     @Override
-    protected void onCreate(Bundle bundle) {
+    protected void onCreate(Bundle savedInstanceState) {
         applyTheme();//do before super on create;
-        super.onCreate(bundle);
+        super.onCreate(savedInstanceState);
+        instanceStateHelper = new InstanceStateHelper(this);
+        instanceStateHelper.onCreate(savedInstanceState);
         //for init ui related resource in ui thread
         GUIs.touch();
 
         Logger.d("activity created:" + this);
         onCreateTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        instanceStateHelper.onSaveInstanceState(savedInstanceState);
     }
 
     public void markWholeRecreate() {

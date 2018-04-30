@@ -4,21 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.colaorange.commons.util.Strings;
-import com.colaorange.dailymoney.core.bg.StartupReceiver;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.bg.StartupReceiver;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.legacy.DesktopActivity;
+import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
  * Created by Dennis
  */
+@InstanceState
 public class StartupActivity extends ContextsActivity {
 
     public static final String PARAM_FIRST_TIME = "startup.firstTime";
+
+    @InstanceState
     private boolean firstTime = false;
+
+    @InstanceState
+    private boolean started = false;
 
     @Override
     public boolean isNoActionBarTheme(){
@@ -26,8 +33,8 @@ public class StartupActivity extends ContextsActivity {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         this.setContentView(R.layout.startup);
     }
     @Override
@@ -51,6 +58,7 @@ public class StartupActivity extends ContextsActivity {
             trackEvent("theme-"+preference().getTheme());
         }
     }
+
 
     @Override
     public void onResume() {
@@ -90,6 +98,7 @@ public class StartupActivity extends ContextsActivity {
         Intent intent = new Intent(StartupActivity.this, DesktopActivity.class);
         intent.putExtra(PARAM_FIRST_TIME, firstTime);
         startActivity(intent);
+        started = true;
     }
 
 
