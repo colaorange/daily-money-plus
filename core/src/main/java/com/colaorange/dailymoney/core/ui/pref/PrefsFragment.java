@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.legacy;
+package com.colaorange.dailymoney.core.ui.pref;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -30,7 +31,7 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PrefsFragment extends ContextsPrefsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     boolean dirty = false;
 

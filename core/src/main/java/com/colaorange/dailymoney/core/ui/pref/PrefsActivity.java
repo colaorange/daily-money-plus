@@ -1,12 +1,8 @@
-package com.colaorange.dailymoney.core.ui.legacy;
+package com.colaorange.dailymoney.core.ui.pref;
 
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 
 /**

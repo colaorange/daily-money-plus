@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.dailymoney.core.data.Record;
+import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;

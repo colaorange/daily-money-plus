@@ -16,8 +16,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
 
         <activity android:name="com.colaorange.calculator2.Calculator" />
         <activity
@@ -29,13 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".core.ui.LocalWebViewActivity"
-            android:theme="@style/AppTheme"
-            />
+        <activity
+            android:name=".core.ui.LocalWebViewActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".core.ui.PasswordProtectionActivity"
-            android:label="@string/label_pwd_protection"
-            />
+            android:label="@string/label_pwd_protection" />
         <activity
             android:name=".core.ui.legacy.DesktopActivity"
             android:label="@string/app_name" />
@@ -46,27 +44,34 @@
         <activity
             android:name=".core.ui.legacy.RecordlListActivity"
             android:label="@string/title_reclist" />
-        <activity android:name=".core.ui.legacy.RecordEditorActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".core.ui.legacy.RecordEditorActivity"></activity>
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />
         <activity android:name=".core.ui.legacy.AccountEditorActivity" />
         <activity android:name=".core.ui.legacy.AccountRecordListActivity" />
         <activity
-            android:name=".core.ui.legacy.PrefsActivity"
+            android:name=".core.ui.pref.PrefsActivity"
             android:label="@string/title_prefs" />
+        <activity
+            android:name=".core.ui.pref.PrefsContributionActivity"
+            android:label="@string/label_prefcat_contribution">
+        </activity>
+
+        <activity
+            android:name=".core.ui.pref.PrefsDeveloperActivity"
+            android:label="@string/label_prefcat_developer" >
+        </activity>
+
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"
             android:label="@string/title_datamain" />
         <activity
             android:name=".core.ui.legacy.BalanceActivity"
             android:label="@string/label_balance" />
-        <activity android:name="org.achartengine.GraphicalActivity"
-            android:theme="@style/Theme.AppCompat"/>
+        <activity
+            android:name="org.achartengine.GraphicalActivity"
+            android:theme="@style/Theme.AppCompat" />
 
         <receiver
             android:name=".core.bg.StartupReceiver"
