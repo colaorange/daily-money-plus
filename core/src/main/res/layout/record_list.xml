@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.legacy.RecordlListActivity"
-    android:background="?appPrimaryLightColor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.RecordlListActivity"
+    tools:ignore="ContentDescription">
 
     <include layout="@layout/app_bar" />
 
@@ -44,12 +45,10 @@
         android:id="@+id/record_list_infobar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
         android:ellipsize="end"
         android:gravity="center"
-        android:singleLine="true"
         android:text=""
-        android:textSize="18sp" />
+        android:textSize="?textSizeLarge" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="fill_parent"
@@ -66,9 +65,11 @@
             android:id="@+id/sum_unknow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="......"
             android:textColor="?accountUnknownTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
 
         <TextView
             android:id="@+id/sum_income"
@@ -76,9 +77,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="?accountIncomeTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
 
         <TextView
             android:id="@+id/sum_expense"
@@ -86,9 +88,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="?accountExpenseTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
 
         <TextView
             android:id="@+id/sum_asset"
@@ -96,9 +99,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="?accountAssetTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
 
         <TextView
             android:id="@+id/sum_liability"
@@ -106,9 +110,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="?accountLiabilityTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
 
         <TextView
             android:id="@+id/sum_other"
@@ -116,14 +121,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textColor="?accountOtherTextColor"
-            android:textSize="14dp" />
+            android:textSize="?textSize" />
     </com.google.android.flexbox.FlexboxLayout>
 
 
     <ListView
         android:id="@+id/record_list_list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:drawSelectorOnTop="true" />
 </LinearLayout>

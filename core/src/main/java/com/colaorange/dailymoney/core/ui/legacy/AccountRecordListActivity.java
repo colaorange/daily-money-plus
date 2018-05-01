@@ -51,7 +51,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_record_list);
+        setContentView(R.layout.account_reclist);
         initParams();
         initMembers();
         GUIs.delayPost(new Runnable() {
@@ -102,9 +102,9 @@ public class AccountRecordListActivity extends ContextsActivity {
             }
         });
 
-        infoView = findViewById(R.id.account_detail_list_infobar);
+        infoView = findViewById(R.id.account_reclist_infobar);
 
-        ListView listView = findViewById(R.id.account_detail_list_list);
+        ListView listView = findViewById(R.id.account_reclist_list);
         recordListHelper.setup(listView);
         registerForContextMenu(listView);
     }
@@ -174,7 +174,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.account_detail_list_list) {
+        if (v.getId() == R.id.account_reclist_list) {
             getMenuInflater().inflate(R.menu.account_reclist_ctxmenu, menu);
         }
 

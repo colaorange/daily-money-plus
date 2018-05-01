@@ -31,9 +31,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@android:drawable/ic_dialog_info"
-                android:drawablePadding="10sp"
+                android:drawablePadding="10dp"
                 android:gravity="center"
-                android:text="@string/label_prefs_workingfolder" />
+                android:text="@string/label_prefs_workingfolder"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_request_permission"
@@ -42,7 +43,8 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_edit"
                 android:gravity="center"
-                android:text="@string/label_request_storage_permission" />
+                android:text="@string/label_request_storage_permission"
+                android:textSize="?textSize" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -56,8 +58,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:paddingRight="5sp"
-                    android:text="@string/label_prefs_lastbackup" />
+                    android:paddingRight="5dp"
+                    android:text="@string/label_prefs_lastbackup"
+                    android:textSize="?textSize" />
 
                 <TextView
                     android:id="@+id/datamain_lastbackup"
@@ -65,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="@string/label_unknown" />
+                    android:text="@string/label_unknown"
+                    android:textSize="?textSize" />
             </LinearLayout>
 
             <Button
@@ -75,7 +79,8 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="@string/label_backup_data" />
+                android:text="@string/label_backup_data"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_export_csv"
@@ -83,7 +88,8 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_import_export"
                 android:gravity="center"
-                android:text="@string/label_export_csv" />
+                android:text="@string/label_export_csv"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_share_csv"
@@ -92,7 +98,8 @@
                 android:layout_marginBottom="10dp"
                 android:drawableLeft="?ic_share"
                 android:gravity="center"
-                android:text="@string/label_share_csv" />
+                android:text="@string/label_share_csv"
+                android:textSize="?textSize" />
 
 
             <Button
@@ -102,7 +109,8 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="@string/label_restore_data" />
+                android:text="@string/label_restore_data"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_import_csv"
@@ -111,7 +119,8 @@
                 android:layout_marginBottom="10dp"
                 android:drawableLeft="?ic_import_export"
                 android:gravity="center"
-                android:text="@string/label_import_csv" />
+                android:text="@string/label_import_csv"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_reset"
@@ -120,7 +129,8 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
-                android:text="@string/label_reset_working_book" />
+                android:text="@string/label_reset_working_book"
+                android:textSize="?textSize" />
 
             <!--TODO should move to developer-->
 
@@ -132,6 +142,7 @@
                 android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_clear_folder"
+                android:textSize="?textSize"
                 android:visibility="gone" />
 
             <Button
@@ -141,6 +152,7 @@
                 android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_create_default"
+                android:textSize="?textSize"
                 android:visibility="gone" />
 
         </LinearLayout>

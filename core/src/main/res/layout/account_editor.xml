@@ -9,9 +9,9 @@
     tools:context=".ui.legacy.AccountEditorActivity">
 
     <ScrollView
-        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -21,16 +21,19 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_name" />
+                android:text="@string/label_name"
+                android:textSize="?textSize" />
 
             <EditText
                 android:id="@+id/account_name"
                 style="@style/editorFieldInput"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textSize="?textSize" />
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_type" />
+                android:text="@string/label_type"
+                android:textSize="?textSize" />
 
             <Spinner
                 android:id="@+id/account_type"
@@ -38,7 +41,8 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_initial_value" />
+                android:text="@string/label_initial_value"
+                android:textSize="?textSize" />
 
             <LinearLayout
                 style="@style/editorFieldInput"
@@ -50,7 +54,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:digits="0123456789.,"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:textSize="?textSize" />
 
                 <ImageButton
                     android:id="@+id/btn_cal2"
@@ -61,7 +66,8 @@
             <CheckBox
                 android:id="@+id/account_cash"
                 style="@style/editorFieldInput"
-                android:text="@string/label_cash_account" />
+                android:text="@string/label_cash_account"
+                android:textSize="?textSize" />
 
         </LinearLayout>
     </ScrollView>
@@ -75,19 +81,22 @@
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
-            android:text="@string/act_ok" />
+            android:text="@string/act_ok"
+            android:textSize="?textSize" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
-            android:text="@string/act_cancel" />
+            android:text="@string/act_cancel"
+            android:textSize="?textSize" />
 
         <Button
             android:id="@+id/btn_close"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
             android:text="@string/act_close"
+            android:textSize="?textSize"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

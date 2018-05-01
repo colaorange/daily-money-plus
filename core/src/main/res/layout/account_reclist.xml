@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    tools:context=".ui.legacy.BookMgntActivity">
+    tools:context=".ui.legacy.AccountRecordListActivity">
 
     <include layout="@layout/app_bar" />
 
-    <ListView
-        android:id="@+id/book_mgnt_list"
+    <TextView
+        android:id="@+id/account_reclist_infobar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:drawSelectorOnTop="true" />
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="?textSizeLarge" />
+
+    <ListView
+        android:id="@+id/account_reclist_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

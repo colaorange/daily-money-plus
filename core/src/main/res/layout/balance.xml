@@ -46,7 +46,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:paddingVertical="5dp"
-        android:singleLine="true"
         android:textSize="?textSizeLarge" />
 
     <LinearLayout

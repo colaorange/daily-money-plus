@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.legacy.AccountMgntActivity"
-    android:background="?appPrimaryLightColor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    >
+    tools:context=".ui.legacy.AccountMgntActivity">
 
     <include layout="@layout/app_bar" />
 
@@ -39,7 +38,8 @@
                 <ListView
                     android:id="@+id/account_mgnt_list"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="true" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>

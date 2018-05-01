@@ -47,13 +47,13 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 
     RecordListHelper recordListHelper;
 
-    TextView infoView;
-    TextView sumIncomeView;
-    TextView sumExpenseView;
-    TextView sumAssetView;
-    TextView sumLiabilityView;
-    TextView sumOtherView;
-    TextView sumUnknowView;
+    TextView vInfo;
+    TextView vSumIncome;
+    TextView vSumExpense;
+    TextView vSumAsset;
+    TextView vSumLiability;
+    TextView vSumOther;
+    TextView vSumUnknow;
 
     View toolbarView;
 
@@ -97,14 +97,14 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
         yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
         yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
 
-        infoView = findViewById(R.id.record_list_infobar);
+        vInfo = findViewById(R.id.record_list_infobar);
         toolbarView = findViewById(R.id.record_list_toolbar);
-        sumIncomeView = findViewById(R.id.sum_income);
-        sumExpenseView = findViewById(R.id.sum_expense);
-        sumAssetView = findViewById(R.id.sum_asset);
-        sumLiabilityView = findViewById(R.id.sum_liability);
-        sumOtherView = findViewById(R.id.sum_other);
-        sumUnknowView = findViewById(R.id.sum_unknow);
+        vSumIncome = findViewById(R.id.sum_income);
+        vSumExpense = findViewById(R.id.sum_expense);
+        vSumAsset = findViewById(R.id.sum_asset);
+        vSumLiability = findViewById(R.id.sum_liability);
+        vSumOther = findViewById(R.id.sum_other);
+        vSumUnknow = findViewById(R.id.sum_unknow);
         modeBtn = findViewById(R.id.toolbar_btn_mode);
 
         modeBtn.setOnClickListener(this);
@@ -185,15 +185,15 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
         final CalendarHelper cal = calendarHelper();
         final Date start;
         final Date end;
-        infoView.setText("");
+        vInfo.setText("");
         refreshToolbar();
-        sumIncomeView.setVisibility(TextView.GONE);
-        sumExpenseView.setVisibility(TextView.GONE);
-        sumAssetView.setVisibility(TextView.GONE);
-        sumLiabilityView.setVisibility(TextView.GONE);
-        sumOtherView.setVisibility(TextView.GONE);
+        vSumIncome.setVisibility(TextView.GONE);
+        vSumExpense.setVisibility(TextView.GONE);
+        vSumAsset.setVisibility(TextView.GONE);
+        vSumLiability.setVisibility(TextView.GONE);
+        vSumOther.setVisibility(TextView.GONE);
 
-        sumUnknowView.setVisibility(TextView.VISIBLE);
+        vSumUnknow.setVisibility(TextView.VISIBLE);
 
 
         switch (mode) {
@@ -267,59 +267,47 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                 CalendarHelper cal = calendarHelper();
                 I18N i18n = i18n();
 
-                sumUnknowView.setVisibility(TextView.GONE);
+                vSumUnknow.setVisibility(TextView.GONE);
                 //update data
                 recordListHelper.reloadData(data);
-                int showcount = 0;
                 if (income != 0) {
-                    sumIncomeView.setText(i18n.string(R.string.label_reclist_sum_income, contexts().toFormattedMoneyString((income))));
-                    sumIncomeView.setVisibility(TextView.VISIBLE);
-                    showcount++;
+                    vSumIncome.setText(i18n.string(R.string.label_reclist_sum_income, contexts().toFormattedMoneyString((income))));
+                    vSumIncome.setVisibility(TextView.VISIBLE);
                 }
                 if (expense != 0) {
-                    sumExpenseView.setText(i18n.string(R.string.label_reclist_sum_expense, contexts().toFormattedMoneyString((expense))));
-                    sumExpenseView.setVisibility(TextView.VISIBLE);
-                    showcount++;
+                    vSumExpense.setText(i18n.string(R.string.label_reclist_sum_expense, contexts().toFormattedMoneyString((expense))));
+                    vSumExpense.setVisibility(TextView.VISIBLE);
                 }
                 if (asset != 0) {
-                    sumAssetView.setText(i18n.string(R.string.label_reclist_sum_asset, contexts().toFormattedMoneyString((asset))));
-                    sumAssetView.setVisibility(TextView.VISIBLE);
-                    showcount++;
+                    vSumAsset.setText(i18n.string(R.string.label_reclist_sum_asset, contexts().toFormattedMoneyString((asset))));
+                    vSumAsset.setVisibility(TextView.VISIBLE);
                 }
                 if (liability != 0) {
-                    sumLiabilityView.setText(i18n.string(R.string.label_reclist_sum_liability, contexts().toFormattedMoneyString((liability))));
-                    sumLiabilityView.setVisibility(TextView.VISIBLE);
-                    showcount++;
+                    vSumLiability.setText(i18n.string(R.string.label_reclist_sum_liability, contexts().toFormattedMoneyString((liability))));
+                    vSumLiability.setVisibility(TextView.VISIBLE);
                 }
                 if (other != 0) {
-                    sumOtherView.setText(i18n.string(R.string.label_reclist_sum_other, contexts().toFormattedMoneyString((other))));
-                    sumOtherView.setVisibility(TextView.VISIBLE);
-                    showcount++;
+                    vSumOther.setText(i18n.string(R.string.label_reclist_sum_other, contexts().toFormattedMoneyString((other))));
+                    vSumOther.setVisibility(TextView.VISIBLE);
                 }
-
-                adjustTextSize(sumIncomeView, showcount);
-                adjustTextSize(sumExpenseView, showcount);
-                adjustTextSize(sumAssetView, showcount);
-                adjustTextSize(sumLiabilityView, showcount);
-                adjustTextSize(sumOtherView, showcount);
 
                 //update info
                 switch (mode) {
                     case MODE_ALL:
-                        infoView.setText(i18n.string(R.string.label_all_records, Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_all_records, Integer.toString(count)));
                         break;
                     case MODE_MONTH:
-                        infoView.setText(i18n.string(R.string.label_month_details, yearMonthFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_month_details, yearMonthFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
                         break;
                     case MODE_DAY:
-                        infoView.setText(i18n.string(R.string.label_day_records, dateFormat.format(currentDate), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(currentDate), Integer.toString(count)));
                         break;
                     case MODE_YEAR:
-                        infoView.setText(i18n.string(R.string.label_year_details, yearFormat.format(currentDate), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_year_details, yearFormat.format(currentDate), Integer.toString(count)));
                         break;
                     case MODE_WEEK:
                     default:
-                        infoView.setText(i18n.string(R.string.label_week_details, monthDateFormat.format(start), monthDateFormat.format(end),
+                        vInfo.setText(i18n.string(R.string.label_week_details, monthDateFormat.format(start), monthDateFormat.format(end),
                                 cal.weekOfMonth(currentDate), cal.weekOfYear(currentDate), yearFormat.format(start), Integer.toString(count)));
                         break;
                 }
@@ -329,15 +317,6 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 
 
     }
-
-    private void adjustTextSize(TextView view, int count) {
-        if (count <= 3) {
-            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        } else {
-            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

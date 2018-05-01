@@ -74,7 +74,7 @@ public class Preference {
 
     private CalendarHelper calendarHelper;
 
-    int detailListLayout = 2;
+    int recordListLayout = 2;
     int maxRecords = -1;//-1 is no limit
     int firstdayWeek = 1;//sunday
     int startdayMonth = 1;//1-28
@@ -317,7 +317,7 @@ public class Preference {
 
         try {
             str = i18n.string(R.string.default_record_list_layout);
-            detailListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
+            recordListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -433,7 +433,7 @@ public class Preference {
         Logger.d("preference : monthDateFormat {}", monthDateFormat);
         Logger.d("preference : yearFormat {}", yearFormat);
         Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
-        Logger.d("preference : detail layout {}", detailListLayout);
+        Logger.d("preference : record layout {}", recordListLayout);
         Logger.d("preference : max records {}", maxRecords);
 
     }
@@ -491,8 +491,8 @@ public class Preference {
         editor.commit();
     }
 
-    public int getDetailListLayout() {
-        return detailListLayout;
+    public int getRecordListLayout() {
+        return recordListLayout;
     }
 
     public int getMaxRecords() {

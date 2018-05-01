@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -44,11 +45,11 @@ public class BookListHelper implements OnItemClickListener {
 
     private OnBookListener listener;
 
-    private Activity activity;
+    private ContextsActivity activity;
 
     private int workingBookId;
 
-    public BookListHelper(Activity activity, boolean clickEditable, OnBookListener listener) {
+    public BookListHelper(ContextsActivity activity, boolean clickEditable, OnBookListener listener) {
         this.activity = activity;
         this.clickEditable = clickEditable;
         this.listener = listener;
@@ -185,11 +186,11 @@ public class BookListHelper implements OnItemClickListener {
 
         public void bindViewValue(Book book, View convertView) {
 
-            ImageView vicon = convertView.findViewById(R.id.book_mgnt_item_icon);
-            TextView vname = convertView.findViewById(R.id.book_mgnt_item_name);
-            TextView vid = convertView.findViewById(R.id.book_mgnt_item_id);
-            TextView vnote = convertView.findViewById(R.id.book_mgnt_item_note);
-            TextView vsymbol = convertView.findViewById(R.id.book_mgnt_item_symbol);
+            ImageView vicon = convertView.findViewById(R.id.book_item_icon);
+            TextView vname = convertView.findViewById(R.id.book_item_name);
+            TextView vid = convertView.findViewById(R.id.book_item_id);
+            TextView vnote = convertView.findViewById(R.id.book_item_note);
+            TextView vsymbol = convertView.findViewById(R.id.book_item_symbol);
 
             vname.setText(book.getName());
             vid.setText(Integer.toString(book.getId()));

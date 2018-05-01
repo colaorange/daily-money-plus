@@ -18,9 +18,6 @@ public class Constants {
     public static final int REQUEST_BOOK_EDITOR_CODE = 6;
 
 
-    public static final String SIMPLE_SPINNER_LABEL_KEY = "label";
-    public static final String SIMPLE_SPINNER_ITEM_TAG = "item";
-
     public static final String LOCAL_URL_PREFIX = "file:///android_asset/";
 
 }

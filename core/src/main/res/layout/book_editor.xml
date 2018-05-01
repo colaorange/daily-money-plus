@@ -20,25 +20,30 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_name" />
+                android:text="@string/label_name"
+                android:textSize="?textSize" />
 
             <EditText
                 android:id="@+id/book_name"
                 style="@style/editorFieldInput"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textSize="?textSize" />
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_symbol" />
+                android:text="@string/label_symbol"
+                android:textSize="?textSize" />
 
             <EditText
                 android:id="@+id/book_symbol"
                 style="@style/editorFieldInput"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textSize="?textSize" />
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_symbol_position" />
+                android:text="@string/label_symbol_position"
+                android:textSize="?textSize" />
 
             <Spinner
                 android:id="@+id/book_symbol_position"
@@ -46,12 +51,14 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_note" />
+                android:text="@string/label_note"
+                android:textSize="?textSize" />
 
             <EditText
                 android:id="@+id/book_note"
                 style="@style/editorFieldInput"
-                android:maxLines="2" />
+                android:maxLines="2"
+                android:textSize="?textSize" />
         </LinearLayout>
     </ScrollView>
 
@@ -64,12 +71,14 @@
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
-            android:text="@string/act_ok" />
+            android:text="@string/act_ok"
+            android:textSize="?textSize" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
-            android:text="@string/act_cancel" />
+            android:text="@string/act_cancel"
+            android:textSize="?textSize" />
     </LinearLayout>
 </LinearLayout>

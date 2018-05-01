@@ -21,7 +21,8 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_from_account" />
+                android:text="@string/label_from_account"
+                android:textSize="?textSize" />
 
             <Spinner
                 android:id="@+id/record_from_account"
@@ -29,7 +30,8 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_to_account" />
+                android:text="@string/label_to_account"
+                android:textSize="?textSize" />
 
             <Spinner
                 android:id="@+id/record_to_account"
@@ -37,7 +39,8 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_date" />
+                android:text="@string/label_date"
+                android:textSize="?textSize" />
 
             <LinearLayout
                 style="@style/editorFieldInput"
@@ -49,7 +52,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:editable="false" />
+                    android:editable="false"
+                    android:textSize="?textSize" />
 
                 <ImageButton
                     android:id="@+id/btn_prev"
@@ -74,7 +78,8 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_money" />
+                android:text="@string/label_money"
+                android:textSize="?textSize" />
 
             <LinearLayout
                 style="@style/editorFieldInput"
@@ -86,7 +91,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:digits="0123456789.,"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:textSize="?textSize" />
 
                 <ImageButton
                     android:id="@+id/btn_cal2"
@@ -96,12 +102,14 @@
 
             <TextView
                 style="@style/editorFieldTitle"
-                android:text="@string/label_note" />
+                android:text="@string/label_note"
+                android:textSize="?textSize" />
 
             <EditText
                 android:id="@+id/record_note"
                 style="@style/editorFieldInput"
-                android:maxLines="3" />
+                android:maxLines="3"
+                android:textSize="?textSize" />
         </LinearLayout>
     </ScrollView>
 
@@ -114,19 +122,22 @@
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
-            android:text="@string/act_ok" />
+            android:text="@string/act_ok"
+            android:textSize="?textSize" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
-            android:text="@string/act_cancel" />
+            android:text="@string/act_cancel"
+            android:textSize="?textSize" />
 
         <Button
             android:id="@+id/btn_close"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
             android:text="@string/act_close"
+            android:textSize="?textSize"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

@@ -4,8 +4,11 @@
     <dimen name="textSizeSmall">12sp</dimen>
     <dimen name="textSizeLarge">16sp</dimen>
 
-    <dimen name="largeTextSize">16sp</dimen>
-    <dimen name="largeTextSizeSmall">14sp</dimen>
-    <dimen name="largeTextSizeLarge">18sp</dimen>
+    <dimen name="mediumTextSize">16sp</dimen>
+    <dimen name="mediumTextSizeSmall">14sp</dimen>
+    <dimen name="mediumTextSizeLarge">18sp</dimen>
 
+    <dimen name="largeTextSize">18sp</dimen>
+    <dimen name="largeTextSizeSmall">16sp</dimen>
+    <dimen name="largeTextSizeLarge">20sp</dimen>
 </resources>

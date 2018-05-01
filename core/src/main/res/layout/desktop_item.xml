@@ -15,7 +15,7 @@
     <TextView
         android:id="@+id/desktop_label"
         android:layout_width="wrap_content"
-        android:layout_height="38sp"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="2"

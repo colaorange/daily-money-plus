@@ -16,7 +16,7 @@
     <color name="themeLemonSecondaryText">#e0e0e0</color>
 
     <color name="themeLemonBalanceHeadBg">#855e42</color>
-    <color name="themeLemonBalanceItemBg">#eee9e5</color>
+    <color name="themeLemonBalanceItemBg">#f0eee1</color>
 
     <!--dark-->
     <!--cola-->
@@ -40,7 +40,7 @@
     <color name="expenseTextLight">#ffb3c8</color>
     <color name="expenseTextDark">#9f6676</color>
     <color name="expenseBgLight">#ffc7d6</color>
-    <color name="expenseBgDark">#a63251</color>
+    <color name="expenseBgDark">#964261</color>
 
     <color name="incomeText">#7AFFA2</color>
     <color name="incomeTextLight">#b6ffcc</color>
