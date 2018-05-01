@@ -1,15 +1,13 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,16 +23,16 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
-import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
+import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
+import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.AccountIndentNode;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +43,8 @@ import java.util.Map;
  */
 public class RecordEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "recordEditor.modeCreate";
-    public static final String PARAM_RECORD = "recordEditor.record";
+    public static final String PARAM_MODE_CREATE = "modeCreate";
+    public static final String PARAM_RECORD = "record";
 
 
     private boolean modeCreate;
@@ -58,32 +56,25 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private boolean archived = false;
 
-    private List<IndentNode> fromAccountList;
-    private List<IndentNode> toAccountList;
+    private List<AccountIndentNode> fromAccountList;
+    private List<AccountIndentNode> toAccountList;
 
-    private List<Map<String, Object>> fromAccountMapList;
-    private List<Map<String, Object>> toAccountMapList;
-
-    private SimpleAdapter fromAccountAdapter;
-    private SimpleAdapter toAccountAdapter;
+    private RegularSpinnerAdapter<AccountIndentNode> fromAccountAdapter;
+    private RegularSpinnerAdapter<AccountIndentNode> toAccountAdapter;
 
 
-    private static String[] accountMappingKeys = new String[]{Constants.SIMPLE_SPINNER_LABEL_KEY};
-    private static int[] accountMappingResIds = new int[]{R.id.simple_spinner_item_label};
+    private Spinner vFromAccount;
+    private Spinner vToAccount;
 
-    private Spinner spFromAccount;
-    private Spinner spToAccount;
-
-    private EditText editRecordDate;
-    private EditText editRecordNote;
-    private EditText editRecordMoney;
+    private EditText vRecordDate;
+    private EditText vRecordNote;
+    private EditText vRecordMoney;
 
     private Button btnOk;
     private Button btnCancel;
     private Button btnClose;
 
-    private float ddItemPaddingBase;
-    private Drawable ddSelectedBg;
+    private float nodePaddingBase;
 
 
     @Override
@@ -132,16 +123,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         boolean archived = workingRecord.isArchived();
 
 
-        editRecordDate = findViewById(R.id.record_date);
-        editRecordDate.setText(dateFormat.format(workingRecord.getDate()));
-        editRecordDate.setEnabled(!archived);
+        vRecordDate = findViewById(R.id.record_date);
+        vRecordDate.setText(dateFormat.format(workingRecord.getDate()));
+        vRecordDate.setEnabled(!archived);
 
-        editRecordMoney = findViewById(R.id.record_money);
-        editRecordMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
-        editRecordMoney.setEnabled(!archived);
+        vRecordMoney = findViewById(R.id.record_money);
+        vRecordMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
+        vRecordMoney.setEnabled(!archived);
 
-        editRecordNote = findViewById(R.id.record_note);
-        editRecordNote.setText(workingRecord.getNote());
+        vRecordNote = findViewById(R.id.record_note);
+        vRecordNote.setText(workingRecord.getNote());
 
         if (!archived) {
             findViewById(R.id.btn_prev).setOnClickListener(this);
@@ -158,7 +149,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } else {
             btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
             btnOk.setText(R.string.act_update);
-            editRecordMoney.requestFocus();
+            vRecordMoney.requestFocus();
         }
         btnOk.setOnClickListener(this);
 
@@ -168,53 +159,51 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         btnCancel.setOnClickListener(this);
         btnClose.setOnClickListener(this);
 
-        spFromAccount = findViewById(R.id.record_from_account);
+        vFromAccount = findViewById(R.id.record_from_account);
 
-        fromAccountList = new ArrayList<IndentNode>();
-        fromAccountMapList = new ArrayList<Map<String, Object>>();
-        fromAccountAdapter = new AccountViewAdapter(this, fromAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds){
+        fromAccountList = new LinkedList<>();
+        fromAccountAdapter = new RegularSpinnerAdapter<AccountIndentNode>(this, fromAccountList) {
+
+            public boolean isSelected(int position) {
+                return vFromAccount.getSelectedItemPosition() == position;
+            }
+
             @Override
-            public Account getAccount(int position) {
-                return fromAccountList.get(position).getAccount();
+            public boolean isEnabled(int position) {
+                return getItem(position).getAccount() != null;
+            }
+
+            @Override
+            public ViewHolder<AccountIndentNode> createViewHolder() {
+                return new AccountTypeViewBinder(this);
             }
         };
-        fromAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        fromAccountAdapter.setViewBinder(new AccountViewBinder() {
-            public Account getSelectedAccount() {
-                int pos = spFromAccount.getSelectedItemPosition();
-                if (pos >= 0) {
-                    return fromAccountList.get(pos).getAccount();
-                }
-                return null;
-            }
-        });
-        spFromAccount.setAdapter(fromAccountAdapter);
+        vFromAccount.setAdapter(fromAccountAdapter);
 
-        spToAccount = findViewById(R.id.record_to_account);
-        toAccountList = new ArrayList<IndentNode>();
-        toAccountMapList = new ArrayList<Map<String, Object>>();
-        toAccountAdapter = new AccountViewAdapter(this, toAccountMapList, R.layout.simple_spinner_dropdown, accountMappingKeys, accountMappingResIds){
+        vToAccount = findViewById(R.id.record_to_account);
+        toAccountList = new LinkedList<>();
+        toAccountAdapter = new RegularSpinnerAdapter<AccountIndentNode>(this, toAccountList) {
+
+            public boolean isSelected(int position) {
+                return vToAccount.getSelectedItemPosition() == position;
+            }
+
             @Override
-            public Account getAccount(int position) {
-                return toAccountList.get(position).getAccount();
+            public boolean isEnabled(int position) {
+                return getItem(position).getAccount() != null;
+            }
+
+            @Override
+            public ViewHolder<AccountIndentNode> createViewHolder() {
+                return new AccountTypeViewBinder(this);
             }
         };
-        toAccountAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        toAccountAdapter.setViewBinder(new AccountViewBinder() {
-            public Account getSelectedAccount() {
-                int pos = spToAccount.getSelectedItemPosition();
-                if (pos >= 0) {
-                    return toAccountList.get(pos).getAccount();
-                }
-                return null;
-            }
-        });
-        spToAccount.setAdapter(toAccountAdapter);
+        vToAccount.setAdapter(toAccountAdapter);
 
-        spFromAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        vFromAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                IndentNode tn = fromAccountList.get(pos);
+                AccountIndentNode tn = fromAccountList.get(pos);
                 if (tn.getAccount() != null) {
                     onFromChanged(tn.getAccount());
                 }
@@ -225,10 +214,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        spToAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        vToAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                IndentNode tn = toAccountList.get(pos);
+                AccountIndentNode tn = toAccountList.get(pos);
                 if (tn.getAccount() != null) {
                     onToChanged(tn.getAccount());
                 }
@@ -239,103 +228,104 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        ddItemPaddingBase = 15 * GUIs.getDPRatio(this);
-        ddSelectedBg = getResources().getDrawable(resolveThemeAttrResId(R.attr.colorControlNormal));
+        nodePaddingBase = 10 * GUIs.getDPRatio(this);
     }
 
     private void refreshUI() {
-        refreshSpinner();
+        refreshSpinner(false);
     }
 
-    private void refreshSpinner() {
+    private void refreshSpinner(boolean toOnly) {
         IDataProvider idp = contexts().getDataProvider();
-        // initial from
-        fromAccountList.clear();
-        fromAccountMapList.clear();
-        for (AccountType at : AccountType.getFromType()) {
-            List<Account> list = idp.listAccount(at);
-            fromAccountList.addAll(AccountUtil.toIndentNode(list));
+
+        if (!toOnly) {
+            // initial from
+            fromAccountList.clear();
+            for (AccountType at : AccountType.getFromType()) {
+                List<Account> list = idp.listAccount(at);
+                fromAccountList.addAll(AccountUtil.toIndentNode(list));
+            }
         }
-        String fromAccountId = workingRecord.getFrom();
-        int fromSel, firstFromSel, i;
-        fromSel = firstFromSel = i = -1;
+        String fromId = workingRecord.getFrom();
         String fromType = null;
-        for (IndentNode node : fromAccountList) {
+        int bookFromPos, firstFromPos, i;
+        bookFromPos = firstFromPos = i = -1;
+
+        for (AccountIndentNode node : fromAccountList) {
             i++;
-            Map<String, Object> itemMap = new HashMap<String, Object>();
-            fromAccountMapList.add(itemMap);
-
-            //label
-            itemMap.put(accountMappingKeys[0], node);
-
-            if (node.getAccount() != null) {
-                if (firstFromSel == -1) {
-                    firstFromSel = i;
+            Account acc = node.getAccount();
+            if (acc != null) {
+                if (firstFromPos == -1) {
+                    firstFromPos = i;
                 }
-                if (fromSel == -1 && node.getAccount().getId().equals(fromAccountId)) {
-                    fromSel = i;
+                if (acc.getId().equals(fromId)) {
+                    bookFromPos = i;
                     fromType = node.getAccount().getType();
+                    break;
                 }
-
             }
         }
 
-        // initial to
+
+        if (!toOnly) {
+            fromAccountAdapter.notifyDataSetChanged();
+
+            if (bookFromPos > -1) {
+                vFromAccount.setSelection(bookFromPos);
+            } else if (firstFromPos > -1) {
+                vFromAccount.setSelection(firstFromPos);
+                workingRecord.setFrom(fromAccountList.get(firstFromPos).getAccount().getId());
+            } else {
+                vFromAccount.setSelection(Spinner.INVALID_POSITION);
+                workingRecord.setFrom("");
+            }
+        }
+
+        //reset for dynamic item and clear selection
         toAccountList.clear();
-        toAccountMapList.clear();
         for (AccountType at : AccountType.getToType(fromType)) {
             List<Account> list = idp.listAccount(at);
             toAccountList.addAll(AccountUtil.toIndentNode(list));
         }
-        String toAccountId = workingRecord.getTo();
-        int toSel, firstToSel;
-        toSel = firstToSel = i = -1;
+
+        String toId = workingRecord.getTo();
+        int bookToPos, firstToPos;
+        bookToPos = firstToPos = i = -1;
         // String toType = null;
-        for (IndentNode node : toAccountList) {
+        for (AccountIndentNode node : toAccountList) {
             i++;
-            Map<String, Object> itemMap = new HashMap<String, Object>();
-            toAccountMapList.add(itemMap);
-
-            //label
-            itemMap.put(accountMappingKeys[0], node);
-
-            if (node.getAccount() != null) {
-                if (firstToSel == -1) {
-                    firstToSel = i;
+            Account acc = node.getAccount();
+            if (acc != null) {
+                if (firstToPos == -1) {
+                    firstToPos = i;
                 }
-                if (toSel == -1 && node.getAccount().getId().equals(toAccountId)) {
-                    toSel = i;
+                if (acc.getId().equals(toId)) {
+                    bookToPos = i;
                 }
 
             }
         }
 
-        if (fromSel > -1) {
-            this.spFromAccount.setSelection(fromSel);
-        } else if (firstFromSel > -1) {
-            this.spFromAccount.setSelection(firstFromSel);
-            workingRecord.setFrom(fromAccountList.get(firstFromSel).getAccount().getId());
-        } else {
-            workingRecord.setFrom("");
-        }
+        toAccountAdapter.notifyDataSetChanged();
 
-        if (toSel > -1) {
-            this.spToAccount.setSelection(toSel);
-        } else if (firstToSel > -1) {
-            this.spToAccount.setSelection(firstToSel);
-            workingRecord.setTo(toAccountList.get(firstToSel).getAccount().getId());
+        if (bookToPos > -1) {
+            vToAccount.setSelection(bookToPos);
+        } else if (firstToPos > -1) {
+            vToAccount.setSelection(firstToPos);
+            workingRecord.setTo(toAccountList.get(firstToPos).getAccount().getId());
         } else {
+            vToAccount.setSelection(Spinner.INVALID_POSITION);
             workingRecord.setTo("");
         }
 
-        fromAccountAdapter.notifyDataSetChanged();
-        toAccountAdapter.notifyDataSetChanged();
+
+
     }
 
 
     private void onFromChanged(Account acc) {
         workingRecord.setFrom(acc.getId());
-        refreshSpinner();
+        refreshSpinner(true);
     }
 
     private void onToChanged(Account acc) {
@@ -343,7 +333,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void updateDateEditor(Date d) {
-        editRecordDate.setText(dateFormat.format(d));
+        vRecordDate.setText(dateFormat.format(d));
     }
 
     @Override
@@ -357,14 +347,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             doClose();
         } else if (v.getId() == R.id.btn_prev) {
             try {
-                Date d = dateFormat.parse(editRecordDate.getText().toString());
+                Date d = dateFormat.parse(vRecordDate.getText().toString());
                 updateDateEditor(cal.yesterday(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
         } else if (v.getId() == R.id.btn_next) {
             try {
-                Date d = dateFormat.parse(editRecordDate.getText().toString());
+                Date d = dateFormat.parse(vRecordDate.getText().toString());
                 updateDateEditor(cal.tomorrow(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
@@ -373,7 +363,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             updateDateEditor(cal.today());
         } else if (v.getId() == R.id.btn_datepicker) {
             try {
-                Date d = dateFormat.parse(editRecordDate.getText().toString());
+                Date d = dateFormat.parse(vRecordDate.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
                     public boolean onFinish(Object data) {
@@ -397,7 +387,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         String start = "";
         try {
-            start = Formats.editorTextNumberDecimalToCal2(editRecordMoney.getText().toString());
+            start = Formats.editorTextNumberDecimalToCal2(vRecordMoney.getText().toString());
         } catch (Exception x) {
         }
 
@@ -411,7 +401,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
             try {
-                editRecordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
+                vRecordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
             }
         }
@@ -422,21 +412,21 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         I18N i18n = i18n();
 
         // verify
-        int fromPos = spFromAccount.getSelectedItemPosition();
+        int fromPos = vFromAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == fromPos || fromAccountList.get(fromPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_from_account)));
             return;
         }
-        int toPos = spToAccount.getSelectedItemPosition();
+        int toPos = vToAccount.getSelectedItemPosition();
         if (Spinner.INVALID_POSITION == toPos || toAccountList.get(toPos).getAccount() == null) {
             GUIs.alert(this,
                     i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_to_account)));
             return;
         }
-        String datestr = editRecordDate.getText().toString().trim();
+        String datestr = vRecordDate.getText().toString().trim();
         if ("".equals(datestr)) {
-            editRecordDate.requestFocus();
+            vRecordDate.requestFocus();
             GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_date)));
             return;
         }
@@ -450,9 +440,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String moneystr = editRecordMoney.getText().toString();
+        String moneystr = vRecordMoney.getText().toString();
         if ("".equals(moneystr)) {
-            editRecordMoney.requestFocus();
+            vRecordMoney.requestFocus();
             GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_money)));
             return;
         }
@@ -468,7 +458,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String note = editRecordNote.getText().toString();
+        String note = vRecordNote.getText().toString();
 
         Account fromAcc = fromAccountList.get(fromPos).getAccount();
         Account toAcc = toAccountList.get(toPos).getAccount();
@@ -494,9 +484,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             workingRecord = clone(workingRecord);
             workingRecord.setMoney(0D);
             workingRecord.setNote("");
-            editRecordMoney.setText("");
-            editRecordMoney.requestFocus();
-            editRecordNote.setText("");
+            vRecordMoney.setText("");
+            vRecordMoney.requestFocus();
+            vRecordNote.setText("");
             counterCreate++;
             btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);
@@ -525,96 +515,50 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         finish();
     }
 
-    abstract class AccountViewAdapter extends SimpleAdapter{
 
-        abstract public Account getAccount(int position);
+    public class AccountTypeViewBinder extends RegularSpinnerAdapter.ViewHolder<AccountIndentNode> {
 
-        public AccountViewAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
-            super(context, data, resource, from, to);
+        public AccountTypeViewBinder(RegularSpinnerAdapter adapter) {
+            super(adapter);
         }
 
         @Override
-        public boolean isEnabled(int position) {
-            return getAccount(position) != null;
-        }
-
-
-    }
-
-
-    abstract class AccountViewBinder implements SimpleAdapter.ViewBinder {
-
-
-        abstract public Account getSelectedAccount();
-
-        @Override
-        public boolean setViewValue(View view, Object data, String text) {
+        public void bindViewValue(AccountIndentNode item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
             I18N i18n = i18n();
 
-            IndentNode node = (IndentNode) data;
+            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
+            Map<AccountType, Integer> bgColorMap = getAccountBgColorMap();
 
-            if (view.getId() == accountMappingResIds[0]) {
+            AccountType at = item.getType();
 
-                AccountType at = node.getType();
-                TextView tv = (TextView) view;
-                int textColor;
-                if (AccountType.INCOME == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountIncomeTextColor));
-                } else if (AccountType.ASSET == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountAssetTextColor));
-                } else if (AccountType.EXPENSE == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountExpenseTextColor));
-                } else if (AccountType.LIABILITY == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountLiabilityTextColor));
-                } else if (AccountType.OTHER == at) {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountOtherTextColor));
-                } else {
-                    textColor = RecordEditorActivity.this.getResources().getColor(resolveThemeAttrResId(R.attr.accountUnknownTextColor));
+            int textColor = textColorMap.get(at);
+
+
+            StringBuilder display = new StringBuilder();
+
+            if (isDropdown) {
+                vlayout.setPadding((int) ((1 + item.getIndent()) * nodePaddingBase), vlayout.getPaddingTop(), vlayout.getPaddingRight(), vlayout.getPaddingBottom());
+
+                if (item.getIndent() == 0) {
+                    display.append(item.getType().getDisplay(i18n));
+                    display.append(" - ");
                 }
-                tv.setTextColor(textColor);
+                display.append(item.getName());
 
-
-                StringBuilder display = new StringBuilder();
-                if (Constants.SIMPLE_SPINNER_ITEM_TAG.equals(tv.getTag())) {
-                    tv.setPadding((int) ((1 + node.getIndent()) * ddItemPaddingBase), tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
-
-                    if (node.getAccount() == null) {//pseudo node
-                        if (isLightTheme()) {
-                            textColor = Colors.lighten(textColor, 0.2f);
-                        } else {
-                            textColor = Colors.darken(textColor, 0.2f);
-                        }
-                        tv.setTextColor(textColor);
-                    } else if (node.getAccount().equals(getSelectedAccount())) {
-                        if (isLightTheme()) {
-                            textColor = Colors.darken(textColor, 0.2f);
-                        } else {
-                            textColor = Colors.lighten(textColor, 0.2f);
-                        }
-                        tv.setTextColor(textColor);
-                        tv.setBackgroundDrawable(ddSelectedBg);
-                    } else {
-                        tv.setBackgroundDrawable(null);
-                    }
-
-                    if (node.getIndent() == 0) {
-                        display.append(node.getType().getDisplay(i18n));
-                        display.append(" - ");
-                    }
-                    display.append(node.getName());
-                } else {
-                    if (node.getAccount() == null) {
-                        display.append("");
-                    } else {
-                        display.append(node.getType().getDisplay(i18n));
-                        display.append("-");
-                        display.append(node.getAccount().getName());
-                    }
+                if (item.getAccount() == null) {
+                    textColor = Colors.lighten(textColor, 0.3f);
+                } else if (isSelected) {
+                    textColor = Colors.darken(textColor, 0.3f);
                 }
-                tv.setText(display.toString());
-                return true;
+            } else {
+                if (item.getAccount() != null) {
+                    display.append(item.getType().getDisplay(i18n));
+                    display.append("-");
+                    display.append(item.getAccount().getName());
+                }
             }
-            return false;
+            vtext.setTextColor(textColor);
+            vtext.setText(display.toString());
         }
     }
 }

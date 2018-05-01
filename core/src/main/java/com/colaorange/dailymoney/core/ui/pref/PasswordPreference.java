@@ -26,7 +26,7 @@ public class PasswordPreference extends ValidatableDialogPreference {
     public PasswordPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setDialogLayoutResource(R.layout.password_preference_dlg);
+        setDialogLayoutResource(R.layout.password_preference);
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 
