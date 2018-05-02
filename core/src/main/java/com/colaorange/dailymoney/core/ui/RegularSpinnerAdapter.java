@@ -26,6 +26,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
 
     protected int selectedBgColor;
     protected int selectedTexColor;
+    protected int textColor;
 
     abstract public ViewHolder<T> createViewHolder();
 
@@ -41,6 +42,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
     public RegularSpinnerAdapter(@NonNull ContextsActivity context, List<T> items) {
         super(context, R.layout.regular_spinner, items);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        textColor = context.resolveThemeAttrResData(R.attr.appPrimaryTextColor);
         selectedBgColor = context.resolveThemeAttrResData(R.attr.appSecondaryLightColor);
         selectedTexColor = context.resolveThemeAttrResData(R.attr.appSecondaryTextColor);
     }
@@ -56,7 +58,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
                         @NonNull ViewGroup parent, boolean isDropdown) {
         ViewHolder<T> holder;
         if (convertView == null) {
-            convertView = inflater.inflate(isDropdown ? R.layout.regular_spinner_item : R.layout.regular_spinner, null);
+            convertView = inflater.inflate(isDropdown ? R.layout.regular_spinner_item : R.layout.regular_spinner, parent, false);
             convertView.setTag(holder = createViewHolder());
         } else {
             holder = (ViewHolder<T>) convertView.getTag();
@@ -92,6 +94,10 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
                 //todo keep ripple
                 vlayout.setBackgroundColor(adapter.selectedBgColor);
                 vtext.setTextColor(adapter.selectedTexColor);
+            }else{
+                //reset color
+                vlayout.setBackgroundDrawable(null);
+                vtext.setTextColor(adapter.textColor);
             }
             this.bindViewValue(item, vlayout, vtext, isDropdown, isSelected);
         }
