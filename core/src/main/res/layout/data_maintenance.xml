@@ -28,7 +28,6 @@
                 android:id="@+id/data_maintenance_workingfolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@android:drawable/ic_dialog_info"
                 android:drawablePadding="10dp"
@@ -56,7 +55,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:paddingRight="5dp"
                     android:text="@string/label_prefs_lastbackup"
@@ -66,7 +64,6 @@
                     android:id="@+id/datamain_lastbackup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:text="@string/label_unknown"
                     android:textSize="?textSize" />
