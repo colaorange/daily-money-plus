@@ -191,6 +191,12 @@
         <item name="textSizeLarge">@dimen/textSizeLarge</item>
     </style>
 
+    <style name="textSizeMedium">
+        <item name="textSize">@dimen/mediumTextSize</item>
+        <item name="textSizeSmall">@dimen/mediumTextSizeSmall</item>
+        <item name="textSizeLarge">@dimen/mediumTextSizeLarge</item>
+    </style>
+
     <style name="textSizeLarge">
         <item name="textSize">@dimen/largeTextSize</item>
         <item name="textSizeSmall">@dimen/largeTextSizeSmall</item>

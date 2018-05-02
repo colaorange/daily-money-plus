@@ -41,8 +41,18 @@ public class Preference {
     static{
         themeSet.add(THEME_COLA);
 //        themeSet.add(THEME_ORANGE);
-        themeSet.add(THEME_LEMON);
 //        themeSet.add(THEME_SAKURA);
+        themeSet.add(THEME_LEMON);
+    }
+
+    public static final String TEXT_SIZE_NOMRAL = "normal";
+    public static final String TEXT_SIZE_MEDIUM = "medium";
+    public static final String TEXT_SIZE_LARGE = "large";
+    private static final LinkedHashSet<String> textSizeSet = new LinkedHashSet<>();
+    static{
+        textSizeSet.add(TEXT_SIZE_NOMRAL);
+        textSizeSet.add(TEXT_SIZE_MEDIUM);
+        textSizeSet.add(TEXT_SIZE_LARGE);
     }
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
@@ -98,7 +108,9 @@ public class Preference {
 
     boolean autoBackup = true;
 
-    String theme = THEME_COLA;
+    String theme;
+
+    String textSize;
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
@@ -424,8 +436,18 @@ public class Preference {
             theme = themeSet.iterator().next();
         }
 
+        try {
+            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_text_size));
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+        if (!textSizeSet.contains(textSize)) {
+            textSize = textSizeSet.iterator().next();
+        }
+
 
         Logger.d("preference : theme {}", theme);
+        Logger.d("preference : textSize {}", textSize);
         Logger.d("preference : dateFormat {}", dateFormat);
         Logger.d("preference : timeFormat {}", timeFormat);
         Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
@@ -621,5 +643,9 @@ public class Preference {
 
     public boolean isLightTheme() {
         return getTheme().startsWith(THEME_LIGHT_PREFIX);
+    }
+
+    public String getTextSize(){
+        return textSize;
     }
 }

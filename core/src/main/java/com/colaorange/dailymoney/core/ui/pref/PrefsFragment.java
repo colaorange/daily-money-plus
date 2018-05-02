@@ -24,6 +24,7 @@ import com.colaorange.dailymoney.core.util.Logger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -35,9 +36,9 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
 
     boolean dirty = false;
 
-    boolean themeChanged = false;
+    boolean markRestart = false;
 
-    String themeKey;
+    Set<String> recreateKeys = new HashSet<>();
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -45,7 +46,8 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         addPreferencesFromResource(R.xml.prefs);
         final I18N i18n = Contexts.instance().getI18n();
 
-        themeKey = i18n.string(R.string.pref_theme);
+        recreateKeys.add(i18n.string(R.string.pref_theme));
+        recreateKeys.add(i18n.string(R.string.pref_text_size));
 
         initAccountingPrefs(i18n);
         initDataPrefs(i18n);
@@ -263,8 +265,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         dirty = true;
-        if(key.equals(themeKey)){
-            themeChanged = true;
+        if(recreateKeys.contains(key)){
             ((ContextsActivity)getActivity()).markWholeRecreate();
             getActivity().recreate();
         }

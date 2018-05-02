@@ -3,12 +3,25 @@
     <string-array name="prefs_theme_values" translatable="false">
         <item>dark-cola</item>
         <item>light-orange</item>
+        <item>light-sakura</item>
         <item>light-lemon</item>
     </string-array>
     <string-array name="prefs_theme_labels" translatable="false">
         <item>@string/label_theme_cola</item>
         <item>@string/label_theme_orange</item>
+        <item>@string/label_theme_sakura</item>
         <item>@string/label_theme_lemon</item>
+    </string-array>
+
+    <string-array name="prefs_text_size_values" translatable="false">
+        <item>normal</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+    <string-array name="prefs_text_size_labels" translatable="false">
+        <item>@string/label_text_size_normal</item>
+        <item>@string/label_text_size_medium</item>
+        <item>@string/label_text_size_large</item>
     </string-array>
 
 	<string-array name="prefs_detlayout_values" translatable="false">

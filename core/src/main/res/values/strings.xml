@@ -31,6 +31,7 @@
     <string name="pref_testsdekstop" translatable="false">testsdekstop</string>
     <string name="pref_allow_analytics" translatable="false">allow_analytics</string>
     <string name="pref_csv_encoding" translatable="false">csv_encoding</string>
+    <string name="pref_text_size" translatable="false">text_size</string>
 
     <string name="default_record_list_layout" translatable="false">1</string>
     <string name="default_max_records" translatable="false">-1</string>
@@ -46,6 +47,8 @@
     <string name="default_auto_backup_weekdays" translatable="false">1</string>
     <string name="default_auto_backup_at_hours" translatable="false">2</string>
     <string name="default_theme" translatable="false">dark-cola</string>
+    <string name="default_text_size" translatable="false">normal</string>
+
 
     <string name="path_about" translatable="false">en/about.html</string>
     <string name="path_contributor" translatable="false">en/contributor.html</string>

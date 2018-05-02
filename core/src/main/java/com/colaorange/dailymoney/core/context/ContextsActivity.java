@@ -127,8 +127,20 @@ public class ContextsActivity extends AppCompatActivity {
                 theme.applyStyle(R.style.themeCola, true);
         }
 
-        //TODO, font
-        theme.applyStyle(R.style.textSizeNormal, true);
+        String userTextSize = preference.getTextSize();
+        switch(userTextSize){
+            case Preference.TEXT_SIZE_MEDIUM:
+                theme.applyStyle(R.style.textSizeMedium, true);
+                break;
+            case Preference.TEXT_SIZE_LARGE:
+                theme.applyStyle(R.style.textSizeLarge, true);
+                break;
+            case Preference.TEXT_SIZE_NOMRAL:
+            default:
+                theme.applyStyle(R.style.textSizeNormal, true);
+
+        }
+
 
 
         //appbar
