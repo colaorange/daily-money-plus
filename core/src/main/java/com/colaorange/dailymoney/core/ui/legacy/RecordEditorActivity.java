@@ -228,7 +228,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             }
         });
 
-        nodePaddingBase = 10 * GUIs.getDPRatio(this);
+        //10dp
+        nodePaddingBase = 10 * getDpRatio();
     }
 
     private void refreshUI() {

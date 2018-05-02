@@ -7,7 +7,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -66,7 +65,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     private DateFormat yearMonthFormat;
     private DateFormat yearFormat;
 
-    ImageButton modeBtn;
+    ImageButton btnMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,9 +104,9 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
         vSumLiability = findViewById(R.id.sum_liability);
         vSumOther = findViewById(R.id.sum_other);
         vSumUnknow = findViewById(R.id.sum_unknow);
-        modeBtn = findViewById(R.id.toolbar_btn_mode);
+        btnMode = findViewById(R.id.toolbar_btn_mode);
 
-        modeBtn.setOnClickListener(this);
+        btnMode.setOnClickListener(this);
 
         recordListHelper = new RecordListHelper(this, true, new RecordListHelper.OnRecordListener() {
             @Override
@@ -156,7 +155,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     private void refreshToolbar() {
 
         toolbarView.setVisibility(TextView.VISIBLE);
-        modeBtn.setVisibility(ImageButton.VISIBLE);
+        btnMode.setVisibility(ImageButton.VISIBLE);
 
         switch (mode) {
             case MODE_ALL:
@@ -206,11 +205,11 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                 end = cal.monthEndDate(currentDate);
 //            toolbarView.setVisibility(TextView.VISIBLE);
 //            
-//            modeBtn.setVisibility(ImageButton.VISIBLE);
+//            btnMode.setVisibility(ImageButton.VISIBLE);
 //            if(allowYearSwitch){
-//                modeBtn.setImageResource(R.drawable.btn_year);
+//                btnMode.setImageResource(R.drawable.btn_year);
 //            }else{
-//                modeBtn.setImageResource(R.drawable.btn_week);
+//                btnMode.setImageResource(R.drawable.btn_week);
 //            }
                 break;
             case MODE_DAY:
@@ -223,10 +222,10 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 //            toolbarView.setVisibility(TextView.VISIBLE);
 //
 //            if(allowYearSwitch){
-//                modeBtn.setVisibility(ImageButton.VISIBLE);
-//                modeBtn.setImageResource(R.drawable.btn_week);
+//                btnMode.setVisibility(ImageButton.VISIBLE);
+//                btnMode.setImageResource(R.drawable.btn_week);
 //            }else{
-//                modeBtn.setVisibility(ImageButton.GONE);
+//                btnMode.setVisibility(ImageButton.GONE);
 //            }
 
                 break;
@@ -234,8 +233,8 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                 start = cal.weekStartDate(currentDate);
                 end = cal.weekEndDate(currentDate);
 //            toolbarView.setVisibility(TextView.VISIBLE);
-//            modeBtn.setVisibility(ImageButton.VISIBLE);
-//            modeBtn.setImageResource(R.drawable.btn_month);
+//            btnMode.setVisibility(ImageButton.VISIBLE);
+//            btnMode.setImageResource(R.drawable.btn_month);
                 break;
         }
         final IDataProvider idp = contexts().getDataProvider();

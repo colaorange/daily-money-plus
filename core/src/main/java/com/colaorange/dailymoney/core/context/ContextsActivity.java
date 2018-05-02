@@ -39,6 +39,10 @@ public class ContextsActivity extends AppCompatActivity {
 
     private InstanceStateHelper instanceStateHelper;
 
+    private Float dpRatio;
+
+    private Boolean lightTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         applyTheme();//do before super on create;
@@ -132,10 +136,6 @@ public class ContextsActivity extends AppCompatActivity {
         if (appbar != null) {
             //todo style, theme
         }
-    }
-
-    public boolean isLightTheme() {
-        return preference().isLightTheme();
     }
 
     public boolean isNoActionBarTheme() {
@@ -283,5 +283,19 @@ public class ContextsActivity extends AppCompatActivity {
         map.put(AccountType.OTHER, resolveThemeAttrResData(R.attr.accountOtherBgColor));
         map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountOtherBgColor));
         return this.accountBgColorMap = map;
+    }
+
+    public float getDpRatio() {
+        if(dpRatio==null) {
+            dpRatio = GUIs.getDPRatio(this);
+        }
+        return dpRatio.floatValue();
+    }
+
+    public boolean isLightTheme() {
+        if(lightTheme==null){
+            lightTheme = preference().isLightTheme();
+        }
+        return lightTheme;
     }
 }

@@ -49,8 +49,6 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     private Button btnOk;
     private Button btnCancel;
 
-    private float dpRatio;
-
 
     /**
      * clone book without id
@@ -127,8 +125,6 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
         btnCancel = findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(this);
-
-        dpRatio = GUIs.getDPRatio(this);
     }
 
     @Override

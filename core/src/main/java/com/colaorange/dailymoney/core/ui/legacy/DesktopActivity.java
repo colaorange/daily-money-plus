@@ -52,20 +52,18 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private String selectedTab = null;
 
-    private GridView gridView;
+    private GridView vGrid;
 
-    private DesktopItemAdapter gridViewAdapter;
+    private DesktopItemAdapter gridAdapter;
 
     private List<Desktop> desktops = new ArrayList<Desktop>();
 
     private DesktopItem lastClickedItem;
 
-    private TextView infoWeeklyExpense;
-    private TextView infoMonthlyExpense;
-    private TextView infoCumulativeCash;
-    private TabHost tabs;
-
-    private HashMap<Object, DesktopItem> dtHashMap = new HashMap<Object, DesktopItem>();
+    private TextView vInfoWeeklyExpense;
+    private TextView vInfoMonthlyExpense;
+    private TextView vInfoCumulativeCash;
+    private TabHost vTabs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,18 +108,18 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initTabs() {
 
-        tabs.setup();
+        vTabs.setup();
 
 
         for (Desktop d : desktops) {
-            TabSpec tab = tabs.newTabSpec(d.getLabel());
+            TabSpec tab = vTabs.newTabSpec(d.getLabel());
             if (d.getIcon() < 0) {
                 tab.setIndicator(d.getLabel());
             } else {
                 tab.setIndicator(d.getLabel(), getResources().getDrawable(d.getIcon()));
             }
             tab.setContent(R.id.desktop_grid);
-            tabs.addTab(tab);
+            vTabs.addTab(tab);
             if (selectedTab == null) {
                 selectedTab = tab.getTag();
             }
@@ -129,27 +127,27 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
         if (desktops.size() > 1) {
             //workaround, force refresh
-            tabs.setCurrentTab(1);
-            tabs.setCurrentTab(0);
+            vTabs.setCurrentTab(1);
+            vTabs.setCurrentTab(0);
         }
 
-        tabs.setOnTabChangedListener(this);
+        vTabs.setOnTabChangedListener(this);
 
     }
 
 
     private void initMembers() {
-        tabs = findViewById(R.id.desktop_tabs);
+        vTabs = findViewById(R.id.desktop_tabs);
 
-        infoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
-        infoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
-        infoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
+        vInfoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
+        vInfoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
+        vInfoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
 
 
-        gridViewAdapter = new DesktopItemAdapter();
-        gridView = findViewById(R.id.desktop_grid);
-        gridView.setAdapter(gridViewAdapter);
-        gridView.setOnItemClickListener(this);
+        gridAdapter = new DesktopItemAdapter();
+        vGrid = findViewById(R.id.desktop_grid);
+        vGrid.setAdapter(gridAdapter);
+        vGrid.setOnItemClickListener(this);
 
     }
 
@@ -160,7 +158,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 break;
             }
         }
-        gridViewAdapter.notifyDataSetChanged();
+        gridAdapter.notifyDataSetChanged();
     }
 
     private boolean handleFirstTime() {
@@ -214,12 +212,12 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Date end = calHelper.weekEndDate(now);
         AccountType type = AccountType.EXPENSE;
         double b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
+        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
 
         start = calHelper.monthStartDate(now);
         end = calHelper.monthEndDate(now);
         b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
+        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
 
 
         IDataProvider idp = Contexts.instance().getDataProvider();
@@ -230,7 +228,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 b += BalanceHelper.calculateBalance(ac, null, calHelper.toDayEnd(now)).getMoney();
             }
         }
-        infoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
+        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
     }
 
     @Override
@@ -268,10 +266,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 
         //item clicked in grid view
-        if (parent == gridView) {
-            DesktopItem di = dtHashMap.get(view);
-            if (di != null) {
-                lastClickedItem = di;
+        if (parent == vGrid) {
+            Object obj = view.getTag();
+            if(obj instanceof DesktopItem){
+                lastClickedItem = (DesktopItem)obj;
                 lastClickedItem.run();
             }
         }
@@ -350,7 +348,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
             DesktopItem item = getCurrentDesktopItems().get(position);
             iv.setImageResource(item.getIcon());
             tv.setText(item.getLabel());
-            dtHashMap.put(view, item);
+
+            view.setTag(item);
             return view;
         }
 

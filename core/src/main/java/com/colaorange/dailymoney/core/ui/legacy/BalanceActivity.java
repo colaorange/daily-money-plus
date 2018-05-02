@@ -69,18 +69,16 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     private Date currentStartDate;
     private Date currentEndDate;
 
-    ImageButton modeBtn;
+    ImageButton btnMode;
 
 
-    private List<Balance> listViewData = new ArrayList<Balance>();
+    private List<Balance> listData = new ArrayList<Balance>();
 
     private ListView listView;
 
-    private BalanceListAdapter listViewAdapter;
+    private BalanceListAdapter listAdapter;
 
-    private float dpRatio;
-
-    private boolean lightTheme;
+    GUIs.Dimen textSizeLarge;
 
 
     @Override
@@ -107,7 +105,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void initMembers() {
-        dpRatio = GUIs.getDPRatio(BalanceActivity.this);
         Preference pref = preference();
         monthDateFormat = pref.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
         yearMonthFormat = pref.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM");
@@ -119,19 +116,19 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         findViewById(R.id.btn_prev).setOnClickListener(this);
         findViewById(R.id.btn_next).setOnClickListener(this);
         findViewById(R.id.btn_today).setOnClickListener(this);
-        modeBtn = findViewById(R.id.btn_mode);
-        modeBtn.setOnClickListener(this);
+        btnMode = findViewById(R.id.btn_mode);
+        btnMode.setOnClickListener(this);
 
 
-        listViewAdapter = new BalanceListAdapter(this, listViewData);
+        listAdapter = new BalanceListAdapter(this, listData);
 
         listView = findViewById(R.id.balance_list);
-        listView.setAdapter(listViewAdapter);
+        listView.setAdapter(listAdapter);
 
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
 
-        lightTheme = isLightTheme();
+        textSizeLarge = GUIs.toDimen(resolveThemeAttr(R.attr.textSizeLarge).data);
 
     }
 
@@ -251,10 +248,10 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                 I18N i18n = i18n();
                 CalendarHelper cal = calendarHelper();
 
-                listViewData.clear();
-                listViewData.addAll(all);
+                listData.clear();
+                listData.addAll(all);
 
-                listViewAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged();
 
 
                 // update info
@@ -387,7 +384,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     }
 
     private void doRecordList(int position) {
-        Balance b = listViewData.get(position);
+        Balance b = listData.get(position);
         if (b.getTarget() == null) {
             //TODO some message
             return;
@@ -458,7 +455,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @Override
             public void run() {
-                Balance b = listViewData.get(pos);
+                Balance b = listData.get(pos);
                 AccountType at;
                 List<Balance> group = b.getGroup();
                 if (b.getTarget() instanceof Account) {
@@ -490,7 +487,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             public void run() {
                 CalendarHelper calHelper = calendarHelper();
                 I18N i18n = i18n();
-                Balance b = listViewData.get(pos);
+                Balance b = listData.get(pos);
                 AccountType at;
                 List<Balance> group = b.getGroup();
                 if (b.getTarget() instanceof Account) {
@@ -534,7 +531,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                 CalendarHelper calHelper = calendarHelper();
                 I18N i18n = i18n();
 
-                Balance b = listViewData.get(pos);
+                Balance b = listData.get(pos);
                 AccountType at;
                 List<Balance> group = b.getGroup();
                 if (b.getTarget() instanceof Account) {
@@ -651,6 +648,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
             Map<AccountType,Integer> bgColorMap = getAccountBgColorMap();
+            boolean lightTheme = isLightTheme();
+            float dpRatio = getDpRatio();
 
             LinearLayout vlayout = convertView.findViewById(R.id.balance_item_layout);
             TextView vname = convertView.findViewById(R.id.balance_item_name);
@@ -665,6 +664,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
             vname.setText(balance.getName());
             vmoney.setText(contexts().toFormattedMoneyString(balance.getMoney()));
 
+
             if (head) {
                 vlayout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceHeadBgColor));
                 if(!lightTheme){
@@ -672,6 +672,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                 }else {
                     textColor = bgColorMap.get(at);
                 }
+
+                vname.setTextSize(textSizeLarge.unit, textSizeLarge.value);
+                vmoney.setTextSize(textSizeLarge.unit, textSizeLarge.value);
             }else{
                 vlayout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceItemBgColor));
                 if(lightTheme){
@@ -686,6 +689,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             vname.setTextColor(textColor);
             vmoney.setTextColor(textColor);
+
+
         }
     }
 }

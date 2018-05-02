@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Utitls to help use handling guis opersation, make sure all api are using in GUI scope.
+ *
  * @author dennis
  */
 public class GUIs {
@@ -154,12 +156,11 @@ public class GUIs {
         }, delay, TimeUnit.MILLISECONDS);
     }
 
-    static public void touch(){
+    static public void touch() {
         getHandler();
     }
 
     /**
-     *
      * @return
      */
     static synchronized private Handler getHandler() {
@@ -381,6 +382,22 @@ public class GUIs {
 
     public static boolean isLandscape(Activity activity) {
         return activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public static class Dimen {
+        public final int unit;
+        public final float value;
+
+        public Dimen(int unit, float value) {
+            this.unit = unit;
+            this.value = value;
+        }
+    }
+
+    public static Dimen toDimen(int typedValueData) {
+        Dimen d = new Dimen((typedValueData >> TypedValue.COMPLEX_UNIT_SHIFT) & TypedValue.COMPLEX_UNIT_MASK,
+                TypedValue.complexToFloat(typedValueData));
+        return d;
     }
 
 }

@@ -21,7 +21,7 @@ public class LocalWebViewActivity extends ContextsActivity {
     public static final String PARAM_URI = "lwv.uri";
     public static final String PARAM_URI_RES_ID = "lwv.uriResId";
 
-    WebView webView;
+    WebView vWeb;
 
     String uri;
 
@@ -50,17 +50,17 @@ public class LocalWebViewActivity extends ContextsActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void initMembers() {
 
-        webView = findViewById(R.id.local_webview);
+        vWeb = findViewById(R.id.local_webview);
 
-        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(this, "wvif");
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webView.setBackgroundColor(Color.TRANSPARENT);
+        vWeb.getSettings().setAllowFileAccess(true);
+        vWeb.getSettings().setJavaScriptEnabled(true);
+        vWeb.addJavascriptInterface(this, "wvif");
+        vWeb.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        vWeb.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void refreshUI() {
-        webView.loadUrl(Constants.LOCAL_URL_PREFIX + uri);
+        vWeb.loadUrl(Constants.LOCAL_URL_PREFIX + uri);
     }
 
 
