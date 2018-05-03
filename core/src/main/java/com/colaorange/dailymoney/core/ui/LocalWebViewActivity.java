@@ -61,6 +61,8 @@ public class LocalWebViewActivity extends ContextsActivity {
 
     private void refreshUI() {
         vWeb.loadUrl(Constants.LOCAL_URL_PREFIX + uri);
+
+        trackEvent(TE.WEBVIEW + uri);
     }
 
 

@@ -88,7 +88,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         initParams();
         initMembers();
         refreshUI();
-
     }
 
     private void initParams() {
@@ -169,6 +168,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         currentStartDate = null;
         infoView.setText("");
         refreshToolbar();
+
+        trackEvent(TE.BALANCE + mode);
+
         switch (mode) {
             case MODE_YEAR:
                 currentEndDate = cal.yearEndDate(currentDate);
@@ -475,6 +477,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                     Balance balance = BalanceHelper.calculateBalance(acc, currentStartDate, currentEndDate);
                     list.add(balance);
                 }
+                trackEvent(TE.CHART + "pie");
                 Intent intent = new BalancePieChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(at, list);
                 startActivity(intent);
             }
@@ -516,7 +519,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                         d = calHelper.monthAfter(d, 1);
                     }
                 }
-
+                trackEvent(TE.CHART + "yt");
                 Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_timechart, at.getDisplay(i18n), yearFormat.format(currentDate)), balances);
                 startActivity(intent);
@@ -563,7 +566,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                         d = calHelper.monthAfter(d, 1);
                     }
                 }
-
+                trackEvent(TE.CHART + "yct");
                 Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_cumulative_timechart, at.getDisplay(i18n), yearFormat.format(currentDate)), balances);
                 startActivity(intent);
@@ -605,7 +608,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                         }
                     }
                 }
-
+                trackEvent(TE.CHART + "yr");
                 Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_runchart, yearFormat.format(currentDate)), balances);
                 startActivity(intent);
@@ -646,8 +649,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
         public void bindViewValue(Balance balance, View convertView) {
 
-            Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
-            Map<AccountType,Integer> bgColorMap = getAccountBgColorMap();
+            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
+            Map<AccountType, Integer> bgColorMap = getAccountBgColorMap();
             boolean lightTheme = isLightTheme();
             float dpRatio = getDpRatio();
 
@@ -667,19 +670,19 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
             if (head) {
                 vlayout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceHeadBgColor));
-                if(!lightTheme){
+                if (!lightTheme) {
                     textColor = textColorMap.get(at);
-                }else {
+                } else {
                     textColor = bgColorMap.get(at);
                 }
 
                 vname.setTextSize(textSizeMedium.unit, textSizeMedium.value);
                 vmoney.setTextSize(textSizeMedium.unit, textSizeMedium.value);
-            }else{
+            } else {
                 vlayout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceItemBgColor));
-                if(lightTheme){
+                if (lightTheme) {
                     textColor = textColorMap.get(at);
-                }else {
+                } else {
                     textColor = bgColorMap.get(at);
                 }
             }

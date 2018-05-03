@@ -23,7 +23,6 @@ import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
@@ -262,7 +261,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);
             btnClose.setVisibility(Button.VISIBLE);
-            trackEvent(Contexts.TRACKER_EVT_CREATE);
+            trackEvent(TE.CREATE_ACCOUNT);
         } else {
             if (namedAcc != null && !namedAcc.getId().equals(account.getId())) {
                 GUIs.alert(this, i18n.string(R.string.msg_account_existed, name,
@@ -275,7 +274,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
             setResult(RESULT_OK);
             finish();
-            trackEvent(Contexts.TRACKER_EVT_UPDATE);
+            trackEvent(TE.UPDDATE_ACCOUNT);
         }
 
     }

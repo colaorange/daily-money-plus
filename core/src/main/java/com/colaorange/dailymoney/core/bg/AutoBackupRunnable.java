@@ -97,7 +97,7 @@ public class AutoBackupRunnable implements Runnable {
 
         Logger.d("start to backup");
 
-        contexts.trackEvent(Contexts.getTrackerPath(getClass()), "backup", "", null);
+        contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a", "", null);
 
         DataBackupRestorer.Result r = DataBackupRestorer.backup();
         if (r.isSuccess()) {
@@ -115,7 +115,7 @@ public class AutoBackupRunnable implements Runnable {
             errorDayHour = format.format(cal.getTime());
             Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.WARN,
                     i18n.string(R.string.label_backup_data), r.getErr(), null, 0);
-            contexts.trackEvent(Contexts.getTrackerPath(getClass()), "backup-fail", "", null);
+            contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a-fail", "", null);
         }
 
     }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,10 +63,6 @@ public class Contexts {
 
     private GoogleAnalytics sAnalytics;
     private Tracker sTracker;
-
-    public static final String TRACKER_EVT_CREATE = "C";
-    public static final String TRACKER_EVT_UPDATE = "U";
-    public static final String TRACKER_EVT_DELETE = "D";
 
     private String currencySymbol = "$";
 
@@ -130,6 +127,7 @@ public class Contexts {
     }
 
 
+    @SuppressLint("MissingPermission")
     private void initTracker() {
         try {
             if (sTracker == null) {
@@ -503,5 +501,38 @@ public class Contexts {
         }
         sb.append(pkg).append(".").append(name);
         return sb.toString();
+    }
+
+
+
+    public interface TE {
+        String CREATE_BOOK = "cb-";
+        String CREATE_ACCOUNT = "ca-";
+        String CREATE_RECORD = "ce-";
+
+        String UPDDATE_BOOK = "ub-";
+        String UPDDATE_ACCOUNT = "ua-";
+        String UPDDATE_RECORD = "ur-";
+
+        String DELETE_BOOK = "cb-";
+        String DELETE_ACCOUNT = "ca-";
+        String DELETE_RECORD = "cr-";
+
+        String BALANCE = "bala-";
+        String RECORD_LIST = "recl-";
+        String PREFENCE = "pref-";
+        String FIRST_TIME = "firt-";
+        String EXPORT = "expo-";
+        String BACKUP = "baku-";
+        String RESTORE = "rest-";
+        String IMPORT = "impo-";
+        String SHARE = "share-";
+        String PROTECTION = "prot-";
+        String STARTUP = "stau-";
+        String THEME = "theme-";
+
+        String CHART = "chart-";
+        String WEBVIEW = "webv-";
+
     }
 }

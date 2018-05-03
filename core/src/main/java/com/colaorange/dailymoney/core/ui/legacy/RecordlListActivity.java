@@ -22,7 +22,6 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Preference;
@@ -113,7 +112,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
             public void onRecordDeleted(Record record) {
                 GUIs.shortToast(RecordlListActivity.this, i18n().string(R.string.msg_record_deleted));
                 refreshUI();
-                trackEvent(Contexts.TRACKER_EVT_DELETE);
+                trackEvent(TE.DELETE_RECORD);
             }
         });
         ListView listView = findViewById(R.id.record_list_list);
@@ -194,7 +193,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 
         vSumUnknow.setVisibility(TextView.VISIBLE);
 
-
+        trackEvent(TE.RECORD_LIST + mode);
         switch (mode) {
             case MODE_ALL:
                 start = end = null;

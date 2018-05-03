@@ -28,7 +28,7 @@ public class StartupActivity extends ContextsActivity {
     private boolean started = false;
 
     @Override
-    public boolean isNoActionBarTheme(){
+    public boolean isNoActionBarTheme() {
         return true;
     }
 
@@ -36,10 +36,11 @@ public class StartupActivity extends ContextsActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.startup);
-        if(started){
+        if (started) {
             finish();
         }
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -56,9 +57,9 @@ public class StartupActivity extends ContextsActivity {
         intent.setAction(StartupReceiver.ACTION_STARTUP);
         sendBroadcast(intent);
 
-        trackEvent("startup");
-        if(!firstTime){
-            trackEvent("theme-"+preference().getTheme());
+        trackEvent(TE.STARTUP);
+        if (!firstTime) {
+            trackEvent(TE.THEME + preference().getTheme());
         }
     }
 
@@ -93,7 +94,7 @@ public class StartupActivity extends ContextsActivity {
         Intent intent = null;
         intent = new Intent(this, PasswordProtectionActivity.class);
         startActivityForResult(intent, Constants.REQUEST_PASSWORD_PROTECTION_CODE);
-        trackEvent("protection");
+        trackEvent(TE.PROTECTION);
         return true;
     }
 
@@ -112,7 +113,7 @@ public class StartupActivity extends ContextsActivity {
             new DataCreator(idp, i18n()).createDefaultAccount();
         }
         GUIs.longToast(this, R.string.msg_firsttime_use_hint);
-        trackEvent("first_time");
+        trackEvent(TE.FIRST_TIME);
     }
 
 

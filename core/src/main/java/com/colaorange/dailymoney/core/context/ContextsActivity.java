@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -254,5 +253,8 @@ public class ContextsActivity extends AppCompatActivity {
             lightTheme = preference().isLightTheme();
         }
         return lightTheme;
+    }
+
+    public interface TE extends Contexts.TE {
     }
 }

@@ -155,7 +155,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             @Override
             public void run() {
                 result = DataBackupRestorer.backup();
-                trackEvent("backup");
+                trackEvent(TE.BACKUP);
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -187,7 +187,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void run() {
                 lastBakcup = preference().getLastBackupTime();
                 result = DataBackupRestorer.restore();
-                trackEvent("restore");
+                trackEvent(TE.RESTORE);
             }
         };
 
@@ -334,7 +334,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(), e);
                                 }
-                                trackEvent("export_csv_v2");
+                                trackEvent(TE.EXPORT);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -378,7 +378,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 }
                                 result = new CSVImportExporter().importIt(mode);
 
-                                trackEvent("import_csv_v2");
+                                trackEvent(TE.IMPORT);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -427,7 +427,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(), e);
                                 }
-                                trackEvent("share_csv_v2");
+                                trackEvent(TE.SHARE);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);

@@ -16,7 +16,6 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -492,7 +491,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);
             btnClose.setVisibility(Button.VISIBLE);
-            trackEvent(Contexts.TRACKER_EVT_CREATE);
+            trackEvent(TE.CREATE_RECORD);
         } else {
 
             idp.updateRecord(record.getId(), workingRecord);
@@ -501,7 +500,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             setResult(RESULT_OK);
             finish();
 
-            trackEvent(Contexts.TRACKER_EVT_UPDATE);
+            trackEvent(TE.UPDDATE_RECORD);
         }
     }
 

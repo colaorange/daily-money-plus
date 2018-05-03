@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -186,7 +185,7 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
                     if(r) {
                         refreshUI();
                         GUIs.shortToast(AccountMgntActivity.this, i18n().string(R.string.msg_account_deleted, name));
-                        trackEvent(Contexts.TRACKER_EVT_DELETE);
+                        trackEvent(TE.DELETE_ACCOUNT);
                     }
                 }
                 return true;

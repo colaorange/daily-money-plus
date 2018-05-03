@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
@@ -170,13 +169,13 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         if (modeCreate) {
             idp.newBook(workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_created, name));
-            trackEvent(Contexts.TRACKER_EVT_CREATE);
+            trackEvent(TE.CREATE_BOOK);
         } else {
             idp.updateBook(book.getId(), workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_updated, name));
             setResult(RESULT_OK);
             finish();
-            trackEvent(Contexts.TRACKER_EVT_UPDATE);
+            trackEvent(TE.UPDDATE_BOOK);
         }
         setResult(RESULT_OK);
         finish();
