@@ -94,7 +94,7 @@ public class StartupActivity extends ContextsActivity {
         Intent intent = null;
         intent = new Intent(this, PasswordProtectionActivity.class);
         startActivityForResult(intent, Constants.REQUEST_PASSWORD_PROTECTION_CODE);
-        trackEvent(TE.PROTECTION);
+        trackEvent(TE.PROTECT);
         return true;
     }
 

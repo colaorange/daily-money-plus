@@ -45,6 +45,7 @@
     color
     http://paletton.com/#uid=1000u0kllllaFw0g0qFqFg0w0aF
     http://colorschemedesigner.com/csd-3.5/
+    https://material.io/color/#!/?view.left=0&view.right=0
 
 * appbar scrolling with
     https://blog.30sparks.com/material-design-5-appbarlayout/

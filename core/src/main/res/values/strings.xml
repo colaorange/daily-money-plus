@@ -5,6 +5,8 @@
     <string name="app_market_app" translatable="false">market://details?id=com.colaorange.dailymoney</string>
     <string name="app_like_page" translatable="false">https://www.facebook.com/co.daily.money</string>
 
+    <string name="ga_debug" translatable="false"></string>
+
 
     <string name="pref_firstday_week" translatable="false">firstday_week</string>
     <string name="pref_startday_month" translatable="false">startday_month</string>

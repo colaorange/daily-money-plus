@@ -68,6 +68,8 @@ public class Contexts {
 
     Preference preference;
 
+    private boolean gaDebug = false;
+
     private Contexts() {
     }
 
@@ -132,6 +134,14 @@ public class Contexts {
         try {
             if (sTracker == null) {
                 sAnalytics = GoogleAnalytics.getInstance(contextsApp);
+
+                if("true".equalsIgnoreCase(i18n.string(R.string.ga_debug))){
+                    gaDebug = true;
+                }
+
+                if(gaDebug){
+                    sAnalytics.setLocalDispatchPeriod(5);
+                }
                 sTracker = sAnalytics.newTracker(R.xml.ga_tracker);
                 sTracker.setAppId(getAppId());
                 sTracker.setAppName(i18n.string(R.string.app_code));
@@ -161,6 +171,9 @@ public class Contexts {
             try {
                 Logger.d("track event " + category + ", " + action);
                 sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value == null ? 0 : value.longValue()).build());
+                if(gaDebug){
+                    sAnalytics.dispatchLocalHits();
+                }
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
@@ -506,29 +519,29 @@ public class Contexts {
 
 
     public interface TE {
-        String CREATE_BOOK = "cb-";
-        String CREATE_ACCOUNT = "ca-";
-        String CREATE_RECORD = "ce-";
+        String CREATE_BOOK = "cre-bk-";
+        String CREATE_ACCOUNT = "cre-acc-";
+        String CREATE_RECORD = "cre-rec-";
 
-        String UPDDATE_BOOK = "ub-";
-        String UPDDATE_ACCOUNT = "ua-";
-        String UPDDATE_RECORD = "ur-";
+        String UPDDATE_BOOK = "upd-bk-";
+        String UPDDATE_ACCOUNT = "upd-acc-";
+        String UPDDATE_RECORD = "upd-rec-";
 
-        String DELETE_BOOK = "cb-";
-        String DELETE_ACCOUNT = "ca-";
-        String DELETE_RECORD = "cr-";
+        String DELETE_BOOK = "del-bk-";
+        String DELETE_ACCOUNT = "del-acc-";
+        String DELETE_RECORD = "del-rec-";
 
-        String BALANCE = "bala-";
-        String RECORD_LIST = "recl-";
-        String PREFENCE = "pref-";
-        String FIRST_TIME = "firt-";
-        String EXPORT = "expo-";
-        String BACKUP = "baku-";
-        String RESTORE = "rest-";
-        String IMPORT = "impo-";
+        String BALANCE = "balance-";
+        String RECORD_LIST = "reclist-";
+        String PREFENCE = "prefs-";
+        String FIRST_TIME = "first-";
+        String EXPORT = "export-";
+        String BACKUP = "backup-";
+        String RESTORE = "restore-";
+        String IMPORT = "import-";
         String SHARE = "share-";
-        String PROTECTION = "prot-";
-        String STARTUP = "stau-";
+        String PROTECT = "protect-";
+        String STARTUP = "startup-";
         String THEME = "theme-";
 
         String CHART = "chart-";
