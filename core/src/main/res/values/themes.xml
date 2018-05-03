@@ -10,6 +10,9 @@
     <attr name="appSecondaryTextColor" format="color" />
     <attr name="disabledTextColor" format="color" />
 
+    <attr name="appbarTheme" format="reference" />
+    <attr name="appPopupTheme" format="reference" />
+
     <attr name="defaultSelector" format="reference" />
 
     <attr name="accountAssetTextColor" format="color" />
@@ -61,6 +64,23 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="lightAppbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+    <style name="darkAppbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
+    <style name="lightAppPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">?appPrimaryLightColor</item>
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
+    <style name="darkAppPopupTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:colorBackground">?appPrimaryLightColor</item>
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
 
     <style name="themeLemon">
 
@@ -73,6 +93,9 @@
         <item name="appSecondaryDarkColor">@color/themeLemonSecondaryDark</item>
         <item name="appSecondaryLightColor">@color/themeLemonSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeLemonSecondaryText</item>
+
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 
@@ -142,6 +165,9 @@
         <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
 
+        <item name="appbarTheme">@style/darkAppbarTheme</item>
+        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
+
         <item name="defaultSelector">@drawable/selector_dark</item>
 
         <item name="accountAssetTextColor">@color/assetTextLight</item>
@@ -198,6 +224,9 @@
         <item name="appSecondaryLightColor">@color/themeOrangeSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeOrangeSecondaryText</item>
 
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
+
         <item name="defaultSelector">@drawable/selector_light</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
@@ -248,6 +277,9 @@
         <item name="appSecondaryDarkColor">@color/themeSakuraSecondaryDark</item>
         <item name="appSecondaryLightColor">@color/themeSakuraSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeSakuraSecondaryText</item>
+
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 

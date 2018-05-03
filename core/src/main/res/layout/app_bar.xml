@@ -5,14 +5,13 @@
     android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+    android:theme="?appbarTheme">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/appToolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="?colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat"
+        app:popupTheme="?appPopupTheme"
         app:layout_scrollFlags="scroll|enterAlways"
         />
 
