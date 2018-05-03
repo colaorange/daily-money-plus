@@ -43,9 +43,14 @@ public class ContextsActivity extends AppCompatActivity {
 
     private Boolean lightTheme;
 
+    private ThemeApplier themeApplier;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        applyTheme();//do before super on create;
+        //do before super on create;
+        themeApplier = new ThemeApplier(this);
+        themeApplier.applyTheme();
+
         super.onCreate(savedInstanceState);
         instanceStateHelper = new InstanceStateHelper(this);
         instanceStateHelper.onCreate(savedInstanceState);
@@ -88,66 +93,6 @@ public class ContextsActivity extends AppCompatActivity {
 //        i.putExtra(StartupActivity.PARAM_BYPASS_PROTECTION,true);
 
         startActivity(i);
-    }
-
-    private void applyTheme() {
-        Resources.Theme theme = getTheme();
-
-        boolean light = isLightTheme();
-
-        if (light) {
-            if (isDialogTheme()) {
-                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light_Dialog, true);
-            } else {
-                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light, true);
-            }
-            theme.applyStyle(R.style.darkIconSet, true);
-        } else {
-            if (isDialogTheme()) {
-                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Dialog, true);
-            } else {
-                theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat, true);
-            }
-            theme.applyStyle(R.style.lightIconSet, true);
-        }
-
-        if (isNoActionBarTheme()) {
-            theme.applyStyle(R.style.noActionBar, true);
-        }
-
-
-        Preference preference = preference();
-        String userTheme = preference.getTheme();
-        switch (userTheme) {
-            case Preference.THEME_LEMON:
-                theme.applyStyle(R.style.themeLemon, true);
-                break;
-            case Preference.THEME_COLA:
-            default:
-                theme.applyStyle(R.style.themeCola, true);
-        }
-
-        String userTextSize = preference.getTextSize();
-        switch(userTextSize){
-            case Preference.TEXT_SIZE_MEDIUM:
-                theme.applyStyle(R.style.textSizeMedium, true);
-                break;
-            case Preference.TEXT_SIZE_LARGE:
-                theme.applyStyle(R.style.textSizeLarge, true);
-                break;
-            case Preference.TEXT_SIZE_NOMRAL:
-            default:
-                theme.applyStyle(R.style.textSizeNormal, true);
-
-        }
-
-
-
-        //appbar
-        AppBarLayout appbar = findViewById(R.id.appbar);
-        if (appbar != null) {
-            //todo style, theme
-        }
     }
 
     public boolean isNoActionBarTheme() {

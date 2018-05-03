@@ -40,8 +40,8 @@ public class Preference {
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
     static{
         themeSet.add(THEME_COLA);
-//        themeSet.add(THEME_ORANGE);
-//        themeSet.add(THEME_SAKURA);
+        themeSet.add(THEME_ORANGE);
+        themeSet.add(THEME_SAKURA);
         themeSet.add(THEME_LEMON);
     }
 

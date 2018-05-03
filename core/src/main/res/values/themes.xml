@@ -31,6 +31,7 @@
 
     <attr name="textSize" format="dimension" />
     <attr name="textSizeSmall" format="dimension" />
+    <attr name="textSizeMedium" format="dimension" />
     <attr name="textSizeLarge" format="dimension" />
 
     <attr name="ic_add" format="reference" />
@@ -185,22 +186,130 @@
         -->
     </style>
 
+    <style name="themeOrange">
+
+        <item name="appPrimaryColor">@color/themeOrangePrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeOrangePrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeOrangePrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeOrangePrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeOrangeSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeOrangeSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeOrangeSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeOrangeSecondaryText</item>
+
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="balanceHeadBgColor">@color/themeOrangeBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeOrangeBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeOrangePrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeOrangePrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeOrangeSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeOrangeSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeOrangeSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeOrangeSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeOrangePrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeOrangeSecondary</item>
+    </style>
+
+    <style name="themeSakura">
+
+        <item name="appPrimaryColor">@color/themeSakuraPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeSakuraPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeSakuraPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeSakuraPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeSakuraSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeSakuraSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeSakuraSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeSakuraSecondaryText</item>
+
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="balanceHeadBgColor">@color/themeSakuraBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeSakuraBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeSakuraPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeSakuraPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeSakuraSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeSakuraSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeSakuraSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeSakuraSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeSakuraPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeSakuraSecondary</item>
+    </style>
+
     <style name="textSizeNormal">
         <item name="textSize">@dimen/textSize</item>
         <item name="textSizeSmall">@dimen/textSizeSmall</item>
+        <item name="textSizeMedium">@dimen/textSizeMedium</item>
         <item name="textSizeLarge">@dimen/textSizeLarge</item>
+
     </style>
 
     <style name="textSizeMedium">
         <item name="textSize">@dimen/mediumTextSize</item>
         <item name="textSizeSmall">@dimen/mediumTextSizeSmall</item>
+        <item name="textSizeMedium">@dimen/mediumTextSizeMedium</item>
         <item name="textSizeLarge">@dimen/mediumTextSizeLarge</item>
+
     </style>
 
     <style name="textSizeLarge">
         <item name="textSize">@dimen/largeTextSize</item>
         <item name="textSizeSmall">@dimen/largeTextSizeSmall</item>
+        <item name="textSizeMedium">@dimen/largeTextSizeMedium</item>
         <item name="textSizeLarge">@dimen/largeTextSizeLarge</item>
+
     </style>
 
     <style name="lightIconSet">

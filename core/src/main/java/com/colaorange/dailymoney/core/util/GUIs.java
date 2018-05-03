@@ -385,19 +385,19 @@ public class GUIs {
     }
 
     public static class Dimen {
+        public final int data;
         public final int unit;
         public final float value;
 
-        public Dimen(int unit, float value) {
-            this.unit = unit;
-            this.value = value;
+        public Dimen(int data) {
+            this.data = data;
+            this.unit = (data >> TypedValue.COMPLEX_UNIT_SHIFT) & TypedValue.COMPLEX_UNIT_MASK;
+            this.value = TypedValue.complexToFloat(data);
         }
     }
 
     public static Dimen toDimen(int typedValueData) {
-        Dimen d = new Dimen((typedValueData >> TypedValue.COMPLEX_UNIT_SHIFT) & TypedValue.COMPLEX_UNIT_MASK,
-                TypedValue.complexToFloat(typedValueData));
-        return d;
+        return new Dimen(typedValueData);
     }
 
 }

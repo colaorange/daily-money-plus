@@ -18,6 +18,34 @@
     <color name="themeLemonBalanceHeadBg">#855e42</color>
     <color name="themeLemonBalanceItemBg">#f0eee1</color>
 
+    <!--orange-->
+    <color name="themeOrangePrimary">#ffc091</color>
+    <color name="themeOrangePrimaryDark">#fb9143</color>
+    <color name="themeOrangePrimaryLight">#fff4ec</color>
+    <color name="themeOrangePrimaryText">#333333</color>
+
+    <color name="themeOrangeSecondary">#2e7d32</color>
+    <color name="themeOrangeSecondaryDark">#005005</color>
+    <color name="themeOrangeSecondaryLight">#60ad5e</color>
+    <color name="themeOrangeSecondaryText">#e0e0e0</color>
+
+    <color name="themeOrangeBalanceHeadBg">#a17500</color>
+    <color name="themeOrangeBalanceItemBg">#fff0e4</color>
+
+    <!--sakura-->
+    <color name="themeSakuraPrimary">#fecdde</color>
+    <color name="themeSakuraPrimaryDark">#fda6c3</color>
+    <color name="themeSakuraPrimaryLight">#ffeaf6</color>
+    <color name="themeSakuraPrimaryText">#333333</color>
+
+    <color name="themeSakuraSecondary">#2e7d32</color>
+    <color name="themeSakuraSecondaryDark">#005005</color>
+    <color name="themeSakuraSecondaryLight">#60ad5e</color>
+    <color name="themeSakuraSecondaryText">#e0e0e0</color>
+
+    <color name="themeSakuraBalanceHeadBg">#ae7d8d</color>
+    <color name="themeSakuraBalanceItemBg">#ffecf3</color>
+
     <!--dark-->
     <!--cola-->
     <color name="themeColaPrimary">#171411</color>

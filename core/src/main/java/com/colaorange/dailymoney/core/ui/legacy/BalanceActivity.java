@@ -78,7 +78,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private BalanceListAdapter listAdapter;
 
-    GUIs.Dimen textSizeLarge;
+    GUIs.Dimen textSizeMedium;
 
 
     @Override
@@ -128,7 +128,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
 
-        textSizeLarge = GUIs.toDimen(resolveThemeAttr(R.attr.textSizeLarge).data);
+        textSizeMedium = GUIs.toDimen(resolveThemeAttr(R.attr.textSizeMedium).data);
 
     }
 
@@ -673,8 +673,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                     textColor = bgColorMap.get(at);
                 }
 
-                vname.setTextSize(textSizeLarge.unit, textSizeLarge.value);
-                vmoney.setTextSize(textSizeLarge.unit, textSizeLarge.value);
+                vname.setTextSize(textSizeMedium.unit, textSizeMedium.value);
+                vmoney.setTextSize(textSizeMedium.unit, textSizeMedium.value);
             }else{
                 vlayout.setBackgroundColor(resolveThemeAttrResData(R.attr.balanceItemBgColor));
                 if(lightTheme){

@@ -1,7 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -149,6 +152,11 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         vGrid.setAdapter(gridAdapter);
         vGrid.setOnItemClickListener(this);
 
+        TypedValue textSize = this.resolveThemeAttr(R.attr.textSize);
+        int width = (int)(TypedValue.complexToDimensionPixelSize(textSize.data, getResources().getDisplayMetrics()) * 5.5);
+
+        vGrid.setColumnWidth(width);
+
     }
 
     private void refreshDesktop() {
@@ -268,8 +276,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         //item clicked in grid view
         if (parent == vGrid) {
             Object obj = view.getTag();
-            if(obj instanceof DesktopItem){
-                lastClickedItem = (DesktopItem)obj;
+            if (obj instanceof DesktopItem) {
+                lastClickedItem = (DesktopItem) obj;
                 lastClickedItem.run();
             }
         }
@@ -315,6 +323,11 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     }
 
     public class DesktopItemAdapter extends BaseAdapter {
+        LayoutInflater inflater;
+
+        public DesktopItemAdapter() {
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
 
         public int getCount() {
             return getCurrentDesktopItems().size();
@@ -330,27 +343,28 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView iv;
-            TextView tv;
-            LinearLayout view;
+            LinearLayout layout;
+            ImageView vicon;
+            TextView vtext;
             if (convertView == null) {  // if it's not recycled, initialize some attributes
-
-                view = new LinearLayout(DesktopActivity.this);
-                view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT, GridView.LayoutParams.WRAP_CONTENT));
-                GUIs.inflateView(DesktopActivity.this, view, R.layout.desktop_item);
+                convertView = inflater.inflate(R.layout.desktop_item, parent, false);
             } else {
-                view = (LinearLayout) convertView;
+                convertView = (LinearLayout) convertView;
             }
 
-            iv = view.findViewById(R.id.desktop_icon);
-            tv = view.findViewById(R.id.desktop_label);
+//            layout = convertView.findViewById(R.id.desktop_layout);
+            vicon = convertView.findViewById(R.id.desktop_icon);
+            vtext = convertView.findViewById(R.id.desktop_label);
+
+
+//            layout.setLayoutParams(new LinearLayout.LayoutParams((int)(textSize.value * 6 * getDpRatio()), LinearLayout.LayoutParams.WRAP_CONTENT));
 
             DesktopItem item = getCurrentDesktopItems().get(position);
-            iv.setImageResource(item.getIcon());
-            tv.setText(item.getLabel());
+            vicon.setImageResource(item.getIcon());
+            vtext.setText(item.getLabel());
 
-            view.setTag(item);
-            return view;
+            convertView.setTag(item);
+            return convertView;
         }
 
     }

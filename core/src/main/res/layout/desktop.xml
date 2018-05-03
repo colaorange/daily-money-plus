@@ -67,7 +67,8 @@
             android:gravity="center"
             android:textColor="?accountExpenseTextColor"
             android:textSize="?textSize"
-            android:paddingHorizontal="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
             />
 
@@ -79,7 +80,8 @@
             android:gravity="center"
             android:textColor="?accountExpenseTextColor"
             android:textSize="?textSize"
-            android:paddingHorizontal="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
             />
         <TextView
@@ -90,7 +92,8 @@
             android:gravity="center"
             android:textColor="?accountAssetTextColor"
             android:textSize="?textSize"
-            android:paddingHorizontal="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
             />
     </com.google.android.flexbox.FlexboxLayout>
