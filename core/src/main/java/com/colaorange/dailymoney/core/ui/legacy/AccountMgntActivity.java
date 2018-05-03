@@ -176,14 +176,22 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     private void doDeleteAccount(int pos) {
-        Account acc = listData.get(pos);
-        String name = acc.getName();
+        final Account acc = listData.get(pos);
+        final String name = acc.getName();
 
-        contexts().getDataProvider().deleteAccount(acc.getId());
-        refreshUI();
-        GUIs.shortToast(this, i18n().string(R.string.msg_account_deleted, name));
-        trackEvent(Contexts.TRACKER_EVT_DELETE);
-
+        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, acc.getName()), new GUIs.OnFinishListener() {
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    boolean r = contexts().getDataProvider().deleteAccount(acc.getId());
+                    if(r) {
+                        refreshUI();
+                        GUIs.shortToast(AccountMgntActivity.this, i18n().string(R.string.msg_account_deleted, name));
+                        trackEvent(Contexts.TRACKER_EVT_DELETE);
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     private void doEditAccount(int pos) {

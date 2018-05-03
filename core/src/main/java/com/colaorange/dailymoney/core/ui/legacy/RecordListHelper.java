@@ -31,6 +31,7 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Record;
+import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;
@@ -148,17 +149,28 @@ public class RecordListHelper implements OnItemClickListener {
         activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
-    public void doDeleteRecord(int pos) {
-        Record d = listData.get(pos);
-        boolean r = Contexts.instance().getDataProvider().deleteRecord(d.getId());
-        if (r) {
-            if (listener != null) {
-                listener.onRecordDeleted(d);
-            } else {
-                listData.remove(pos);
-                listAdapter.notifyDataSetChanged();
+    public void doDeleteRecord(final int pos) {
+        final Record record = listData.get(pos);
+
+        GUIs.confirm(activity, i18n.string(R.string.qmsg_delete_record, Contexts.instance().toFormattedMoneyString(record.getMoney())), new GUIs.OnFinishListener() {
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    boolean r = Contexts.instance().getDataProvider().deleteRecord(record.getId());
+                    if (r) {
+                        if (listener != null) {
+                            listener.onRecordDeleted(record);
+                        } else {
+                            listData.remove(pos);
+                            listAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+                return true;
             }
-        }
+        });
+
+
+
     }
 
 
