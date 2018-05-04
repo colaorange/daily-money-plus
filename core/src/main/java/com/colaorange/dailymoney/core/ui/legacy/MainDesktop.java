@@ -83,13 +83,23 @@ public class MainDesktop extends AbstractDesktop {
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_how2use);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.label_how2use));
         DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_how2use), R.drawable.dtitem_how2use, true, true, -998);
+                i18n.string(R.string.label_how2use), R.drawable.dtitem_how2use, true, false, -998);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
         intent.putExtra(LocalWebViewActivity.PARAM_TITLE, Contexts.instance().getAppVerName());
         DesktopItem about = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_about), R.drawable.dtitem_about, true, true, -999);
+                i18n.string(R.string.label_about), R.drawable.dtitem_about, true, false, -999);
+
+        addItem(how2use);
+        addItem(about);
+
+
+        intent = new Intent(activity, LocalWebViewActivity.class);
+        intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_what_is_new);
+        intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n.string(R.string.label_what_is_new));
+        DesktopItem whatisnew = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.label_what_is_new));
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_contributor);
@@ -103,10 +113,11 @@ public class MainDesktop extends AbstractDesktop {
         DesktopItem history = new DesktopItem(new IntentRun(activity, intent),
                 i18n.string(R.string.label_history));
 
-        addItem(how2use);
+
         addItem(contributor);
+        addItem(whatisnew);
         addItem(history);
-        addItem(about);
+
 
     }
 

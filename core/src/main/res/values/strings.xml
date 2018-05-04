@@ -48,7 +48,7 @@
     <string name="default_auto_backup" translatable="false">true</string>
     <string name="default_auto_backup_weekdays" translatable="false">1</string>
     <string name="default_auto_backup_at_hours" translatable="false">2</string>
-    <string name="default_theme" translatable="false">dark-cola</string>
+    <string name="default_theme" translatable="false">light-lemon</string>
     <string name="default_text_size" translatable="false">normal</string>
 
 
