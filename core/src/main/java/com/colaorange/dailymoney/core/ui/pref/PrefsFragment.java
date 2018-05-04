@@ -42,8 +42,19 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         addPreferencesFromResource(R.xml.prefs);
         final I18N i18n = Contexts.instance().getI18n();
 
+        initDisplayPrefs(i18n);
         initAccountingPrefs(i18n);
         initDataPrefs(i18n);
+    }
+
+    private void initDisplayPrefs(I18N i18n) {
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_theme)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_text_size)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_record_list_layout)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_date)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_month)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_time)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_max_records)));
     }
 
     private void initDataPrefs(I18N i18n) {
@@ -104,10 +115,14 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 Logger.w(x.getMessage(), x);
             }
         }
+
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_weekdays)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_at_hours)));
     }
 
 
     private void initAccountingPrefs(final I18N i18n) {
+
         Preference pref = findPreference(i18n.string(R.string.pref_startday_year_month));
         if (pref instanceof ListPreference) {
             try {
@@ -126,5 +141,10 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 Logger.w(x.getMessage(), x);
             }
         }
+
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_firstday_week)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_startday_month)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_startday_year_month)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_startday_year_month_day)));
     }
 }

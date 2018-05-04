@@ -44,6 +44,9 @@ public class PrefsDeveloperFragment extends ContextsPrefsFragment implements Sha
 
 
     private void initDeveloperPrefs(final I18N i18n) {
+
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_csv_encoding)));
+
         try {
         } catch (Exception x) {
             Logger.w(x.getMessage(), x);

@@ -4,14 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.util.I18N;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,6 +31,8 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
     boolean markRestart = false;
 
     Set<String> recreateKeys = new HashSet<>();
+
+    Map<String, CharSequence> adjustSummaryCache = new HashMap<>();
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -66,9 +76,81 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         dirty = true;
         trackEvent(Contexts.TE.PREFENCE + key);
-        if(recreateKeys.contains(key)){
-            ((ContextsActivity)getActivity()).markWholeRecreate();
+        if (recreateKeys.contains(key)) {
+            ((ContextsActivity) getActivity()).markWholeRecreate();
             getActivity().recreate();
         }
+
+        adjustSummaryValue(findPreference(key));
+    }
+
+    public <T extends Preference> T adjustSummaryValue(T pref) {
+        if (pref == null) {
+            return pref;
+        }
+
+        CharSequence summary = adjustSummaryCache.get(pref.getKey());
+        if (summary == null) {
+            summary = pref.getSummary();
+            adjustSummaryCache.put(pref.getKey(), summary);
+        }
+
+        if (pref instanceof ListPreference) {
+            ListPreference vp = (ListPreference) pref;
+
+            if (vp.getEntries() == null || vp.getEntryValues() == null || vp.getValue() == null) {
+                return pref;
+            }
+
+
+            int idx = -1;
+            for (CharSequence s : vp.getEntryValues()) {
+                idx++;
+                if (s.equals(vp.getValue())) {
+                    break;
+                }
+            }
+
+            if (idx >= 0 && vp.getEntries().length > idx) {
+                vp.setSummary(combineSummary(summary, vp.getEntries()[idx]));
+            }
+
+        } else if (pref instanceof EditTextPreference) {
+            EditTextPreference vp = (EditTextPreference) pref;
+            vp.setSummary(combineSummary(summary, vp.getText()));
+        } else if (pref instanceof MultiSelectListPreference) {
+            MultiSelectListPreference vp = (MultiSelectListPreference) pref;
+
+            if (vp.getEntries() == null || vp.getEntryValues() == null || vp.getValues() == null) {
+                return pref;
+            }
+
+            Set<String> selected = vp.getValues();
+            Set<Integer> idxs = new LinkedHashSet<>();
+            int i = -1;
+            for (CharSequence s : vp.getEntryValues()) {
+                i++;
+                if (selected.contains(s)) {
+                    idxs.add(i);
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+
+            CharSequence[] csa = vp.getEntries();
+            for (Integer idx : idxs) {
+                if (idx < csa.length) {
+                    if (sb.length() > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(csa[idx]);
+                }
+            }
+            vp.setSummary(combineSummary(summary, sb.toString()));
+        }
+        return pref;
+    }
+
+    private CharSequence combineSummary(CharSequence summary, CharSequence value) {
+        return summary == null ? value : "[" + value + "] "+summary;
     }
 }
