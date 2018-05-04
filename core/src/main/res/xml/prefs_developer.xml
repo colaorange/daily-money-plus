@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/label_prefcat_developer">
+    <!-- at the bottom -->
+    <ListPreference
+        android:defaultValue="@string/default_csv_encoding"
+        android:entries="@array/prefs_csv_encoding_values"
+        android:entryValues="@array/prefs_csv_encoding_values"
+        android:key="@string/pref_csv_encoding"
+        android:summary="@string/label_prefs_csv_encoding_sum"
+        android:title="@string/label_prefs_csv_encoding" />
+    <SwitchPreference
+        android:defaultValue="@string/default_testsdekstop"
+        android:key="@string/pref_testsdekstop"
+        android:summary="@string/label_prefs_testsdekstop_sum"
+        android:title="@string/label_prefs_testsdekstop" />
+
+
+</PreferenceScreen>

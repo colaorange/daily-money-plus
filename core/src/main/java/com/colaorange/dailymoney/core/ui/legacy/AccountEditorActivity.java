@@ -1,7 +1,5 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +12,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.Collections;
+import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
+import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Account;
@@ -38,18 +38,24 @@ import com.colaorange.dailymoney.core.ui.Constants;
  */
 public class AccountEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "account_editor.modeCreate";
-    public static final String PARAM_ACCOUNT = "account_editor.account";
+    public static final String PARAM_MODE_CREATE = "modeCreate";
+    public static final String PARAM_ACCOUNT = "account";
 
     private boolean modeCreate;
     private int counterCreate;
     private Account account;
     private Account workingAccount;
 
-    Activity activity;
 
-    ImageButton cal2Btn;
+    private EditText vName;
+    private EditText vInitval;
+    private Spinner vType;
+    private CheckBox vCash;
 
+    private Button btnOk;
+    private Button btnCancel;
+    private Button btnClose;
+    private ImageButton btnCal2;
 
     /**
      * clone account without id
@@ -72,6 +78,10 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         account = (Account) bundle.get(PARAM_ACCOUNT);
+
+        if (modeCreate && account == null) {
+            account = new Account(AccountType.INCOME.getType(), "", 0D);
+        }
         workingAccount = clone(account);
 
         if (modeCreate) {
@@ -81,60 +91,41 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         }
     }
 
-    /**
-     * need to mapping twice to do different mapping in spitem and spdropdown item
-     */
-    private static String[] spfrom = new String[]{Constants.DISPLAY, Constants.DISPLAY};
-    private static int[] spto = new int[]{R.id.simple_spinner_item_display, R.id.simple_spinner_dropdown_item_display};
-
-    EditText nameEditor;
-    EditText initvalEditor;
-    Spinner typeEditor;
-    CheckBox cashAccountEditor;
-
-    Button okBtn;
-    Button cancelBtn;
-    Button closeBtn;
-
     private void initMembers() {
         I18N i18n = i18n();
 
-        nameEditor = findViewById(R.id.account_editor_name);
-        nameEditor.setText(workingAccount.getName());
+        vName = findViewById(R.id.account_name);
+        vName.setText(workingAccount.getName());
 
-        initvalEditor = findViewById(R.id.account_editor_initval);
-        initvalEditor.setText(Formats.double2String(workingAccount.getInitialValue()));
+        vInitval = findViewById(R.id.account_initval);
+        vInitval.setText(Formats.double2String(workingAccount.getInitialValue()));
 
-        //initial spinner
-        typeEditor = findViewById(R.id.account_editor_type);
-        List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-        String type = workingAccount.getType();
+        //initial regular_spinner
+        vType = findViewById(R.id.account_type);
+        final List<AccountType> list = Collections.asList(AccountType.getSupportedType());
+        AccountType type = AccountType.find(workingAccount.getType());
 
-        AccountType selType = null;
-        int selpos = 0;
-        int i = 0;
-        for (AccountType at : AccountType.getSupportedType()) {
-            Map<String, Object> row = new HashMap<>();
-            data.add(row);
-            row.put(spfrom[0], new NamedItem(spfrom[0], at, at.getDisplay(i18n)));
+        int selpos = list.indexOf(type);
+        RegularSpinnerAdapter<AccountType> adapter = new RegularSpinnerAdapter<AccountType>(this, list) {
 
-            if (at.getType().equals(type)) {
-                selpos = i;
-                selType = at;
+            public boolean isSelected(int position) {
+                return vType.getSelectedItemPosition() == position;
             }
-            i++;
+
+            @Override
+            public ViewHolder<AccountType> createViewHolder() {
+                return new AccountTypeViewBinder(this);
+            }
+        };
+
+        vType.setAdapter(adapter);
+        if (selpos > -1) {
+            vType.setSelection(selpos);
         }
-
-
-        SimpleAdapter adapter = new SimpleAdapter(this, data, R.layout.simple_spinner_dropdown_item, spfrom, spto);
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
-        adapter.setViewBinder(new AccountTypeViewBinder());
-        typeEditor.setAdapter(adapter);
-        typeEditor.setSelection(selpos);
-        typeEditor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        vType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                AccountType type = AccountType.getSupportedType()[typeEditor.getSelectedItemPosition()];
+                AccountType type = list.get(pos);
                 doTypeChanged(type);
             }
 
@@ -144,42 +135,44 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         });
 
 
-        cashAccountEditor = findViewById(R.id.account_editor_cash_account);
+        vCash = findViewById(R.id.account_cash);
 
-        cashAccountEditor.setChecked(workingAccount.isCashAccount());
+        vCash.setChecked(workingAccount.isCashAccount());
 
-        okBtn = findViewById(R.id.acceditor_ok);
+        btnOk = findViewById(R.id.btn_ok);
         if (modeCreate) {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_white_24dp, 0, 0, 0);
-            okBtn.setText(R.string.cact_create);
+            btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_add), 0, 0, 0);
+            btnOk.setText(R.string.act_create);
         } else {
-            okBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_save_white_24dp, 0, 0, 0);
-            okBtn.setText(R.string.cact_update);
+            btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
+            btnOk.setText(R.string.act_update);
         }
-        okBtn.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
 
 
-        cancelBtn = findViewById(R.id.acceditor_cancel);
-        closeBtn = findViewById(R.id.acceditor_close);
-        cal2Btn = findViewById(R.id.account_editor_cal2);
+        btnCancel = findViewById(R.id.btn_cancel);
+        btnClose = findViewById(R.id.btn_close);
+        btnCal2 = findViewById(R.id.btn_cal2);
 
-        cancelBtn.setOnClickListener(this);
-        closeBtn.setOnClickListener(this);
-        cal2Btn.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnClose.setOnClickListener(this);
+        btnCal2.setOnClickListener(this);
 
-        doTypeChanged(selType);
+        doTypeChanged(type);
+
+
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.acceditor_ok) {
+        if (v.getId() == R.id.btn_ok) {
             doOk();
-        } else if (v.getId() == R.id.acceditor_cancel) {
+        } else if (v.getId() == R.id.btn_cancel) {
             doCancel();
-        } else if (v.getId() == R.id.acceditor_close) {
+        } else if (v.getId() == R.id.btn_close) {
             doClose();
-        } else if (v.getId() == R.id.account_editor_cal2) {
+        } else if (v.getId() == R.id.btn_cal2) {
             doCalculator2();
         }
     }
@@ -189,10 +182,11 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
         intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
+        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
-            start = Formats.editorTextNumberDecimalToCal2(initvalEditor.getText().toString());
+            start = Formats.editorTextNumberDecimalToCal2(vInitval.getText().toString());
         } catch (Exception e) {
         }
 
@@ -207,7 +201,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
             String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
             try {
                 double d = Formats.string2Double(result);
-                initvalEditor.setText(Formats.cal2ToEditorTextNumberDecimal(result));
+                vInitval.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
             }
         }
@@ -217,32 +211,32 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
         I18N i18n = i18n();
         //verify
-        if (Spinner.INVALID_POSITION == typeEditor.getSelectedItemPosition()) {
-            GUIs.shortToast(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_type)));
+        if (Spinner.INVALID_POSITION == vType.getSelectedItemPosition()) {
+            GUIs.shortToast(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_type)));
             return;
         }
-        String name = nameEditor.getText().toString().trim();
+        String name = vName.getText().toString().trim();
         if ("".equals(name)) {
-            nameEditor.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.clabel_name)));
+            vName.requestFocus();
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_name)));
             return;
         }
-        String initval = initvalEditor.getText().toString();
+        String initval = vInitval.getText().toString();
         if ("".equals(initval)) {
-            initvalEditor.requestFocus();
-            GUIs.alert(this, i18n.string(R.string.cmsg_field_empty, i18n.string(R.string.label_initial_value)));
+            vInitval.requestFocus();
+            GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_initial_value)));
             return;
         }
-        String type = AccountType.getSupportedType()[typeEditor.getSelectedItemPosition()].getType();
+        String type = AccountType.getSupportedType()[vType.getSelectedItemPosition()].getType();
         //assign
         workingAccount.setType(type);
         workingAccount.setName(name);
         try {
             workingAccount.setInitialValue(Formats.string2Double(initval));
-        }catch (Exception x){
+        } catch (Exception x) {
             workingAccount.setInitialValue(0);
         }
-        workingAccount.setCashAccount(cashAccountEditor.isChecked());
+        workingAccount.setCashAccount(vCash.isChecked());
 
         IDataProvider idp = contexts().getDataProvider();
 
@@ -258,20 +252,20 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
                     idp.newAccount(workingAccount);
                     GUIs.shortToast(this, i18n.string(R.string.msg_account_created, name, AccountType.getDisplay(i18n, workingAccount.getType())));
                 } catch (DuplicateKeyException e) {
-                    GUIs.alert(this, i18n.string(R.string.cmsg_error, e.getMessage()));
+                    GUIs.alert(this, i18n.string(R.string.msg_error, e.getMessage()));
                     return;
                 }
             }
             setResult(RESULT_OK);
             workingAccount = clone(workingAccount);
             workingAccount.setName("");
-            nameEditor.setText("");
-            nameEditor.requestFocus();
+            vName.setText("");
+            vName.requestFocus();
             counterCreate++;
-            okBtn.setText(i18n.string(R.string.cact_create) + "(" + counterCreate + ")");
-            cancelBtn.setVisibility(Button.GONE);
-            closeBtn.setVisibility(Button.VISIBLE);
-            trackEvent(Contexts.TRACKER_EVT_CREATE);
+            btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
+            btnCancel.setVisibility(Button.GONE);
+            btnClose.setVisibility(Button.VISIBLE);
+            trackEvent(TE.CREATE_ACCOUNT);
         } else {
             if (namedAcc != null && !namedAcc.getId().equals(account.getId())) {
                 GUIs.alert(this, i18n.string(R.string.msg_account_existed, name,
@@ -284,7 +278,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
             setResult(RESULT_OK);
             finish();
-            trackEvent(Contexts.TRACKER_EVT_UPDATE);
+            trackEvent(TE.UPDDATE_ACCOUNT);
         }
 
     }
@@ -302,41 +296,34 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
     private void doTypeChanged(AccountType type) {
         if (AccountType.ASSET.equals(type)) {
-            cashAccountEditor.setVisibility(View.VISIBLE);
+            vCash.setVisibility(View.VISIBLE);
         } else {
-            cashAccountEditor.setVisibility(View.INVISIBLE);
-            cashAccountEditor.setChecked(false);
+            vCash.setVisibility(View.INVISIBLE);
+            vCash.setChecked(false);
         }
     }
 
-    class AccountTypeViewBinder implements SimpleAdapter.ViewBinder {
-        @Override
-        public boolean setViewValue(View view, Object data, String text) {
+    public class AccountTypeViewBinder extends RegularSpinnerAdapter.ViewHolder<AccountType> {
 
-            NamedItem item = (NamedItem) data;
-            String name = item.getName();
-            AccountType at = (AccountType) item.getValue();
-            if (!(view instanceof TextView)) {
-                return false;
+        public AccountTypeViewBinder(RegularSpinnerAdapter adapter) {
+            super(adapter);
+        }
+
+        @Override
+        public void bindViewValue(AccountType item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
+            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
+            Map<AccountType, Integer> bgColorMap = getAccountBgColorMap();
+
+            int textColor = textColorMap.get(item);
+
+            vtext.setTextColor(textColor);
+            vtext.setText(item.getDisplay(i18n()));
+
+            if (isDropdown && isSelected) {
+                textColor = Colors.darken(textColor, 0.3f);
+                vtext.setTextColor(textColor);
             }
-            if (Constants.DISPLAY.equals(name)) {
-                if (AccountType.INCOME == at) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.income_fgl));
-                } else if (AccountType.ASSET == at) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.asset_fgl));
-                } else if (AccountType.EXPENSE == at) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.expense_fgl));
-                } else if (AccountType.LIABILITY == at) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.liability_fgl));
-                } else if (AccountType.OTHER == at) {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.other_fgl));
-                } else {
-                    ((TextView) view).setTextColor(getResources().getColor(R.color.unknow_fgl));
-                }
-                ((TextView) view).setText(item.getToString());
-                return true;
-            }
-            return false;
+
         }
     }
 

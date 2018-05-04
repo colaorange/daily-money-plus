@@ -169,7 +169,7 @@ public class CSVImportExporter {
                 sw = new StringWriter();
                 csvw = new CsvWriter(sw, ',');
                 csvw.writeRecord(new String[]{"id", "from", "to", "date", "value", "note", "archived", APPVER + vercode});
-                for (Detail d : idp.listAllDetail()) {
+                for (Record d : idp.listAllRecord()) {
                     detailCount++;
                     csvw.writeRecord(new String[]{Integer.toString(d.getId()), d.getFrom(), d.getTo(),
                             Formats.normalizeDate2String(d.getDate()), Formats.normalizeDouble2String(d.getMoney()),
@@ -319,10 +319,10 @@ public class CSVImportExporter {
                 appver = getAppver(detailReader.getHeaders()[detailReader.getHeaderCount() - 1]);
 
                 //shouldn't delete in import, should append it.
-//                idp.deleteAllDetail();
+//                idp.deleteAllRecord();
                 while (detailReader.readRecord()) {
                     try {
-                        Detail det = new Detail(detailReader.get("from"), detailReader.get("to"), Formats.normalizeString2Date(detailReader.get("date")), Formats.normalizeString2Double(detailReader.get("value")), detailReader.get("note"));
+                        Record det = new Record(detailReader.get("from"), detailReader.get("to"), Formats.normalizeString2Date(detailReader.get("date")), Formats.normalizeString2Double(detailReader.get("value")), detailReader.get("note"));
                         String archived = detailReader.get("archived");
                         if ("1".equals(archived)) {
                             det.setArchived(true);
@@ -332,7 +332,7 @@ public class CSVImportExporter {
                             det.setArchived(Boolean.parseBoolean(archived));
                         }
 
-                        idp.newDetail(det);
+                        idp.newRecord(det);
                         r.detail++;
                     } catch (Exception x) {
                         r.err = i18n.string(R.string.msg_no_csv) + " : csv format error : " + x.getMessage();

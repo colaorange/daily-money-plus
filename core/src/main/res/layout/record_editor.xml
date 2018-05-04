@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    tools:context=".ui.legacy.RecordEditorActivity">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/editorFieldTitle"
+                android:text="@string/label_from_account"
+                android:textSize="?textSize" />
+
+            <Spinner
+                android:id="@+id/record_from_account"
+                style="@style/editorFieldInput" />
+
+            <TextView
+                style="@style/editorFieldTitle"
+                android:text="@string/label_to_account"
+                android:textSize="?textSize" />
+
+            <Spinner
+                android:id="@+id/record_to_account"
+                style="@style/editorFieldInput" />
+
+            <TextView
+                style="@style/editorFieldTitle"
+                android:text="@string/label_date"
+                android:textSize="?textSize" />
+
+            <LinearLayout
+                style="@style/editorFieldInput"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/record_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:textSize="?textSize" />
+
+                <ImageButton
+                    android:id="@+id/btn_prev"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_arrow_back" />
+
+                <ImageButton
+                    android:id="@+id/btn_today"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_today" />
+
+                <ImageButton
+                    android:id="@+id/btn_next"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_arrow_forward" />
+
+                <ImageButton
+                    android:id="@+id/btn_datepicker"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_date_range" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/editorFieldTitle"
+                android:text="@string/label_money"
+                android:textSize="?textSize" />
+
+            <LinearLayout
+                style="@style/editorFieldInput"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/record_money"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:textSize="?textSize" />
+
+                <ImageButton
+                    android:id="@+id/btn_cal2"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_grid_on" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/editorFieldTitle"
+                android:text="@string/label_note"
+                android:textSize="?textSize" />
+
+            <EditText
+                android:id="@+id/record_note"
+                style="@style/editorFieldInput"
+                android:maxLines="3"
+                android:textSize="?textSize" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/editorActionBtn"
+            android:drawableLeft="?ic_add"
+            android:text="@string/act_ok"
+            android:textSize="?textSize" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/editorActionBtn"
+            android:drawableLeft="?ic_clear"
+            android:text="@string/act_cancel"
+            android:textSize="?textSize" />
+
+        <Button
+            android:id="@+id/btn_close"
+            style="@style/editorActionBtn"
+            android:drawableLeft="?ic_clear"
+            android:text="@string/act_close"
+            android:textSize="?textSize"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

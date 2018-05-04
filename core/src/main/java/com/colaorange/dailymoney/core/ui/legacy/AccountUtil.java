@@ -13,13 +13,13 @@ import com.colaorange.dailymoney.core.data.AccountType;
  */
 public class AccountUtil {
 
-    public static List<IndentNode> toIndentNode(List<Account> accl) {
-        List<IndentNode> better = new ArrayList<IndentNode>();
-        Map<String,IndentNode> tree = new LinkedHashMap<String,IndentNode>();
+    public static List<AccountIndentNode> toIndentNode(List<Account> accl) {
+        List<AccountIndentNode> better = new ArrayList<AccountIndentNode>();
+        Map<String,AccountIndentNode> tree = new LinkedHashMap<String,AccountIndentNode>();
         for(Account acc:accl){
             String name = acc.getName();
             StringBuilder path = new StringBuilder();
-            IndentNode node = null;
+            AccountIndentNode node = null;
             String pp = null;
             String np = null;
             AccountType type = AccountType.find(acc.getType());
@@ -37,7 +37,7 @@ public class AccountUtil {
                     indent++;
                     continue;
                 }
-                node = new IndentNode(pp,t,indent,type,null);
+                node = new AccountIndentNode(pp,t,indent,type,null);
                 indent++;
                 tree.put(np, node);
             }
@@ -47,14 +47,14 @@ public class AccountUtil {
         }
         
         for(String key:tree.keySet()){
-            IndentNode tn = tree.get(key);
+            AccountIndentNode tn = tree.get(key);
             better.add(tn);
         }
         
         return better;
     }
     
-    public static class IndentNode{
+    public static class AccountIndentNode {
         private String path;
         private  String name;
         private  AccountType type;
@@ -62,7 +62,7 @@ public class AccountUtil {
         private  int indent;
         private String fullpath;
         
-        public IndentNode(String path,String name,int indent,AccountType type,Account account){
+        public AccountIndentNode(String path, String name, int indent, AccountType type, Account account){
             this.path = path;
             this.name = name;
             this.indent = indent;

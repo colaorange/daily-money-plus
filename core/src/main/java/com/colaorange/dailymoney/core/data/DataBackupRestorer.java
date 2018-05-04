@@ -233,7 +233,7 @@ public class DataBackupRestorer {
             r.err = x.getMessage();
             r.success = false;
         }
-        contexts().setWorkingBookId(Contexts.WORKING_BOOK_DEFAULT);
+        contexts().setWorkingBookId(Contexts.DEFAULT_BOOK_ID);
         return r;
     }
 }

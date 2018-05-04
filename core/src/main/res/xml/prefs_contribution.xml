@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/label_prefcat_contribution">
+    <Preference
+        android:key="mailme_lang"
+        android:persistent="false"
+        android:summary="@string/label_prefs_lang_contribution_sum"
+        android:title="@string/label_prefs_lang_contribution" />
+    <Preference
+        android:key="vote_dm"
+        android:persistent="false"
+        android:summary="@string/label_prefs_vote_sum"
+        android:title="@string/label_prefs_vote" />
+    <Preference
+        android:key="like_dm"
+        android:persistent="false"
+        android:summary="@string/label_prefs_like_sum"
+        android:title="@string/label_prefs_like" />
+    <SwitchPreference
+        android:defaultValue="@string/default_allow_analytics"
+        android:key="@string/pref_allow_analytics"
+        android:summary="@string/label_prefs_allow_analytics_sum"
+        android:title="@string/label_prefs_allow_analytics" />
+</PreferenceScreen>
+

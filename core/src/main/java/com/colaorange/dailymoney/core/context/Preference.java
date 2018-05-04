@@ -22,11 +22,38 @@ import java.util.Set;
  */
 public class Preference {
 
-    /**DON'T CHANGE SALT, it effect all old password**/
+    /**
+     * WARN, DON'T CHANGE SALT, it effect all old password
+     **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
-    public static final String THEME_DARK = "dark";
-    public static final String THEME_LIGHT = "light";
+
+    private static final String THEME_DARK_PREFIX = "dark-";
+    private static final String THEME_LIGHT_PREFIX = "light-";
+
+    public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
+    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX+ "orange";
+    public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
+    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX+ "sakura";
+
+
+    private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
+    static{
+        themeSet.add(THEME_COLA);
+        themeSet.add(THEME_ORANGE);
+        themeSet.add(THEME_SAKURA);
+        themeSet.add(THEME_LEMON);
+    }
+
+    public static final String TEXT_SIZE_NOMRAL = "normal";
+    public static final String TEXT_SIZE_MEDIUM = "medium";
+    public static final String TEXT_SIZE_LARGE = "large";
+    private static final LinkedHashSet<String> textSizeSet = new LinkedHashSet<>();
+    static{
+        textSizeSet.add(TEXT_SIZE_NOMRAL);
+        textSizeSet.add(TEXT_SIZE_MEDIUM);
+        textSizeSet.add(TEXT_SIZE_LARGE);
+    }
 
     public static final String FORMAT_DATE_YMD = "Y/M/D";
     public static final String FORMAT_DATE_MDY = "M/D/Y";
@@ -52,12 +79,12 @@ public class Preference {
 
     }
 
-    int workingBookId = Contexts.WORKING_BOOK_DEFAULT;
+    int workingBookId = Contexts.DEFAULT_BOOK_ID;
 
 
     private CalendarHelper calendarHelper;
 
-    int detailListLayout = 2;
+    int recordListLayout = 2;
     int maxRecords = -1;//-1 is no limit
     int firstdayWeek = 1;//sunday
     int startdayMonth = 1;//1-28
@@ -80,6 +107,14 @@ public class Preference {
     String yearMonthFormat;
 
     boolean autoBackup = true;
+
+
+    String lastFromAccount;
+    String lastToAccount;
+
+    String theme;
+
+    String textSize;
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
@@ -120,6 +155,18 @@ public class Preference {
 
         try {
             lastbackup = prefs.getString(Constants.PREFS_LAST_BACKUP, lastbackup);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+
+        try {
+            lastFromAccount = prefs.getString(Constants.PREFS_LAST_FROM_ACCOUNT, lastFromAccount);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+
+        try {
+            lastToAccount = prefs.getString(Constants.PREFS_LAST_TO_ACCOUNT, lastToAccount);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -297,8 +344,8 @@ public class Preference {
         String str;
 
         try {
-            str = i18n.string(R.string.default_detail_list_layout);
-            detailListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_detail_list_layout), str));
+            str = i18n.string(R.string.default_record_list_layout);
+            recordListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -396,7 +443,27 @@ public class Preference {
 
         dateTimeFormat = dateFormat + " " + timeFormat;
 
+        try {
+            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_theme));
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+        if (!themeSet.contains(theme)) {
+            theme = themeSet.iterator().next();
+        }
 
+        try {
+            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_text_size));
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+        if (!textSizeSet.contains(textSize)) {
+            textSize = textSizeSet.iterator().next();
+        }
+
+
+        Logger.d("preference : theme {}", theme);
+        Logger.d("preference : textSize {}", textSize);
         Logger.d("preference : dateFormat {}", dateFormat);
         Logger.d("preference : timeFormat {}", timeFormat);
         Logger.d("preference : dateTimeFormat {}", dateTimeFormat);
@@ -404,7 +471,7 @@ public class Preference {
         Logger.d("preference : monthDateFormat {}", monthDateFormat);
         Logger.d("preference : yearFormat {}", yearFormat);
         Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
-        Logger.d("preference : detail layout {}", detailListLayout);
+        Logger.d("preference : record layout {}", recordListLayout);
         Logger.d("preference : max records {}", maxRecords);
 
     }
@@ -415,7 +482,7 @@ public class Preference {
 
     void setWorkingBookId(int id) {
         if (id < 0) {
-            id = Contexts.WORKING_BOOK_DEFAULT;
+            id = Contexts.DEFAULT_BOOK_ID;
         }
         if (workingBookId != id) {
             workingBookId = id;
@@ -462,8 +529,8 @@ public class Preference {
         editor.commit();
     }
 
-    public int getDetailListLayout() {
-        return detailListLayout;
+    public int getRecordListLayout() {
+        return recordListLayout;
     }
 
     public int getMaxRecords() {
@@ -514,6 +581,11 @@ public class Preference {
 
     public DateFormat getDateFormat() {
         return new SimpleDateFormat(dateFormat);
+    }
+
+    public DateFormat getWeekDayFormat(){
+        //TODO config? do we need to ?
+        return new SimpleDateFormat("EEE");
     }
 
     public DateFormat getTimeFormat() {
@@ -580,11 +652,34 @@ public class Preference {
         return Security.md5String(pwd + Preference.PASSWORD_SALT);
     }
 
-    public boolean isDarkTheme(){
-        return getTheme().startsWith(THEME_DARK);
+
+    public String getTheme() {
+        return theme;
     }
 
-    public String getTheme(){
-        return THEME_DARK;
+    public boolean isLightTheme() {
+        return getTheme().startsWith(THEME_LIGHT_PREFIX);
+    }
+
+    public String getTextSize(){
+        return textSize;
+    }
+
+    public String getLastFromAccount() {
+        return lastFromAccount;
+    }
+
+    public void setLastAccount(String lastFromAccount, String lastToAccount) {
+        this.lastFromAccount = lastFromAccount;
+        this.lastToAccount = lastToAccount;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.PREFS_LAST_FROM_ACCOUNT, lastFromAccount);
+        editor.putString(Constants.PREFS_LAST_TO_ACCOUNT, lastToAccount);
+        editor.commit();
+    }
+
+    public String getLastToAccount() {
+        return lastToAccount;
     }
 }

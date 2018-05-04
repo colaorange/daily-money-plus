@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,7 +46,7 @@ import com.google.android.gms.analytics.Tracker;
 public class Contexts {
 
     //shold't not modify it, code has some assumption.
-    public static final int WORKING_BOOK_DEFAULT = 0;
+    public static final int DEFAULT_BOOK_ID = 0;
 
     private static Contexts instance;
 
@@ -63,13 +64,11 @@ public class Contexts {
     private GoogleAnalytics sAnalytics;
     private Tracker sTracker;
 
-    public static final String TRACKER_EVT_CREATE = "C";
-    public static final String TRACKER_EVT_UPDATE = "U";
-    public static final String TRACKER_EVT_DELETE = "D";
-
     private String currencySymbol = "$";
 
     Preference preference;
+
+    private boolean gaDebug = false;
 
     private Contexts() {
     }
@@ -130,10 +129,19 @@ public class Contexts {
     }
 
 
+    @SuppressLint("MissingPermission")
     private void initTracker() {
         try {
             if (sTracker == null) {
                 sAnalytics = GoogleAnalytics.getInstance(contextsApp);
+
+                if("true".equalsIgnoreCase(i18n.string(R.string.ga_debug))){
+                    gaDebug = true;
+                }
+
+                if(gaDebug){
+                    sAnalytics.setLocalDispatchPeriod(5);
+                }
                 sTracker = sAnalytics.newTracker(R.xml.ga_tracker);
                 sTracker.setAppId(getAppId());
                 sTracker.setAppName(i18n.string(R.string.app_code));
@@ -163,6 +171,9 @@ public class Contexts {
             try {
                 Logger.d("track event " + category + ", " + action);
                 sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value == null ? 0 : value.longValue()).build());
+                if(gaDebug){
+                    sAnalytics.dispatchLocalHits();
+                }
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
@@ -226,7 +237,7 @@ public class Contexts {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, parcels);
         }
         try {
-            activity.startActivity(Intent.createChooser(intent, i18n.string(R.string.clabel_share)));
+            activity.startActivity(Intent.createChooser(intent, i18n.string(R.string.label_share)));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
             return false;
@@ -303,7 +314,7 @@ public class Contexts {
      **/
     public boolean deleteData(Book book) {
         //can't delete default(0) and working book
-        if (book.getId() == WORKING_BOOK_DEFAULT || book.getId() == preference.getWorkingBookId()) {
+        if (book.getId() == DEFAULT_BOOK_ID || book.getId() == preference.getWorkingBookId()) {
             return false;
         }
         String dbname = "dm_" + book.getId() + ".db";
@@ -323,7 +334,7 @@ public class Contexts {
     public void setWorkingBookId(int id) {
         int oid = preference.getWorkingBookId();
         if (id < 0) {
-            id = Contexts.WORKING_BOOK_DEFAULT;
+            id = Contexts.DEFAULT_BOOK_ID;
         }
         if (oid != id) {
             preference.setWorkingBookId(id);
@@ -347,7 +358,7 @@ public class Contexts {
         CalendarHelper calHelper = getCalendarHelper();
 
         String dbname = "dm.db";
-        if (bookId > WORKING_BOOK_DEFAULT) {
+        if (bookId > DEFAULT_BOOK_ID) {
             dbname = "dm_" + bookId + ".db";
         }
         IDataProvider provider = new SQLiteDataProvider(new SQLiteDataHelper(contextsApp, dbname), calHelper);
@@ -503,5 +514,38 @@ public class Contexts {
         }
         sb.append(pkg).append(".").append(name);
         return sb.toString();
+    }
+
+
+
+    public interface TE {
+        String CREATE_BOOK = "cre-bk-";
+        String CREATE_ACCOUNT = "cre-acc-";
+        String CREATE_RECORD = "cre-rec-";
+
+        String UPDDATE_BOOK = "upd-bk-";
+        String UPDDATE_ACCOUNT = "upd-acc-";
+        String UPDDATE_RECORD = "upd-rec-";
+
+        String DELETE_BOOK = "del-bk-";
+        String DELETE_ACCOUNT = "del-acc-";
+        String DELETE_RECORD = "del-rec-";
+
+        String BALANCE = "balance-";
+        String RECORD_LIST = "reclist-";
+        String PREFENCE = "prefs-";
+        String FIRST_TIME = "first-";
+        String EXPORT = "export-";
+        String BACKUP = "backup-";
+        String RESTORE = "restore-";
+        String IMPORT = "import-";
+        String SHARE = "share-";
+        String PROTECT = "protect-";
+        String STARTUP = "startup-";
+        String THEME = "theme-";
+
+        String CHART = "chart-";
+        String WEBVIEW = "webv-";
+
     }
 }

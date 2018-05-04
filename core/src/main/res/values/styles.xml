@@ -1,47 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!--theme-->
-    <style name="AppTheme" parent="Theme.AppCompat">
-
+    <style name="rowItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="AppTheme.Startup" parent="Theme.AppCompat">
-        <item name="windowNoTitle">true</item>
-        <item name="android:visibility">invisible</item>
+    <style name="editorFieldTitle" parent="rowItem">
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
-    <style name="AppTheme.NoTitle" parent="Theme.AppCompat.NoActionBar">
-        <item name="windowNoTitle">true</item>
+    <style name="editorFieldInput" parent="rowItem">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
-
-    </style>
-    <style name="AppTheme.Dialog.NoTitle" parent="AppTheme.Dialog">
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.Legacy" parent="Theme.AppCompat">
-
-    </style>
-
-    <style name="AppTheme.Legacy.NoTitle" parent="Theme.AppCompat.NoActionBar">
-
-    </style>
-
-    <style name="AppTheme.Legacy.Dialog" parent="Theme.AppCompat.Dialog">
-
-    </style>
-
-    <style name="AppTheme.Legacy.Dialog.NoTitle" parent="AppTheme.Legacy.Dialog">
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <!--not theme-->
 
     <style name="editorActionBtn">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">16dp</item>
+    </style>
+    <style name="navActionBtn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">12dp</item>
     </style>
     <style name="editorToolIconBtn">
         <item name="android:layout_width">wrap_content</item>

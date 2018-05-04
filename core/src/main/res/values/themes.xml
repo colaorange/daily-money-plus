@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="appPrimaryColor" format="color" />
+    <attr name="appPrimaryDarkColor" format="color" />
+    <attr name="appPrimaryLightColor" format="color" />
+    <attr name="appPrimaryTextColor" format="color" />
+    <attr name="appSecondaryColor" format="color" />
+    <attr name="appSecondaryDarkColor" format="color" />
+    <attr name="appSecondaryLightColor" format="color" />
+    <attr name="appSecondaryTextColor" format="color" />
+    <attr name="disabledTextColor" format="color" />
+
+    <attr name="appbarTheme" format="reference" />
+    <attr name="appPopupTheme" format="reference" />
+
+    <attr name="defaultSelector" format="reference" />
+
+    <attr name="accountAssetTextColor" format="color" />
+    <attr name="accountIncomeTextColor" format="color" />
+    <attr name="accountExpenseTextColor" format="color" />
+    <attr name="accountLiabilityTextColor" format="color" />
+    <attr name="accountOtherTextColor" format="color" />
+    <attr name="accountUnknownTextColor" format="color" />
+    <attr name="accountAssetBgColor" format="color" />
+    <attr name="accountIncomeBgColor" format="color" />
+    <attr name="accountExpenseBgColor" format="color" />
+    <attr name="accountLiabilityBgColor" format="color" />
+    <attr name="accountOtherBgColor" format="color" />
+    <attr name="accountUnknownBgColor" format="color" />
+
+    <attr name="balanceHeadBgColor" format="reference" />
+    <attr name="balanceItemBgColor" format="reference" />
+
+
+    <attr name="textSize" format="dimension" />
+    <attr name="textSizeSmall" format="dimension" />
+    <attr name="textSizeMedium" format="dimension" />
+    <attr name="textSizeLarge" format="dimension" />
+
+    <attr name="ic_add" format="reference" />
+    <attr name="ic_apps" format="reference" />
+    <attr name="ic_arrow_back" format="reference" />
+    <attr name="ic_arrow_forward" format="reference" />
+    <attr name="ic_calendar" format="reference" />
+    <attr name="ic_clear" format="reference" />
+    <attr name="ic_content_copy" format="reference" />
+    <attr name="ic_date_range" format="reference" />
+    <attr name="ic_delete_forever" format="reference" />
+    <attr name="ic_edit" format="reference" />
+    <attr name="ic_grid_on" format="reference" />
+    <attr name="ic_import_export" format="reference" />
+    <attr name="ic_save" format="reference" />
+    <attr name="ic_settings_backup_restore" format="reference" />
+    <attr name="ic_share" format="reference" />
+    <attr name="ic_today" format="reference" />
+
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!--we implement dynamically in code-->
+    </style>
+
+    <style name="noActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="lightAppbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+    <style name="darkAppbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
+    <style name="lightAppPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">?appPrimaryLightColor</item>
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
+    <style name="darkAppPopupTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:colorBackground">?appPrimaryLightColor</item>
+        <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+    </style>
+
+
+    <style name="themeLemon">
+
+        <item name="appPrimaryColor">@color/themeLemonPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeLemonPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeLemonPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeLemonPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeLemonSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeLemonSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeLemonSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeLemonSecondaryText</item>
+
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
+
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="balanceHeadBgColor">@color/themeLemonBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeLemonBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeLemonPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeLemonPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeLemonSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeLemonSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeLemonSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeLemonSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeLemonPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeLemonSecondary</item>
+
+        <!--
+        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+        -->
+        <!--
+
+        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
+
+        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
+        <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+
+        <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
+        <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
+        <item name="ratingBarStyleSmall">@style/Widget.AppCompat.RatingBar.Small</item>
+        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar</item>
+        -->
+    </style>
+
+    <style name="themeCola">
+
+        <item name="appPrimaryColor">@color/themeColaPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeColaPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeColaSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeColaSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
+
+        <item name="appbarTheme">@style/darkAppbarTheme</item>
+        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
+
+        <item name="defaultSelector">@drawable/selector_dark</item>
+
+        <item name="accountAssetTextColor">@color/assetTextLight</item>
+        <item name="accountIncomeTextColor">@color/incomeTextLight</item>
+        <item name="accountExpenseTextColor">@color/expenseTextLight</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextLight</item>
+        <item name="accountOtherTextColor">@color/otherTextLight</item>
+        <item name="accountUnknownTextColor">@color/unknownTextLight</item>
+
+        <item name="accountAssetBgColor">@color/assetBgDark</item>
+        <item name="accountIncomeBgColor">@color/incomeBgDark</item>
+        <item name="accountExpenseBgColor">@color/expenseBgDark</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgDark</item>
+        <item name="accountOtherBgColor">@color/otherBgDark</item>
+        <item name="accountUnknownBgColor">@color/unknownBgDark</item>
+
+        <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeColaBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeColaPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeColaPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeColaSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeColaSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeColaSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeColaSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeColaPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
+
+        <!--
+        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+        -->
+    </style>
+
+    <style name="themeOrange">
+
+        <item name="appPrimaryColor">@color/themeOrangePrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeOrangePrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeOrangePrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeOrangePrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeOrangeSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeOrangeSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeOrangeSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeOrangeSecondaryText</item>
+
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
+
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="balanceHeadBgColor">@color/themeOrangeBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeOrangeBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeOrangePrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeOrangePrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeOrangeSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeOrangeSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeOrangeSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeOrangeSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeOrangePrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeOrangeSecondary</item>
+    </style>
+
+    <style name="themeSakura">
+
+        <item name="appPrimaryColor">@color/themeSakuraPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeSakuraPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeSakuraPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeSakuraPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeSakuraSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeSakuraSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeSakuraSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeSakuraSecondaryText</item>
+
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
+
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="balanceHeadBgColor">@color/themeSakuraBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeSakuraBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeSakuraPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeSakuraPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeSakuraSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeSakuraSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeSakuraSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeSakuraSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeSakuraPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeSakuraSecondary</item>
+    </style>
+
+    <style name="textSizeNormal">
+        <item name="textSize">@dimen/textSize</item>
+        <item name="textSizeSmall">@dimen/textSizeSmall</item>
+        <item name="textSizeMedium">@dimen/textSizeMedium</item>
+        <item name="textSizeLarge">@dimen/textSizeLarge</item>
+
+    </style>
+
+    <style name="textSizeMedium">
+        <item name="textSize">@dimen/mediumTextSize</item>
+        <item name="textSizeSmall">@dimen/mediumTextSizeSmall</item>
+        <item name="textSizeMedium">@dimen/mediumTextSizeMedium</item>
+        <item name="textSizeLarge">@dimen/mediumTextSizeLarge</item>
+
+    </style>
+
+    <style name="textSizeLarge">
+        <item name="textSize">@dimen/largeTextSize</item>
+        <item name="textSizeSmall">@dimen/largeTextSizeSmall</item>
+        <item name="textSizeMedium">@dimen/largeTextSizeMedium</item>
+        <item name="textSizeLarge">@dimen/largeTextSizeLarge</item>
+
+    </style>
+
+    <style name="lightIconSet">
+        <item name="ic_add">@drawable/ic_add_light_24dp</item>
+        <item name="ic_apps">@drawable/ic_apps_light_24dp</item>
+        <item name="ic_arrow_back">@drawable/ic_arrow_back_light_24dp</item>
+        <item name="ic_arrow_forward">@drawable/ic_arrow_forward_light_24dp</item>
+        <item name="ic_calendar">@drawable/ic_calendar_light_24dp</item>
+        <item name="ic_clear">@drawable/ic_clear_light_24dp</item>
+        <item name="ic_content_copy">@drawable/ic_content_copy_light_24dp</item>
+        <item name="ic_date_range">@drawable/ic_date_range_light_24dp</item>
+        <item name="ic_delete_forever">@drawable/ic_delete_forever_light_24dp</item>
+        <item name="ic_edit">@drawable/ic_edit_light_24dp</item>
+        <item name="ic_grid_on">@drawable/ic_grid_on_light_24dp</item>
+        <item name="ic_import_export">@drawable/ic_import_export_light_24dp</item>
+        <item name="ic_save">@drawable/ic_save_light_24dp</item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp
+        </item>
+        <item name="ic_share">@drawable/ic_share_light_24dp</item>
+        <item name="ic_today">@drawable/ic_today_light_24dp</item>
+    </style>
+
+    <style name="darkIconSet">
+        <item name="ic_add">@drawable/ic_add_dark_24dp</item>
+        <item name="ic_apps">@drawable/ic_apps_dark_24dp</item>
+        <item name="ic_arrow_back">@drawable/ic_arrow_back_dark_24dp</item>
+        <item name="ic_arrow_forward">@drawable/ic_arrow_forward_dark_24dp</item>
+        <item name="ic_calendar">@drawable/ic_calendar_dark_24dp</item>
+        <item name="ic_clear">@drawable/ic_clear_dark_24dp</item>
+        <item name="ic_content_copy">@drawable/ic_content_copy_dark_24dp</item>
+        <item name="ic_date_range">@drawable/ic_date_range_dark_24dp</item>
+        <item name="ic_delete_forever">@drawable/ic_delete_forever_dark_24dp</item>
+        <item name="ic_edit">@drawable/ic_edit_dark_24dp</item>
+        <item name="ic_grid_on">@drawable/ic_grid_on_dark_24dp</item>
+        <item name="ic_import_export">@drawable/ic_import_export_dark_24dp</item>
+        <item name="ic_save">@drawable/ic_save_dark_24dp</item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp
+        </item>
+        <item name="ic_share">@drawable/ic_share_dark_24dp</item>
+        <item name="ic_today">@drawable/ic_today_dark_24dp</item>
+    </style>
+
+
+</resources>

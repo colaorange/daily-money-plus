@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    android:padding="5dp">
+    tools:context=".ui.legacy.DataMaintenanceActivity">
+
+    <include layout="@layout/app_bar" />
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
@@ -21,21 +27,22 @@
                 android:id="@+id/data_maintenance_workingfolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:drawableLeft="@android:drawable/ic_dialog_info"
-                android:drawablePadding="10sp"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="@string/label_prefs_workingfolder" />
+                android:drawableLeft="@android:drawable/ic_dialog_info"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:text="@string/label_prefs_workingfolder"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_request_permission"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_edit_white_24dp"
+                android:drawableLeft="?ic_edit"
                 android:gravity="center"
-                android:text="@string/label_request_storage_permission" />
+                android:text="@string/label_request_storage_permission"
+                android:textSize="?textSize" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -47,17 +54,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:paddingRight="5sp"
-                    android:text="@string/label_prefs_lastbackup" />
+                    android:paddingRight="5dp"
+                    android:text="@string/label_prefs_lastbackup"
+                    android:textSize="?textSize" />
+
                 <TextView
                     android:id="@+id/datamain_lastbackup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="@string/clabel_unknown" />
+                    android:text="@string/label_unknown"
+                    android:textSize="?textSize" />
             </LinearLayout>
 
             <Button
@@ -65,26 +73,29 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_save_white_24dp"
+                android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="@string/label_backup_data" />
+                android:text="@string/label_backup_data"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_export_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_import_export_white_24dp"
+                android:drawableLeft="?ic_import_export"
                 android:gravity="center"
-                android:text="@string/label_export_csv" />
+                android:text="@string/label_export_csv"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_share_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:drawableLeft="@drawable/ic_share_white_24dp"
+                android:drawableLeft="?ic_share"
                 android:gravity="center"
-                android:text="@string/label_share_csv" />
+                android:text="@string/label_share_csv"
+                android:textSize="?textSize" />
 
 
             <Button
@@ -92,28 +103,30 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_save_white_24dp"
+                android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="@string/label_restore_data" />
+                android:text="@string/label_restore_data"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_import_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:drawableLeft="@drawable/ic_import_export_white_24dp"
+                android:drawableLeft="?ic_import_export"
                 android:gravity="center"
-                android:text="@string/label_import_csv" />
+                android:text="@string/label_import_csv"
+                android:textSize="?textSize" />
 
             <Button
                 android:id="@+id/data_maintenance_reset"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_reset_working_book"
-                android:layout_marginTop="10dp"
-                />
+                android:textSize="?textSize" />
 
             <!--TODO should move to developer-->
 
@@ -122,19 +135,21 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"
+                android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_clear_folder"
+                android:textSize="?textSize"
                 android:visibility="gone" />
 
             <Button
                 android:id="@+id/data_maintenance_create_default"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_settings_backup_restore_white_24dp"
+                android:drawableLeft="?ic_settings_backup_restore"
                 android:gravity="center"
                 android:text="@string/label_create_default"
-                android:visibility="gone"></Button>
+                android:textSize="?textSize"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

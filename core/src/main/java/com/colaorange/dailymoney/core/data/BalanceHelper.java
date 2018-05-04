@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil;
-import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.IndentNode;
+import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.AccountIndentNode;
 
 public class BalanceHelper {
     
@@ -43,7 +43,7 @@ public class BalanceHelper {
         
         IDataProvider idp = contexts().getDataProvider();
         List<Account> accs = idp.listAccount(type);
-        List<IndentNode> inodes = AccountUtil.toIndentNode(accs);
+        List<AccountIndentNode> inodes = AccountUtil.toIndentNode(accs);
         
         List<Balance> nested = new ArrayList<Balance>();
         
@@ -54,7 +54,7 @@ public class BalanceHelper {
         Date date = items.get(0).getDate();
         
         //the nested nodes
-        for(IndentNode node:inodes){
+        for(AccountIndentNode node:inodes){
             String fullpath = node.getFullPath();
             Balance b = new Balance(node.getName(),type.getType(),0,null);
             nested.add(b);
@@ -93,7 +93,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;
@@ -120,7 +120,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;
@@ -147,7 +147,7 @@ public class BalanceHelper {
         if(start!=null){
             calInit = false;
         }else{
-            Detail first = idp.getFirstDetail();
+            Record first = idp.getFirstRecord();
             //don't calculate init val if the first record date in after end data
             if(first!=null && first.getDate().after(end)){
                 calInit = false;

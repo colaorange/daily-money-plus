@@ -6,13 +6,12 @@ import java.util.Date;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.Logger;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
@@ -157,7 +155,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             @Override
             public void run() {
                 result = DataBackupRestorer.backup();
-                trackEvent("backup");
+                trackEvent(TE.BACKUP);
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -189,7 +187,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             public void run() {
                 lastBakcup = preference().getLastBackupTime();
                 result = DataBackupRestorer.restore();
-                trackEvent("restore");
+                trackEvent(TE.RESTORE);
             }
         };
 
@@ -312,7 +310,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                             result.getLastFolder());
                                     GUIs.alert(DataMaintenanceActivity.this, msg);
                                 } else {
-                                    GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.clabel_error) + ":" + result.getErr());
+                                    GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.label_error) + ":" + result.getErr());
                                 }
                             }
 
@@ -336,7 +334,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(), e);
                                 }
-                                trackEvent("export_csv_v2");
+                                trackEvent(TE.EXPORT);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -362,7 +360,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                     String msg = i18n().string(R.string.msg_csv_imported, Integer.toString(result.getAccount() + result.getDetail()), workingFolder);
                                     GUIs.alert(DataMaintenanceActivity.this, msg);
                                 } else {
-                                    GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.clabel_error) + ":" + result.getErr());
+                                    GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.label_error) + ":" + result.getErr());
                                 }
                             }
 
@@ -380,7 +378,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 }
                                 result = new CSVImportExporter().importIt(mode);
 
-                                trackEvent("import_csv_v2");
+                                trackEvent(TE.IMPORT);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);
@@ -429,7 +427,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                                 } catch (Exception e) {
                                     throw new RuntimeException(e.getMessage(), e);
                                 }
-                                trackEvent("share_csv_v2");
+                                trackEvent(TE.SHARE);
                             }
                         };
                         GUIs.doBusy(DataMaintenanceActivity.this, job);

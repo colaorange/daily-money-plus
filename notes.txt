@@ -25,6 +25,7 @@
 * Layout
     https://github.com/google/flexbox-layout
 * Material design component
+    https://material.io/color/#!/?view.left=0&view.right=0
     https://material.io/components/android/catalog/text-input-layout/
     https://romannurik.github.io/AndroidAssetStudio/index.html
 * Dialog close prevent
@@ -36,3 +37,18 @@
     https://en.wikipedia.org/wiki/Category:National_flags
 * Theme
     https://stackoverflow.com/questions/6352318/let-the-user-choose-a-theme-android
+    https://developer.android.com/reference/android/R.styleable.html#Theme
+    https://medium.com/google-developers/theming-with-appcompat-1a292b754b35
+    workaround of drawable reference ?attr/
+    https://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable
+    http://jgilfelt.github.io/android-actionbarstylegenerator/
+    color
+    http://paletton.com/#uid=1000u0kllllaFw0g0qFqFg0w0aF
+    http://colorschemedesigner.com/csd-3.5/
+    https://material.io/color/#!/?view.left=0&view.right=0
+
+* appbar scrolling with
+    https://blog.30sparks.com/material-design-5-appbarlayout/
+
+* supports
+    https://developer.android.com/topic/libraries/support-library/packages

@@ -1,44 +1,34 @@
 package com.colaorange.dailymoney.core.util;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.core.R;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Utitls to help use handling guis opersation, make sure all api are using in GUI scope.
+ *
  * @author dennis
  */
 public class GUIs {
@@ -47,6 +37,8 @@ public class GUIs {
 
     public static final int OK_BUTTON = AlertDialog.BUTTON_POSITIVE;
     public static final int CANCEL_BUTTON = AlertDialog.BUTTON_NEGATIVE;
+
+    private static Handler guiHandler;
 
     static public void alert(Context context, String title, String msg, String oktext, int icon) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
@@ -68,19 +60,19 @@ public class GUIs {
     }
 
     static public void alert(Context context, String msg) {
-        alert(context, null, msg, context.getString(R.string.cact_ok), NO_ICON_RES);
+        alert(context, null, msg, context.getString(R.string.act_ok), NO_ICON_RES);
     }
 
     static public void alert(Context context, int msg) {
-        alert(context, null, context.getString(msg), context.getString(R.string.cact_ok), NO_ICON_RES);
+        alert(context, null, context.getString(msg), context.getString(R.string.act_ok), NO_ICON_RES);
     }
 
     static public void confirm(Context context, int msg, OnFinishListener listener) {
-        confirm(context, null, context.getString(msg), context.getString(R.string.cact_ok), context.getString(R.string.cact_cancel), NO_ICON_RES, listener);
+        confirm(context, null, context.getString(msg), context.getString(R.string.act_ok), context.getString(R.string.act_cancel), NO_ICON_RES, listener);
     }
 
     static public void confirm(Context context, String msg, OnFinishListener listener) {
-        confirm(context, null, msg, context.getString(R.string.cact_ok), context.getString(R.string.cact_cancel), NO_ICON_RES, listener);
+        confirm(context, null, msg, context.getString(R.string.act_ok), context.getString(R.string.act_cancel), NO_ICON_RES, listener);
     }
 
     static public void confirm(Context context, String title, String msg, String oktext, String canceltext, int icon, final OnFinishListener listener) {
@@ -131,11 +123,11 @@ public class GUIs {
     }
 
     static public void errorToast(Context context, Throwable e) {
-        shortToast(context, context.getString(R.string.cmsg_error, e.getMessage()));
+        shortToast(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
     static public void error(Context context, Throwable e) {
-        alert(context, context.getString(R.string.cmsg_error, e.getMessage()));
+        alert(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
     static public View inflateView(Context context, ViewGroup parent, int resourceid) {
@@ -145,7 +137,7 @@ public class GUIs {
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();
     private static ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
-    private static Handler guiHandler = new Handler();
+
 
     static public void delayPost(final Runnable r) {
         delayPost(r, 50);
@@ -164,7 +156,22 @@ public class GUIs {
         }, delay, TimeUnit.MILLISECONDS);
     }
 
+    static public void touch() {
+        getHandler();
+    }
+
+    /**
+     * @return
+     */
+    static synchronized private Handler getHandler() {
+        if (guiHandler == null) {
+            guiHandler = new Handler();
+        }
+        return guiHandler;
+    }
+
     static public void post(Runnable r) {
+
         guiHandler.post(new NothrowRunnable(r));
     }
 
@@ -177,7 +184,7 @@ public class GUIs {
     }
 
     static public void doBusy(Context context, Runnable r) {
-        doBusy(context, context.getString(R.string.cmsg_busy), r);
+        doBusy(context, context.getString(R.string.msg_busy), r);
     }
 
     //lock & release rotation!! not work in sdk(2.1,2.2) but work fine in my i9000
@@ -377,92 +384,20 @@ public class GUIs {
         return activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    public static class Dimen {
+        public final int data;
+        public final int unit;
+        public final float value;
 
-    public enum NotificationLevel {
-        INFO, WARN, ERROR
+        public Dimen(int data) {
+            this.data = data;
+            this.unit = (data >> TypedValue.COMPLEX_UNIT_SHIFT) & TypedValue.COMPLEX_UNIT_MASK;
+            this.value = TypedValue.complexToFloat(data);
+        }
     }
 
-    public enum NotificationTarget {
-        SYSTEM_BAR, APP_ICON
+    public static Dimen toDimen(int typedValueData) {
+        return new Dimen(typedValueData);
     }
 
-    public static final String CHANNEL_ID_SYSTEM = "com.colaorange.dailymoney.system";
-    public static final String CHANNEL_ID_APP_ICON = "com.colaorange.dailymoney.appicon";
-
-    private static final Set<String> channelIdCreated = java.util.Collections.synchronizedSet(new HashSet<String>());
-
-    public static void sendNotification(Context context, NotificationTarget target, NotificationLevel level, String msg, @Nullable String title, @Nullable Intent intent, int groupId) {
-        String channelId;
-        switch (target) {
-            case APP_ICON:
-                channelId = CHANNEL_ID_APP_ICON;
-                break;
-            case SYSTEM_BAR:
-            default:
-                channelId = CHANNEL_ID_SYSTEM;
-                break;
-        }
-
-        NotificationManager manager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        initChannel(channelId, manager);
-
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, channelId)
-                        .setContentTitle(msg)
-                        .setContentText(title);
-
-        mBuilder.setSmallIcon(R.drawable.ic_notification);
-
-        //TODO different level, icon coloring.
-        switch (level) {
-            case INFO:
-                break;
-            case WARN:
-                break;
-            case ERROR:
-                break;
-        }
-
-        PendingIntent notifyPendingIntent = null;
-        if (intent != null) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            notifyPendingIntent = PendingIntent.getActivity(
-                    context,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            );
-            mBuilder.setContentIntent(notifyPendingIntent);
-        }
-
-
-        // mId allows you to update the notification later on.
-
-        manager.notify(groupId, mBuilder.build());
-    }
-
-    private synchronized static void initChannel(String channelId, NotificationManager manager) {
-        //api 26, android 8.0 only
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            return;
-        }
-
-        if (channelIdCreated.contains(channelId)) {
-            return;
-        }
-
-        try {
-            NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT);
-            manager.createNotificationChannel(channel);
-        }catch(Exception x){
-            Logger.e(x.getMessage(), x);
-        }
-
-        channelIdCreated.add(channelId);
-
-    }
 }

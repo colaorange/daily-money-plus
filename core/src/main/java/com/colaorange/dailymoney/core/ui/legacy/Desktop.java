@@ -2,6 +2,8 @@ package com.colaorange.dailymoney.core.ui.legacy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -56,18 +58,37 @@ public class Desktop {
     }
 
     public List<DesktopItem> getItems() {
-        return Collections.unmodifiableList(items);
+        ArrayList<DesktopItem> list  = new ArrayList<>(items);
+        Collections.sort(list, new Comparator<DesktopItem>() {
+            public int compare(DesktopItem item1, DesktopItem item2) {
+                return Integer.valueOf(item2.getPriority()).compareTo(Integer.valueOf(item1.getPriority()));
+            }
+        });
+        return list;
     }
-    
-    public List<DesktopItem> getVisibleItems(){
-        ArrayList<DesktopItem> list = new ArrayList<DesktopItem>();
-        for(DesktopItem di:items){
-            if(!di.isHidden()){
-                list.add(di);
+
+    public List<DesktopItem> getMenuItems() {
+        List<DesktopItem> list = getItems();
+        Iterator<DesktopItem> i = list.iterator();
+        while(i.hasNext()){
+            if(!i.next().isInMenu()){
+                i.remove();
             }
         }
         return list;
     }
+
+    public List<DesktopItem> getDesktopItems() {
+        List<DesktopItem> list = getItems();
+        Iterator<DesktopItem> i = list.iterator();
+        while(i.hasNext()){
+            if(!i.next().isInDesktop()){
+                i.remove();
+            }
+        }
+        return list;
+    }
+
 
     public static class IntentRun implements Runnable {
         Intent intent;

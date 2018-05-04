@@ -15,17 +15,13 @@
         android:name=".core.context.ContextsApp"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <!-- android:supportsRtl="true"> -->
 
-        <activity
-            android:name="com.colaorange.calculator2.Calculator"
-            android:theme="@style/AppTheme.NoTitle" />
+        <activity android:name="com.colaorange.calculator2.Calculator" />
         <activity
             android:name=".core.ui.StartupActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.Startup">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,55 +33,45 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".core.ui.PasswordProtectionActivity"
-            android:label="@string/title_pdprotection"
-            android:theme="@style/AppTheme.Dialog" />
+            android:label="@string/label_pwd_protection" />
         <activity
             android:name=".core.ui.legacy.DesktopActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.Legacy" />
+            android:label="@string/app_name" />
         <activity
             android:name=".core.ui.legacy.BookMgntActivity"
-            android:label="@string/title_bookmgnt"
-            android:theme="@style/AppTheme.Legacy" />
+            android:label="@string/title_bookmgnt" />
+        <activity android:name=".core.ui.legacy.BookEditorActivity" />
         <activity
-            android:name=".core.ui.legacy.BookEditorActivity"
-            android:theme="@style/AppTheme.Legacy" />
-        <activity
-            android:name=".core.ui.legacy.DetailListActivity"
-            android:label="@string/title_detlist"
-            android:theme="@style/AppTheme.Legacy" />
-        <activity
-            android:name=".core.ui.legacy.DetailEditorActivity"
-            android:theme="@style/AppTheme.Legacy">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+            android:name=".core.ui.legacy.RecordlListActivity"
+            android:label="@string/title_reclist" />
+        <activity android:name=".core.ui.legacy.RecordEditorActivity"></activity>
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
-            android:label="@string/title_accmgnt"
-            android:theme="@style/AppTheme.Legacy" />
+            android:label="@string/title_accmgnt" />
+        <activity android:name=".core.ui.legacy.AccountEditorActivity" />
+        <activity android:name=".core.ui.legacy.AccountRecordListActivity" />
         <activity
-            android:name=".core.ui.legacy.AccountEditorActivity"
-            android:theme="@style/AppTheme.Legacy" />
+            android:name=".core.ui.pref.PrefsActivity"
+            android:label="@string/title_prefs" />
         <activity
-            android:name=".core.ui.legacy.AccountDetailListActivity"
-            android:theme="@style/AppTheme.Legacy" />
+            android:name=".core.ui.pref.PrefsContributionActivity"
+            android:label="@string/label_prefcat_contribution">
+        </activity>
+
         <activity
-            android:name=".core.ui.legacy.PrefsActivity"
-            android:label="@string/title_prefs"
-            android:theme="@style/AppTheme.Legacy" />
+            android:name=".core.ui.pref.PrefsDeveloperActivity"
+            android:label="@string/label_prefcat_developer" >
+        </activity>
+
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"
-            android:label="@string/title_datamain"
-            android:theme="@style/AppTheme.Legacy" />
+            android:label="@string/title_datamain" />
         <activity
             android:name=".core.ui.legacy.BalanceActivity"
-            android:label="@string/label_balance"
-            android:theme="@style/AppTheme.Legacy" />
+            android:label="@string/label_balance" />
         <activity
             android:name="org.achartengine.GraphicalActivity"
-            android:theme="@style/AppTheme.Legacy.NoTitle" />
+            android:theme="@style/Theme.AppCompat" />
 
         <receiver
             android:name=".core.bg.StartupReceiver"
@@ -100,7 +86,7 @@
         <receiver
             android:name=".core.bg.TimeTickReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <service
             android:name=".core.bg.StartupService"

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.util.Logger;
-import com.colaorange.dailymoney.core.context.Contexts;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -195,7 +194,7 @@ public class SQLiteDataProvider implements IDataProvider {
      * detail impl.
      */
 
-    private void applyCursor(Detail det, Cursor c) {
+    private void applyCursor(Record det, Cursor c) {
         int i = 0;
         for (String n : c.getColumnNames()) {
             if (n.equals(COL_DET_ID)) {
@@ -217,7 +216,7 @@ public class SQLiteDataProvider implements IDataProvider {
         }
     }
 
-    private void applyContextValue(Detail det, ContentValues values) {
+    private void applyContextValue(Record det, ContentValues values) {
         values.put(COL_DET_ID, det.getId());
         values.put(COL_DET_FROM, det.getFrom());
         values.put(COL_DET_FROM_TYPE, det.getFromType());
@@ -230,12 +229,12 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public Detail findDetail(int id) {
+    public Record findRecord(int id) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.query(TB_DET, COL_DET_ALL, COL_DET_ID + " = " + id, null, null, null, null, "1");
-        Detail det = null;
+        Record det = null;
         if (c.moveToNext()) {
-            det = new Detail();
+            det = new Record();
             applyCursor(det, c);
         }
         c.close();
@@ -259,46 +258,46 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public void newDetail(Detail detail) {
+    public void newRecord(Record record) {
         int id = nextDetailId();
         try {
-            newDetail(id,detail);
+            newRecord(id, record);
         } catch (DuplicateKeyException e) {
             Logger.e(e.getMessage(),e);
         }
     }
     
-    public void newDetail(int id,Detail detail) throws DuplicateKeyException{
-        if (findDetail(id) != null) {
-            throw new DuplicateKeyException("duplicate detail id " + id);
+    public void newRecord(int id, Record record) throws DuplicateKeyException{
+        if (findRecord(id) != null) {
+            throw new DuplicateKeyException("duplicate record id " + id);
         }
-        newDetailNoCheck(id,detail);
+        newRecordNoCheck(id, record);
     }
     
     @Override
-    public void newDetailNoCheck(int id,Detail detail){
-        Logger.d("new detail {}, {}", id, detail.getNote());
+    public void newRecordNoCheck(int id, Record record){
+        Logger.d("new record {}, {}", id, record.getNote());
 
         first = null;
-        detail.setId(id);
+        record.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        applyContextValue(detail, cv);
+        applyContextValue(record, cv);
         db.insertOrThrow(TB_DET, null, cv);
     }
 
     @Override
-    public boolean updateDetail(int id, Detail detail) {
-        Detail det = findDetail(id);
+    public boolean updateRecord(int id, Record record) {
+        Record det = findRecord(id);
         if (det == null) {
             return false;
         }
         first = null;
-        //set id, detail might have a dirty id from copy or zero
-        detail.setId(id);
+        //set id, record might have a dirty id from copy or zero
+        record.setId(id);
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        applyContextValue(detail,cv);
+        applyContextValue(record,cv);
         
         //use old id to update
         int r = db.update(TB_DET, cv, COL_DET_ID+" = "+id,null);
@@ -306,7 +305,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public boolean deleteDetail(int id) {
+    public boolean deleteRecord(int id) {
         SQLiteDatabase db = helper.getWritableDatabase();
         first = null;
         int r = db.delete(TB_DET, COL_DET_ID+" = "+id, null);
@@ -314,14 +313,14 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public List<Detail> listAllDetail() {
+    public List<Record> listAllRecord() {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = null;
         c = db.query(TB_DET,COL_DET_ALL,null,null, null, null, DET_ORDERBY);
-        List<Detail> result = new ArrayList<Detail>();
-        Detail det;
+        List<Record> result = new ArrayList<Record>();
+        Record det;
         while(c.moveToNext()){
-            det = new Detail();
+            det = new Record();
             applyCursor(det,c);
             result.add(det);
         }
@@ -333,7 +332,7 @@ public class SQLiteDataProvider implements IDataProvider {
     static final String DET_ORDERBY = COL_DET_DATE +" DESC,"+COL_DET_ID+" DESC";
 
     @Override
-    public List<Detail> listDetail(Date start, Date end, int max) {
+    public List<Record> listRecord(Date start, Date end, int max) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = null;
         StringBuilder where = new StringBuilder();
@@ -348,10 +347,10 @@ public class SQLiteDataProvider implements IDataProvider {
         }
         
         c = db.query(TB_DET,COL_DET_ALL,where.length()==0?null:where.toString(),null, null, null, DET_ORDERBY,max>0?Integer.toString(max):null);
-        List<Detail> result = new ArrayList<Detail>();
-        Detail det;
+        List<Record> result = new ArrayList<Record>();
+        Record det;
         while(c.moveToNext()){
-            det = new Detail();
+            det = new Record();
             applyCursor(det,c);
             result.add(det);
         }
@@ -360,7 +359,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public List<Detail> listDetail(Date start, Date end, String note, int max) {
+    public List<Record> listRecord(Date start, Date end, String note, int max) {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = null;
         StringBuilder where = new StringBuilder();
@@ -380,10 +379,10 @@ public class SQLiteDataProvider implements IDataProvider {
         }
         
         c = db.query(TB_DET,COL_DET_ALL,where.length()==0?null:where.toString(),null, null, null, DET_ORDERBY,max>0?Integer.toString(max):null);
-        List<Detail> result = new ArrayList<Detail>();
-        Detail det;
+        List<Record> result = new ArrayList<Record>();
+        Record det;
         while(c.moveToNext()){
-            det = new Detail();
+            det = new Record();
             applyCursor(det,c);
             result.add(det);
         }
@@ -392,11 +391,11 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public List<Detail> listDetail(Account account, int mode, Date start, Date end,int max) {
-        return listDetail(account.getId(),mode,start,end,max);
+    public List<Record> listRecord(Account account, int mode, Date start, Date end, int max) {
+        return listRecord(account.getId(),mode,start,end,max);
     }
     @Override
-    public List<Detail> listDetail(String accountId, int mode, Date start, Date end,int max) {
+    public List<Record> listRecord(String accountId, int mode, Date start, Date end, int max) {
         SQLiteDatabase db = helper.getReadableDatabase();
         StringBuilder where = new StringBuilder();
         List<String> args = new ArrayList<String>();
@@ -443,10 +442,10 @@ public class SQLiteDataProvider implements IDataProvider {
         }
         Cursor c = null;
         c = db.query(TB_DET,COL_DET_ALL,where.length()==0?null:where.toString(),wherearg, null, null, DET_ORDERBY,max>0?Integer.toString(max):null);
-        List<Detail> result = new ArrayList<Detail>();
-        Detail det;
+        List<Record> result = new ArrayList<Record>();
+        Record det;
         while(c.moveToNext()){
-            det = new Detail();
+            det = new Record();
             applyCursor(det,c);
             result.add(det);
         }
@@ -455,7 +454,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
     
     @Override
-    public List<Detail> listDetail(AccountType type, int mode,Date start, Date end, int max) {
+    public List<Record> listRecord(AccountType type, int mode, Date start, Date end, int max) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         StringBuilder where = new StringBuilder();
@@ -483,10 +482,10 @@ public class SQLiteDataProvider implements IDataProvider {
         
         Cursor c = null;
         c = db.query(TB_DET,COL_DET_ALL,where.length()==0?null:where.toString(),null, null, null, DET_ORDERBY,max>0?Integer.toString(max):null);
-        List<Detail> result = new ArrayList<Detail>();
-        Detail det;
+        List<Record> result = new ArrayList<Record>();
+        Record det;
         while(c.moveToNext()){
-            det = new Detail();
+            det = new Record();
             applyCursor(det,c);
             result.add(det);
         }
@@ -495,7 +494,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
     
     @Override
-    public int countDetail(Date start, Date end){
+    public int countRecord(Date start, Date end){
         SQLiteDatabase db = helper.getReadableDatabase();
 
         StringBuilder query =  new StringBuilder();
@@ -529,11 +528,11 @@ public class SQLiteDataProvider implements IDataProvider {
         return i;
     }
     @Override
-    public int countDetail(Account account, int mode,Date start, Date end){
-        return countDetail(account.getId(),mode,start,end);
+    public int countRecord(Account account, int mode, Date start, Date end){
+        return countRecord(account.getId(),mode,start,end);
     }
     @Override
-    public int countDetail(String accountId, int mode,Date start, Date end){
+    public int countRecord(String accountId, int mode, Date start, Date end){
         SQLiteDatabase db = helper.getReadableDatabase();
         String nestedId = accountId+".%";
         StringBuilder query =  new StringBuilder();
@@ -600,7 +599,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
     
     @Override
-    public int countDetail(AccountType type, int mode,Date start, Date end){
+    public int countRecord(AccountType type, int mode, Date start, Date end){
         SQLiteDatabase db = helper.getReadableDatabase();
 
         StringBuilder query =  new StringBuilder();
@@ -788,7 +787,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public void deleteAllDetail() {
+    public void deleteAllRecord() {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.delete(TB_DET, null, null);
         detId = 0;
@@ -801,10 +800,10 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     
-    Detail first = null;
+    Record first = null;
     
     @Override
-    public Detail getFirstDetail() {
+    public Record getFirstRecord() {
         if(first!=null) return first;
         SQLiteDatabase db = helper.getReadableDatabase();
         StringBuilder where = new StringBuilder();
@@ -813,7 +812,7 @@ public class SQLiteDataProvider implements IDataProvider {
         c = db.query(TB_DET,COL_DET_ALL,where.length()==0?null:where.toString(),null, null, null, COL_DET_DATE,Integer.toString(1));
         first = null;
         if(c.moveToNext()){
-            first = new Detail();
+            first = new Record();
             applyCursor(first,c);
         }
         c.close();

@@ -1,14 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -26,11 +22,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
@@ -39,37 +34,44 @@ import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author dennis
  */
+@InstanceState
 public class DesktopActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
 
-    private boolean firstTime;
+    @InstanceState
+    private Boolean firstTime;
 
-    private String currTab = null;
+    private String selectedTab = null;
 
-    private GridView gridView;
+    private GridView vGrid;
 
-    private DesktopItemAdapter gridViewAdapter;
+    private DesktopItemAdapter gridAdapter;
 
     private List<Desktop> desktops = new ArrayList<Desktop>();
 
     private DesktopItem lastClickedItem;
 
-    private TextView infoWeeklyExpense;
-    private TextView infoMonthlyExpense;
-    private TextView infoCumulativeCash;
-    private TabHost tabs;
-    private View dtLayout;
-
-    private HashMap<Object, DesktopItem> dtHashMap = new HashMap<Object, DesktopItem>();
+    private TextView vInfoWeeklyExpense;
+    private TextView vInfoMonthlyExpense;
+    private TextView vInfoCumulativeCash;
+    private TabHost vTabs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desktop);
-        dtLayout = findViewById(R.id.dt_layout);
 
         initParams();
         initMembers();
@@ -89,8 +91,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     }
 
     private void initParams() {
-        Bundle bundle = getIntentExtras();
-        firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME,false);
+        if (firstTime == null) {
+            Bundle bundle = getIntentExtras();
+            firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
+        }
     }
 
 
@@ -107,64 +111,70 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     private void initTabs() {
 
-        tabs.setup();
+        vTabs.setup();
 
 
         for (Desktop d : desktops) {
-            TabSpec tab = tabs.newTabSpec(d.getLabel());
+            TabSpec tab = vTabs.newTabSpec(d.getLabel());
             if (d.getIcon() < 0) {
                 tab.setIndicator(d.getLabel());
             } else {
                 tab.setIndicator(d.getLabel(), getResources().getDrawable(d.getIcon()));
             }
             tab.setContent(R.id.desktop_grid);
-            tabs.addTab(tab);
-            if (currTab == null) {
-                currTab = tab.getTag();
+            vTabs.addTab(tab);
+            if (selectedTab == null) {
+                selectedTab = tab.getTag();
             }
         }
 
         if (desktops.size() > 1) {
             //workaround, force refresh
-            tabs.setCurrentTab(1);
-            tabs.setCurrentTab(0);
+            vTabs.setCurrentTab(1);
+            vTabs.setCurrentTab(0);
         }
 
-        tabs.setOnTabChangedListener(this);
+        vTabs.setOnTabChangedListener(this);
 
     }
 
 
     private void initMembers() {
-        tabs = findViewById(R.id.desktop_tabs);
+        vTabs = findViewById(R.id.desktop_tabs);
 
-        infoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
-        infoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
-        infoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
+        vInfoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
+        vInfoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
+        vInfoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
 
 
-        gridViewAdapter = new DesktopItemAdapter();
-        gridView = findViewById(R.id.desktop_grid);
-        gridView.setAdapter(gridViewAdapter);
-        gridView.setOnItemClickListener(this);
+        gridAdapter = new DesktopItemAdapter();
+        vGrid = findViewById(R.id.desktop_grid);
+        vGrid.setAdapter(gridAdapter);
+        vGrid.setOnItemClickListener(this);
+
+        TypedValue textSize = this.resolveThemeAttr(R.attr.textSize);
+        int width = (int)(TypedValue.complexToDimensionPixelSize(textSize.data, getResources().getDisplayMetrics()) * 5.5);
+
+        vGrid.setColumnWidth(width);
 
     }
 
     private void refreshDesktop() {
         for (Desktop d : desktops) {
-            if (d.getLabel().equals(currTab)) {
+            if (d.getLabel().equals(selectedTab)) {
                 d.refresh();
                 break;
             }
         }
-        gridViewAdapter.notifyDataSetChanged();
+        gridAdapter.notifyDataSetChanged();
     }
 
     private boolean handleFirstTime() {
-        boolean fv = contexts().getAndSetFirstVersionTime();
-        if (firstTime){
+        boolean fvt = contexts().getAndSetFirstVersionTime();
+        if (firstTime) {
+            //TODO minor bug, firstTime to false is no usage when onStop be called, have to save to savedInstanceState
             firstTime = false;
-            GUIs.post(new Runnable(){
+            GUIs.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
@@ -174,8 +184,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 }
             });
             return true;
-        }else if(fv){
-            GUIs.post(new Runnable(){
+        } else if (fvt) {
+            GUIs.post(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
@@ -210,12 +220,12 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Date end = calHelper.weekEndDate(now);
         AccountType type = AccountType.EXPENSE;
         double b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
+        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
 
         start = calHelper.monthStartDate(now);
         end = calHelper.monthEndDate(now);
         b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        infoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
+        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
 
 
         IDataProvider idp = Contexts.instance().getDataProvider();
@@ -226,12 +236,12 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 b += BalanceHelper.calculateBalance(ac, null, calHelper.toDayEnd(now)).getMoney();
             }
         }
-        infoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
+        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
     }
 
     @Override
     public void onTabChanged(String tabId) {
-        currTab = tabId;
+        selectedTab = tabId;
         refreshDesktop();
     }
 
@@ -239,21 +249,20 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        List<DesktopItem> importants = new ArrayList<DesktopItem>();
+        List<DesktopItem> menuItems = new ArrayList<DesktopItem>();
         for (Desktop d : desktops) {
-            for (DesktopItem item : d.getItems()) {
-                if (item.getImportance() >= 0) {
-                    importants.add(item);
-                }
+            for (DesktopItem item : d.getMenuItems()) {
+                menuItems.add(item);
             }
         }
-        //sort
-        Collections.sort(importants, new Comparator<DesktopItem>() {
+
+        Collections.sort(menuItems, new Comparator<DesktopItem>() {
             public int compare(DesktopItem item1, DesktopItem item2) {
-                return Integer.valueOf(item2.getImportance()).compareTo(Integer.valueOf(item1.getImportance()));
+                return Integer.valueOf(item2.getPriority()).compareTo(Integer.valueOf(item1.getPriority()));
             }
         });
-        for (DesktopItem item : importants) {
+
+        for (DesktopItem item : menuItems) {
             MenuItem mi = menu.add(item.getLabel());
             mi.setOnMenuItemClickListener(new DesktopItemClickListener(item));
         }
@@ -265,10 +274,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 
         //item clicked in grid view
-        if (parent == gridView) {
-            DesktopItem di = dtHashMap.get(view);
-            if (di != null) {
-                lastClickedItem = di;
+        if (parent == vGrid) {
+            Object obj = view.getTag();
+            if (obj instanceof DesktopItem) {
+                lastClickedItem = (DesktopItem) obj;
                 lastClickedItem.run();
             }
         }
@@ -276,10 +285,10 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
 
     @SuppressWarnings("unchecked")
-    List<DesktopItem> getCurrentVisibleDesktopItems() {
+    List<DesktopItem> getCurrentDesktopItems() {
         for (Desktop d : desktops) {
-            if (d.getLabel().equals(currTab)) {
-                return d.getVisibleItems();
+            if (d.getLabel().equals(selectedTab)) {
+                return d.getDesktopItems();
             }
         }
         return Collections.EMPTY_LIST;
@@ -314,9 +323,14 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     }
 
     public class DesktopItemAdapter extends BaseAdapter {
+        LayoutInflater inflater;
+
+        public DesktopItemAdapter() {
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
 
         public int getCount() {
-            return getCurrentVisibleDesktopItems().size();
+            return getCurrentDesktopItems().size();
         }
 
         public Object getItem(int position) {
@@ -329,26 +343,28 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView iv;
-            TextView tv;
-            LinearLayout view;
+            LinearLayout layout;
+            ImageView vicon;
+            TextView vtext;
             if (convertView == null) {  // if it's not recycled, initialize some attributes
-
-                view = new LinearLayout(DesktopActivity.this);
-                view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.WRAP_CONTENT, GridView.LayoutParams.WRAP_CONTENT));
-                GUIs.inflateView(DesktopActivity.this, view, R.layout.desktop_item);
+                convertView = inflater.inflate(R.layout.desktop_item, parent, false);
             } else {
-                view = (LinearLayout) convertView;
+                convertView = (LinearLayout) convertView;
             }
 
-            iv = view.findViewById(R.id.desktop_icon);
-            tv = view.findViewById(R.id.desktop_label);
+//            layout = convertView.findViewById(R.id.desktop_layout);
+            vicon = convertView.findViewById(R.id.desktop_icon);
+            vtext = convertView.findViewById(R.id.desktop_label);
 
-            DesktopItem item = getCurrentVisibleDesktopItems().get(position);
-            iv.setImageResource(item.getIcon());
-            tv.setText(item.getLabel());
-            dtHashMap.put(view, item);
-            return view;
+
+//            layout.setLayoutParams(new LinearLayout.LayoutParams((int)(textSize.value * 6 * getDpRatio()), LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            DesktopItem item = getCurrentDesktopItems().get(position);
+            vicon.setImageResource(item.getIcon());
+            vtext.setText(item.getLabel());
+
+            convertView.setTag(item);
+            return convertView;
         }
 
     }

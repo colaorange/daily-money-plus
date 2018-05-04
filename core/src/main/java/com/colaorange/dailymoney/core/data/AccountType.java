@@ -79,7 +79,7 @@ public enum AccountType {
             case OTHER:
                 return i18n.string(R.string.label_other);
             default:
-                return i18n.string(R.string.clabel_unknown);
+                return i18n.string(R.string.label_unknown);
         }
     }
 

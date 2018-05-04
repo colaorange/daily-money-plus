@@ -1,24 +1,45 @@
 package com.colaorange.dailymoney.core.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.colaorange.commons.util.Strings;
-import com.colaorange.dailymoney.core.bg.StartupReceiver;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.bg.StartupReceiver;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.legacy.DesktopActivity;
+import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
  * Created by Dennis
  */
+@InstanceState
 public class StartupActivity extends ContextsActivity {
 
     public static final String PARAM_FIRST_TIME = "startup.firstTime";
-    private boolean passedProtection = false;
+
+    @InstanceState
     private boolean firstTime = false;
+
+    @InstanceState
+    private boolean started = false;
+
+    @Override
+    public boolean isNoActionBarTheme() {
+        return true;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.startup);
+        if (started) {
+            finish();
+        }
+    }
 
     @Override
     public void onStart() {
@@ -31,12 +52,17 @@ public class StartupActivity extends ContextsActivity {
             firstTime = true;
         }
 
+        //notify app is startup
         Intent intent = new Intent();
         intent.setAction(StartupReceiver.ACTION_STARTUP);
         sendBroadcast(intent);
 
-        trackEvent("startup");
+        trackEvent(TE.STARTUP);
+        if (!firstTime) {
+            trackEvent(TE.THEME + preference().getTheme());
+        }
     }
+
 
     @Override
     public void onResume() {
@@ -47,17 +73,12 @@ public class StartupActivity extends ContextsActivity {
         if (handleProtection()) {
             return;
         }
-        if (!passedProtection) {
-            finish();
-        }
-
         doNextActivity();
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
-        //for the desktop activity back
         finish();
     }
 
@@ -67,13 +88,13 @@ public class StartupActivity extends ContextsActivity {
      */
     private boolean handleProtection() {
         final String passwordHash = preference().getPasswordHash();
-        if (Strings.isBlank(passwordHash) || passedProtection) {
+        if (Strings.isBlank(passwordHash)) {
             return false;
         }
         Intent intent = null;
         intent = new Intent(this, PasswordProtectionActivity.class);
         startActivityForResult(intent, Constants.REQUEST_PASSWORD_PROTECTION_CODE);
-        trackEvent("protection");
+        trackEvent(TE.PROTECT);
         return true;
     }
 
@@ -81,6 +102,8 @@ public class StartupActivity extends ContextsActivity {
         Intent intent = new Intent(StartupActivity.this, DesktopActivity.class);
         intent.putExtra(PARAM_FIRST_TIME, firstTime);
         startActivity(intent);
+        started = true;
+        firstTime = false;
     }
 
 
@@ -90,7 +113,7 @@ public class StartupActivity extends ContextsActivity {
             new DataCreator(idp, i18n()).createDefaultAccount();
         }
         GUIs.longToast(this, R.string.msg_firsttime_use_hint);
-        trackEvent("first_time");
+        trackEvent(TE.FIRST_TIME);
     }
 
 
@@ -98,11 +121,10 @@ public class StartupActivity extends ContextsActivity {
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent data) {
         if (requestCode == Constants.REQUEST_PASSWORD_PROTECTION_CODE) {
-            if (resultCode != RESULT_OK) {
-                finish();
-            } else {
-                passedProtection = true;
+            if (resultCode == RESULT_OK) {
+                doNextActivity();
             }
+            finish();
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -44,6 +44,9 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
     //"dark" or "light"
     public static final String PARAM_THEME = "cal2.theme";
 
+    public static final String THEME_DARK = "dark";
+    public static final String THEME_LIGHT = "light";
+
 
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
@@ -70,9 +73,9 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        String theme = getIntent().getExtras().getString(PARAM_THEME, "dark");
+        String theme = getIntent().getExtras().getString(PARAM_THEME, THEME_DARK);
 
-        if(theme.startsWith("light")){
+        if(theme.equals(THEME_LIGHT)){
             setTheme(R.style.Cal2Theme_Light);
         }else {
             setTheme(R.style.Cal2Theme);
@@ -174,11 +177,11 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle icicle) {
-        // as work-around for ClassCastException in TextView on restart
-        // avoid calling superclass, to keep icicle empty
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle icicle) {
+//        // as work-around for ClassCastException in TextView on restart
+//        // avoid calling superclass, to keep icicle empty
+//    }
 
     @Override
     public void onPause() {

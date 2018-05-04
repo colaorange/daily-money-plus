@@ -2,39 +2,46 @@ package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.content.Intent;
 
-import com.colaorange.dailymoney.core.R;
 /**
- * 
  * @author dennis
- *
  */
 public class DesktopItem {
-    //a non-hidden item should always has icon
-    protected int icon;
-    
-    //a item should always has label
-    protected String label;
-    Runnable run;
-    
-    //a importance item(>=0), will show to menu (the larger number will put to front of menu)
-    int importance;
-    
-    //a hidden item, show not show to desktop, but still show to menu if it is importance
-    boolean hidden;
+
+    private int icon;
+
+    private String label;
+
+    private Runnable run;
+
+    private int priority;
+
+    private boolean inMenu;
+
+    private boolean inDesktop;
 
     public DesktopItem(Runnable run, String label) {
-        this(run, label, R.drawable.dtitem,-1);
+        this(run, label, -1, false, true, 0);
     }
 
     public DesktopItem(Runnable run, String label, int icon) {
-        this(run, label, icon,-1);
+        this(run, label, icon, true, false, 0);
     }
-    
-    public DesktopItem(Runnable run, String label, int icon, int importance) {
+
+    public DesktopItem(Runnable run, String label, int icon, boolean inDesktop, boolean menuItem, int priority) {
         this.run = run;
         this.label = label;
         this.icon = icon;
-        this.importance = importance;
+        this.inDesktop = inDesktop;
+        this.inMenu = menuItem;
+        this.priority = priority;
+    }
+
+    public boolean isInDesktop() {
+        return inDesktop;
+    }
+
+    public void setInDesktop(boolean inDesktop) {
+        this.inDesktop = inDesktop;
     }
 
     public void run() {
@@ -50,27 +57,38 @@ public class DesktopItem {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        
+
     }
 
-    public int getImportance() {
-        return importance;
+    public void setIcon(int icon) {
+        this.icon = icon;
     }
 
-    public void setImportance(int importance) {
-        this.importance = importance;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public boolean isHidden() {
-        return hidden;
+    public Runnable getRun() {
+        return run;
     }
 
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
+    public void setRun(Runnable run) {
+        this.run = run;
     }
 
-    
-    
-    
-    
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public boolean isInMenu() {
+        return inMenu;
+    }
+
+    public void setInMenu(boolean inMenu) {
+        this.inMenu = inMenu;
+    }
 }
