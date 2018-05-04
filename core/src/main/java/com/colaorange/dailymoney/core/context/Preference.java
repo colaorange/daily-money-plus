@@ -108,6 +108,10 @@ public class Preference {
 
     boolean autoBackup = true;
 
+
+    String lastFromAccount;
+    String lastToAccount;
+
     String theme;
 
     String textSize;
@@ -151,6 +155,18 @@ public class Preference {
 
         try {
             lastbackup = prefs.getString(Constants.PREFS_LAST_BACKUP, lastbackup);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+
+        try {
+            lastFromAccount = prefs.getString(Constants.PREFS_LAST_FROM_ACCOUNT, lastFromAccount);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
+
+        try {
+            lastToAccount = prefs.getString(Constants.PREFS_LAST_TO_ACCOUNT, lastToAccount);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -647,5 +663,23 @@ public class Preference {
 
     public String getTextSize(){
         return textSize;
+    }
+
+    public String getLastFromAccount() {
+        return lastFromAccount;
+    }
+
+    public void setLastAccount(String lastFromAccount, String lastToAccount) {
+        this.lastFromAccount = lastFromAccount;
+        this.lastToAccount = lastToAccount;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.PREFS_LAST_FROM_ACCOUNT, lastFromAccount);
+        editor.putString(Constants.PREFS_LAST_TO_ACCOUNT, lastToAccount);
+        editor.commit();
+    }
+
+    public String getLastToAccount() {
+        return lastToAccount;
     }
 }

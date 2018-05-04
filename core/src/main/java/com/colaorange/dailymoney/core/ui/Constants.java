@@ -9,6 +9,9 @@ public class Constants {
     static final public String PREFS_HIERARCHICAL_REPORT = "hierarchical_report";
     public static final String PREFS_LAST_BACKUP = "last_backup";
 
+    public static final String PREFS_LAST_FROM_ACCOUNT = "last_from_account";
+    public static final String PREFS_LAST_TO_ACCOUNT = "last_to_account";
+
 
     public static final int REQUEST_CALCULATOR_CODE = 1;
     public static final int REQUEST_RECORD_EDITOR_CODE = 2;

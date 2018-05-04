@@ -102,9 +102,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         record = (Record) bundle.get(PARAM_RECORD);
 
-        //issue 51, for direct call from outside action, 
-        if (record == null) {
-            record = new Record("", "", new Date(), 0D, "");
+        if (modeCreate && record == null) {
+            record = new Record(preference().getLastFromAccount(), preference().getLastToAccount(), new Date(), 0D, "");
         }
 
         workingRecord = clone(record);
@@ -502,6 +501,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
             trackEvent(TE.UPDDATE_RECORD);
         }
+
+        preference().setLastAccount(workingRecord.getFrom(), workingRecord.getTo());
     }
 
     private void doCancel() {

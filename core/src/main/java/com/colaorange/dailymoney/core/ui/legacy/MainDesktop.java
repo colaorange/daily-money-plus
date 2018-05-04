@@ -29,11 +29,9 @@ public class MainDesktop extends AbstractDesktop {
 
         DesktopItem addrec = new DesktopItem(new Runnable() {
             public void run() {
-                Record d = new Record("", "", new Date(), 0D, "");
                 Intent intent = null;
                 intent = new Intent(activity, RecordEditorActivity.class);
                 intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
-                intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
                 activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
             }
         }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_add_record, true, false, 999);

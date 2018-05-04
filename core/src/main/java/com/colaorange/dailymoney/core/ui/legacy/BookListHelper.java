@@ -87,11 +87,9 @@ public class BookListHelper implements OnItemClickListener {
 
 
     public void doNewBook() {
-        Book book = new Book("", "$", SymbolPosition.FRONT, "");
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(BookEditorActivity.PARAM_BOOK, book);
         activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
     }
 

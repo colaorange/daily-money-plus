@@ -69,6 +69,10 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         book = (Book) bundle.get(PARAM_BOOK);
+
+        if(modeCreate && book==null){
+            book = new Book("", "$", SymbolPosition.FRONT, "");
+        }
         workingBook = clone(book);
 
         if (modeCreate) {

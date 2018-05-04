@@ -78,6 +78,10 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         account = (Account) bundle.get(PARAM_ACCOUNT);
+
+        if (modeCreate && account == null) {
+            account = new Account(AccountType.INCOME.getType(), "", 0D);
+        }
         workingAccount = clone(account);
 
         if (modeCreate) {
@@ -308,7 +312,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         @Override
         public void bindViewValue(AccountType item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
             Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
-            Map<AccountType,Integer> bgColorMap = getAccountBgColorMap();
+            Map<AccountType, Integer> bgColorMap = getAccountBgColorMap();
 
             int textColor = textColorMap.get(item);
 
