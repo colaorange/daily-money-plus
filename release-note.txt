@@ -1,4 +1,15 @@
 
+== 0.10.0 ==
+=== Features ===
+ # Theme : Cola, Orange, Sakura, Lemon
+ #
+
+=== Bugs ===
+ # Can't create book after having 20 books
+ # Can't allow blank password
+ # Confirmation before deleting
+
+====================================================================================================
 == 0.9.9 ==
 === Features ===
  # Enhance password protection data
@@ -10,8 +21,6 @@
 
 === Bugs ===
 
-
-====================================================================================================
 == 0.9.8 ==
 === Features ===
  # 1: Add functions about 'manually backup db & pref to sd' & 'restore db & pref from sd at first time'.

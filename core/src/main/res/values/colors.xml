@@ -35,7 +35,7 @@
     <!--sakura-->
     <color name="themeSakuraPrimary">#fecdde</color>
     <color name="themeSakuraPrimaryDark">#fda6c3</color>
-    <color name="themeSakuraPrimaryLight">#ffeef6</color>
+    <color name="themeSakuraPrimaryLight">#fff3f6</color>
     <color name="themeSakuraPrimaryText">#333333</color>
 
     <color name="themeSakuraSecondary">#ae7d8d</color>
