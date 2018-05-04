@@ -27,7 +27,7 @@ public class MainDesktop extends AbstractDesktop {
         I18N i18n = Contexts.instance().getI18n();
         label = i18n.string(R.string.dt_main);
 
-        DesktopItem adddetdt = new DesktopItem(new Runnable() {
+        DesktopItem addrec = new DesktopItem(new Runnable() {
             public void run() {
                 Record d = new Record("", "", new Date(), 0D, "");
                 Intent intent = null;
@@ -71,15 +71,15 @@ public class MainDesktop extends AbstractDesktop {
                 i18n.string(R.string.dtitem_prefs), R.drawable.dtitem_prefs);
 
 
-        addItem(adddetdt);
+        addItem(addrec);
         addItem(daylist);
         addItem(weeklist);
         addItem(monthlist);
         addItem(yearlist);
         addItem(accmgntdt);
-        addItem(datamaindt);
-        addItem(prefdt);
         addItem(bookmgntdt);
+        addItem(prefdt);
+        addItem(datamaindt);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_how2use);
