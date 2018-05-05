@@ -1,15 +1,22 @@
 
 == 0.10.0 ==
 === Features ===
- # Theme : Cola, Orange, Sakura, Lemon
  #
+
+=== Bugs ===
+ # No selection effect on account-reclist
+
+====================================================================================================
+== 0.10.0 ==
+=== Features ===
+ # Theme : Cola, Orange, Sakura, Lemon
+ # TextSize: Normal, Medium, Large
 
 === Bugs ===
  # Can't create book after having 20 books
  # Can't allow blank password
  # Confirmation before deleting
 
-====================================================================================================
 == 0.9.9 ==
 === Features ===
  # Enhance password protection data
