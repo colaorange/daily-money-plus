@@ -73,6 +73,12 @@ public class MainDesktop extends AbstractDesktop {
         DesktopItem aboutdt = new DesktopItem(new ActivityRun(activity, AboutActivity.class),
                 i18n.string(R.string.dtitem_about), R.drawable.dtitem_about,0);
 
+        intent = new Intent(activity, UpgradeActivity.class);
+        DesktopItem upgrade = new DesktopItem(new IntentRun(activity, intent),
+                i18n.string(R.string.dtitem_upgrade), R.drawable.dtitem_upgrade, 9999);
+
+        addItem(upgrade);
+
         addItem(adddetdt);
         addItem(daylist);
         addItem(weeklist);
@@ -86,6 +92,10 @@ public class MainDesktop extends AbstractDesktop {
         addItem(how2use);
         
         addItem(aboutdt);
+
+
+
+
     }
 
 }

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="10dp"
+                android:gravity="left"
+                android:text="@string/label_upgrade_note" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_looks_one_white_24dp"
+                android:drawablePadding="10dp"
+                android:gravity="top|left"
+                android:text="@string/label_upgrade_step1" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <TextView
+                    android:id="@+id/datamain_workingfolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/label_prefs_workingfolder" />
+
+                <Button
+                    android:id="@+id/datamain_request_permission"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/ic_edit_white_24dp"
+                    android:gravity="center"
+                    android:text="@string/label_request_storage_permission" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:paddingRight="5dp"
+                        android:text="@string/label_prefs_lastbackup" />
+
+                    <TextView
+                        android:id="@+id/datamain_lastbackup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="@string/clabel_unknown" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/datamain_backup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/ic_save_white_24dp"
+                    android:gravity="center"
+                    android:text="@string/label_backup_data" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_looks_two_white_24dp"
+                android:drawablePadding="10dp"
+                android:gravity="top|left"
+                android:text="@string/label_upgrade_step2" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+
+                <Button
+                    android:id="@+id/datamain_install"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/ic_apps_white_24dp"
+                    android:gravity="center"
+                    android:text="@string/label_install_dm" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_looks_3_white_24dp"
+                android:drawablePadding="10dp"
+                android:gravity="top|left"
+                android:text="@string/label_upgrade_step3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_looks_4_white_24dp"
+                android:drawablePadding="10dp"
+                android:gravity="top|left"
+                android:text="@string/label_upgrade_step4" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

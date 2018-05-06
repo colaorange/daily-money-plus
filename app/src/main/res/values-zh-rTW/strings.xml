@@ -239,4 +239,14 @@
     <string name="title_detmgnt">明細管理器</string>
     <string name="title_pdprotection">密碼保護</string>
     <string name="title_prefs">喜好設定</string>
+
+
+    <!--20180506 for upgarde-->
+    <string name="dtitem_upgrade">升級每日記帳本+</string>
+    <string name="label_upgrade_note">你好, 這個版本的已經不維護了. 我有新健立了一個每日記帳本+, 並且正在維護它. 如果可以的話, 請依下列步驟更新到新版</string>
+    <string name="label_upgrade_step1">備份你的資料 (如果你是新的使用者的話, 可以略過這個步驟)</string>
+    <string name="label_upgrade_step2">安裝每日記帳本+</string>
+    <string name="label_upgrade_step3">開啟每日記帳本帳+, 點擊資料維護, 取得存取權限, 還原資料. 最後檢查一下是否資料都已經回來</string>
+    <string name="label_upgrade_step4">如果有任何資料還原上的問題, 請上臉書私訊我來幫助你</string>
+    <string name="label_install_dm">取得每日記帳本+</string>
 </resources>

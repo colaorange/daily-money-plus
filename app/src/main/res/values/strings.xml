@@ -269,5 +269,15 @@
     <string name="qmsg_restore_data">WARN: Current data will be replaced, do you still want to restore?</string>
     <string name="label_balance">Balance</string>
     <string name="label_request_storage_permission">Request storage permission</string>
+
+    <!--20180506 for upgarde-->
+    <string name="dtitem_upgrade">Upgrade +</string>
+    <string name="label_upgrade_note">Hi, this version of App is deprecated. I created new Daily Money+ and update it, please
+    follow the steps to upgrade if you can</string>
+    <string name="label_upgrade_step1">Backup your data (you can skip this step if you are new here)</string>
+    <string name="label_upgrade_step2">Install new Daily Money+</string>
+    <string name="label_upgrade_step3">Open Daily Money+, Click Data maintenance, Request storage permission, Restore data, check to see if data is back in new App</string>
+    <string name="label_upgrade_step4">Contact me on facebook if you get trouble when restoring data</string>
+    <string name="label_install_dm">Get Daily Money+</string>
 </resources>
 

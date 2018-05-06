@@ -8,7 +8,7 @@ android {
         targetSdkVersion 23
         //we had yyyy already, google doesn't allow me to use lower number
         //noinspection HighAppVersionCode
-        versionCode 2018040605
+        versionCode 2018050600
         versionName "0.9.8-dep"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
