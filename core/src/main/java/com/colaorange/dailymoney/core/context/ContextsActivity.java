@@ -223,7 +223,7 @@ public class ContextsActivity extends AppCompatActivity {
         map.put(AccountType.ASSET, resolveThemeAttrResData(R.attr.accountAssetTextColor));
         map.put(AccountType.LIABILITY, resolveThemeAttrResData(R.attr.accountLiabilityTextColor));
         map.put(AccountType.OTHER, resolveThemeAttrResData(R.attr.accountOtherTextColor));
-        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountOtherTextColor));
+        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountUnknownTextColor));
         return this.accountTextColorMap = map;
     }
 
@@ -237,7 +237,7 @@ public class ContextsActivity extends AppCompatActivity {
         map.put(AccountType.ASSET, resolveThemeAttrResData(R.attr.accountAssetBgColor));
         map.put(AccountType.LIABILITY, resolveThemeAttrResData(R.attr.accountLiabilityBgColor));
         map.put(AccountType.OTHER, resolveThemeAttrResData(R.attr.accountOtherBgColor));
-        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountOtherBgColor));
+        map.put(AccountType.UNKONW, resolveThemeAttrResData(R.attr.accountUnknownBgColor));
         return this.accountBgColorMap = map;
     }
 

@@ -115,7 +115,7 @@ public class RecordListHelper implements OnItemClickListener {
 
 
     public void reloadData(List<Record> data) {
-        if(listData !=data) {//not self call
+        if (listData != data) {//not self call
             listData.clear();
             listData.addAll(data);
         }
@@ -166,7 +166,6 @@ public class RecordListHelper implements OnItemClickListener {
                 return true;
             }
         });
-
 
 
     }
@@ -249,8 +248,8 @@ public class RecordListHelper implements OnItemClickListener {
             Account fromAcc = accountMap.get(record.getFrom());
             Account toAcc = accountMap.get(record.getTo());
 
-            AccountType fromAccType = AccountType.find(fromAcc.getType());
-            AccountType toAccType = AccountType.find(toAcc.getType());
+            AccountType fromAccType = fromAcc == null ? AccountType.UNKONW : AccountType.find(fromAcc.getType());
+            AccountType toAccType = toAcc == null ? AccountType.UNKONW : AccountType.find(toAcc.getType());
 
 
             vlayout.setBackgroundColor(accountBgColorMap.get(toAccType));
