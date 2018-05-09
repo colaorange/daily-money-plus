@@ -30,12 +30,12 @@ public class LocalWebViewActivity extends ContextsActivity {
         super.onCreate(bundle);
         setContentView(R.layout.local_webview);
 
-        initParams();
+        initArgs();
         initMembers();
         refreshUI();
     }
 
-    private void initParams() {
+    private void initArgs() {
         Bundle bundle = getIntentExtras();
         uri = null;
 

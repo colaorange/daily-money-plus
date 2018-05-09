@@ -1,12 +1,13 @@
 
 == 0.10.1 ==
 === Features ===
- # re-support Italian
+ #  re-support Italian
 
 === Bugs ===
- # No selection effect on account-reclist
- # bit-bucket-14: NPE if show a record which has deleted account
- # 5: No next input button in receditor
+ #   No selection effect on account-reclist
+ #bb-14: NPE if show a record which has deleted account
+ #5: No next input button in receditor
+ #2: support selected date when creating in reclist
 
 ====================================================================================================
 == 0.10.0 ==

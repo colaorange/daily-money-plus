@@ -61,11 +61,11 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book_editor);
-        initParams();
+        initArgs();
         initMembers();
     }
 
-    private void initParams() {
+    private void initArgs() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         book = (Book) bundle.get(PARAM_BOOK);

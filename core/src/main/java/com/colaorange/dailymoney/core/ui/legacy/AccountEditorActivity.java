@@ -70,11 +70,11 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_editor);
-        initParams();
+        initArgs();
         initMembers();
     }
 
-    private void initParams() {
+    private void initArgs() {
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
         account = (Account) bundle.get(PARAM_ACCOUNT);

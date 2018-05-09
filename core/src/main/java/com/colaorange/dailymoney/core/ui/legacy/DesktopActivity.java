@@ -73,7 +73,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desktop);
 
-        initParams();
+        initArgs();
         initMembers();
         initDesktopItems();
         initTabs();
@@ -90,7 +90,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     }
 
-    private void initParams() {
+    private void initArgs() {
         if (firstTime == null) {
             Bundle bundle = getIntentExtras();
             firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);

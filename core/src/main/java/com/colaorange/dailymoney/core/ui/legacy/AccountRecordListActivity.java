@@ -52,7 +52,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_reclist);
-        initParams();
+        initArgs();
         initMembers();
         GUIs.delayPost(new Runnable() {
             @Override
@@ -63,7 +63,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     }
 
 
-    private void initParams() {
+    private void initArgs() {
         I18N i18n = i18n();
 
         Bundle b = getIntentExtras();

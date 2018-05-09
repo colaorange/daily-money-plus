@@ -42,7 +42,17 @@ import java.util.Map;
  */
 public class RecordEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
+    /**
+     * a boolean to represent the create mode
+     */
     public static final String PARAM_MODE_CREATE = "modeCreate";
+    /**
+     * a specified created date or null, it only usefaul when mode is create and no record arg
+     */
+    public static final String PARAM_CREATED_DATE = "createdDate";
+    /**
+     * a specified record for create or update
+     */
     public static final String PARAM_RECORD = "record";
 
 
@@ -80,8 +90,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_editor);
-        dateFormat = preference().getDateFormat();
-        initParams();
+        initArgs();
         initMembers();
         refreshUI();
     }
@@ -97,13 +106,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     }
 
 
-    private void initParams() {
+    private void initArgs() {
+        dateFormat = preference().getDateFormat();
+
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
+        Date createdDate = (Date) bundle.get(PARAM_CREATED_DATE);
         record = (Record) bundle.get(PARAM_RECORD);
 
         if (modeCreate && record == null) {
-            record = new Record(preference().getLastFromAccount(), preference().getLastToAccount(), new Date(), 0D, "");
+            record = new Record(preference().getLastFromAccount(), preference().getLastToAccount(), createdDate == null ? new Date() : createdDate, 0D, "");
         }
 
         workingRecord = clone(record);
@@ -316,7 +328,6 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             vToAccount.setSelection(Spinner.INVALID_POSITION);
             workingRecord.setTo("");
         }
-
 
 
     }

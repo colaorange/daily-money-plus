@@ -134,6 +134,7 @@ public class RecordListHelper implements OnItemClickListener {
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.PARAM_CREATED_DATE, date);
         activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 

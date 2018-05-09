@@ -86,12 +86,12 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.balance);
-        initParams();
+        initArgs();
         initMembers();
         refreshUI();
     }
 
-    private void initParams() {
+    private void initArgs() {
         Bundle b = getIntentExtras();
         mode = b.getInt(PARAM_MODE, MODE_MONTH);
         totalMode = b.getBoolean(PARAM_TOTAL_MODE, true);

@@ -33,7 +33,7 @@ public class BookMgntActivity extends ContextsActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book_mgnt);
-        initParams();
+        initArgs();
         initMembers();
         GUIs.delayPost(new Runnable() {
             @Override
@@ -44,7 +44,7 @@ public class BookMgntActivity extends ContextsActivity {
     }
     
 
-    private void initParams() {
+    private void initArgs() {
 
     }
 

@@ -70,13 +70,13 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_list);
-        initParams();
+        initArgs();
         initMembers();
         refreshUI();
     }
 
 
-    private void initParams() {
+    private void initArgs() {
         Bundle b = getIntentExtras();
         mode = b.getInt(PARAM_MODE, MODE_WEEK);
         Object o = b.get(PARAM_TARGET_DATE);
