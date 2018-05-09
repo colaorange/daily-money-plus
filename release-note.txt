@@ -5,7 +5,8 @@
 
 === Bugs ===
  # No selection effect on account-reclist
- #14: NPE if show a record which has deleted account
+ # bit-bucket-14: NPE if show a record which has deleted account
+ # 5: No next input button in receditor
 
 ====================================================================================================
 == 0.10.0 ==
