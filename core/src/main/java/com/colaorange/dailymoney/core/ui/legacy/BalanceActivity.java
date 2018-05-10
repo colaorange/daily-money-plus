@@ -54,8 +54,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     //    public static final String PARAM_TARGET_DATE = "target";
     public static final String PARAM_TOTAL_MODE = "balance.modeTotal";
 
-    TextView infoView;
-    View toolbarView;
+    private TextView vInfo;
+    private View vToolbar;
 
     private Date targetDate;
     private Date currentDate;
@@ -69,7 +69,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     private Date currentStartDate;
     private Date currentEndDate;
 
-    ImageButton btnMode;
+    private ImageButton btnMode;
 
 
     private List<Balance> listData = new ArrayList<Balance>();
@@ -78,8 +78,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private BalanceListAdapter listAdapter;
 
-    GUIs.Dimen textSize;
-    GUIs.Dimen textSizeMedium;
+    private GUIs.Dimen textSize;
+    private GUIs.Dimen textSizeMedium;
 
 
     @Override
@@ -110,8 +110,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         yearMonthFormat = pref.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM");
         yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
 
-        infoView = findViewById(R.id.balance_info);
-        toolbarView = findViewById(R.id.balance_toolbar);
+        vInfo = findViewById(R.id.balance_info);
+        vToolbar = findViewById(R.id.balance_toolbar);
 
         findViewById(R.id.btn_prev).setOnClickListener(this);
         findViewById(R.id.btn_next).setOnClickListener(this);
@@ -168,7 +168,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         CalendarHelper cal = calendarHelper();
         currentEndDate = null;
         currentStartDate = null;
-        infoView.setText("");
+        vInfo.setText("");
         refreshToolbar();
 
         trackEvent(TE.BALANCE + mode);
@@ -263,25 +263,25 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
                     if (mode == MODE_MONTH) {
                         Date monthStart = cal.monthStartDate(currentDate);
                         Date monthEnd = cal.monthEndDate(currentDate);
-                        infoView.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(monthStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthEnd)));
                     } else if (mode == MODE_YEAR) {
                         Date yearStart = cal.yearStartDate(currentDate);
                         Date yearEnd = cal.yearEndDate(currentDate);
 
-                        infoView.setText(i18n.string(R.string.label_balance_mode_year_total, yearFormat.format(yearStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_mode_year_total, yearFormat.format(yearStart),
                                 yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 } else {
                     if (mode == MODE_MONTH) {
                         Date monthStart = cal.monthStartDate(currentDate);
                         Date monthEnd = cal.monthEndDate(currentDate);
-                        infoView.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(monthStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthStart), monthDateFormat.format(monthEnd)));
                     } else if (mode == MODE_YEAR) {
                         Date yearStart = cal.yearStartDate(currentDate);
                         Date yearEnd = cal.yearEndDate(currentDate);
-                        infoView.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(yearStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(yearStart),
                                 monthDateFormat.format(yearStart), yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 }
@@ -358,6 +358,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.balance_menu, menu);
+
+        menu.findItem(R.id.menu_hierarchy).setChecked(preference().isHierarchicalBalance());
+
         return true;
     }
 
@@ -366,7 +369,8 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         if (item.getItemId() == R.id.menu_yearly_runchart) {
             doYearlyRunChart();
             return true;
-        } else if (item.getItemId() == R.id.menu_toggle_hierarchy) {
+        } else if (item.getItemId() == R.id.menu_hierarchy) {
+            item.setChecked(!item.isChecked());
             preference().setHierarchicalBalance(!preference().isHierarchicalBalance());
             GUIs.delayPost(new Runnable() {
                 @Override

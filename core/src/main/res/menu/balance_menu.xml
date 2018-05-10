@@ -2,8 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_toggle_hierarchy"
-        android:title="@string/act_toggle_hierarchical_report"/>
+        android:id="@+id/menu_hierarchy"
+        android:title="@string/act_hierarchical_balance"
+        android:checkable="true"
+        />
     <item
         android:id="@+id/menu_yearly_runchart"
         android:title="@string/act_balance_yearly_runchart"/>

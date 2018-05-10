@@ -48,6 +48,24 @@ public class PrefsDeveloperFragment extends ContextsPrefsFragment implements Sha
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_csv_encoding)));
 
         try {
+            Preference pref = findPreference(i18n.string(R.string.pref_testsdekstop));
+            if (pref != null) {
+                pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        try {
+                            trackEvent(preference.getKey());
+
+                            ((ContextsActivity)getActivity()).markWholeRecreate();
+
+                        } catch (Exception x) {
+                            Logger.w(x.getMessage(), x);
+                            trackEvent(preference.getKey() + "_fail");
+                        }
+                        return true;
+                    }
+                });
+            }
         } catch (Exception x) {
             Logger.w(x.getMessage(), x);
         }
