@@ -8,6 +8,8 @@
     android:orientation="vertical"
     tools:context=".ui.legacy.RecordEditorActivity">
 
+    <include layout="@layout/app_bar" />
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dp"

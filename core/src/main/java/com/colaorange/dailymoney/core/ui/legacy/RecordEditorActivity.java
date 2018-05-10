@@ -3,6 +3,8 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -85,6 +87,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private float nodePaddingBase;
 
+    //0:usual, 1:last
+    private int bookmarkMode = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,45 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         initArgs();
         initMembers();
         refreshUI();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.record_editor_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_quick) {
+            if (++bookmarkMode > 1) {
+                bookmarkMode = 0;
+            }
+
+            switch (bookmarkMode) {
+                case 1:
+                    workingRecord.setFrom(preference().getLastFromAccount());
+                    workingRecord.setTo(preference().getLastToAccount());
+                    break;
+                case 0:
+                default:
+                    workingRecord.setFrom("");
+                    workingRecord.setTo("");
+                    break;
+            }
+
+
+            refreshSpinner(false);
+            return true;
+        } else if (item.getItemId() == R.id.menu_swap) {
+            String from = workingRecord.getFrom();
+            workingRecord.setFrom(workingRecord.getTo());
+            workingRecord.setTo(from);
+            refreshSpinner(false);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -115,7 +159,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         record = (Record) bundle.get(PARAM_RECORD);
 
         if (modeCreate && record == null) {
-            record = new Record(preference().getLastFromAccount(), preference().getLastToAccount(), createdDate == null ? new Date() : createdDate, 0D, "");
+            record = new Record("", "", createdDate == null ? new Date() : createdDate, 0D, "");
         }
 
         workingRecord = clone(record);
@@ -259,8 +303,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         }
         String fromId = workingRecord.getFrom();
         String fromType = null;
-        int bookFromPos, firstFromPos, i;
-        bookFromPos = firstFromPos = i = -1;
+        int recFromPos, firstFromPos, i;
+        recFromPos = firstFromPos = i = -1;
 
         for (AccountIndentNode node : fromAccountList) {
             i++;
@@ -268,9 +312,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             if (acc != null) {
                 if (firstFromPos == -1) {
                     firstFromPos = i;
+                    fromType = node.getAccount().getType();
                 }
                 if (acc.getId().equals(fromId)) {
-                    bookFromPos = i;
+                    recFromPos = i;
                     fromType = node.getAccount().getType();
                     break;
                 }
@@ -281,8 +326,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         if (!toOnly) {
             fromAccountAdapter.notifyDataSetChanged();
 
-            if (bookFromPos > -1) {
-                vFromAccount.setSelection(bookFromPos);
+            if (recFromPos > -1) {
+                vFromAccount.setSelection(recFromPos);
             } else if (firstFromPos > -1) {
                 vFromAccount.setSelection(firstFromPos);
                 workingRecord.setFrom(fromAccountList.get(firstFromPos).getAccount().getId());
@@ -300,8 +345,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         }
 
         String toId = workingRecord.getTo();
-        int bookToPos, firstToPos;
-        bookToPos = firstToPos = i = -1;
+        int recToPos, firstToPos;
+        recToPos = firstToPos = i = -1;
         // String toType = null;
         for (AccountIndentNode node : toAccountList) {
             i++;
@@ -311,7 +356,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                     firstToPos = i;
                 }
                 if (acc.getId().equals(toId)) {
-                    bookToPos = i;
+                    recToPos = i;
                 }
 
             }
@@ -319,8 +364,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         toAccountAdapter.notifyDataSetChanged();
 
-        if (bookToPos > -1) {
-            vToAccount.setSelection(bookToPos);
+        if (recToPos > -1) {
+            vToAccount.setSelection(recToPos);
         } else if (firstToPos > -1) {
             vToAccount.setSelection(firstToPos);
             workingRecord.setTo(toAccountList.get(firstToPos).getAccount().getId());
