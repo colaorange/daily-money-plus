@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -208,9 +207,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Book book = imdp.findBook(Contexts.instance().getWorkingBookId());
         String symbol = book.getSymbol();
         if (symbol == null || "".equals(symbol)) {
-            setTitle(i18n.string(R.string.title_book) + " : " + book.getName());
+            setTitle(book.getName());
         } else {
-            setTitle(i18n.string(R.string.title_book) + " : " + book.getName() + " ( " + symbol + " )");
+            setTitle(book.getName() + " ( " + symbol + " )");
         }
 
 //        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
@@ -369,5 +368,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     }
 
+    @Override
+    public int getActionBarHomeAsUp(){
+        return homeAsUpNone;
+    }
 
 }

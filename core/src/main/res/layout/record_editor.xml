@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical"
     tools:context=".ui.legacy.RecordEditorActivity">
@@ -11,13 +11,13 @@
     <include layout="@layout/app_bar" />
 
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -60,7 +60,7 @@
                 <ImageButton
                     android:id="@+id/btn_prev"
                     style="@style/editorToolIconBtn"
-                    android:src="?ic_arrow_back" />
+                    android:src="?ic_arrow_left" />
 
                 <ImageButton
                     android:id="@+id/btn_today"
@@ -70,7 +70,7 @@
                 <ImageButton
                     android:id="@+id/btn_next"
                     style="@style/editorToolIconBtn"
-                    android:src="?ic_arrow_forward" />
+                    android:src="?ic_arrow_right" />
 
                 <ImageButton
                     android:id="@+id/btn_datepicker"
@@ -117,7 +117,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 

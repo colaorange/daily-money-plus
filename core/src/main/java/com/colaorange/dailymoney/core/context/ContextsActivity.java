@@ -6,9 +6,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.MenuItem;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
@@ -44,8 +46,15 @@ public class ContextsActivity extends AppCompatActivity {
 
     private ThemeApplier themeApplier;
 
+    protected static final int homeAsUpNone = -1;
+    protected int homeAsUpBackId;
+    protected int homeAsUpAppId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //for init ui related resource in ui thread
+        GUIs.touch();
+
         //do before super on create;
         themeApplier = new ThemeApplier(this);
         themeApplier.applyTheme();
@@ -53,8 +62,10 @@ public class ContextsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         instanceStateHelper = new InstanceStateHelper(this);
         instanceStateHelper.onCreate(savedInstanceState);
-        //for init ui related resource in ui thread
-        GUIs.touch();
+
+
+        homeAsUpBackId = resolveThemeAttrResId(R.attr.ic_arrow_back);
+        homeAsUpAppId = resolveThemeAttrResId(R.attr.ic_apps);
 
         Logger.d("activity created:" + this);
         onCreateTime = System.currentTimeMillis();
@@ -79,8 +90,10 @@ public class ContextsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.appToolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            doInitActionBar(getSupportActionBar());
         }
     }
+
 
     protected void restartApp(boolean passedProtection) {
         //TODO
@@ -242,17 +255,50 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     public float getDpRatio() {
-        if(dpRatio==null) {
+        if (dpRatio == null) {
             dpRatio = GUIs.getDPRatio(this);
         }
         return dpRatio.floatValue();
     }
 
     public boolean isLightTheme() {
-        if(lightTheme==null){
+        if (lightTheme == null) {
             lightTheme = preference().isLightTheme();
         }
         return lightTheme;
+    }
+
+
+    protected int getActionBarHomeAsUp() {
+        return homeAsUpBackId;
+    }
+
+    protected void doInitActionBar(ActionBar supportActionBar) {
+        int resId = getActionBarHomeAsUp();
+        if (resId > 0) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeAsUpIndicator(resId);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            //home button clicked
+            case android.R.id.home:
+                this.onActionBarHomeAsUp(getActionBarHomeAsUp());
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onActionBarHomeAsUp(int resId) {
+        if (resId == homeAsUpBackId) {
+            this.finish();
+        } else if (resId == homeAsUpAppId) {
+            //todo
+        }
     }
 
     public interface TE extends Contexts.TE {

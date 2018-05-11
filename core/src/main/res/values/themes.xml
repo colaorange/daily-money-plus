@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="appbarSize" fromat="reference"/>
     <attr name="appPrimaryColor" format="color" />
     <attr name="appPrimaryDarkColor" format="color" />
     <attr name="appPrimaryLightColor" format="color" />
@@ -36,11 +37,14 @@
     <attr name="textSizeSmall" format="dimension" />
     <attr name="textSizeMedium" format="dimension" />
     <attr name="textSizeLarge" format="dimension" />
+    <attr name="actionBarTextAppearance" format="reference"/>
 
     <attr name="ic_add" format="reference" />
     <attr name="ic_apps" format="reference" />
     <attr name="ic_arrow_back" format="reference" />
     <attr name="ic_arrow_forward" format="reference" />
+    <attr name="ic_arrow_left" format="reference" />
+    <attr name="ic_arrow_right" format="reference" />
     <attr name="ic_calendar" format="reference" />
     <attr name="ic_clear" format="reference" />
     <attr name="ic_content_copy" format="reference" />
@@ -57,7 +61,9 @@
     <attr name="ic_from_to_swap" format="reference" />
 
 
+
     <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="appbarSize">@dimen/appbarSize</item>
         <!--we implement dynamically in code-->
     </style>
 
@@ -68,11 +74,15 @@
 
     <style name="lightAppbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
+
     </style>
     <style name="darkAppbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
     </style>
-
+    <style name="appbarTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textSize">?textSizeMedium</item>
+        <item name="android:textColor">?appPrimaryTextColor</item>
+    </style>
     <style name="lightAppPopupTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">?appPrimaryLightColor</item>
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
@@ -351,6 +361,8 @@
         <item name="ic_apps">@drawable/ic_apps_light_24dp</item>
         <item name="ic_arrow_back">@drawable/ic_arrow_back_light_24dp</item>
         <item name="ic_arrow_forward">@drawable/ic_arrow_forward_light_24dp</item>
+        <item name="ic_arrow_left">@drawable/ic_arrow_left_light_24dp</item>
+        <item name="ic_arrow_right">@drawable/ic_arrow_right_light_24dp</item>
         <item name="ic_calendar">@drawable/ic_calendar_light_24dp</item>
         <item name="ic_clear">@drawable/ic_clear_light_24dp</item>
         <item name="ic_content_copy">@drawable/ic_content_copy_light_24dp</item>
@@ -366,6 +378,7 @@
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_light_24dp</item>
         <item name="ic_from_to_swap">@drawable/ic_swap_calls_light_24dp</item>
+
     </style>
 
     <style name="darkIconSet">
@@ -373,6 +386,8 @@
         <item name="ic_apps">@drawable/ic_apps_dark_24dp</item>
         <item name="ic_arrow_back">@drawable/ic_arrow_back_dark_24dp</item>
         <item name="ic_arrow_forward">@drawable/ic_arrow_forward_dark_24dp</item>
+        <item name="ic_arrow_left">@drawable/ic_arrow_left_dark_24dp</item>
+        <item name="ic_arrow_right">@drawable/ic_arrow_right_dark_24dp</item>
         <item name="ic_calendar">@drawable/ic_calendar_dark_24dp</item>
         <item name="ic_clear">@drawable/ic_clear_dark_24dp</item>
         <item name="ic_content_copy">@drawable/ic_content_copy_dark_24dp</item>
@@ -388,6 +403,7 @@
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_dark_24dp</item>
         <item name="ic_from_to_swap">@drawable/ic_swap_calls_dark_24dp</item>
+
     </style>
 
 

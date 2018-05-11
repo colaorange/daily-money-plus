@@ -20,7 +20,7 @@
         <ImageButton
             android:id="@+id/btn_prev"
             style="@style/navActionBtn"
-            android:src="?ic_arrow_back" />
+            android:src="?ic_arrow_left" />
 
         <ImageButton
             android:id="@+id/btn_today"
@@ -30,7 +30,7 @@
         <ImageButton
             android:id="@+id/btn_next"
             style="@style/navActionBtn"
-            android:src="?ic_arrow_forward" />
+            android:src="?ic_arrow_right" />
 
         <ImageButton
             android:id="@+id/btn_mode"
