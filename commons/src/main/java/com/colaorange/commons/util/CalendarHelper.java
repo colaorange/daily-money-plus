@@ -185,6 +185,19 @@ public class CalendarHelper {
         return cal.get(Calendar.WEEK_OF_YEAR);
     }
 
+    public int dayOfMonth(Date d){
+        Calendar cal = calendar(d);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+    public int dayOfWeek(Date d){
+        Calendar cal = calendar(d);
+        return cal.get(Calendar.DAY_OF_WEEK);
+    }
+    public int dayOfYear(Date d){
+        Calendar cal = calendar(d);
+        return cal.get(Calendar.DAY_OF_YEAR);
+    }
+
     public Date monthStartDate(Date d) {
         if (startDayOfMonth == 1) {
             return absMonthStartDate(d);

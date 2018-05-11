@@ -60,9 +60,10 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     private int mode = MODE_WEEK;
 
     private DateFormat dateFormat;
-    private DateFormat monthDateFormat;
+//    private DateFormat monthDateFormat;
     private DateFormat yearMonthFormat;
     private DateFormat yearFormat;
+    private DateFormat nonDigitalMonthFormat;
 
     ImageButton btnMode;
 
@@ -91,9 +92,10 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     private void initMembers() {
         Preference preference = preference();
         dateFormat = preference.getDateFormat();//new SimpleDateFormat("yyyy/MM/dd");
-        monthDateFormat = preference.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
+//        monthDateFormat = preference.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
         yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
         yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
+        nonDigitalMonthFormat = preference.getNonDigitalMonthFormat();
 
         vInfo = findViewById(R.id.record_list_infobar);
         toolbarView = findViewById(R.id.record_list_toolbar);
@@ -197,19 +199,10 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
         switch (mode) {
             case MODE_ALL:
                 start = end = null;
-//            toolbarView.setVisibility(TextView.GONE);
                 break;
             case MODE_MONTH:
                 start = cal.monthStartDate(currentDate);
                 end = cal.monthEndDate(currentDate);
-//            toolbarView.setVisibility(TextView.VISIBLE);
-//            
-//            btnMode.setVisibility(ImageButton.VISIBLE);
-//            if(allowYearSwitch){
-//                btnMode.setImageResource(R.drawable.btn_year);
-//            }else{
-//                btnMode.setImageResource(R.drawable.btn_week);
-//            }
                 break;
             case MODE_DAY:
                 start = cal.toDayStart(currentDate);
@@ -218,25 +211,19 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
             case MODE_YEAR:
                 start = cal.yearStartDate(currentDate);
                 end = cal.yearEndDate(currentDate);
-//            toolbarView.setVisibility(TextView.VISIBLE);
-//
-//            if(allowYearSwitch){
-//                btnMode.setVisibility(ImageButton.VISIBLE);
-//                btnMode.setImageResource(R.drawable.btn_week);
-//            }else{
-//                btnMode.setVisibility(ImageButton.GONE);
-//            }
 
                 break;
+            case MODE_WEEK:
             default:
                 start = cal.weekStartDate(currentDate);
                 end = cal.weekEndDate(currentDate);
-//            toolbarView.setVisibility(TextView.VISIBLE);
-//            btnMode.setVisibility(ImageButton.VISIBLE);
-//            btnMode.setImageResource(R.drawable.btn_month);
                 break;
         }
         final IDataProvider idp = contexts().getDataProvider();
+
+        final boolean sameYear = cal.isSameYear(start, end);
+        final boolean sameMonth = cal.isSameMonth(start, end);
+
 //        recordListHelper.refreshData(idp.listAllRecord());
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             List<Record> data = null;
@@ -289,23 +276,44 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                     vSumOther.setVisibility(TextView.VISIBLE);
                 }
 
+                StringBuilder sb = new StringBuilder();
                 //update info
                 switch (mode) {
                     case MODE_ALL:
                         vInfo.setText(i18n.string(R.string.label_all_records, Integer.toString(count)));
                         break;
                     case MODE_MONTH:
-                        vInfo.setText(i18n.string(R.string.label_month_details, yearMonthFormat.format(cal.monthStartDate(currentDate)), Integer.toString(count)));
+                        //<string name="label_month_details">%1$s (%2$s records)</string>
+                        if (sameMonth) {
+                            sb.append(yearMonthFormat.format(start));
+                        }else {
+                            sb.append(yearFormat.format(start));
+                            sb.append(" ").append(nonDigitalMonthFormat.format(start)).append(", ").append(cal.dayOfMonth(start)).append(" - ")
+                                    .append(nonDigitalMonthFormat.format(end)).append(" ").append(cal.dayOfMonth(end));
+                        }
+                        vInfo.setText(i18n.string(R.string.label_month_details, sb.toString(), Integer.toString(count)));
                         break;
                     case MODE_DAY:
                         vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(currentDate), Integer.toString(count)));
                         break;
                     case MODE_YEAR:
-                        vInfo.setText(i18n.string(R.string.label_year_details, yearFormat.format(currentDate), Integer.toString(count)));
+
+                        //<string name="label_year_details">%1$s (%2$s records)</string>
+                        if (sameYear) {
+                            sb.append(yearFormat.format(start));
+                        } else {
+                            sb.append(yearFormat.format(start));
+                            sb.append(", ").append(nonDigitalMonthFormat.format(start)).append(" ").append(cal.dayOfMonth(start)).append(" - ")
+                                    .append(yearFormat.format(end)).append(" ").append(nonDigitalMonthFormat.format(end)).append(" ").append(cal.dayOfMonth(end));
+                        }
+
+                        vInfo.setText(i18n.string(R.string.label_year_details, sb.toString(), Integer.toString(count)));
                         break;
                     case MODE_WEEK:
                     default:
-                        vInfo.setText(i18n.string(R.string.label_week_details, monthDateFormat.format(start), monthDateFormat.format(end),
+                        //<string name="label_week_details">%5$s %1$s to %2$s - Week %3$s/%4$s (%6$s)</string>
+                        vInfo.setText(i18n.string(R.string.label_week_details, nonDigitalMonthFormat.format(start) + " " + cal.dayOfMonth(start),
+                                (!sameMonth ? nonDigitalMonthFormat.format(end) + " " : "") + cal.dayOfMonth(end),
                                 cal.weekOfMonth(currentDate), cal.weekOfYear(currentDate), yearFormat.format(start), Integer.toString(count)));
                         break;
                 }

@@ -3,6 +3,7 @@
 === Features ===
  ## re-support Italian
  #8 option for select 1st and last used account.
+ #6 refactor sub title in reclist
 
 === Bugs ===
  #   No selection effect on account-reclist

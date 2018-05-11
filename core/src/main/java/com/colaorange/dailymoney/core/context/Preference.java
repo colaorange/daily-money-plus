@@ -102,6 +102,7 @@ public class Preference {
     String timeFormat;
     String dateTimeFormat;
     String monthFormat;
+    String nonDigitalMonthFormat;
     String monthDateFormat;
     String yearFormat;
     String yearMonthFormat;
@@ -389,13 +390,14 @@ public class Preference {
 
         switch (formatMonth) {
             case FORMAT_MONTH_FULL:
-                monthFormat = "MMMM";
+                nonDigitalMonthFormat = monthFormat = "MMMM";
                 break;
             case FORMAT_MONTH_SHORT:
-                monthFormat = "MMM";
+                nonDigitalMonthFormat = monthFormat = "MMM";
                 break;
             case FORMAT_MONTH_DIGITAL:
             default:
+                nonDigitalMonthFormat = "MMM";
                 monthFormat = "MM";
                 monthDigital = true;
                 break;
@@ -598,6 +600,9 @@ public class Preference {
 
     public DateFormat getMonthFormat() {
         return new SimpleDateFormat(monthFormat);
+    }
+    public DateFormat getNonDigitalMonthFormat() {
+        return new SimpleDateFormat(nonDigitalMonthFormat);
     }
 
     public DateFormat getMonthDateFormat() {
