@@ -3,11 +3,13 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
@@ -22,6 +24,9 @@ import java.util.List;
 public class BookMgntActivity extends ContextsActivity {
 
     BookRecyclerHelper bookRecyclerHelper;
+
+    private ActionMode actionMode;
+    private Book actionBook;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,10 +54,13 @@ public class BookMgntActivity extends ContextsActivity {
 
         bookRecyclerHelper = new BookRecyclerHelper(this, true, new BookRecyclerHelper.OnBookListener() {
             @Override
+            public void onBookSelected(Book book) {
+                doBookSelected(book);
+            }
+
+            @Override
             public void onBookDeleted(Book book) {
-                GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
-                reloadData();
-                trackEvent(TE.DELETE_BOOK);
+                doBookDeleted(book);
             }
         });
 
@@ -60,6 +68,35 @@ public class BookMgntActivity extends ContextsActivity {
         bookRecyclerHelper.setup(vrecycler);
 
 //        registerForContextMenu(vrecycler);
+    }
+
+    private void doBookDeleted(Book book) {
+        if (book.equals(actionBook)) {
+            if (actionMode != null) {
+                actionMode.finish();
+            }
+        }
+        GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
+        reloadData();
+        trackEvent(TE.DELETE_BOOK);
+    }
+
+    private void doBookSelected(Book book) {
+        if (book == null && actionMode != null) {
+            actionMode.finish();
+            return;
+        }
+
+        if (book != null) {
+            actionBook = book;
+            if (actionMode == null) {
+                actionMode = this.startSupportActionMode(new BookActionModeCallback());
+            } else {
+                actionMode.invalidate();
+            }
+            actionMode.setTitle(book.getName());
+        }
+
     }
 
     @Override
@@ -113,30 +150,76 @@ public class BookMgntActivity extends ContextsActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class BookActionModeCallback implements android.support.v7.view.ActionMode.Callback {
 
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        if (v.getId() == R.id.book_mgnt_list) {
-//            getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);
-//        }
-//
-//    }
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);//Inflate the menu over action mode
+            return true;
+        }
 
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//        if (item.getItemId() == R.id.menu_edit) {
-//            bookRecyclerHelper.doEditBook(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_delete) {
-//            bookRecyclerHelper.doDeleteBook(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_set_working) {
-//            bookRecyclerHelper.doSetWorkingBook(info.position);
-//            finish();
-//            return true;
-//        }
-//        return super.onContextItemSelected(item);
-//    }
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            int workingBookId = contexts().getWorkingBookId();
+
+            //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
+            //So here show action menu according to SDK Levels
+            MenuItem mi = menu.findItem(R.id.menu_set_working);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            if (workingBookId == actionBook.getId()) {
+                mi.setEnabled(false);
+            } else {
+                mi.setEnabled(true);
+            }
+            mi.setIcon(buildIcon(resolveThemeAttrResId(R.attr.ic_set_working), mi.isEnabled()));
+
+
+            mi = menu.findItem(R.id.menu_edit);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            mi = menu.findItem(R.id.menu_delete);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            if (workingBookId == actionBook.getId() || Contexts.DEFAULT_BOOK_ID == actionBook.getId()) {
+                mi.setEnabled(false);
+            } else {
+                mi.setEnabled(true);
+            }
+            mi.setIcon(buildIcon(resolveThemeAttrResId(R.attr.ic_delete_forever), mi.isEnabled()));
+
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_edit) {
+                bookRecyclerHelper.doEditBook(actionBook);
+                return true;
+            } else if (item.getItemId() == R.id.menu_delete) {
+                bookRecyclerHelper.doDeleteBook(actionBook);
+//                mode.finish();//Finish action mode
+                return true;
+            } else if (item.getItemId() == R.id.menu_set_working) {
+                bookRecyclerHelper.doSetWorkingBook(actionBook);
+                mode.invalidate();
+                return true;
+            }
+            return false;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionBook = null;
+            bookRecyclerHelper.clearSelection();
+        }
+
+
+    }
 }

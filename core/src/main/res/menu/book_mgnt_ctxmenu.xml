@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_set_working"
-        android:icon="?ic_edit"
+        android:icon="?ic_set_working"
         android:title="@string/act_set_working_book"/>
     <item
         android:id="@+id/menu_edit"

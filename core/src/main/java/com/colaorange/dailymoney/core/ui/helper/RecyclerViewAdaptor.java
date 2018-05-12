@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.adapter;
+package com.colaorange.dailymoney.core.ui.helper;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

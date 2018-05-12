@@ -1,17 +1,14 @@
-package com.colaorange.dailymoney.core.ui.adapter;
+package com.colaorange.dailymoney.core.ui.helper;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by Dennis

@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.ui.Constants;
-import com.colaorange.dailymoney.core.ui.adapter.SelectableRecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
@@ -60,30 +61,19 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new BookRecyclerAdapter(activity, recyclerDataList);
         this.vRecycler = vRecycler;
-        this.vRecycler.setLayoutManager(new LinearLayoutManager(activity));
-        this.vRecycler.setAdapter(recyclerAdapter);
+        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+        vRecycler.setLayoutManager(new LinearLayoutManager(activity));
+        vRecycler.setAdapter(recyclerAdapter);
+
 
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Book>() {
             @Override
             public void onSelect(Set<Book> selection) {
-                if(selection.size()>0){
-
-                }
+                listener.onBookSelected(selection.size() == 0 ? null : selection.iterator().next());
             }
         });
-
-//        if (clickEditable) {
-//            vRecycler.setOnItemClickListener(this);
-//        }
     }
 
-
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-//        if (parent == vRecycler) {
-//            doEditBook(pos);
-//        }
-//    }
 
     public void reloadData(List<Book> data) {
         if (recyclerDataList != data) {//not self call
@@ -104,8 +94,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
     }
 
 
-    public void doEditBook(int pos) {
-        Book book = recyclerDataList.get(pos);
+    public void doEditBook(Book book) {
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, false);
@@ -113,8 +102,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
     }
 
-    public void doDeleteBook(final int pos) {
-        final Book book = recyclerDataList.get(pos);
+    public void doDeleteBook(final Book book) {
         final int workingBookId = Contexts.instance().getWorkingBookId();
         final I18N i18n = Contexts.instance().getI18n();
         if (book.getId() == Contexts.DEFAULT_BOOK_ID) {
@@ -134,7 +122,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
                         if (listener != null) {
                             listener.onBookDeleted(book);
                         } else {
-                            recyclerDataList.remove(pos);
+                            recyclerAdapter.remove(book);
                             recyclerAdapter.notifyDataSetChanged();
                         }
                         Contexts.instance().deleteData(book);
@@ -145,19 +133,27 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         });
     }
 
-    public void doSetWorkingBook(int pos) {
-        Book d = recyclerDataList.get(pos);
-        if (Contexts.instance().getWorkingBookId() == d.getId()) {
+    public void doSetWorkingBook(Book book) {
+        if (Contexts.instance().getWorkingBookId() == book.getId()) {
             return;
         }
-        Contexts.instance().setWorkingBookId(d.getId());
+        Contexts.instance().setWorkingBookId(book.getId());
 
         reloadData(recyclerDataList);
     }
 
+    public void clearSelection() {
+        recyclerAdapter.clearSelection();
+    }
+
 
     public interface OnBookListener {
-        void onBookDeleted(Book detail);
+        /**
+         * select or dis select a book
+         */
+        void onBookSelected(Book book);
+
+        void onBookDeleted(Book book);
     }
 
 

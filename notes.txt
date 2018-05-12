@@ -52,5 +52,10 @@
     https://www.jianshu.com/p/4a77ae4cd82f
     https://blog.csdn.net/github_35180164/article/details/54025071
 
+* recycler view menu
+    https://www.simplifiedcoding.net/create-options-menu-recyclerview-item-tutorial/
+    http://www.androhub.com/android-contextual-action-mode-over-toolbar/
+
+
 * supports
     https://developer.android.com/topic/libraries/support-library/packages

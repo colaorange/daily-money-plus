@@ -3,6 +3,9 @@ package com.colaorange.dailymoney.core.context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -340,5 +343,20 @@ public class ContextsActivity extends AppCompatActivity {
 
     public int getSelectedBackgroundId() {
         return selectedBackgroundId;
+    }
+
+    public Drawable buildIcon(int drawableResId, boolean enabled){
+        Drawable drawable = getResources().getDrawable(drawableResId);
+        if(enabled){
+            return drawable;
+        }
+
+        drawable = drawable.mutate();
+        if(isLightTheme()) {
+            drawable.setColorFilter(0x7FFFFFFF, PorterDuff.Mode.LIGHTEN);
+        }else{
+            drawable.setColorFilter(0x7F000000, PorterDuff.Mode.DARKEN);
+        }
+        return drawable;
     }
 }
