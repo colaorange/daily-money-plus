@@ -49,6 +49,8 @@
 
 * appbar scrolling with
     https://blog.30sparks.com/material-design-5-appbarlayout/
+    https://www.jianshu.com/p/4a77ae4cd82f
+    https://blog.csdn.net/github_35180164/article/details/54025071
 
 * supports
     https://developer.android.com/topic/libraries/support-library/packages

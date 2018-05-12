@@ -4,19 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -25,21 +20,20 @@ import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Book;
-import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
  * @author dennis
  */
-public class BookListHelper implements OnItemClickListener {
+public class BookListHelper /*implements OnItemClickListener */ {
 
 
-    private List<Book> listData = new ArrayList<Book>();
+    private List<Book> recyclerDataList;
 
 
-    private ListView vList;
+    private RecyclerView vRecycler;
 
-    private BookListAdapter listAdapter;
+    private BookRecyclerAdapter recyclerAdapter;
 
     private boolean clickEditable;
 
@@ -49,40 +43,45 @@ public class BookListHelper implements OnItemClickListener {
 
     private int workingBookId;
 
+    LayoutInflater inflater;
+
     public BookListHelper(ContextsActivity activity, boolean clickEditable, OnBookListener listener) {
         this.activity = activity;
         this.clickEditable = clickEditable;
         this.listener = listener;
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
 
-    public void setup(ListView listview) {
+    public void setup(RecyclerView vRecycler) {
         workingBookId = Contexts.instance().getWorkingBookId();
-        listData = new LinkedList<>();
-        listAdapter = new BookListAdapter(activity, listData);
-        vList = listview;
-        vList.setAdapter(listAdapter);
-        if (clickEditable) {
-            vList.setOnItemClickListener(this);
-        }
+        recyclerDataList = new LinkedList<>();
+        recyclerAdapter = new BookRecyclerAdapter(recyclerDataList);
+        this.vRecycler = vRecycler;
+        this.vRecycler.setAdapter(recyclerAdapter);
+//        if (clickEditable) {
+//            vRecycler.setOnItemClickListener(this);
+//        }
     }
 
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-        if (parent == vList) {
-            doEditBook(pos);
-        }
-    }
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+//        if (parent == vRecycler) {
+//            doEditBook(pos);
+//        }
+//    }
 
     public void reloadData(List<Book> data) {
-        if(listData !=data) {//not self call
-            listData.clear();
-            listData.addAll(data);
+        if (recyclerDataList != data) {//not self call
+            recyclerDataList.clear();
+            recyclerDataList.addAll(data);
         }
+        System.out.println(">>>>>>>>>>" + recyclerDataList);
 
         workingBookId = Contexts.instance().getWorkingBookId();
-        listAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
+//        recyclerAdapter.notifyItemRangeChanged(0, recyclerDataList.size());
     }
 
 
@@ -95,7 +94,7 @@ public class BookListHelper implements OnItemClickListener {
 
 
     public void doEditBook(int pos) {
-        Book book = listData.get(pos);
+        Book book = recyclerDataList.get(pos);
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
         intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, false);
@@ -104,7 +103,7 @@ public class BookListHelper implements OnItemClickListener {
     }
 
     public void doDeleteBook(final int pos) {
-        final Book book = listData.get(pos);
+        final Book book = recyclerDataList.get(pos);
         final int workingBookId = Contexts.instance().getWorkingBookId();
         final I18N i18n = Contexts.instance().getI18n();
         if (book.getId() == Contexts.DEFAULT_BOOK_ID) {
@@ -124,8 +123,8 @@ public class BookListHelper implements OnItemClickListener {
                         if (listener != null) {
                             listener.onBookDeleted(book);
                         } else {
-                            listData.remove(pos);
-                            listAdapter.notifyDataSetChanged();
+                            recyclerDataList.remove(pos);
+                            recyclerAdapter.notifyDataSetChanged();
                         }
                         Contexts.instance().deleteData(book);
                     }
@@ -136,13 +135,13 @@ public class BookListHelper implements OnItemClickListener {
     }
 
     public void doSetWorkingBook(int pos) {
-        Book d = listData.get(pos);
+        Book d = recyclerDataList.get(pos);
         if (Contexts.instance().getWorkingBookId() == d.getId()) {
             return;
         }
         Contexts.instance().setWorkingBookId(d.getId());
 
-        reloadData(listData);
+        reloadData(recyclerDataList);
     }
 
 
@@ -151,51 +150,51 @@ public class BookListHelper implements OnItemClickListener {
     }
 
 
+    private class BookRecyclerAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
-    private class BookListAdapter extends ArrayAdapter<Book> {
+        List<Book> list;
 
-        LayoutInflater inflater;
-
-        public BookListAdapter(@NonNull Context context, List<Book> list) {
-            super(context, R.layout.book_mgnt_item, list);
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public BookRecyclerAdapter(List<Book> list) {
+            this.list = list;
         }
 
         @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            BookViewHolder holder;
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.book_mgnt_item, null);
-                convertView.setTag(holder = new BookViewHolder());
-            } else {
-                holder = (BookViewHolder) convertView.getTag();
-            }
-
-            holder.bindViewValue(getItem(position), convertView);
-
-            return convertView;
+        public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new BookViewHolder(inflater.inflate(R.layout.book_mgnt_item, parent, false));
         }
 
+        @Override
+        public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+            holder.bindViewValue(list.get(position));
+        }
 
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
     }
 
-    private class BookViewHolder {
+    private class BookViewHolder extends RecyclerView.ViewHolder {
 
-        public void bindViewValue(Book book, View convertView) {
+        public BookViewHolder(View itemView) {
+            super(itemView);
+        }
 
-            ImageView vicon = convertView.findViewById(R.id.book_item_icon);
-            TextView vname = convertView.findViewById(R.id.book_item_name);
-            TextView vid = convertView.findViewById(R.id.book_item_id);
-            TextView vnote = convertView.findViewById(R.id.book_item_note);
-            TextView vsymbol = convertView.findViewById(R.id.book_item_symbol);
+        public void bindViewValue(Book book) {
+
+            ImageView vicon = itemView.findViewById(R.id.book_item_icon);
+            TextView vname = itemView.findViewById(R.id.book_item_name);
+            TextView vid = itemView.findViewById(R.id.book_item_id);
+            TextView vnote = itemView.findViewById(R.id.book_item_note);
+            TextView vsymbol = itemView.findViewById(R.id.book_item_symbol);
 
             vname.setText(book.getName());
             vid.setText(Integer.toString(book.getId()));
             vnote.setText(book.getNote());
             vsymbol.setText(book.getSymbol());
 
-            if(book.getId()==workingBookId){
+            if (book.getId() == workingBookId) {
                 vicon.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_active));
             } else {
                 vicon.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_notactive));

@@ -5,13 +5,13 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ListView;
 
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -21,14 +21,12 @@ import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
- * 
  * @author dennis
- * 
  */
 public class BookMgntActivity extends ContextsActivity {
-    
+
     BookListHelper bookListHelper;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +38,9 @@ public class BookMgntActivity extends ContextsActivity {
             public void run() {
                 reloadData();
             }
-        },25);
+        }, 25);
     }
-    
+
 
     private void initArgs() {
 
@@ -50,56 +48,58 @@ public class BookMgntActivity extends ContextsActivity {
 
 
     private void initMembers() {
-        
-        
+
+
         bookListHelper = new BookListHelper(this, true, new BookListHelper.OnBookListener() {
             @Override
             public void onBookDeleted(Book book) {
-                GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted,book.getName()));
+                GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
                 reloadData();
                 trackEvent(TE.DELETE_BOOK);
             }
         });
-        
-        ListView listView = findViewById(R.id.book_mgnt_list);
+
+        RecyclerView listView = findViewById(R.id.book_mgnt_list);
         bookListHelper.setup(listView);
-        
+
         registerForContextMenu(listView);
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constants.REQUEST_BOOK_EDITOR_CODE && resultCode==Activity.RESULT_OK){
-            GUIs.delayPost(new Runnable(){
+        if (requestCode == Constants.REQUEST_BOOK_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
+            GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
                     reloadData();
-                }});
+                }
+            });
         }
     }
 
 
     private void reloadData() {
         final IMasterDataProvider idp = contexts().getMasterDataProvider();
-        GUIs.doBusy(this,new GUIs.BusyAdapter() {
+        GUIs.doBusy(this, new GUIs.BusyAdapter() {
             List<Book> data = null;
-            
+
             @Override
             public void run() {
                 data = idp.listAllBook();
             }
+
             @Override
             public void onBusyFinish() {
-              //update data
+                //update data
                 bookListHelper.reloadData(data);
             }
         });
-        
-        
+
+
     }
-    
-   
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -115,8 +115,8 @@ public class BookMgntActivity extends ContextsActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    
+
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
