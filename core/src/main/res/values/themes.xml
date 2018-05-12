@@ -360,12 +360,11 @@
         <item name="ic_grid_on">@drawable/ic_grid_on_light_24dp</item>
         <item name="ic_import_export">@drawable/ic_import_export_light_24dp</item>
         <item name="ic_save">@drawable/ic_save_light_24dp</item>
-        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp
-        </item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp</item>
         <item name="ic_share">@drawable/ic_share_light_24dp</item>
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_light_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_calls_light_24dp</item>
+        <item name="ic_from_to_swap">@drawable/ic_swap_vert_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -382,12 +381,11 @@
         <item name="ic_grid_on">@drawable/ic_grid_on_dark_24dp</item>
         <item name="ic_import_export">@drawable/ic_import_export_dark_24dp</item>
         <item name="ic_save">@drawable/ic_save_dark_24dp</item>
-        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp
-        </item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp</item>
         <item name="ic_share">@drawable/ic_share_dark_24dp</item>
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_dark_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_calls_dark_24dp</item>
+        <item name="ic_from_to_swap">@drawable/ic_swap_vert_dark_24dp</item>
     </style>
 
 

@@ -1,8 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,30 +106,39 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.record_editor_menu, menu);
+        GUIs.post(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.menu_bookmark).setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        doShowBookmarkModeDlg();
+                        return true;
+                    }
+                });
+            }
+        });
         return true;
+    }
+
+    private void doShowBookmarkModeDlg() {
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.act_bookmark))
+                .setItems(R.array.record_editor_bookmark_options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+                        doBookmarkMode(bookmarkMode = which);
+                    }
+                }).show();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_quick) {
+
+        if (item.getItemId() == R.id.menu_bookmark) {
             if (++bookmarkMode > 1) {
                 bookmarkMode = 0;
             }
-
-            switch (bookmarkMode) {
-                case 1:
-                    workingRecord.setFrom(preference().getLastFromAccount());
-                    workingRecord.setTo(preference().getLastToAccount());
-                    break;
-                case 0:
-                default:
-                    workingRecord.setFrom("");
-                    workingRecord.setTo("");
-                    break;
-            }
-
-
-            refreshSpinner(false);
+            doBookmarkMode(bookmarkMode);
             return true;
         } else if (item.getItemId() == R.id.menu_swap) {
             String from = workingRecord.getFrom();
@@ -137,6 +148,24 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doBookmarkMode(int bookmarkMode) {
+
+        switch (bookmarkMode) {
+            case 1:
+                workingRecord.setFrom(preference().getLastFromAccount());
+                workingRecord.setTo(preference().getLastToAccount());
+                break;
+            case 0:
+            default:
+                workingRecord.setFrom("");
+                workingRecord.setTo("");
+                break;
+        }
+
+
+        refreshSpinner(false);
     }
 
 

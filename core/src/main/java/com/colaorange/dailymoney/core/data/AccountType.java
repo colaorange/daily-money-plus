@@ -42,9 +42,9 @@ public enum AccountType {
     static final AccountType[] fromExpense = new AccountType[]{ASSET, INCOME, LIABILITY, OTHER};
 
     static final AccountType[] fromAsset = new AccountType[]{EXPENSE, ASSET, LIABILITY, OTHER, INCOME};
-    static final AccountType[] fromLiability = new AccountType[]{EXPENSE, ASSET, LIABILITY, OTHER, LIABILITY};
+    static final AccountType[] fromLiability = new AccountType[]{EXPENSE, ASSET, LIABILITY, OTHER, INCOME};
     static final AccountType[] fromOther = new AccountType[]{ASSET, LIABILITY, OTHER, EXPENSE, INCOME};
-    static final AccountType[] fromUnknow = new AccountType[]{};
+    static final AccountType[] fromUnknow = new AccountType[]{ASSET, LIABILITY, OTHER, EXPENSE, INCOME};
 
     static public AccountType[] getSupportedType() {
         return supported;
