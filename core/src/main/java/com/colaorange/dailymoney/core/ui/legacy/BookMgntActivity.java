@@ -1,31 +1,27 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.GUIs;
+
+import java.util.List;
 
 /**
  * @author dennis
  */
 public class BookMgntActivity extends ContextsActivity {
 
-    BookListHelper bookListHelper;
+    BookRecyclerHelper bookRecyclerHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +29,8 @@ public class BookMgntActivity extends ContextsActivity {
         setContentView(R.layout.book_mgnt);
         initArgs();
         initMembers();
+        enableAppbarHideOnScroll(false);
+
         GUIs.delayPost(new Runnable() {
             @Override
             public void run() {
@@ -49,8 +47,7 @@ public class BookMgntActivity extends ContextsActivity {
 
     private void initMembers() {
 
-
-        bookListHelper = new BookListHelper(this, true, new BookListHelper.OnBookListener() {
+        bookRecyclerHelper = new BookRecyclerHelper(this, true, new BookRecyclerHelper.OnBookListener() {
             @Override
             public void onBookDeleted(Book book) {
                 GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
@@ -59,10 +56,10 @@ public class BookMgntActivity extends ContextsActivity {
             }
         });
 
-        RecyclerView listView = findViewById(R.id.book_mgnt_list);
-        bookListHelper.setup(listView);
+        RecyclerView vrecycler = findViewById(R.id.book_mgnt_recycler);
+        bookRecyclerHelper.setup(vrecycler);
 
-        registerForContextMenu(listView);
+//        registerForContextMenu(vrecycler);
     }
 
     @Override
@@ -92,7 +89,7 @@ public class BookMgntActivity extends ContextsActivity {
             @Override
             public void onBusyFinish() {
                 //update data
-                bookListHelper.reloadData(data);
+                bookRecyclerHelper.reloadData(data);
             }
         });
 
@@ -110,36 +107,36 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_new) {
-            bookListHelper.doNewBook();
+            bookRecyclerHelper.doNewBook();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.book_mgnt_list) {
-            getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);
-        }
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        if (v.getId() == R.id.book_mgnt_list) {
+//            getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);
+//        }
+//
+//    }
 
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.menu_edit) {
-            bookListHelper.doEditBook(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_delete) {
-            bookListHelper.doDeleteBook(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_set_working) {
-            bookListHelper.doSetWorkingBook(info.position);
-            finish();
-            return true;
-        }
-        return super.onContextItemSelected(item);
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//        if (item.getItemId() == R.id.menu_edit) {
+//            bookRecyclerHelper.doEditBook(info.position);
+//            return true;
+//        } else if (item.getItemId() == R.id.menu_delete) {
+//            bookRecyclerHelper.doDeleteBook(info.position);
+//            return true;
+//        } else if (item.getItemId() == R.id.menu_set_working) {
+//            bookRecyclerHelper.doSetWorkingBook(info.position);
+//            finish();
+//            return true;
+//        }
+//        return super.onContextItemSelected(item);
+//    }
 }

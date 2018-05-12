@@ -16,4 +16,7 @@
     <dimen name="largeTextSizeSmall">20sp</dimen>
     <dimen name="largeTextSizeMedium">24sp</dimen>
     <dimen name="largeTextSizeLarge">26sp</dimen>
+
+
+    <dimen name="float_add_margin">16dp</dimen>
 </resources>

@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,9 @@ public class ContextsActivity extends AppCompatActivity {
     protected int homeAsUpBackId;
     protected int homeAsUpAppId;
 
+    protected int selectableBackgroundId;
+    protected int selectedBackgroundId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //for init ui related resource in ui thread
@@ -59,13 +63,20 @@ public class ContextsActivity extends AppCompatActivity {
         themeApplier = new ThemeApplier(this);
         themeApplier.applyTheme();
 
+        homeAsUpBackId = resolveThemeAttrResId(R.attr.ic_arrow_back);
+        homeAsUpAppId = resolveThemeAttrResId(R.attr.ic_apps);
+        selectableBackgroundId = resolveThemeAttrResId(android.R.attr.selectableItemBackground);
+        if (isLightTheme()) {
+            selectedBackgroundId = resolveThemeAttrResId(R.attr.appSecondaryLightColor);
+        } else {
+            selectedBackgroundId = resolveThemeAttrResId(R.attr.appSecondaryDarkColor);
+        }
+
+
         super.onCreate(savedInstanceState);
         instanceStateHelper = new InstanceStateHelper(this);
         instanceStateHelper.onCreate(savedInstanceState);
 
-
-        homeAsUpBackId = resolveThemeAttrResId(R.attr.ic_arrow_back);
-        homeAsUpAppId = resolveThemeAttrResId(R.attr.ic_apps);
 
         Logger.d("activity created:" + this);
         onCreateTime = System.currentTimeMillis();
@@ -301,6 +312,33 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
+    public void expandAppbar(boolean expand) {
+        AppBarLayout appbar = findViewById(R.id.appbar);
+        if (appbar != null) {
+            appbar.setExpanded(expand, true);
+        }
+    }
+
+    public void enableAppbarHideOnScroll(boolean enable) {
+        setAppbarHideOnScrollFlag(enable ? AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
+    }
+
+    public void setAppbarHideOnScrollFlag(int flag) {
+        Toolbar toolbar = findViewById(R.id.appToolbar);
+        if (toolbar != null) {
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            params.setScrollFlags(flag);
+        }
+    }
+
     public interface TE extends Contexts.TE {
+    }
+
+    public int getSelectableBackgroundId() {
+        return selectableBackgroundId;
+    }
+
+    public int getSelectedBackgroundId() {
+        return selectedBackgroundId;
     }
 }

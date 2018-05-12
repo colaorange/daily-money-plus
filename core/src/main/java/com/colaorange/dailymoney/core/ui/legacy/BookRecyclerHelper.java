@@ -1,12 +1,9 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +11,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.adapter.SelectableRecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author dennis
  */
-public class BookListHelper /*implements OnItemClickListener */ {
+public class BookRecyclerHelper /*implements OnItemClickListener */ {
 
 
     private List<Book> recyclerDataList;
@@ -45,7 +47,7 @@ public class BookListHelper /*implements OnItemClickListener */ {
 
     LayoutInflater inflater;
 
-    public BookListHelper(ContextsActivity activity, boolean clickEditable, OnBookListener listener) {
+    public BookRecyclerHelper(ContextsActivity activity, boolean clickEditable, OnBookListener listener) {
         this.activity = activity;
         this.clickEditable = clickEditable;
         this.listener = listener;
@@ -56,9 +58,20 @@ public class BookListHelper /*implements OnItemClickListener */ {
     public void setup(RecyclerView vRecycler) {
         workingBookId = Contexts.instance().getWorkingBookId();
         recyclerDataList = new LinkedList<>();
-        recyclerAdapter = new BookRecyclerAdapter(recyclerDataList);
+        recyclerAdapter = new BookRecyclerAdapter(activity, recyclerDataList);
         this.vRecycler = vRecycler;
+        this.vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         this.vRecycler.setAdapter(recyclerAdapter);
+
+        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Book>() {
+            @Override
+            public void onSelect(Set<Book> selection) {
+                if(selection.size()>0){
+
+                }
+            }
+        });
+
 //        if (clickEditable) {
 //            vRecycler.setOnItemClickListener(this);
 //        }
@@ -77,11 +90,9 @@ public class BookListHelper /*implements OnItemClickListener */ {
             recyclerDataList.clear();
             recyclerDataList.addAll(data);
         }
-        System.out.println(">>>>>>>>>>" + recyclerDataList);
 
         workingBookId = Contexts.instance().getWorkingBookId();
         recyclerAdapter.notifyDataSetChanged();
-//        recyclerAdapter.notifyItemRangeChanged(0, recyclerDataList.size());
     }
 
 
@@ -150,38 +161,29 @@ public class BookListHelper /*implements OnItemClickListener */ {
     }
 
 
-    private class BookRecyclerAdapter extends RecyclerView.Adapter<BookViewHolder> {
+    public class BookRecyclerAdapter extends SelectableRecyclerViewAdaptor<Book, BookViewHolder> {
 
-        List<Book> list;
-
-        public BookRecyclerAdapter(List<Book> list) {
-            this.list = list;
+        public BookRecyclerAdapter(ContextsActivity activity, List<Book> data) {
+            super(activity, data);
         }
 
         @NonNull
         @Override
         public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new BookViewHolder(inflater.inflate(R.layout.book_mgnt_item, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-            holder.bindViewValue(list.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
+            View viewItem = inflater.inflate(R.layout.book_mgnt_item, parent, false);
+            return new BookViewHolder(this, viewItem);
         }
     }
 
-    private class BookViewHolder extends RecyclerView.ViewHolder {
+    public class BookViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<BookRecyclerAdapter, Book> {
 
-        public BookViewHolder(View itemView) {
-            super(itemView);
+        public BookViewHolder(BookRecyclerAdapter adapter, View itemView) {
+            super(adapter, itemView);
         }
 
+        @Override
         public void bindViewValue(Book book) {
+            super.bindViewValue(book);
 
             ImageView vicon = itemView.findViewById(R.id.book_item_icon);
             TextView vname = itemView.findViewById(R.id.book_item_name);
@@ -201,5 +203,6 @@ public class BookListHelper /*implements OnItemClickListener */ {
             }
         }
     }
+
 
 }

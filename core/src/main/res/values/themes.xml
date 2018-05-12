@@ -11,6 +11,7 @@
     <attr name="disabledTextColor" format="color" />
 
     <attr name="appbarTheme" format="reference" />
+    <attr name="appbarSize" fromat="reference"/>
     <attr name="appPopupTheme" format="reference" />
 
     <attr name="defaultSelector" format="reference" />
@@ -381,6 +382,8 @@
         <item name="ic_apps">@drawable/ic_apps_dark_24dp</item>
         <item name="ic_arrow_back">@drawable/ic_arrow_back_dark_24dp</item>
         <item name="ic_arrow_forward">@drawable/ic_arrow_forward_dark_24dp</item>
+        <item name="ic_arrow_left">@drawable/ic_arrow_left_dark_24dp</item>
+        <item name="ic_arrow_right">@drawable/ic_arrow_right_dark_24dp</item>
         <item name="ic_calendar">@drawable/ic_calendar_dark_24dp</item>
         <item name="ic_clear">@drawable/ic_clear_dark_24dp</item>
         <item name="ic_content_copy">@drawable/ic_content_copy_dark_24dp</item>
