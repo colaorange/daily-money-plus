@@ -334,6 +334,7 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
+    //shortcut
     public interface TE extends Contexts.TE {
     }
 
@@ -345,6 +346,9 @@ public class ContextsActivity extends AppCompatActivity {
         return selectedBackgroundId;
     }
 
+    /**
+     * to get a drawable icon or build a lighten/darken icon when it is disabled
+     */
     public Drawable buildIcon(int drawableResId, boolean enabled){
         Drawable drawable = getResources().getDrawable(drawableResId);
         if(enabled){
@@ -353,9 +357,10 @@ public class ContextsActivity extends AppCompatActivity {
 
         drawable = drawable.mutate();
         if(isLightTheme()) {
-            drawable.setColorFilter(0x7FFFFFFF, PorterDuff.Mode.LIGHTEN);
+            //https://blog.csdn.net/t12x3456/article/details/10432935
+            drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
         }else{
-            drawable.setColorFilter(0x7F000000, PorterDuff.Mode.DARKEN);
+            drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
         }
         return drawable;
     }

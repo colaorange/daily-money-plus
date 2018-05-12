@@ -25,10 +25,9 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class ContextsPrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ContextsPrefsFragment extends ContextsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     boolean dirty = false;
-    boolean markRestart = false;
 
     Set<String> recreateKeys = new HashSet<>();
 
@@ -41,13 +40,6 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         final I18N i18n = Contexts.instance().getI18n();
         recreateKeys.add(i18n.string(R.string.pref_theme));
         recreateKeys.add(i18n.string(R.string.pref_text_size));
-    }
-
-    public void trackEvent(String action) {
-        Activity activity = getActivity();
-        if (activity instanceof ContextsActivity) {
-            ((ContextsActivity) activity).trackEvent(action);
-        }
     }
 
     @Override
