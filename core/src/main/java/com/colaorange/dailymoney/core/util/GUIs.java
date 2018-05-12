@@ -130,9 +130,9 @@ public class GUIs {
         alert(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
-    static public View inflateView(Context context, ViewGroup parent, int resourceid) {
+    static public View inflateView(Context context, ViewGroup parent, int resId) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(resourceid, parent);
+        return inflater.inflate(resId, parent);
     }
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="appbarSize" fromat="reference"/>
     <attr name="appPrimaryColor" format="color" />
     <attr name="appPrimaryDarkColor" format="color" />
     <attr name="appPrimaryLightColor" format="color" />
@@ -61,7 +60,6 @@
     <attr name="ic_from_to_swap" format="reference" />
 
 
-
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
         <!--we implement dynamically in code-->
@@ -74,7 +72,6 @@
 
     <style name="lightAppbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
-
     </style>
     <style name="darkAppbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
@@ -372,13 +369,11 @@
         <item name="ic_grid_on">@drawable/ic_grid_on_light_24dp</item>
         <item name="ic_import_export">@drawable/ic_import_export_light_24dp</item>
         <item name="ic_save">@drawable/ic_save_light_24dp</item>
-        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp
-        </item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp</item>
         <item name="ic_share">@drawable/ic_share_light_24dp</item>
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_light_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_calls_light_24dp</item>
-
+        <item name="ic_from_to_swap">@drawable/ic_swap_vert_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -386,8 +381,6 @@
         <item name="ic_apps">@drawable/ic_apps_dark_24dp</item>
         <item name="ic_arrow_back">@drawable/ic_arrow_back_dark_24dp</item>
         <item name="ic_arrow_forward">@drawable/ic_arrow_forward_dark_24dp</item>
-        <item name="ic_arrow_left">@drawable/ic_arrow_left_dark_24dp</item>
-        <item name="ic_arrow_right">@drawable/ic_arrow_right_dark_24dp</item>
         <item name="ic_calendar">@drawable/ic_calendar_dark_24dp</item>
         <item name="ic_clear">@drawable/ic_clear_dark_24dp</item>
         <item name="ic_content_copy">@drawable/ic_content_copy_dark_24dp</item>
@@ -397,13 +390,11 @@
         <item name="ic_grid_on">@drawable/ic_grid_on_dark_24dp</item>
         <item name="ic_import_export">@drawable/ic_import_export_dark_24dp</item>
         <item name="ic_save">@drawable/ic_save_dark_24dp</item>
-        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp
-        </item>
+        <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp</item>
         <item name="ic_share">@drawable/ic_share_dark_24dp</item>
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
         <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_dark_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_calls_dark_24dp</item>
-
+        <item name="ic_from_to_swap">@drawable/ic_swap_vert_dark_24dp</item>
     </style>
 
 
