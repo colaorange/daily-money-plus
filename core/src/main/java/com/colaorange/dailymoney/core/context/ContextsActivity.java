@@ -400,7 +400,7 @@ public class ContextsActivity extends AppCompatActivity {
                     return q;
                 }
                 m.put(queueName, q = new EventQueueImpl(queueName));
-                Logger.d("Event queue {} created", queueName);
+                Logger.d("Event queue '{}' created", queueName);
             }
         }
         return q;
@@ -459,14 +459,13 @@ public class ContextsActivity extends AppCompatActivity {
         public void subscribe(EventListener<?> listener) {
             synchronized (listeners) {
                 listeners.add(new WeakReference<EventListener<?>>(listener));
-                Logger.d("Event queue {} subscribe {}", name, listener);
+                Logger.d("Event queue '{}', subscriber {}", name, listener);
             }
         }
 
         @Override
         public void unsubscribe(EventListener<?> listener) {
             trimOrUnsubscribe(listener);
-            Logger.d("Event queue {} unsubscribe {}", name, listener);
         }
 
         private synchronized void trimOrUnsubscribe(EventListener<?> listener) {
@@ -476,19 +475,20 @@ public class ContextsActivity extends AppCompatActivity {
                 EventListener<?> l = w.get();
                 if (l == null || l == listener) {
                     it.remove();
+                    Logger.d("Event queue '{}', unsubscriber {}", name, l);
                 }
             }
             if (listeners.size() == 0) {
                 synchronized (this) {
                     getEventQueueMap().remove(name);
-                    Logger.d("Event queue {} destroyed", name);
+                    Logger.d("Event queue '{}' destroyed", name);
                 }
             }
         }
 
         @Override
         public void publish(Event<?> event) {
-            Logger.d("Receive event {},{} to queue {}", event.getName(), event.getData(), name);
+            Logger.d("Receive event {} to queue '{}'", event.getName(), name);
 
             trimOrUnsubscribe(null);
             List<EventListener<?>> ls = new LinkedList<>();
@@ -507,7 +507,7 @@ public class ContextsActivity extends AppCompatActivity {
             }
 
             for (EventListener<?> l : ls) {
-                Logger.d("Sending event {},{} to queue {} , listener ", event.getName(), event.getData(), name, l);
+                Logger.d("> Sending event {} to listener {}", event.getName(), l);
                 l.onEvent((Event) event);
             }
         }
