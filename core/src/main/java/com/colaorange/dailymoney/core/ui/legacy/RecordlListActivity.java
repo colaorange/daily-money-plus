@@ -40,8 +40,8 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     public static final int MODE_YEAR = 3;
     public static final int MODE_ALL = 4;
 
-    public static final String PARAM_MODE = "dtlist.mode";
-    public static final String PARAM_TARGET_DATE = "dtlist.target";
+    public static final String ARG_MODE = "dtlist.mode";
+    public static final String ARG_TARGET_DATE = "dtlist.target";
 
     RecordListHelper recordListHelper;
 
@@ -79,8 +79,8 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 
     private void initArgs() {
         Bundle b = getIntentExtras();
-        mode = b.getInt(PARAM_MODE, MODE_WEEK);
-        Object o = b.get(PARAM_TARGET_DATE);
+        mode = b.getInt(ARG_MODE, MODE_WEEK);
+        Object o = b.get(ARG_TARGET_DATE);
         if (o instanceof Date) {
             targetDate = (Date) o;
         } else {

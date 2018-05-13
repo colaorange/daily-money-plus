@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.ui.Constants;
@@ -71,7 +72,7 @@ public class AccountMgntActivity extends ContextsActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedType[tab.getPosition()].getType();
-//                System.out.println(">onTabSelected>>>>>>>>>>>" + currentAccountType);
+                lookupQueue().publish(new EventQueue.EventBuilder(Constants.EVTQ_ON_CLEAR_ACCOUNT_SELECTION).build());
             }
 
             @Override
@@ -174,8 +175,8 @@ public class AccountMgntActivity extends ContextsActivity {
 //        Account acc = listData.get(pos);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, false);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 //
@@ -183,8 +184,8 @@ public class AccountMgntActivity extends ContextsActivity {
 //        Account acc = listData.get(pos);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 
@@ -192,8 +193,8 @@ public class AccountMgntActivity extends ContextsActivity {
 //        Account acc = new Account(currentAccountType, "", 0D);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 
@@ -221,7 +222,7 @@ public class AccountMgntActivity extends ContextsActivity {
         public Fragment getItem(int position) {
             Fragment f = new AccountMgntFragment();
             Bundle b = new Bundle();
-            b.putString(AccountMgntFragment.PARAM_ACCOUNT_TYPE, types[position].getType());
+            b.putString(AccountMgntFragment.ARG_ACCOUNT_TYPE, types[position].getType());
             f.setArguments(b);
             return f;
         }

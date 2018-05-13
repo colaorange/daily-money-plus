@@ -18,8 +18,8 @@ import com.colaorange.dailymoney.core.R;
  */
 public class LocalWebViewActivity extends ContextsActivity {
 
-    public static final String PARAM_URI = "lwv.uri";
-    public static final String PARAM_URI_RES_ID = "lwv.uriResId";
+    public static final String ARG_URI = "lwv.uri";
+    public static final String ARG_URI_RES_ID = "lwv.uriResId";
 
     WebView vWeb;
 
@@ -39,11 +39,11 @@ public class LocalWebViewActivity extends ContextsActivity {
         Bundle bundle = getIntentExtras();
         uri = null;
 
-        int rid = bundle.getInt(PARAM_URI_RES_ID, -1);
+        int rid = bundle.getInt(ARG_URI_RES_ID, -1);
         if (rid != -1) {
             uri = i18n().string(rid);
         } else {
-            uri = bundle.getString(PARAM_URI);
+            uri = bundle.getString(ARG_URI);
         }
     }
 
@@ -89,8 +89,8 @@ public class LocalWebViewActivity extends ContextsActivity {
         GUIs.post(new Runnable() {
             public void run() {
                 Intent intent = new Intent(LocalWebViewActivity.this, LocalWebViewActivity.class);
-                intent.putExtra(LocalWebViewActivity.PARAM_URI, path);
-                intent.putExtra(LocalWebViewActivity.PARAM_TITLE, LocalWebViewActivity.this.getTitle());
+                intent.putExtra(LocalWebViewActivity.ARG_URI, path);
+                intent.putExtra(LocalWebViewActivity.ARG_TITLE, LocalWebViewActivity.this.getTitle());
                 startActivity(intent);
             }
         });

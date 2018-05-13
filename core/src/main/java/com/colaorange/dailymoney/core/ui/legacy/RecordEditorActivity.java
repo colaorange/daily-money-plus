@@ -49,15 +49,15 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     /**
      * a boolean to represent the create mode
      */
-    public static final String PARAM_MODE_CREATE = "modeCreate";
+    public static final String ARG_MODE_CREATE = "modeCreate";
     /**
      * a specified created date or null, it only usefaul when mode is create and no record arg
      */
-    public static final String PARAM_CREATED_DATE = "createdDate";
+    public static final String ARG_CREATED_DATE = "createdDate";
     /**
      * a specified record for create or update
      */
-    public static final String PARAM_RECORD = "record";
+    public static final String ARG_RECORD = "record";
 
 
     private boolean modeCreate;
@@ -183,9 +183,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         dateFormat = preference().getDateFormat();
 
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
-        Date createdDate = (Date) bundle.get(PARAM_CREATED_DATE);
-        record = (Record) bundle.get(PARAM_RECORD);
+        modeCreate = bundle.getBoolean(ARG_MODE_CREATE, true);
+        Date createdDate = (Date) bundle.get(ARG_CREATED_DATE);
+        record = (Record) bundle.get(ARG_RECORD);
 
         if (modeCreate && record == null) {
             record = new Record("", "", createdDate == null ? new Date() : createdDate, 0D, "");
@@ -466,8 +466,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private void doCalculator2() {
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
-        intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
-        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
+        intent.putExtra(Calculator.ARG_NEED_RESULT, true);
+        intent.putExtra(Calculator.ARG_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
@@ -475,7 +475,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } catch (Exception x) {
         }
 
-        intent.putExtra(Calculator.PARAM_START_VALUE, start);
+        intent.putExtra(Calculator.ARG_START_VALUE, start);
         startActivityForResult(intent, Constants.REQUEST_CALCULATOR_CODE);
     }
 
@@ -483,7 +483,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
-            String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
+            String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
                 vRecordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {

@@ -29,8 +29,8 @@ import java.util.List;
  */
 public class BookEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "modeCreate";
-    public static final String PARAM_BOOK = "book";
+    public static final String ARG_MODE_CREATE = "modeCreate";
+    public static final String ARG_BOOK = "book";
 
     private boolean modeCreate;
     private Book book;
@@ -67,8 +67,8 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
     private void initArgs() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
-        book = (Book) bundle.get(PARAM_BOOK);
+        modeCreate = bundle.getBoolean(ARG_MODE_CREATE, true);
+        book = (Book) bundle.get(ARG_BOOK);
 
         if(modeCreate && book==null){
             book = new Book("", "$", SymbolPosition.FRONT, "");

@@ -16,9 +16,11 @@ import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
+import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 
 import java.util.LinkedList;
@@ -32,9 +34,9 @@ import java.util.Set;
  * @author dennis
  * @see {@link AccountType}
  */
-public class AccountMgntFragment extends ContextsFragment {
+public class AccountMgntFragment extends ContextsFragment implements EventQueue.EventListener{
 
-    public static final String PARAM_ACCOUNT_TYPE = "accountType";
+    public static final String ARG_ACCOUNT_TYPE = "accountType";
 
     private AccountType accountType = null;
 
@@ -69,7 +71,7 @@ public class AccountMgntFragment extends ContextsFragment {
 
     private void initArgs() {
         Bundle args = getArguments();
-        String type = args.getString(PARAM_ACCOUNT_TYPE);
+        String type = args.getString(ARG_ACCOUNT_TYPE);
         accountType = AccountType.find(type);
 
     }
@@ -117,6 +119,27 @@ public class AccountMgntFragment extends ContextsFragment {
         recyclerDataList.clear();
         recyclerDataList.addAll(idp.listAccount(accountType));
         recyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lookupQueue().subscribe(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
+    }
+
+    @Override
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()){
+            case Constants.EVTQ_ON_CLEAR_ACCOUNT_SELECTION:
+                recyclerAdapter.clearSelection();
+                break;
+        }
     }
 
 //    @Override
@@ -168,8 +191,8 @@ public class AccountMgntFragment extends ContextsFragment {
 //        Account acc = listData.get(pos);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, false);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 //
@@ -177,8 +200,8 @@ public class AccountMgntFragment extends ContextsFragment {
 //        Account acc = listData.get(pos);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 //
@@ -186,8 +209,8 @@ public class AccountMgntFragment extends ContextsFragment {
 //        Account acc = new Account(currTabTag, "", 0D);
 //        Intent intent = null;
 //        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
 //        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
 //    }
 //

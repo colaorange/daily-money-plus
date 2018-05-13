@@ -16,13 +16,18 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +38,8 @@ import java.util.Map;
 @InstanceState(stopLookup = true)
 public class ContextsActivity extends AppCompatActivity {
 
-    public static final String PARAM_TITLE = "activity.title";
+    public static final String ARG_TITLE = "activity.title";
+    public static final String DEFAULT_EVENT_QUEUE = "default";
 
     private long onCreateTime;
     private static long recreateTimeMark;
@@ -56,7 +62,9 @@ public class ContextsActivity extends AppCompatActivity {
     protected int selectableBackgroundId;
     protected int selectedBackgroundId;
 
-    public ContextsActivity(){
+    Map<String, EventQueue> eventQueueMap;
+
+    public ContextsActivity() {
         instanceStateHelper = new InstanceStateHelper(this);
     }
 
@@ -118,7 +126,7 @@ public class ContextsActivity extends AppCompatActivity {
 
         i = (Intent) i.clone();
 //        String bypassId = Strings.randomUUID();
-//        i.putExtra(StartupActivity.PARAM_BYPASS_PROTECTION,true);
+//        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
 
         startActivity(i);
     }
@@ -202,7 +210,7 @@ public class ContextsActivity extends AppCompatActivity {
         super.onResume();
 
         Bundle b = getIntentExtras();
-        String t = b.getString(PARAM_TITLE);
+        String t = b.getString(ARG_TITLE);
         if (t != null) {
             setTitle(t);
         }
@@ -351,19 +359,162 @@ public class ContextsActivity extends AppCompatActivity {
     /**
      * to get a drawable icon or build a lighten/darken icon when it is disabled
      */
-    public Drawable buildIcon(int drawableResId, boolean enabled){
+    public Drawable buildIcon(int drawableResId, boolean enabled) {
         Drawable drawable = getResources().getDrawable(drawableResId);
-        if(enabled){
+        if (enabled) {
             return drawable;
         }
 
         drawable = drawable.mutate();
-        if(isLightTheme()) {
+        if (isLightTheme()) {
             //https://blog.csdn.net/t12x3456/article/details/10432935
             drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
-        }else{
+        } else {
             drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
         }
         return drawable;
+    }
+
+    private synchronized Map<String, EventQueue> getEventQueueMap() {
+        if (eventQueueMap == null) {
+            eventQueueMap = java.util.Collections.synchronizedMap(new HashMap<String, EventQueue>());
+        }
+        return eventQueueMap;
+    }
+
+    public EventQueue lookupQueue() {
+        return lookupQueue(DEFAULT_EVENT_QUEUE);
+    }
+
+    public EventQueue lookupQueue(String queueName) {
+        return new EventQueuePhantom(queueName);
+    }
+
+    private EventQueue lookupQueue(String queueName, boolean create) {
+        Map<String, EventQueue> m = getEventQueueMap();
+        EventQueue q = m.get(queueName);
+        if (q == null && create) {
+            synchronized (this) {
+                q = m.get(queueName);
+                if (q != null) {
+                    return q;
+                }
+                m.put(queueName, q = new EventQueueImpl(queueName));
+                Logger.d("Event queue {} created", queueName);
+            }
+        }
+        return q;
+    }
+
+    private class EventQueuePhantom implements EventQueue {
+
+        String name;
+
+        public EventQueuePhantom(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void subscribe(EventListener<?> l) {
+            lookupQueue(name, true).subscribe(l);
+        }
+
+        @Override
+        public void unsubscribe(EventListener<?> l) {
+            EventQueue q = lookupQueue(name, false);
+            if (q != null) {
+                q.unsubscribe(l);
+            }
+        }
+
+        @Override
+        public void publish(Event<?> event) {
+            EventQueue q = lookupQueue(name, false);
+            if (q != null) {
+                q.publish(event);
+            }
+        }
+
+        @Override
+        public void publish(String name, Object data) {
+            EventQueue q = lookupQueue(name, false);
+            if (q != null) {
+                q.publish(name, data);
+            }
+        }
+    }
+
+    private class EventQueueImpl implements EventQueue {
+
+        String name;
+
+        List<WeakReference<EventListener<?>>> listeners = new LinkedList<>();
+
+        public EventQueueImpl(String name) {
+            this.name = name;
+        }
+
+
+        @Override
+        public void subscribe(EventListener<?> listener) {
+            synchronized (listeners) {
+                listeners.add(new WeakReference<EventListener<?>>(listener));
+                Logger.d("Event queue {} subscribe {}", name, listener);
+            }
+        }
+
+        @Override
+        public void unsubscribe(EventListener<?> listener) {
+            trimOrUnsubscribe(listener);
+            Logger.d("Event queue {} unsubscribe {}", name, listener);
+        }
+
+        private synchronized void trimOrUnsubscribe(EventListener<?> listener) {
+            Iterator<WeakReference<EventListener<?>>> it = listeners.iterator();
+            while (it.hasNext()) {
+                WeakReference<EventListener<?>> w = it.next();
+                EventListener<?> l = w.get();
+                if (l == null || l == listener) {
+                    it.remove();
+                }
+            }
+            if (listeners.size() == 0) {
+                synchronized (this) {
+                    getEventQueueMap().remove(name);
+                    Logger.d("Event queue {} destroyed", name);
+                }
+            }
+        }
+
+        @Override
+        public void publish(Event<?> event) {
+            Logger.d("Receive event {},{} to queue {}", event.getName(), event.getData(), name);
+
+            trimOrUnsubscribe(null);
+            List<EventListener<?>> ls = new LinkedList<>();
+            synchronized (listeners) {
+
+                Iterator<WeakReference<EventListener<?>>> it = listeners.iterator();
+                while (it.hasNext()) {
+                    WeakReference<EventListener<?>> w = it.next();
+                    EventListener<?> l = w.get();
+                    if (l == null) {
+                        it.remove();
+                    } else {
+                        ls.add(l);
+                    }
+                }
+            }
+
+            for (EventListener<?> l : ls) {
+                Logger.d("Sending event {},{} to queue {} , listener ", event.getName(), event.getData(), name, l);
+                l.onEvent((Event) event);
+            }
+        }
+
+        @Override
+        public void publish(String name, Object data) {
+            publish(new Event<Object>(name, data));
+        }
     }
 }

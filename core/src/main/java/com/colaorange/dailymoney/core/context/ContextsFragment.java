@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -63,5 +62,12 @@ public class ContextsFragment extends Fragment{
             return (ContextsActivity) activity;
         }
         throw new IllegalStateException("not a contexts activity, is "+activity.getClass());
+    }
+
+    public EventQueue lookupQueue() {
+        return getContextsActivity().lookupQueue();
+    }
+    public EventQueue lookupQueue(String queueName) {
+        return getContextsActivity().lookupQueue(queueName);
     }
 }

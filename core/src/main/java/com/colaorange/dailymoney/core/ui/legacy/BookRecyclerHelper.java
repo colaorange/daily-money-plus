@@ -85,7 +85,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
     public void doNewBook() {
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
-        intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, true);
+        intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, true);
         activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
     }
 
@@ -93,8 +93,8 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
     public void doEditBook(Book book) {
         Intent intent = null;
         intent = new Intent(activity, BookEditorActivity.class);
-        intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE, false);
-        intent.putExtra(BookEditorActivity.PARAM_BOOK, book);
+        intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(BookEditorActivity.ARG_BOOK, book);
         activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
     }
 

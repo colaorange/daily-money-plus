@@ -92,7 +92,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     private void initArgs() {
         if (firstTime == null) {
             Bundle bundle = getIntentExtras();
-            firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
+            firstTime = bundle.getBoolean(StartupActivity.ARG_FIRST_TIME, false);
         }
     }
 
@@ -177,8 +177,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
-                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n().string(R.string.app_name));
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
                 }
             });
@@ -188,8 +188,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_what_is_new);
-                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, Contexts.instance().getAppVerName());
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);
                 }
             });

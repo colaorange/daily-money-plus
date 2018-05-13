@@ -19,7 +19,7 @@ import com.colaorange.dailymoney.core.util.GUIs;
 @InstanceState
 public class StartupActivity extends ContextsActivity {
 
-    public static final String PARAM_FIRST_TIME = "startup.firstTime";
+    public static final String ARG_FIRST_TIME = "startup.firstTime";
 
     @InstanceState
     private boolean firstTime = false;
@@ -100,7 +100,7 @@ public class StartupActivity extends ContextsActivity {
 
     private void doNextActivity() {
         Intent intent = new Intent(StartupActivity.this, DesktopActivity.class);
-        intent.putExtra(PARAM_FIRST_TIME, firstTime);
+        intent.putExtra(ARG_FIRST_TIME, firstTime);
         startActivity(intent);
         started = true;
         firstTime = false;

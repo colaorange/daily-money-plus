@@ -49,10 +49,10 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     public static final int MODE_MONTH = 0;
     public static final int MODE_YEAR = 1;
 
-    public static final String PARAM_BALANCE_DATE = "balance.balanceDate";
-    public static final String PARAM_MODE = "balance.mode";
-    //    public static final String PARAM_TARGET_DATE = "target";
-    public static final String PARAM_TOTAL_MODE = "balance.modeTotal";
+    public static final String ARG_BALANCE_DATE = "balance.balanceDate";
+    public static final String ARG_MODE = "balance.mode";
+    //    public static final String ARG_TARGET_DATE = "target";
+    public static final String ARG_TOTAL_MODE = "balance.modeTotal";
 
     private TextView vInfo;
     private View vToolbar;
@@ -93,9 +93,9 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private void initArgs() {
         Bundle b = getIntentExtras();
-        mode = b.getInt(PARAM_MODE, MODE_MONTH);
-        totalMode = b.getBoolean(PARAM_TOTAL_MODE, true);
-        Object o = b.get(PARAM_BALANCE_DATE);
+        mode = b.getInt(ARG_MODE, MODE_MONTH);
+        totalMode = b.getBoolean(ARG_TOTAL_MODE, true);
+        Object o = b.get(ARG_BALANCE_DATE);
         if (o instanceof Date) {
             targetDate = (Date) o;
         } else {
@@ -401,13 +401,13 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         Intent intent = null;
         intent = new Intent(this, AccountRecordListActivity.class);
         if (currentStartDate != null) {
-            intent.putExtra(AccountRecordListActivity.PARAM_START, currentStartDate);
+            intent.putExtra(AccountRecordListActivity.ARG_START, currentStartDate);
         }
         if (currentEndDate != null) {
-            intent.putExtra(AccountRecordListActivity.PARAM_END, currentEndDate);
+            intent.putExtra(AccountRecordListActivity.ARG_END, currentEndDate);
         }
-        intent.putExtra(AccountRecordListActivity.PARAM_TARGET, b.getTarget());
-        intent.putExtra(AccountRecordListActivity.PARAM_TARGET_INFO, b.getName());
+        intent.putExtra(AccountRecordListActivity.ARG_TARGET, b.getTarget());
+        intent.putExtra(AccountRecordListActivity.ARG_TARGET_INFO, b.getName());
         this.startActivityForResult(intent, Constants.REQUEST_ACCOUNT_RECORD_LIST_CODE);
     }
 
