@@ -412,5 +412,9 @@
         <item name="ic_set_working">@drawable/ic_set_working_dark_24dp</item>
     </style>
 
+    <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

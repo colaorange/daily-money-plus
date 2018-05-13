@@ -52,7 +52,7 @@ public class BookMgntActivity extends ContextsActivity {
 
     private void initMembers() {
 
-        bookRecyclerHelper = new BookRecyclerHelper(this, true, new BookRecyclerHelper.OnBookListener() {
+        bookRecyclerHelper = new BookRecyclerHelper(this, new BookRecyclerHelper.OnBookListener() {
             @Override
             public void onBookSelected(Book book) {
                 doBookSelected(book);

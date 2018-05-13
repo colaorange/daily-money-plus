@@ -22,25 +22,28 @@ public class InstanceStateHelper {
     static private LruCache<Class, List<Field>> fieldsCache = new LruCache<>(20);
     static private List<Field> empty = new ArrayList<>(0);
 
-    private Activity activity;
+    private Object instance;
 
-    public InstanceStateHelper(Activity activity) {
-        this.activity = activity;
+    public InstanceStateHelper(Object instance) {
+        this.instance = instance;
     }
 
-    protected void onCreate(Bundle state) {
+    protected void onRestore(Bundle state) {
         if (state == null) {
             return;
         }
         try {
             int idx = 0;
-            Class clz = activity.getClass();
-            while (clz != null && !clz.isAssignableFrom(ContextsActivity.class)) {
+            Class clz = instance.getClass();
+            while (clz != null) {
                 InstanceState ann = (InstanceState) clz.getAnnotation(InstanceState.class);
                 if (ann != null) {
                     List<Field> fields = scanFields(clz);
                     for (Field f : fields) {
                         restoreField(++idx, f, state);
+                    }
+                    if(ann.stopLookup()){
+                        break;
                     }
                 }
                 clz = clz.getSuperclass();
@@ -50,19 +53,22 @@ public class InstanceStateHelper {
         }
     }
 
-    public void onSaveInstanceState(Bundle state) {
+    public void onBackup(Bundle state) {
         if (state == null) {
             return;
         }
         try {
             int idx = 0;
-            Class clz = activity.getClass();
-            while (clz != null && ContextsActivity.class.isAssignableFrom(clz)) {
+            Class clz = instance.getClass();
+            while (clz != null) {
                 InstanceState ann = (InstanceState) clz.getAnnotation(InstanceState.class);
                 if (ann != null) {
                     List<Field> fields = scanFields(clz);
                     for (Field f : fields) {
                         saveField(++idx, f, state);
+                    }
+                    if(ann.stopLookup()){
+                        break;
                     }
                 }
                 clz = clz.getSuperclass();
@@ -75,7 +81,7 @@ public class InstanceStateHelper {
     private void saveField(int i, Field f, Bundle state) throws IllegalAccessException {
         String key = "iState-" + i;
         Class valClz = f.getType();
-        Object val = f.get(activity);
+        Object val = f.get(instance);
         if (val == null) {
             Logger.d(">>> skip to save null filed {}, {}, {}", key, f.getName(), val);
         } else if (Boolean.class.isAssignableFrom(valClz) || boolean.class.isAssignableFrom(valClz)) {
@@ -161,7 +167,7 @@ public class InstanceStateHelper {
             Logger.w(">>> unsupported restore filed {}, {}, {}", key, f.getName(), valClz);
             return;
         }
-        f.set(activity, val);
+        f.set(instance, val);
     }
 
     static synchronized private List<Field> scanFields(Class clz) {

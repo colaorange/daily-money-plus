@@ -3,7 +3,6 @@ package com.colaorange.dailymoney.core.context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import java.util.Map;
  *
  * @author dennis
  */
-@InstanceState
+@InstanceState(stopLookup = true)
 public class ContextsActivity extends AppCompatActivity {
 
     public static final String PARAM_TITLE = "activity.title";
@@ -57,6 +56,10 @@ public class ContextsActivity extends AppCompatActivity {
     protected int selectableBackgroundId;
     protected int selectedBackgroundId;
 
+    public ContextsActivity(){
+        instanceStateHelper = new InstanceStateHelper(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //for init ui related resource in ui thread
@@ -77,8 +80,7 @@ public class ContextsActivity extends AppCompatActivity {
 
 
         super.onCreate(savedInstanceState);
-        instanceStateHelper = new InstanceStateHelper(this);
-        instanceStateHelper.onCreate(savedInstanceState);
+        instanceStateHelper.onRestore(savedInstanceState);
 
 
         Logger.d("activity created:" + this);
@@ -88,7 +90,7 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        instanceStateHelper.onSaveInstanceState(savedInstanceState);
+        instanceStateHelper.onBackup(savedInstanceState);
     }
 
     public void markWholeRecreate() {

@@ -33,12 +33,9 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
 
     private List<Book> recyclerDataList;
 
-
     private RecyclerView vRecycler;
 
     private BookRecyclerAdapter recyclerAdapter;
-
-    private boolean clickEditable;
 
     private OnBookListener listener;
 
@@ -48,9 +45,8 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
 
     LayoutInflater inflater;
 
-    public BookRecyclerHelper(ContextsActivity activity, boolean clickEditable, OnBookListener listener) {
+    public BookRecyclerHelper(ContextsActivity activity, OnBookListener listener) {
         this.activity = activity;
-        this.clickEditable = clickEditable;
         this.listener = listener;
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
