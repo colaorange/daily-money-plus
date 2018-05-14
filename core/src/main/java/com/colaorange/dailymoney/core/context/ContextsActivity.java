@@ -358,7 +358,7 @@ public class ContextsActivity extends AppCompatActivity {
     /**
      * to get a drawable icon or build a lighten/darken icon when it is disabled
      */
-    public Drawable buildIcon(int drawableResId, boolean enabled) {
+    public Drawable buildDisabledIcon(int drawableResId, boolean enabled) {
         Drawable drawable = getResources().getDrawable(drawableResId);
         if (enabled) {
             return drawable;
@@ -370,6 +370,25 @@ public class ContextsActivity extends AppCompatActivity {
             drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
         } else {
             drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
+        }
+        return drawable;
+    }
+
+    /**
+     * to get a drawable icon or build a lighten/darken icon when it is disabled
+     */
+    public Drawable buildNonSelectedIcon(int drawableResId, boolean selected) {
+        Drawable drawable = getResources().getDrawable(drawableResId);
+        if (selected) {
+            return drawable;
+        }
+
+        drawable = drawable.mutate();
+        if (isLightTheme()) {
+            //https://blog.csdn.net/t12x3456/article/details/10432935
+            drawable.setColorFilter(0xE0C0C0C0, PorterDuff.Mode.MULTIPLY);
+        } else {
+            drawable.setColorFilter(0xE0C0C0C0, PorterDuff.Mode.MULTIPLY);
         }
         return drawable;
     }

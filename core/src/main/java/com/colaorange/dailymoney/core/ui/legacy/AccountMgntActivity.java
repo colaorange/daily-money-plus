@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,8 +10,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -22,6 +27,8 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEevents;
 import com.colaorange.dailymoney.core.util.GUIs;
+
+import java.util.Map;
 
 /**
  * this activity manages the account (of record) with tab widgets of android,
@@ -42,6 +49,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     @InstanceState
     private String currentAccountType = null;
 
+    private AccountType[] supportedTypes;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,28 +63,59 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         vAppTabs = findViewById(R.id.appTabs);
         vPager = findViewById(R.id.viewpager);
 
-        final AccountType[] supportedType = AccountType.getSupportedType();
+        supportedTypes = AccountType.getSupportedType();
 
         //just in case filtering
         int selpos = 0;
         int i = 0;
-        for (AccountType a : supportedType) {
+        for (AccountType a : supportedTypes) {
             if (a.getType().equals(currentAccountType)) {
                 selpos = i;
                 break;
             }
             i++;
         }
-        currentAccountType = supportedType[selpos].getType();
+        currentAccountType = supportedTypes[selpos].getType();
 
-        vPager.setAdapter(new AccountTypePagerAdapter(getSupportFragmentManager(), supportedType));
+        vPager.setAdapter(new AccountTypePagerAdapter(getSupportFragmentManager(), supportedTypes));
 
         vAppTabs.setupWithViewPager(vPager);
         vAppTabs.getTabAt(selpos).select();
 
-        i=0;
-        for(AccountType a: supportedType){
+        refreshTab(true);
+
+        vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentAccountType = supportedTypes[tab.getPosition()].getType();
+                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                refreshTab(false);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //is it possible?
+                currentAccountType = null;
+                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+
+                //don't refresh it, there must be a selected.
+//                refreshTab();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                currentAccountType = supportedTypes[tab.getPosition()].getType();
+            }
+        });
+    }
+
+    private void refreshTab(boolean init){
+        Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int i=0;
+        for(AccountType a: supportedTypes){
             int icon;
+            boolean selected = a.getType().equals(currentAccountType);
             switch(a){
                 case INCOME:
                     icon = R.drawable.tab_income;
@@ -97,32 +137,26 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
                     icon = R.drawable.tab_unknow;
                     break;
             }
-
-            vAppTabs.getTabAt(i).setIcon(icon);
-
+            View tab;
+            if(init) {
+                tab = (View) inflater.inflate(R.layout.regular_tab, null);
+                vAppTabs.getTabAt(i).setCustomView(tab);
+            }else{
+                tab = vAppTabs.getTabAt(i).getCustomView();
+            }
+            TextView vtext = tab.findViewById(R.id.tab_text);
+            ImageView vicon = tab.findViewById(R.id.tab_icon);
+            vtext.setText(a.getDisplay(i18n()));
+            //ugly when set color
+            if(selected) {
+                vtext.setTextColor(textColorMap.get(a));
+            }else{
+                vtext.setTextColor(resolveThemeAttrResData(R.attr.appPrimaryTextColor));
+            }
+            vicon.setImageDrawable(buildNonSelectedIcon(icon, selected));
             i++;
         }
 
-
-        vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                currentAccountType = supportedType[tab.getPosition()].getType();
-                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                //is it possible?
-                currentAccountType = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                currentAccountType = supportedType[tab.getPosition()].getType();
-            }
-        });
     }
 
     @Override

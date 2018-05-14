@@ -174,7 +174,7 @@ public class BookMgntActivity extends ContextsActivity {
             } else {
                 mi.setEnabled(true);
             }
-            mi.setIcon(buildIcon(resolveThemeAttrResId(R.attr.ic_set_working), mi.isEnabled()));
+            mi.setIcon(buildDisabledIcon(resolveThemeAttrResId(R.attr.ic_set_working), mi.isEnabled()));
 
 
             mi = menu.findItem(R.id.menu_edit);
@@ -187,7 +187,7 @@ public class BookMgntActivity extends ContextsActivity {
             } else {
                 mi.setEnabled(true);
             }
-            mi.setIcon(buildIcon(resolveThemeAttrResId(R.attr.ic_delete_forever), mi.isEnabled()));
+            mi.setIcon(buildDisabledIcon(resolveThemeAttrResId(R.attr.ic_delete_forever), mi.isEnabled()));
 
             return true;
         }
