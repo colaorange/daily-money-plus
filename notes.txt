@@ -1,3 +1,6 @@
+* Enable daily-money debug
+    adb shell setprop log.tag.daily-money DEBUG
+
 * No SD in emulator
     https://www.chrisblunt.com/fix-missing-sdcard-android-emulator/
 * Locale

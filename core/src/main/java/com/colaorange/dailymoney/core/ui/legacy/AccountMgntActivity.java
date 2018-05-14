@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,8 +17,10 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.InstanceState;
+import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.QEevents;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
@@ -26,12 +29,15 @@ import com.colaorange.dailymoney.core.util.GUIs;
  * @author dennis
  * @see {@link AccountType}
  */
-public class AccountMgntActivity extends ContextsActivity {
+public class AccountMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
     private TabLayout vAppTabs;
 
     private ViewPager vPager;
+
+    private ActionMode actionMode;
+    private Account actionAccount;
 
     @InstanceState
     private String currentAccountType = null;
@@ -67,26 +73,68 @@ public class AccountMgntActivity extends ContextsActivity {
         vAppTabs.setupWithViewPager(vPager);
         vAppTabs.getTabAt(selpos).select();
 
+        i=0;
+        for(AccountType a: supportedType){
+            int icon;
+            switch(a){
+                case INCOME:
+                    icon = R.drawable.tab_income;
+                    break;
+                case EXPENSE:
+                    icon = R.drawable.tab_expense;
+                    break;
+                case ASSET:
+                    icon = R.drawable.tab_asset;
+                    break;
+                case LIABILITY:
+                    icon = R.drawable.tab_liability;
+                    break;
+                case OTHER:
+                    icon = R.drawable.tab_other;
+                    break;
+                case UNKONW:
+                default:
+                    icon = R.drawable.tab_unknow;
+                    break;
+            }
+
+            vAppTabs.getTabAt(i).setIcon(icon);
+
+            i++;
+        }
+
 
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedType[tab.getPosition()].getType();
-                lookupQueue().publish(new EventQueue.EventBuilder(Constants.EVTQ_ON_CLEAR_ACCOUNT_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                currentAccountType = null;
-//                System.out.println(">onTabUnselected>>>>>>>>>>>" + currentAccountType);
+                //is it possible?
+                currentAccountType = null;
+                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 currentAccountType = supportedType[tab.getPosition()].getType();
-//                System.out.println(">onTabReselected>>>>>>>>>>>" + currentAccountType);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lookupQueue().subscribe(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
     }
 
 
@@ -97,7 +145,7 @@ public class AccountMgntActivity extends ContextsActivity {
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
-//                    vAppTabs.invalidate();
+                    reloadData();
                 }
             });
 
@@ -105,8 +153,7 @@ public class AccountMgntActivity extends ContextsActivity {
     }
 
     private void reloadData() {
-
-        //notify tab change
+        lookupQueue().publish(QEevents.AccountMgnt.ON_RELOAD_LIST, null);
     }
 
 
@@ -120,90 +167,90 @@ public class AccountMgntActivity extends ContextsActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_new) {
-//            doNewAccount();
-//            return true;
+            doNewAccount();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        if (v.getId() == R.id.account_mgnt_list) {
-//            getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);
-//        }
-//
-//    }
+    @Override
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()) {
+            case QEevents.AccountMgnt.ON_SELECT_ACCOUNT:
+                Account account = event.getData();
+                doSelectAccount(account);
+                break;
+        }
+    }
 
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//        if (item.getItemId() == R.id.menu_edit) {
-//            doEditAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_delete) {
-//            doDeleteAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_copy) {
-//            doCopyAccount(info.position);
-//            return true;
-//        } else {
-//            return super.onContextItemSelected(item);
-//        }
-//    }
+    private void doDeleteAccount(final Account account) {
+        final String name = account.getName();
 
-//    private void doDeleteAccount(int pos) {
-//        final Account acc = listData.get(pos);
-//        final String name = acc.getName();
-//
-//        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, acc.getName()), new GUIs.OnFinishListener() {
-//            public boolean onFinish(Object data) {
-//                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
-//                    boolean r = contexts().getDataProvider().deleteAccount(acc.getId());
-//                    if (r) {
-//                        GUIs.shortToast(AccountMgntActivity.this, i18n().string(R.string.msg_account_deleted, name));
-//                        reloadData();
-//                        trackEvent(TE.DELETE_ACCOUNT);
-//                    }
-//                }
-//                return true;
-//            }
-//        });
-//    }
-//
-//    private void doEditAccount(int pos) {
-//        Account acc = listData.get(pos);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
-//
-//    private void doCopyAccount(int pos) {
-//        Account acc = listData.get(pos);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
+        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, account.getName()), new GUIs.OnFinishListener() {
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    boolean r = contexts().getDataProvider().deleteAccount(account.getId());
+                    if (r) {
+                        if (account.equals(actionAccount)) {
+                            if (actionMode != null) {
+                                actionMode.finish();
+                            }
+                        }
 
-//    private void doNewAccount() {
-//        Account acc = new Account(currentAccountType, "", 0D);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
+                        GUIs.shortToast(AccountMgntActivity.this, i18n().string(R.string.msg_account_deleted, name));
+                        reloadData();
+                        trackEvent(TE.DELETE_ACCOUNT);
+                    }
+                }
+                return true;
+            }
+        });
+    }
 
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-//        if (parent == vList) {
-//            doEditAccount(pos);
-//        }
-//    }
+    private void doSelectAccount(Account account) {
+        if (account == null && actionMode != null) {
+            actionMode.finish();
+            return;
+        }
+
+        if (account != null) {
+            actionAccount = account;
+            if (actionMode == null) {
+                actionMode = this.startSupportActionMode(new AccountActionModeCallback());
+            } else {
+                actionMode.invalidate();
+            }
+            actionMode.setTitle(account.getName());
+        }
+
+    }
+
+
+    private void doEditAccount(Account account) {
+        Intent intent = null;
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, account);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+    }
+
+    private void doCopyAccount(Account account) {
+        Intent intent = null;
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, account);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+    }
+
+    private void doNewAccount() {
+        Account acc = new Account(currentAccountType, "", 0D);
+        Intent intent = null;
+        intent = new Intent(this, AccountEditorActivity.class);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
+        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
+    }
+
 
     public static class AccountTypePagerAdapter extends FragmentPagerAdapter {
         AccountType[] types;
@@ -231,5 +278,80 @@ public class AccountMgntActivity extends ContextsActivity {
         public CharSequence getPageTitle(int position) {
             return types[position].getDisplay(Contexts.instance().getI18n());
         }
+    }
+
+
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//        if (item.getItemId() == R.id.menu_edit) {
+//            doEditAccount(info.position);
+//            return true;
+//        } else if (item.getItemId() == R.id.menu_delete) {
+//            doDeleteAccount(info.position);
+//            return true;
+//        } else if (item.getItemId() == R.id.menu_copy) {
+//            doCopyAccount(info.position);
+//            return true;
+//        } else {
+//            return super.onContextItemSelected(item);
+//        }
+//    }
+
+    private class AccountActionModeCallback implements android.support.v7.view.ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
+            //So here show action menu according to SDK Levels
+            MenuItem mi = menu.findItem(R.id.menu_edit);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            mi = menu.findItem(R.id.menu_copy);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            mi = menu.findItem(R.id.menu_delete);
+            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_edit) {
+                doEditAccount(actionAccount);
+                return true;
+            } else if (item.getItemId() == R.id.menu_delete) {
+                doDeleteAccount(actionAccount);
+                mode.finish();//Finish action mode
+                return true;
+            } else if (item.getItemId() == R.id.menu_copy) {
+                doCopyAccount(actionAccount);
+                return true;
+            }
+            return false;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionAccount = null;
+            lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+        }
+
+
     }
 }

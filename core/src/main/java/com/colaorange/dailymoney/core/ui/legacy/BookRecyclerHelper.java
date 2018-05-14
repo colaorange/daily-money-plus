@@ -65,7 +65,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Book>() {
             @Override
             public void onSelect(Set<Book> selection) {
-                listener.onBookSelected(selection.size() == 0 ? null : selection.iterator().next());
+                listener.onSelectBook(selection.size() == 0 ? null : selection.iterator().next());
             }
         });
     }
@@ -116,7 +116,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
                     boolean r = Contexts.instance().getMasterDataProvider().deleteBook(book.getId());
                     if (r) {
                         if (listener != null) {
-                            listener.onBookDeleted(book);
+                            listener.onDeleteBook(book);
                         } else {
                             recyclerAdapter.remove(book);
                             recyclerAdapter.notifyDataSetChanged();
@@ -147,9 +147,9 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         /**
          * select or dis select a book
          */
-        void onBookSelected(Book book);
+        void onSelectBook(Book book);
 
-        void onBookDeleted(Book book);
+        void onDeleteBook(Book book);
     }
 
 

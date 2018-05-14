@@ -20,7 +20,7 @@ import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.QEevents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 
 import java.util.LinkedList;
@@ -34,7 +34,7 @@ import java.util.Set;
  * @author dennis
  * @see {@link AccountType}
  */
-public class AccountMgntFragment extends ContextsFragment implements EventQueue.EventListener{
+public class AccountMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
     public static final String ARG_ACCOUNT_TYPE = "accountType";
 
@@ -45,8 +45,6 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
     private RecyclerView vRecycler;
 
     private AccountRecyclerAdapter recyclerAdapter;
-
-//    private OnAccountListener listener;
 
     private LayoutInflater inflater;
 
@@ -92,27 +90,10 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Account>() {
             @Override
             public void onSelect(Set<Account> selection) {
-//                listener.onAccountSelected(selection.size() == 0 ? null : selection.iterator().next());
+                lookupQueue().publish(QEevents.AccountMgnt.ON_SELECT_ACCOUNT, selection.size() == 0 ? null : selection.iterator().next());
             }
         });
     }
-
-//
-//
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
-//            GUIs.delayPost(new Runnable() {
-//                @Override
-//                public void run() {
-//                    reloadData();
-//                }
-//            });
-//
-//        }
-//    }
 
     private void reloadData() {
         IDataProvider idp = contexts().getDataProvider();
@@ -135,92 +116,16 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
 
     @Override
     public void onEvent(EventQueue.Event event) {
-        switch (event.getName()){
-            case Constants.EVTQ_ON_CLEAR_ACCOUNT_SELECTION:
+        switch (event.getName()) {
+            case QEevents.AccountMgnt.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
+                break;
+            case QEevents.AccountMgnt.ON_RELOAD_LIST:
+                recyclerAdapter.clearSelection();
+                reloadData();
                 break;
         }
     }
-
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        if (v.getId() == R.id.account_mgnt_list) {
-//            getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);
-//        }
-//
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//        if (item.getItemId() == R.id.menu_edit) {
-//            doEditAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_delete) {
-//            doDeleteAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_copy) {
-//            doCopyAccount(info.position);
-//            return true;
-//        } else {
-//            return super.onContextItemSelected(item);
-//        }
-//    }
-//
-//    private void doDeleteAccount(int pos) {
-//        final Account acc = listData.get(pos);
-//        final String name = acc.getName();
-//
-//        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, acc.getName()), new GUIs.OnFinishListener() {
-//            public boolean onFinish(Object data) {
-//                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
-//                    boolean r = contexts().getDataProvider().deleteAccount(acc.getId());
-//                    if(r) {
-//                        reloadData();
-//                        GUIs.shortToast(AccountMgntFragment.this, i18n().string(R.string.msg_account_deleted, name));
-//                        trackEvent(TE.DELETE_ACCOUNT);
-//                    }
-//                }
-//                return true;
-//            }
-//        });
-//    }
-//
-//    private void doEditAccount(int pos) {
-//        Account acc = listData.get(pos);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
-//
-//    private void doCopyAccount(int pos) {
-//        Account acc = listData.get(pos);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
-//
-//    private void doNewAccount() {
-//        Account acc = new Account(currTabTag, "", 0D);
-//        Intent intent = null;
-//        intent = new Intent(this, AccountEditorActivity.class);
-//        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
-//        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
-//        startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
-//    }
-//
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-//        if (parent == vList) {
-//            doEditAccount(pos);
-//        }
-//    }
-
 
     public class AccountRecyclerAdapter extends SelectableRecyclerViewAdaptor<Account, AccountViewHolder> {
 

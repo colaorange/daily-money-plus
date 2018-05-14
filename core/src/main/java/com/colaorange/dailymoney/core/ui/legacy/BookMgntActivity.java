@@ -54,13 +54,13 @@ public class BookMgntActivity extends ContextsActivity {
 
         bookRecyclerHelper = new BookRecyclerHelper(this, new BookRecyclerHelper.OnBookListener() {
             @Override
-            public void onBookSelected(Book book) {
-                doBookSelected(book);
+            public void onSelectBook(Book book) {
+                doSelectBook(book);
             }
 
             @Override
-            public void onBookDeleted(Book book) {
-                doBookDeleted(book);
+            public void onDeleteBook(Book book) {
+                doDeleteBook(book);
             }
         });
 
@@ -70,7 +70,7 @@ public class BookMgntActivity extends ContextsActivity {
 //        registerForContextMenu(vrecycler);
     }
 
-    private void doBookDeleted(Book book) {
+    private void doDeleteBook(Book book) {
         if (book.equals(actionBook)) {
             if (actionMode != null) {
                 actionMode.finish();
@@ -81,7 +81,7 @@ public class BookMgntActivity extends ContextsActivity {
         trackEvent(TE.DELETE_BOOK);
     }
 
-    private void doBookSelected(Book book) {
+    private void doSelectBook(Book book) {
         if (book == null && actionMode != null) {
             actionMode.finish();
             return;

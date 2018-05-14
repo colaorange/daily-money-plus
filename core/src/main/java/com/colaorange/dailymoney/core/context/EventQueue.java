@@ -8,20 +8,20 @@ import java.util.Map;
  */
 public interface EventQueue {
 
-    public void subscribe(EventListener<?> l);
+    public void subscribe(EventListener l);
 
-    public void unsubscribe(EventListener<?> l);
+    public void unsubscribe(EventListener l);
 
-    public void publish(Event<?> event);
+    public void publish(Event event);
 
     public void publish(String name, Object data);
 
 
-    public class Event<T> {
+    public class Event {
 
         private String name;
 
-        private T data;
+        private Object data;
 
         private Map<String, Object> args;
 
@@ -29,11 +29,11 @@ public interface EventQueue {
             this(name, null, null);
         }
 
-        public Event(String name, T data) {
+        public Event(String name, Object data) {
             this(name, data, null);
         }
 
-        public Event(String name, T data, Map<String, Object> args) {
+        public Event(String name, Object data, Map<String, Object> args) {
             this.name = name;
             this.data = data;
             this.args = args;
@@ -43,8 +43,8 @@ public interface EventQueue {
             return name;
         }
 
-        public T getData() {
-            return data;
+        public <D> D getData() {
+            return (D)data;
         }
 
         public <D> D getArg(String arg) {
@@ -56,9 +56,9 @@ public interface EventQueue {
         }
     }
 
-    public class EventBuilder<T> {
+    public class EventBuilder {
         String name;
-        T data;
+        Object data;
         Map<String, Object> args;
 
         public EventBuilder() {
@@ -68,17 +68,17 @@ public interface EventQueue {
             this.name = name;
         }
 
-        public EventBuilder<T> withName(String name) {
+        public EventBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public EventBuilder<T> withData(T data) {
+        public EventBuilder withData(Object data) {
             this.data = data;
             return this;
         }
 
-        public EventBuilder<T> withArg(String arg, Object value) {
+        public EventBuilder withArg(String arg, Object value) {
             if (args == null) {
                 args = new LinkedHashMap<>();
             }
@@ -86,14 +86,14 @@ public interface EventQueue {
             return this;
         }
 
-        public Event<T> build() {
-            return new Event<T>(name, data, args);
+        public Event build() {
+            return new Event(name, data, args);
         }
 
     }
 
 
-    public interface EventListener<T> {
-        public void onEvent(Event<T> event);
+    public interface EventListener {
+        public void onEvent(Event event);
     }
 }

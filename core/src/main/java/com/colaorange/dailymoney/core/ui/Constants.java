@@ -23,6 +23,4 @@ public class Constants {
 
     public static final String LOCAL_URL_PREFIX = "file:///android_asset/";
 
-    public static final String EVTQ_ON_CLEAR_ACCOUNT_SELECTION = "onClearAccountSelection";
-
 }

@@ -16,7 +16,6 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -408,28 +407,28 @@ public class ContextsActivity extends AppCompatActivity {
 
     private class EventQueuePhantom implements EventQueue {
 
-        String name;
+        String queueName;
 
         public EventQueuePhantom(String name) {
-            this.name = name;
+            this.queueName = name;
         }
 
         @Override
-        public void subscribe(EventListener<?> l) {
-            lookupQueue(name, true).subscribe(l);
+        public void subscribe(EventListener l) {
+            lookupQueue(queueName, true).subscribe(l);
         }
 
         @Override
-        public void unsubscribe(EventListener<?> l) {
-            EventQueue q = lookupQueue(name, false);
+        public void unsubscribe(EventListener l) {
+            EventQueue q = lookupQueue(queueName, false);
             if (q != null) {
                 q.unsubscribe(l);
             }
         }
 
         @Override
-        public void publish(Event<?> event) {
-            EventQueue q = lookupQueue(name, false);
+        public void publish(Event event) {
+            EventQueue q = lookupQueue(queueName, false);
             if (q != null) {
                 q.publish(event);
             }
@@ -437,7 +436,7 @@ public class ContextsActivity extends AppCompatActivity {
 
         @Override
         public void publish(String name, Object data) {
-            EventQueue q = lookupQueue(name, false);
+            EventQueue q = lookupQueue(queueName, false);
             if (q != null) {
                 q.publish(name, data);
             }
@@ -446,58 +445,58 @@ public class ContextsActivity extends AppCompatActivity {
 
     private class EventQueueImpl implements EventQueue {
 
-        String name;
+        String queueName;
 
-        List<WeakReference<EventListener<?>>> listeners = new LinkedList<>();
+        List<WeakReference<EventListener>> listeners = new LinkedList<>();
 
-        public EventQueueImpl(String name) {
-            this.name = name;
+        public EventQueueImpl(String queueName) {
+            this.queueName = queueName;
         }
 
 
         @Override
-        public void subscribe(EventListener<?> listener) {
+        public void subscribe(EventListener listener) {
             synchronized (listeners) {
-                listeners.add(new WeakReference<EventListener<?>>(listener));
-                Logger.d("Event queue '{}', subscriber {}", name, listener);
+                listeners.add(new WeakReference<EventListener>(listener));
+                Logger.d("Event queue '{}', subscriber {}", queueName, listener);
             }
         }
 
         @Override
-        public void unsubscribe(EventListener<?> listener) {
+        public void unsubscribe(EventListener listener) {
             trimOrUnsubscribe(listener);
         }
 
-        private synchronized void trimOrUnsubscribe(EventListener<?> listener) {
-            Iterator<WeakReference<EventListener<?>>> it = listeners.iterator();
+        private synchronized void trimOrUnsubscribe(EventListener listener) {
+            Iterator<WeakReference<EventListener>> it = listeners.iterator();
             while (it.hasNext()) {
-                WeakReference<EventListener<?>> w = it.next();
-                EventListener<?> l = w.get();
+                WeakReference<EventListener> w = it.next();
+                EventListener l = w.get();
                 if (l == null || l == listener) {
                     it.remove();
-                    Logger.d("Event queue '{}', unsubscriber {}", name, l);
+                    Logger.d("Event queue '{}', unsubscriber {}", queueName, l);
                 }
             }
             if (listeners.size() == 0) {
                 synchronized (this) {
-                    getEventQueueMap().remove(name);
-                    Logger.d("Event queue '{}' destroyed", name);
+                    getEventQueueMap().remove(queueName);
+                    Logger.d("Event queue '{}' destroyed", queueName);
                 }
             }
         }
 
         @Override
-        public void publish(Event<?> event) {
-            Logger.d("Receive event {} to queue '{}'", event.getName(), name);
+        public void publish(Event event) {
+            Logger.d("Receive event {} to queue '{}'", event.getName(), queueName);
 
             trimOrUnsubscribe(null);
-            List<EventListener<?>> ls = new LinkedList<>();
+            List<EventListener> ls = new LinkedList<>();
             synchronized (listeners) {
 
-                Iterator<WeakReference<EventListener<?>>> it = listeners.iterator();
+                Iterator<WeakReference<EventListener>> it = listeners.iterator();
                 while (it.hasNext()) {
-                    WeakReference<EventListener<?>> w = it.next();
-                    EventListener<?> l = w.get();
+                    WeakReference<EventListener> w = it.next();
+                    EventListener l = w.get();
                     if (l == null) {
                         it.remove();
                     } else {
@@ -506,7 +505,7 @@ public class ContextsActivity extends AppCompatActivity {
                 }
             }
 
-            for (EventListener<?> l : ls) {
+            for (EventListener l : ls) {
                 Logger.d("> Sending event {} to listener {}", event.getName(), l);
                 l.onEvent((Event) event);
             }
@@ -514,7 +513,7 @@ public class ContextsActivity extends AppCompatActivity {
 
         @Override
         public void publish(String name, Object data) {
-            publish(new Event<Object>(name, data));
+            publish(new Event(name, data));
         }
     }
 }
