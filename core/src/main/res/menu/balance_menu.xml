@@ -2,11 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_operations"
+        android:title="@string/act_operations"
+        android:icon="?ic_operations"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.ActionMenuView"/>
+    <item
         android:id="@+id/menu_hierarchy"
         android:title="@string/act_hierarchical_balance"
         android:checkable="true"
-        />
+        app:showAsAction="never"/>
     <item
         android:id="@+id/menu_yearly_runchart"
-        android:title="@string/act_balance_yearly_runchart"/>
+        android:title="@string/act_balance_yearly_runchart"
+        app:showAsAction="never"/>
 </menu>

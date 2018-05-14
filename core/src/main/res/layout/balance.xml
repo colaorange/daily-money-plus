@@ -1,64 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?appPrimaryLightColor"
-    android:orientation="vertical"
     tools:context=".ui.legacy.BalanceActivity">
 
-    <include layout="@layout/app_bar" />
-
-    <LinearLayout
-        android:id="@+id/balance_toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:theme="?appbarTheme">
 
-        <ImageButton
-            android:id="@+id/btn_prev"
-            style="@style/navActionBtn"
-            android:src="?ic_arrow_left" />
+        <include layout="@layout/app_tool_bar" />
 
-        <ImageButton
-            android:id="@+id/btn_today"
-            style="@style/navActionBtn"
-            android:src="?ic_today" />
-
-        <ImageButton
-            android:id="@+id/btn_next"
-            style="@style/navActionBtn"
-            android:src="?ic_arrow_right" />
-
-        <ImageButton
-            android:id="@+id/btn_mode"
-            style="@style/navActionBtn"
-            android:src="?ic_date_range" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/balance_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:paddingVertical="5dp"
-        android:textSize="?textSizeMedium" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ListView
-            android:id="@+id/balance_list"
+        <TextView
+            android:id="@+id/balance_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:textSize="?textSizeMedium"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             />
-    </LinearLayout>
 
-</LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <ListView
+                android:id="@+id/balance_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

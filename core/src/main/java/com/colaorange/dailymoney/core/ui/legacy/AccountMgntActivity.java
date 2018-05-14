@@ -146,7 +146,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             }
             TextView vtext = tab.findViewById(R.id.tab_text);
             ImageView vicon = tab.findViewById(R.id.tab_icon);
-            vtext.setText(a.getDisplay(i18n()));
+            //follow original tab design
+            vtext.setText(a.getDisplay(i18n()).toUpperCase());
             //ugly when set color
             if(selected) {
                 vtext.setTextColor(textColorMap.get(a));

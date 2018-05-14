@@ -12,10 +12,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.ActionMenuView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,18 +46,17 @@ import com.colaorange.dailymoney.core.ui.Constants;
 /**
  * @author dennis
  */
-public class BalanceActivity extends ContextsActivity implements OnClickListener, OnItemClickListener {
+public class BalanceActivity extends ContextsActivity implements OnItemClickListener {
 
     public static final int MODE_MONTH = 0;
     public static final int MODE_YEAR = 1;
 
-    public static final String ARG_BALANCE_DATE = "balance.balanceDate";
-    public static final String ARG_MODE = "balance.mode";
+    public static final String ARG_BALANCE_DATE = "balanceDate";
+    public static final String ARG_MODE = "mode";
     //    public static final String ARG_TARGET_DATE = "target";
-    public static final String ARG_TOTAL_MODE = "balance.modeTotal";
+    public static final String ARG_TOTAL_MODE = "modeTotal";
 
     private TextView vInfo;
-    private View vToolbar;
 
     private Date targetDate;
     private Date currentDate;
@@ -68,9 +69,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     private Date currentStartDate;
     private Date currentEndDate;
-
-    private ImageButton btnMode;
-
 
     private List<Balance> listData = new ArrayList<Balance>();
 
@@ -111,14 +109,6 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
 
         vInfo = findViewById(R.id.balance_info);
-        vToolbar = findViewById(R.id.balance_toolbar);
-
-        findViewById(R.id.btn_prev).setOnClickListener(this);
-        findViewById(R.id.btn_next).setOnClickListener(this);
-        findViewById(R.id.btn_today).setOnClickListener(this);
-        btnMode = findViewById(R.id.btn_mode);
-        btnMode.setOnClickListener(this);
-
 
         listAdapter = new BalanceListAdapter(this, listData);
 
@@ -290,20 +280,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
 
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_prev) {
-            onPrev();
-        } else if (v.getId() == R.id.btn_next) {
-            onNext();
-        } else if (v.getId() == R.id.btn_today) {
-            onToday();
-        } else if (v.getId() == R.id.btn_mode) {
-            onMode();
-        }
-    }
-
-    private void onMode() {
+    private void doChangeMode() {
         switch (mode) {
             case MODE_MONTH:
                 mode = MODE_YEAR;
@@ -316,7 +293,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         }
     }
 
-    private void onNext() {
+    private void doNext() {
         CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_MONTH:
@@ -330,7 +307,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         }
     }
 
-    private void onPrev() {
+    private void doPrev() {
         CalendarHelper cal = calendarHelper();
         switch (mode) {
             case MODE_MONTH:
@@ -344,7 +321,7 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
         }
     }
 
-    private void onToday() {
+    private void doGoToday() {
         switch (mode) {
             case MODE_MONTH:
             case MODE_YEAR:
@@ -357,10 +334,34 @@ public class BalanceActivity extends ContextsActivity implements OnClickListener
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.balance_menu, menu);
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.balance_menu, menu);
         menu.findItem(R.id.menu_hierarchy).setChecked(preference().isHierarchicalBalance());
 
+        MenuItem menuItem = menu.findItem(R.id.menu_operations);
+        ActionMenuView amView = (ActionMenuView)menuItem.getActionView();
+
+//        ActionMenuView.LayoutParams lp = new ActionMenuView.LayoutParams(ActionMenuView.LayoutParams.MATCH_PARENT, ActionMenuView.LayoutParams.WRAP_CONTENT);
+//        amView.setLayoutParams(lp);
+//        amView.setGravity(Gravity.RIGHT);
+
+        Menu menuObject = amView.getMenu();
+        inflater.inflate(R.menu.balance_operations_menu, menuObject);
+
+        amView.setOnMenuItemClickListener( new ActionMenuView.OnMenuItemClickListener(){
+            public boolean onMenuItemClick(MenuItem item){
+                if (item.getItemId() == R.id.menu_prev) {
+                    doPrev();
+                }else if (item.getItemId() == R.id.menu_next) {
+                    doNext();
+                }else if (item.getItemId() == R.id.menu_go_today) {
+                    doGoToday();
+                }else if (item.getItemId() == R.id.menu_change_mode) {
+                    doChangeMode();
+                }
+                return true;
+            }
+        });
         return true;
     }
 
