@@ -10,6 +10,7 @@ import com.colaorange.dailymoney.core.util.Logger;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class InstanceStateHelper {
                     for (Field f : fields) {
                         restoreField(++idx, f, state);
                     }
-                    if(ann.stopLookup()){
+                    if (ann.stopLookup()) {
                         break;
                     }
                 }
@@ -67,7 +68,7 @@ public class InstanceStateHelper {
                     for (Field f : fields) {
                         saveField(++idx, f, state);
                     }
-                    if(ann.stopLookup()){
+                    if (ann.stopLookup()) {
                         break;
                     }
                 }
@@ -189,6 +190,16 @@ public class InstanceStateHelper {
                         fields.add(f);
                         Logger.d("Instance {}, field {}:{}", clz.getSimpleName(), f.getName(), f.getType());
                     }
+                }
+
+                //just in case the order is different between save/restore.
+                if (fields != null && fields.size() > 1) {
+                    Collections.sort(fields, new Comparator<Field>() {
+                        @Override
+                        public int compare(Field o1, Field o2) {
+                            return o1.getName().compareTo(o2.getName());
+                        }
+                    });
                 }
 
                 fields = fields == null ? empty : fields;

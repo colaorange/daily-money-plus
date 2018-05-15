@@ -20,7 +20,7 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
 
     protected boolean multipleSelection;
 
-    private OnSelectListener<T> onSelectListener;
+    protected OnSelectListener<T> onSelectListener;
 
     public SelectableRecyclerViewAdaptor(ContextsActivity activity, List<T> data) {
         this(activity, data, false);
@@ -176,7 +176,7 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
                         return true;
                     }
                     if (adaptor.isSelected(item)) {
-                        adaptor.removeSelection(item);
+                        adaptor.reSelection(item);
                     } else {
                         adaptor.addSelection(item);
                     }
@@ -188,8 +188,20 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
         }
     }
 
+    protected void reSelection(T item) {
+        if(onSelectListener != null && onSelectListener.onReselect(item)){
+            return;
+        }
+        removeSelection(item);
+    }
+
 
     public interface OnSelectListener<T>{
         public void onSelect(Set<T> selection);
+
+        /**
+         * @return true if item was handle and should keep select it
+         */
+        public boolean onReselect(T selected);
     }
 }

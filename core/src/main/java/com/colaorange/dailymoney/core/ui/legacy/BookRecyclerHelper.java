@@ -67,6 +67,12 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
             public void onSelect(Set<Book> selection) {
                 listener.onSelectBook(selection.size() == 0 ? null : selection.iterator().next());
             }
+
+            @Override
+            public boolean onReselect(Book selected) {
+                doEditBook(selected);
+                return true;
+            }
         });
     }
 

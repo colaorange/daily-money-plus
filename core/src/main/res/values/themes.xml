@@ -132,7 +132,7 @@
         <item name="accountIncomeBgColor">@color/incomeBgLight</item>
         <item name="accountExpenseBgColor">@color/expenseBgLight</item>
         <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
-        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
         <item name="balanceHeadBgColor">@color/themeLemonBalanceHeadBg</item>
@@ -262,7 +262,7 @@
         <item name="accountIncomeBgColor">@color/incomeBgLight</item>
         <item name="accountExpenseBgColor">@color/expenseBgLight</item>
         <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
-        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
         <item name="balanceHeadBgColor">@color/themeOrangeBalanceHeadBg</item>
@@ -317,7 +317,7 @@
         <item name="accountIncomeBgColor">@color/incomeBgLight</item>
         <item name="accountExpenseBgColor">@color/expenseBgLight</item>
         <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
-        <item name="accountOtherBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
         <item name="balanceHeadBgColor">@color/themeSakuraBalanceHeadBg</item>

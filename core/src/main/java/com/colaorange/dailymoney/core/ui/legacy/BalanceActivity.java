@@ -127,6 +127,12 @@ public class BalanceActivity extends ContextsActivity {
             public void onSelect(Set<Balance> selection) {
                 doSelectBalance(selection.size() == 0 ? null : selection.iterator().next());
             }
+
+            @Override
+            public boolean onReselect(Balance selected) {
+                doRecordList(selected);
+                return true;
+            }
         });
     }
 
@@ -654,7 +660,12 @@ public class BalanceActivity extends ContextsActivity {
 
             //transparent mask for selecting ripple effect
             int mask = 0xE0FFFFFF;
+            int hpd = (int) (10 * dpRatio);
+            int vpd = (int) (6 * dpRatio);
+
             if (head) {
+
+                vpd += 2;
 
                 int bg = mask & resolveThemeAttrResData(R.attr.balanceHeadBgColor);
                 if (selected) {
@@ -684,8 +695,8 @@ public class BalanceActivity extends ContextsActivity {
                 vmoney.setTextSize(textSize.unit, textSize.value);
             }
 
-            int gpd = (int) (10 * dpRatio);
-            vlayout.setPadding((int) ((1 + indent) * gpd), gpd, gpd, gpd);
+
+            vlayout.setPadding((int) ((1 + indent) * hpd), vpd, hpd, vpd);
 
 
             vname.setTextColor(textColor);

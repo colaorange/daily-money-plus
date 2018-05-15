@@ -92,6 +92,12 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
             public void onSelect(Set<Account> selection) {
                 lookupQueue().publish(QEevents.AccountMgnt.ON_SELECT_ACCOUNT, selection.size() == 0 ? null : selection.iterator().next());
             }
+
+            @Override
+            public boolean onReselect(Account selected) {
+                lookupQueue().publish(QEevents.AccountMgnt.ON_EDIT_SELECTED_ACCOUNT, selected);
+                return true;
+            }
         });
     }
 

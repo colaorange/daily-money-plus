@@ -212,8 +212,11 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
             case QEevents.AccountMgnt.ON_SELECT_ACCOUNT:
+                doSelectAccount((Account)event.getData());
+                break;
+            case QEevents.AccountMgnt.ON_EDIT_SELECTED_ACCOUNT:
                 Account account = event.getData();
-                doSelectAccount(account);
+                doEditAccount((Account)event.getData());
                 break;
         }
     }
