@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item-->
+        <!--android:id="@+id/menu_next"-->
+        <!--android:icon="?ic_arrow_right"-->
+        <!--android:title="@string/act_next"-->
+        <!--app:showAsAction="always" />-->
     <item
-        android:id="@+id/menu_operations"
-        android:title="@string/act_operations"
-        android:icon="?ic_operations"
-        app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.ActionMenuView"/>
+        android:id="@+id/menu_go_today"
+        android:icon="?ic_today"
+        android:title="@string/act_go_today"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_change_mode"
+        android:icon="?ic_date_range"
+        android:title="@string/act_change_mode"
+        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/menu_prev"-->
+        <!--android:icon="?ic_arrow_left"-->
+        <!--android:title="@string/act_prev"-->
+        <!--app:showAsAction="ifRoom" />-->
+
+    <!--<item-->
+    <!--android:id="@+id/menu_operations"-->
+    <!--android:title="@string/act_operations"-->
+    <!--android:icon="?ic_operations"-->
+    <!--app:showAsAction="always|collapseActionView"-->
+    <!--app:actionViewClass="android.support.v7.widget.ActionMenuView"/>-->
     <item
         android:id="@+id/menu_hierarchy"
-        android:title="@string/act_hierarchical_balance"
         android:checkable="true"
-        app:showAsAction="never"/>
+        android:title="@string/act_hierarchical_balance"
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_yearly_runchart"
         android:title="@string/act_balance_yearly_runchart"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

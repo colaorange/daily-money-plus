@@ -25,7 +25,7 @@ import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.ui.Constants;
-import com.colaorange.dailymoney.core.ui.QEevents;
+import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 import java.util.Map;
@@ -88,7 +88,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedTypes[tab.getPosition()].getType();
-                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
                 refreshTab(false);
             }
 
@@ -96,7 +96,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
                 currentAccountType = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
 
                 //don't refresh it, there must be a selected.
 //                refreshTab();
@@ -188,7 +188,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     }
 
     private void reloadData() {
-        lookupQueue().publish(QEevents.AccountMgnt.ON_RELOAD_LIST, null);
+        lookupQueue().publish(QEvents.AccountMgnt.ON_RELOAD_FRAGMENT, null);
     }
 
 
@@ -211,10 +211,10 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEevents.AccountMgnt.ON_SELECT_ACCOUNT:
+            case QEvents.AccountMgnt.ON_SELECT_ACCOUNT:
                 doSelectAccount((Account)event.getData());
                 break;
-            case QEevents.AccountMgnt.ON_EDIT_SELECTED_ACCOUNT:
+            case QEvents.AccountMgnt.ON_RESELECT_ACCOUNT:
                 Account account = event.getData();
                 doEditAccount((Account)event.getData());
                 break;
@@ -319,23 +319,6 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     }
 
 
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//        if (item.getItemId() == R.id.menu_edit) {
-//            doEditAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_delete) {
-//            doDeleteAccount(info.position);
-//            return true;
-//        } else if (item.getItemId() == R.id.menu_copy) {
-//            doCopyAccount(info.position);
-//            return true;
-//        } else {
-//            return super.onContextItemSelected(item);
-//        }
-//    }
-
     private class AccountActionModeCallback implements android.support.v7.view.ActionMode.Callback {
 
         //onCreateActionMode(ActionMode, Menu) once on initial creation.
@@ -351,14 +334,6 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
 
             //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
             //So here show action menu according to SDK Levels
-//            MenuItem mi = menu.findItem(R.id.menu_edit);
-//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//
-//            mi = menu.findItem(R.id.menu_copy);
-//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//
-//            mi = menu.findItem(R.id.menu_delete);
-//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             return true;
         }
@@ -387,7 +362,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
         }
 
 

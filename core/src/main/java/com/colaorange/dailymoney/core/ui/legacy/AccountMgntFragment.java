@@ -20,7 +20,7 @@ import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.ui.QEevents;
+import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 
 import java.util.LinkedList;
@@ -29,10 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * this activity manages the account (of record) with tab widgets of android,
- *
  * @author dennis
- * @see {@link AccountType}
  */
 public class AccountMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
@@ -90,12 +87,12 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Account>() {
             @Override
             public void onSelect(Set<Account> selection) {
-                lookupQueue().publish(QEevents.AccountMgnt.ON_SELECT_ACCOUNT, selection.size() == 0 ? null : selection.iterator().next());
+                lookupQueue().publish(QEvents.AccountMgnt.ON_SELECT_ACCOUNT, selection.size() == 0 ? null : selection.iterator().next());
             }
 
             @Override
             public boolean onReselect(Account selected) {
-                lookupQueue().publish(QEevents.AccountMgnt.ON_EDIT_SELECTED_ACCOUNT, selected);
+                lookupQueue().publish(QEvents.AccountMgnt.ON_RESELECT_ACCOUNT, selected);
                 return true;
             }
         });
@@ -123,10 +120,10 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEevents.AccountMgnt.ON_CLEAR_SELECTION:
+            case QEvents.AccountMgnt.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
-            case QEevents.AccountMgnt.ON_RELOAD_LIST:
+            case QEvents.AccountMgnt.ON_RELOAD_FRAGMENT:
                 recyclerAdapter.clearSelection();
                 reloadData();
                 break;
