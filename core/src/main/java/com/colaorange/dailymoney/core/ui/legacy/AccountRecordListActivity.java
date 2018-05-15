@@ -175,7 +175,7 @@ public class AccountRecordListActivity extends ContextsActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.account_reclist_list) {
-            getMenuInflater().inflate(R.menu.account_reclist_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.account_reclist_item_menu, menu);
         }
 
     }

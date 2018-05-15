@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -59,7 +61,7 @@ public class ContextsActivity extends AppCompatActivity {
     protected int homeAsUpAppId;
 
     protected int selectableBackgroundId;
-    protected int selectedBackgroundId;
+    protected int selectedBackgroundColor;
 
     Map<String, EventQueue> eventQueueMap;
 
@@ -75,16 +77,17 @@ public class ContextsActivity extends AppCompatActivity {
         //do before super on create;
         themeApplier = new ThemeApplier(this);
         themeApplier.applyTheme();
-
         homeAsUpBackId = resolveThemeAttrResId(R.attr.ic_arrow_back);
         homeAsUpAppId = resolveThemeAttrResId(R.attr.ic_apps);
-        selectableBackgroundId = resolveThemeAttrResId(android.R.attr.selectableItemBackground);
-        if (isLightTheme()) {
-            selectedBackgroundId = resolveThemeAttrResId(R.attr.appSecondaryLightColor);
-        } else {
-            selectedBackgroundId = resolveThemeAttrResId(R.attr.appSecondaryDarkColor);
-        }
 
+
+        selectableBackgroundId = resolveThemeAttrResId(android.R.attr.selectableItemBackground);
+
+        if (isLightTheme()) {
+            selectedBackgroundColor = resolveThemeAttrResData(R.attr.appSecondaryLightColor);
+        } else {
+            selectedBackgroundColor = resolveThemeAttrResData(R.attr.appSecondaryDarkColor);
+        }
 
         super.onCreate(savedInstanceState);
         instanceStateHelper.onRestore(savedInstanceState);
@@ -347,12 +350,22 @@ public class ContextsActivity extends AppCompatActivity {
     public interface TE extends Contexts.TE {
     }
 
+    /**
+     * limited by getRrawable wihtout theme in our api level, I can just provide drawable id
+     *
+     * @return
+     */
     public int getSelectableBackgroundId() {
         return selectableBackgroundId;
     }
 
-    public int getSelectedBackgroundId() {
-        return selectedBackgroundId;
+    public Drawable getSelectedBackground() {
+        StateListDrawable drawable = new StateListDrawable();
+        //transparent mask for selecting ripple effect
+        drawable.addState(new int[]{android.R.attr.state_selected},
+                isLightTheme() ? new ColorDrawable(0xE0FFFFFF & selectedBackgroundColor) :
+                        new ColorDrawable(0xC0FFFFFF & selectedBackgroundColor));
+        return drawable;
     }
 
     /**

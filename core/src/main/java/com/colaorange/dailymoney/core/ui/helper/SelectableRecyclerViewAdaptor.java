@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.helper;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 
 import java.util.Collections;
@@ -127,21 +128,21 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
             super(adaptor, itemView);
             itemView.setOnClickListener(this);
             itemView.setOnTouchListener(this);
+//            itemView.setBackgroundResource(adaptor.activity.resolveThemeAttrResId(android.R.attr.selectableItemBackground));
             itemView.setBackgroundResource(adaptor.activity.getSelectableBackgroundId());
+
+            View select = itemView.findViewById(R.id.layout_select);
+            if(select!=null) {
+                select.setBackgroundDrawable(adaptor.activity.getSelectedBackground());
+            }
         }
 
         @Override
         public void bindViewValue(T item) {
             super.bindViewValue(item);
-
-            if (adaptor.isSelectable(item)) {
-                if (adaptor.isSelected(item)) {
-                    itemView.setBackgroundResource(adaptor.activity.getSelectedBackgroundId());
-                } else {
-                    itemView.setBackgroundResource(adaptor.activity.getSelectableBackgroundId());
-                }
-            } else {
-                itemView.setBackgroundResource(adaptor.activity.getSelectableBackgroundId());
+            View select = itemView.findViewById(R.id.layout_select);
+            if(select!=null) {
+                select.setSelected(adaptor.isSelected(item));
             }
         }
 

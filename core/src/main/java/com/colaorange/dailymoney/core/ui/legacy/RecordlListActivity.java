@@ -345,7 +345,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.record_list_list) {
-            getMenuInflater().inflate(R.menu.record_list_ctxmenu, menu);
+            getMenuInflater().inflate(R.menu.record_list_item_menu, menu);
         }
 
     }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_reclist"
+        android:title="@string/act_balance_reclist"
+        android:icon="?ic_list"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_piechart"
+        android:title="@string/act_balance_piechart"
+        android:icon="?ic_pie_chart"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_yearly_serieschart"
+        android:title="@string/act_balance_yearly_timechart"
+        android:icon="?ic_series_chart"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_yearly_cumulative_serieschart"
+        android:title="@string/act_balance_yearly_cumulative_timechart"
+        android:icon="?ic_multiline_chart"
+        app:showAsAction="ifRoom"/>
+
+</menu>

@@ -44,7 +44,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     private ViewPager vPager;
 
     private ActionMode actionMode;
-    private Account actionAccount;
+    private Account actionObj;
 
     @InstanceState
     private String currentAccountType = null;
@@ -226,7 +226,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
                     boolean r = contexts().getDataProvider().deleteAccount(account.getId());
                     if (r) {
-                        if (account.equals(actionAccount)) {
+                        if (account.equals(actionObj)) {
                             if (actionMode != null) {
                                 actionMode.finish();
                             }
@@ -249,7 +249,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         }
 
         if (account != null) {
-            actionAccount = account;
+            actionObj = account;
             if (actionMode == null) {
                 actionMode = this.startSupportActionMode(new AccountActionModeCallback());
             } else {
@@ -338,7 +338,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         //onCreateActionMode(ActionMode, Menu) once on initial creation.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);//Inflate the menu over action mode
+            mode.getMenuInflater().inflate(R.menu.account_mgnt_item_menu, menu);//Inflate the menu over action mode
             return true;
         }
 
@@ -348,14 +348,14 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
 
             //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
             //So here show action menu according to SDK Levels
-            MenuItem mi = menu.findItem(R.id.menu_edit);
-            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            mi = menu.findItem(R.id.menu_copy);
-            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            mi = menu.findItem(R.id.menu_delete);
-            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//            MenuItem mi = menu.findItem(R.id.menu_edit);
+//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//            mi = menu.findItem(R.id.menu_copy);
+//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//            mi = menu.findItem(R.id.menu_delete);
+//            mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             return true;
         }
@@ -364,14 +364,14 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.menu_edit) {
-                doEditAccount(actionAccount);
+                doEditAccount(actionObj);
                 return true;
             } else if (item.getItemId() == R.id.menu_delete) {
-                doDeleteAccount(actionAccount);
+                doDeleteAccount(actionObj);
                 mode.finish();//Finish action mode
                 return true;
             } else if (item.getItemId() == R.id.menu_copy) {
-                doCopyAccount(actionAccount);
+                doCopyAccount(actionObj);
                 return true;
             }
             return false;
@@ -383,7 +383,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             //When action mode destroyed remove selected selections and set action mode to null
             //First check current fragment action mode
             actionMode = null;
-            actionAccount = null;
+            actionObj = null;
             lookupQueue().publish(new EventQueue.EventBuilder(QEevents.AccountMgnt.ON_CLEAR_SELECTION).build());
         }
 

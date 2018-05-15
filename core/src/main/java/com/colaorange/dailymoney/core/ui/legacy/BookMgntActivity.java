@@ -26,7 +26,7 @@ public class BookMgntActivity extends ContextsActivity {
     BookRecyclerHelper bookRecyclerHelper;
 
     private ActionMode actionMode;
-    private Book actionBook;
+    private Book actionObj;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class BookMgntActivity extends ContextsActivity {
     }
 
     private void doDeleteBook(Book book) {
-        if (book.equals(actionBook)) {
+        if (book.equals(actionObj)) {
             if (actionMode != null) {
                 actionMode.finish();
             }
@@ -88,7 +88,7 @@ public class BookMgntActivity extends ContextsActivity {
         }
 
         if (book != null) {
-            actionBook = book;
+            actionObj = book;
             if (actionMode == null) {
                 actionMode = this.startSupportActionMode(new BookActionModeCallback());
             } else {
@@ -155,7 +155,7 @@ public class BookMgntActivity extends ContextsActivity {
         //onCreateActionMode(ActionMode, Menu) once on initial creation.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.book_mgnt_ctxmenu, menu);//Inflate the menu over action mode
+            mode.getMenuInflater().inflate(R.menu.book_mgnt_item_menu, menu);//Inflate the menu over action mode
             return true;
         }
 
@@ -169,7 +169,7 @@ public class BookMgntActivity extends ContextsActivity {
             //So here show action menu according to SDK Levels
             MenuItem mi = menu.findItem(R.id.menu_set_working);
             mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            if (workingBookId == actionBook.getId()) {
+            if (workingBookId == actionObj.getId()) {
                 mi.setEnabled(false);
             } else {
                 mi.setEnabled(true);
@@ -182,7 +182,7 @@ public class BookMgntActivity extends ContextsActivity {
 
             mi = menu.findItem(R.id.menu_delete);
             mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            if (workingBookId == actionBook.getId() || Contexts.DEFAULT_BOOK_ID == actionBook.getId()) {
+            if (workingBookId == actionObj.getId() || Contexts.DEFAULT_BOOK_ID == actionObj.getId()) {
                 mi.setEnabled(false);
             } else {
                 mi.setEnabled(true);
@@ -196,14 +196,14 @@ public class BookMgntActivity extends ContextsActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.menu_edit) {
-                bookRecyclerHelper.doEditBook(actionBook);
+                bookRecyclerHelper.doEditBook(actionObj);
                 return true;
             } else if (item.getItemId() == R.id.menu_delete) {
-                bookRecyclerHelper.doDeleteBook(actionBook);
+                bookRecyclerHelper.doDeleteBook(actionObj);
 //                mode.finish();//Finish action mode
                 return true;
             } else if (item.getItemId() == R.id.menu_set_working) {
-                bookRecyclerHelper.doSetWorkingBook(actionBook);
+                bookRecyclerHelper.doSetWorkingBook(actionObj);
                 mode.invalidate();
                 return true;
             }
@@ -216,7 +216,7 @@ public class BookMgntActivity extends ContextsActivity {
             //When action mode destroyed remove selected selections and set action mode to null
             //First check current fragment action mode
             actionMode = null;
-            actionBook = null;
+            actionObj = null;
             bookRecyclerHelper.clearSelection();
         }
 
