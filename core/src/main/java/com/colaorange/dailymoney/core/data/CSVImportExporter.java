@@ -110,7 +110,7 @@ public class CSVImportExporter {
         }
 
         if (bookIds.length == 0) {
-            r.err = i18n.string(R.string.msg_no_data);
+            r.err = i18n.string(R.string.msg_no_data_to_backup);
         } else {
             long now = System.currentTimeMillis();
 
