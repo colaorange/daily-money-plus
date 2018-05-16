@@ -75,7 +75,6 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private RegularSpinnerAdapter<AccountIndentNode> fromAccountAdapter;
     private RegularSpinnerAdapter<AccountIndentNode> toAccountAdapter;
 
-
     private Spinner vFromAccount;
     private Spinner vToAccount;
 
@@ -91,6 +90,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     //0:usual, 1:last
     private int bookmarkMode = 0;
+
+    DateFormat weekDayFormat;
 
 
     @Override
@@ -203,11 +204,12 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private void initMembers() {
 
+        weekDayFormat = preference().getWeekDayFormat();// Wed.
+
         boolean archived = workingRecord.isArchived();
 
-
         vRecordDate = findViewById(R.id.record_date);
-        vRecordDate.setText(dateFormat.format(workingRecord.getDate()));
+        vRecordDate.setText(dateFormat.format(workingRecord.getDate())+" ( "+weekDayFormat.format(workingRecord.getDate())+" )");
         vRecordDate.setEnabled(!archived);
 
         vRecordMoney = findViewById(R.id.record_money);
@@ -417,7 +419,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void updateDateEditor(Date d) {
-        vRecordDate.setText(dateFormat.format(d));
+        vRecordDate.setText(dateFormat.format(d)+" ( "+weekDayFormat.format(d)+" )");
     }
 
     @Override
