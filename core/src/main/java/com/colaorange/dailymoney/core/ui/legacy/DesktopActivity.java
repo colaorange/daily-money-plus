@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -93,7 +92,7 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
     private void initArgs() {
         if (firstTime == null) {
             Bundle bundle = getIntentExtras();
-            firstTime = bundle.getBoolean(StartupActivity.PARAM_FIRST_TIME, false);
+            firstTime = bundle.getBoolean(StartupActivity.ARG_FIRST_TIME, false);
         }
     }
 
@@ -178,8 +177,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_about);
-                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, i18n().string(R.string.app_name));
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
                 }
             });
@@ -189,8 +188,8 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
                 @Override
                 public void run() {
                     Intent intent = new Intent(DesktopActivity.this, LocalWebViewActivity.class);
-                    intent.putExtra(LocalWebViewActivity.PARAM_URI_RES_ID, R.string.path_what_is_new);
-                    intent.putExtra(LocalWebViewActivity.PARAM_TITLE, Contexts.instance().getAppVerName());
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);
                 }
             });
@@ -208,9 +207,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
         Book book = imdp.findBook(Contexts.instance().getWorkingBookId());
         String symbol = book.getSymbol();
         if (symbol == null || "".equals(symbol)) {
-            setTitle(i18n.string(R.string.title_book) + " : " + book.getName());
+            setTitle(book.getName());
         } else {
-            setTitle(i18n.string(R.string.title_book) + " : " + book.getName() + " ( " + symbol + " )");
+            setTitle(book.getName() + " ( " + symbol + " )");
         }
 
 //        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
@@ -369,5 +368,9 @@ public class DesktopActivity extends ContextsActivity implements OnTabChangeList
 
     }
 
+    @Override
+    public int getActionBarHomeAsUp(){
+        return homeAsUpNone;
+    }
 
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_go_today"
+        android:title="@string/act_go_today"
+        android:icon="?ic_today"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_prev"
+        android:title="@string/act_prev"
+        android:icon="?ic_arrow_left"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_next"
+        android:title="@string/act_next"
+        android:icon="?ic_arrow_right"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_change_mode"
+        android:title="@string/act_change_mode"
+        android:icon="?ic_date_range"
+        app:showAsAction="always" />
+</menu>

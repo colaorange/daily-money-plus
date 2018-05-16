@@ -15,6 +15,12 @@ public class Balance {
     String type;
     double money;
     int indent;
+    /**
+     * 1.account
+     * 2.or path of a ancient of account
+     * 3.or null
+     */
+
     Serializable target;
     Date date;
 

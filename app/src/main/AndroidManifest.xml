@@ -42,9 +42,13 @@
             android:label="@string/title_bookmgnt" />
         <activity android:name=".core.ui.legacy.BookEditorActivity" />
         <activity
-            android:name=".core.ui.legacy.RecordlListActivity"
+            android:name=".core.ui.legacy.RecordListActivity"
             android:label="@string/title_reclist" />
-        <activity android:name=".core.ui.legacy.RecordEditorActivity"></activity>
+        <activity
+            android:name=".core.ui.legacy.RecordMgntActivity"
+            android:label="@string/title_recmgnt" />
+
+        <activity android:name=".core.ui.legacy.RecordEditorActivity"/>
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />
@@ -55,23 +59,27 @@
             android:label="@string/title_prefs" />
         <activity
             android:name=".core.ui.pref.PrefsContributionActivity"
-            android:label="@string/label_prefcat_contribution">
-        </activity>
+            android:label="@string/label_prefcat_contribution"/>
 
         <activity
             android:name=".core.ui.pref.PrefsDeveloperActivity"
-            android:label="@string/label_prefcat_developer" >
-        </activity>
+            android:label="@string/label_prefcat_developer"/>
 
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"
             android:label="@string/title_datamain" />
         <activity
-            android:name=".core.ui.legacy.BalanceActivity"
+            android:name=".core.ui.legacy.BalanceMgntActivity"
             android:label="@string/label_balance" />
         <activity
             android:name="org.achartengine.GraphicalActivity"
             android:theme="@style/Theme.AppCompat" />
+
+
+        <activity
+            android:name=".core.ui.legacy.TabbedActivity"
+            android:label="Tabbed">
+        </activity>
 
         <receiver
             android:name=".core.bg.StartupReceiver"

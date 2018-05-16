@@ -68,8 +68,8 @@ public class TestsDesktop extends AbstractDesktop {
                 
                 Intent intent = null;
                 intent = new Intent(activity,BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE,false);
-                intent.putExtra(BookEditorActivity.PARAM_BOOK,book);
+                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE,false);
+                intent.putExtra(BookEditorActivity.ARG_BOOK,book);
                 activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
         }, "Edit selected book", R.drawable.dtitem_test);
@@ -81,8 +81,8 @@ public class TestsDesktop extends AbstractDesktop {
                 Book book = new Book("test","$",SymbolPosition.AFTER,"");
                 Intent intent = null;
                 intent = new Intent(activity,BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.PARAM_MODE_CREATE,true);
-                intent.putExtra(BookEditorActivity.PARAM_BOOK,book);
+                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE,true);
+                intent.putExtra(BookEditorActivity.ARG_BOOK,book);
                 activity.startActivityForResult(intent,Constants.REQUEST_BOOK_EDITOR_CODE);
             }
         }, "Add book", R.drawable.dtitem_test);

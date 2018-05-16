@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_go_today"
+        android:icon="?ic_today"
+        android:title="@string/act_go_today"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_change_mode"
+        android:icon="?ic_date_range"
+        android:title="@string/act_change_mode"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_new"
+        android:icon="?ic_add"
+        android:title="@string/act_new"
+        app:showAsAction="always" />
+</menu>

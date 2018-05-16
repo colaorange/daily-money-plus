@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.FIELD, ElementType.TYPE}) //can use in method only.
 public @interface InstanceState {
 
+    boolean stopLookup() default false;
 }

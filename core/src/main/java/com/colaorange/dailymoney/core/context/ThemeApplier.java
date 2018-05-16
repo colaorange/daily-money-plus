@@ -2,7 +2,6 @@ package com.colaorange.dailymoney.core.context;
 
 import android.content.res.Resources;
 import android.support.design.widget.AppBarLayout;
-import android.util.TypedValue;
 
 import com.colaorange.dailymoney.core.R;
 
@@ -79,5 +78,7 @@ public class ThemeApplier {
         if (appbar != null) {
             //todo style, theme
         }
+
+        theme.applyStyle(R.style.appThemeLatest, true);
     }
 }

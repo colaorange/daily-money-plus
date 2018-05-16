@@ -133,8 +133,8 @@ public class RecordListHelper implements OnItemClickListener {
     public void doNewRecord(Date date) {
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
-        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(RecordEditorActivity.PARAM_CREATED_DATE, date);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.ARG_CREATED_DATE, date);
         activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
@@ -143,8 +143,8 @@ public class RecordListHelper implements OnItemClickListener {
         Record d = listData.get(pos);
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
-        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, false);
-        intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(RecordEditorActivity.ARG_RECORD, d);
         activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
@@ -176,8 +176,8 @@ public class RecordListHelper implements OnItemClickListener {
         Record d = listData.get(pos);
         Intent intent = null;
         intent = new Intent(activity, RecordEditorActivity.class);
-        intent.putExtra(RecordEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(RecordEditorActivity.PARAM_RECORD, d);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.ARG_RECORD, d);
         activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
     }
 
@@ -236,7 +236,6 @@ public class RecordListHelper implements OnItemClickListener {
         public void bindViewValue(Record record, View convertView) {
 
             LinearLayout vlayout = convertView.findViewById(R.id.record_item_layout);
-            LinearLayout vinner = convertView.findViewById(R.id.record_item_layout);
             LinearLayout vfromborder = convertView.findViewById(R.id.record_item_from_border);
             LinearLayout vtoborder = convertView.findViewById(R.id.record_item_to_border);
             TextView vfrom = convertView.findViewById(R.id.detail_mgnt_item_from);

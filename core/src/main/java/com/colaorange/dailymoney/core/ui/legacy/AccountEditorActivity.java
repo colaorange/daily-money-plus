@@ -38,8 +38,8 @@ import com.colaorange.dailymoney.core.ui.Constants;
  */
 public class AccountEditorActivity extends ContextsActivity implements android.view.View.OnClickListener {
 
-    public static final String PARAM_MODE_CREATE = "modeCreate";
-    public static final String PARAM_ACCOUNT = "account";
+    public static final String ARG_MODE_CREATE = "modeCreate";
+    public static final String ARG_ACCOUNT = "account";
 
     private boolean modeCreate;
     private int counterCreate;
@@ -76,8 +76,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
     private void initArgs() {
         Bundle bundle = getIntentExtras();
-        modeCreate = bundle.getBoolean(PARAM_MODE_CREATE, true);
-        account = (Account) bundle.get(PARAM_ACCOUNT);
+        modeCreate = bundle.getBoolean(ARG_MODE_CREATE, true);
+        account = (Account) bundle.get(ARG_ACCOUNT);
 
         if (modeCreate && account == null) {
             account = new Account(AccountType.INCOME.getType(), "", 0D);
@@ -181,8 +181,8 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     private void doCalculator2() {
         Intent intent = null;
         intent = new Intent(this, Calculator.class);
-        intent.putExtra(Calculator.PARAM_NEED_RESULT, true);
-        intent.putExtra(Calculator.PARAM_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
+        intent.putExtra(Calculator.ARG_NEED_RESULT, true);
+        intent.putExtra(Calculator.ARG_THEME, isLightTheme() ? Calculator.THEME_LIGHT : Calculator.THEME_DARK);
 
         String start = "";
         try {
@@ -190,7 +190,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         } catch (Exception e) {
         }
 
-        intent.putExtra(Calculator.PARAM_START_VALUE, start);
+        intent.putExtra(Calculator.ARG_START_VALUE, start);
         startActivityForResult(intent, Constants.REQUEST_CALCULATOR_CODE);
     }
 
@@ -198,7 +198,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
-            String result = data.getExtras().getString(Calculator.PARAM_RESULT_VALUE);
+            String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
                 double d = Formats.string2Double(result);
                 vInitval.setText(Formats.cal2ToEditorTextNumberDecimal(result));

@@ -1,3 +1,6 @@
+* Enable daily-money debug
+    adb shell setprop log.tag.daily-money DEBUG
+
 * No SD in emulator
     https://www.chrisblunt.com/fix-missing-sdcard-android-emulator/
 * Locale
@@ -49,6 +52,15 @@
 
 * appbar scrolling with
     https://blog.30sparks.com/material-design-5-appbarlayout/
+    https://www.jianshu.com/p/4a77ae4cd82f
+    https://blog.csdn.net/github_35180164/article/details/54025071
+
+* recycler view menu
+    https://www.simplifiedcoding.net/create-options-menu-recyclerview-item-tutorial/
+    http://www.androhub.com/android-contextual-action-mode-over-toolbar/
+
+* multiple action menu
+    http://www.zoftino.com/enhance-action-bar-functionality-with-action-view
 
 * supports
     https://developer.android.com/topic/libraries/support-library/packages

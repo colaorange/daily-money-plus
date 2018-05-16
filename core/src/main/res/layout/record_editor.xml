@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical"
     tools:context=".ui.legacy.RecordEditorActivity">
@@ -11,13 +11,13 @@
     <include layout="@layout/app_bar" />
 
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -44,33 +44,34 @@
                 android:text="@string/label_date"
                 android:textSize="?textSize" />
 
+
+            <EditText
+                android:id="@+id/record_date"
+                style="@style/editorFieldInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:textSize="?textSize" />
+
             <LinearLayout
                 style="@style/editorFieldInput"
-                android:gravity="center_vertical"
+                android:gravity="bottom|right"
                 android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/record_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:editable="false"
-                    android:textSize="?textSize" />
 
                 <ImageButton
                     android:id="@+id/btn_prev"
                     style="@style/editorToolIconBtn"
-                    android:src="?ic_arrow_back" />
+                    android:src="?ic_arrow_left" />
+
+                <ImageButton
+                    android:id="@+id/btn_next"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_arrow_right" />
 
                 <ImageButton
                     android:id="@+id/btn_today"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_today" />
-
-                <ImageButton
-                    android:id="@+id/btn_next"
-                    style="@style/editorToolIconBtn"
-                    android:src="?ic_arrow_forward" />
 
                 <ImageButton
                     android:id="@+id/btn_datepicker"
@@ -85,6 +86,7 @@
 
             <LinearLayout
                 style="@style/editorFieldInput"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
@@ -117,7 +119,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 

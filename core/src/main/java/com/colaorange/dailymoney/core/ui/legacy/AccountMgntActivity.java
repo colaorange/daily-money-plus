@@ -3,38 +3,31 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabSpec;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.GUIs;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,62 +36,140 @@ import java.util.Map;
  * @author dennis
  * @see {@link AccountType}
  */
-public class AccountMgntActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
+public class AccountMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
-    private List<Account> listData = new ArrayList<>();
+    private TabLayout vAppTabs;
 
-    private ListView vList;
+    private ViewPager vPager;
 
-    private AccountListAdapter listAdapter;
+    private ActionMode actionMode;
+    private Account actionObj;
 
-    private String currTabTag = null;
+    @InstanceState
+    private String currentAccountType = null;
+
+    private AccountType[] supportedTypes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_mgnt);
         initMembers();
-
-        refreshUI();
     }
 
     private void initMembers() {
 
-        //tabs
-        TabHost tabs = findViewById(R.id.account_mgnt_tabs);
-        tabs.setup();
+        vAppTabs = findViewById(R.id.appTabs);
+        vPager = findViewById(R.id.viewpager);
 
-        AccountType[] supportedType = AccountType.getSupportedType();
-        Resources r = getResources();
-        for (AccountType at : supportedType) {
-            TabSpec tab = tabs.newTabSpec(at.getType());
-            tab.setIndicator(AccountType.getDisplay(i18n(), at.getType()));
-            tab.setContent(R.id.account_mgnt_list);
-            tabs.addTab(tab);
-            if (currTabTag == null) {
-                //it is account type
-                currTabTag = tab.getTag();
+        supportedTypes = AccountType.getSupportedType();
+
+        //just in case filtering
+        int selpos = 0;
+        int i = 0;
+        for (AccountType a : supportedTypes) {
+            if (a.getType().equals(currentAccountType)) {
+                selpos = i;
+                break;
             }
+            i++;
         }
-        // workaround, force refresh
-        if (supportedType.length > 1) {
-            tabs.setCurrentTab(1);
-            tabs.setCurrentTab(0);
+        currentAccountType = supportedTypes[selpos].getType();
+
+        vPager.setAdapter(new AccountTypePagerAdapter(getSupportFragmentManager(), supportedTypes));
+
+        vAppTabs.setupWithViewPager(vPager);
+        vAppTabs.getTabAt(selpos).select();
+
+        refreshTab(true);
+
+        vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentAccountType = supportedTypes[tab.getPosition()].getType();
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                refreshTab(false);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //is it possible?
+                currentAccountType = null;
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
+
+                //don't refresh it, there must be a selected.
+//                refreshTab();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                currentAccountType = supportedTypes[tab.getPosition()].getType();
+            }
+        });
+    }
+
+    private void refreshTab(boolean init){
+        Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int i=0;
+        for(AccountType a: supportedTypes){
+            int icon;
+            boolean selected = a.getType().equals(currentAccountType);
+            switch(a){
+                case INCOME:
+                    icon = R.drawable.tab_income;
+                    break;
+                case EXPENSE:
+                    icon = R.drawable.tab_expense;
+                    break;
+                case ASSET:
+                    icon = R.drawable.tab_asset;
+                    break;
+                case LIABILITY:
+                    icon = R.drawable.tab_liability;
+                    break;
+                case OTHER:
+                    icon = R.drawable.tab_other;
+                    break;
+                case UNKONW:
+                default:
+                    icon = R.drawable.tab_unknow;
+                    break;
+            }
+            View tab;
+            if(init) {
+                tab = (View) inflater.inflate(R.layout.regular_tab, null);
+                vAppTabs.getTabAt(i).setCustomView(tab);
+            }else{
+                tab = vAppTabs.getTabAt(i).getCustomView();
+            }
+            TextView vtext = tab.findViewById(R.id.tab_text);
+            ImageView vicon = tab.findViewById(R.id.tab_icon);
+            //follow original tab design
+            vtext.setText(a.getDisplay(i18n()).toUpperCase());
+            //ugly when set color
+            if(selected) {
+                vtext.setTextColor(textColorMap.get(a));
+            }else{
+                vtext.setTextColor(resolveThemeAttrResData(R.attr.appPrimaryTextColor));
+            }
+            vicon.setImageDrawable(buildNonSelectedIcon(icon, selected));
+            i++;
         }
 
-        tabs.setOnTabChangedListener(this);
+    }
 
+    @Override
+    public void onStart() {
+        lookupQueue().subscribe(this);
+        super.onStart();
+    }
 
-        listAdapter = new AccountListAdapter(this, listData);
-
-        vList = findViewById(R.id.account_mgnt_list);
-        vList.setAdapter(listAdapter);
-
-
-        vList.setOnItemClickListener(this);
-
-        registerForContextMenu(vList);
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
     }
 
 
@@ -109,28 +180,17 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
-                    refreshUI();
+                    reloadData();
                 }
             });
 
         }
     }
 
-    private void refreshUI() {
-        IDataProvider idp = contexts().getDataProvider();
-
-        AccountType type = AccountType.find(currTabTag);
-        listData.clear();
-        listData.addAll(idp.listAccount(type));
-
-        listAdapter.notifyDataSetChanged();
+    private void reloadData() {
+        lookupQueue().publish(QEvents.AccountMgnt.ON_RELOAD_FRAGMENT, null);
     }
 
-    @Override
-    public void onTabChanged(String tabId) {
-        currTabTag = tabId;
-        refreshUI();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -149,42 +209,34 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.account_mgnt_list) {
-            getMenuInflater().inflate(R.menu.account_mgnt_ctxmenu, menu);
-        }
-
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.menu_edit) {
-            doEditAccount(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_delete) {
-            doDeleteAccount(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_copy) {
-            doCopyAccount(info.position);
-            return true;
-        } else {
-            return super.onContextItemSelected(item);
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()) {
+            case QEvents.AccountMgnt.ON_SELECT_ACCOUNT:
+                doSelectAccount((Account)event.getData());
+                break;
+            case QEvents.AccountMgnt.ON_RESELECT_ACCOUNT:
+                Account account = event.getData();
+                doEditAccount((Account)event.getData());
+                break;
         }
     }
 
-    private void doDeleteAccount(int pos) {
-        final Account acc = listData.get(pos);
-        final String name = acc.getName();
+    private void doDeleteAccount(final Account account) {
+        final String name = account.getName();
 
-        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, acc.getName()), new GUIs.OnFinishListener() {
+        GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, account.getName()), new GUIs.OnFinishListener() {
             public boolean onFinish(Object data) {
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
-                    boolean r = contexts().getDataProvider().deleteAccount(acc.getId());
-                    if(r) {
-                        refreshUI();
+                    boolean r = contexts().getDataProvider().deleteAccount(account.getId());
+                    if (r) {
+                        if (account.equals(actionObj)) {
+                            if (actionMode != null) {
+                                actionMode.finish();
+                            }
+                        }
+
                         GUIs.shortToast(AccountMgntActivity.this, i18n().string(R.string.msg_account_deleted, name));
+                        reloadData();
                         trackEvent(TE.DELETE_ACCOUNT);
                     }
                 }
@@ -193,88 +245,126 @@ public class AccountMgntActivity extends ContextsActivity implements OnTabChange
         });
     }
 
-    private void doEditAccount(int pos) {
-        Account acc = listData.get(pos);
+    private void doSelectAccount(Account account) {
+        if (account == null && actionMode != null) {
+            actionMode.finish();
+            return;
+        }
+
+        if (account != null) {
+            actionObj = account;
+            if (actionMode == null) {
+                actionMode = this.startSupportActionMode(new AccountActionModeCallback());
+            } else {
+                actionMode.invalidate();
+            }
+            actionMode.setTitle(account.getName());
+        }
+
+    }
+
+
+    private void doEditAccount(Account account) {
         Intent intent = null;
         intent = new Intent(this, AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, false);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, account);
         startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
-    private void doCopyAccount(int pos) {
-        Account acc = listData.get(pos);
+    private void doCopyAccount(Account account) {
         Intent intent = null;
         intent = new Intent(this, AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, account);
         startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
     private void doNewAccount() {
-        Account acc = new Account(currTabTag, "", 0D);
+        Account acc = new Account(currentAccountType, "", 0D);
         Intent intent = null;
         intent = new Intent(this, AccountEditorActivity.class);
-        intent.putExtra(AccountEditorActivity.PARAM_MODE_CREATE, true);
-        intent.putExtra(AccountEditorActivity.PARAM_ACCOUNT, acc);
+        intent.putExtra(AccountEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(AccountEditorActivity.ARG_ACCOUNT, acc);
         startActivityForResult(intent, Constants.REQUEST_ACCOUNT_EDITOR_CODE);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-        if (parent == vList) {
-            doEditAccount(pos);
-        }
-    }
 
-    private class AccountListAdapter extends ArrayAdapter<Account> {
+    public static class AccountTypePagerAdapter extends FragmentPagerAdapter {
+        AccountType[] types;
 
-        LayoutInflater inflater;
-
-        public AccountListAdapter(@NonNull Context context, List<Account> list) {
-            super(context, R.layout.account_mgnt_item, list);
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public AccountTypePagerAdapter(FragmentManager fm, AccountType[] types) {
+            super(fm);
+            this.types = types;
         }
 
-        @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            AccountViewHolder holder;
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.account_mgnt_item, null);
-                convertView.setTag(holder = new AccountViewHolder());
-            } else {
-                holder = (AccountViewHolder) convertView.getTag();
+        public int getCount() {
+            return types.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment f = new AccountMgntFragment();
+            Bundle b = new Bundle();
+            b.putString(AccountMgntFragment.ARG_ACCOUNT_TYPE, types[position].getType());
+            f.setArguments(b);
+            return f;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return types[position].getDisplay(Contexts.instance().getI18n());
+        }
+    }
+
+
+    private class AccountActionModeCallback implements android.support.v7.view.ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.account_mgnt_item_menu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
+            //So here show action menu according to SDK Levels
+
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_edit) {
+                doEditAccount(actionObj);
+                return true;
+            } else if (item.getItemId() == R.id.menu_delete) {
+                doDeleteAccount(actionObj);
+                mode.finish();//Finish action mode
+                return true;
+            } else if (item.getItemId() == R.id.menu_copy) {
+                doCopyAccount(actionObj);
+                return true;
             }
+            return false;
+        }
 
-            holder.bindViewValue(getItem(position), convertView);
-
-            return convertView;
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionObj = null;
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
         }
 
 
     }
-
-    private class AccountViewHolder {
-
-        public void bindViewValue(Account account, View convertView) {
-
-            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
-
-            TextView vname = convertView.findViewById(R.id.account_item_name);
-            TextView vid = convertView.findViewById(R.id.account_item_id);
-            TextView initvalue = convertView.findViewById(R.id.account_item_initvalue);
-
-            vname.setText(account.getName());
-            vid.setText(account.getId());
-            initvalue.setText(i18n().string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue()));
-
-            int textColor = textColorMap.get(AccountType.find(account.getType()));
-
-            vname.setTextColor(textColor);
-            vid.setTextColor(textColor);
-            initvalue.setTextColor(textColor);
-        }
-    }
-
 }

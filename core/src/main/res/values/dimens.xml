@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="appbarSize">52dp</dimen>
+
     <dimen name="textSize">14sp</dimen>
     <dimen name="textSizeSmall">12sp</dimen>
     <dimen name="textSizeMedium">16sp</dimen>
@@ -14,4 +16,7 @@
     <dimen name="largeTextSizeSmall">20sp</dimen>
     <dimen name="largeTextSizeMedium">24sp</dimen>
     <dimen name="largeTextSizeLarge">26sp</dimen>
+
+
+    <dimen name="float_add_margin">16dp</dimen>
 </resources>

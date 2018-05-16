@@ -4,6 +4,10 @@
  ## re-support Italian
  #8 option for select 1st and last used account.
  #6 refactor sub title in reclist
+ #15 material design in book management
+ #17 Material Design in account management
+ #19 Material Design in balance list
+ #18 Material Design in record list
 
 === Bugs ===
  #   No selection effect on account-reclist

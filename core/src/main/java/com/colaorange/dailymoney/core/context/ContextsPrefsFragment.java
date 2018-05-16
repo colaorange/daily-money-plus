@@ -10,8 +10,8 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
-import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -25,14 +25,27 @@ import java.util.Set;
 /**
  * @author dennis
  */
+@InstanceState(stopLookup = true)
 public class ContextsPrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     boolean dirty = false;
-    boolean markRestart = false;
 
     Set<String> recreateKeys = new HashSet<>();
 
     Map<String, CharSequence> adjustSummaryCache = new HashMap<>();
+
+    private InstanceStateHelper instanceStateHelper;
+
+    public ContextsPrefsFragment(){
+        instanceStateHelper = new InstanceStateHelper(this);
+    }
+
+    public void trackEvent(String action) {
+        Activity activity = getActivity();
+        if (activity instanceof ContextsActivity) {
+            ((ContextsActivity) activity).trackEvent(action);
+        }
+    }
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -43,11 +56,16 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         recreateKeys.add(i18n.string(R.string.pref_text_size));
     }
 
-    public void trackEvent(String action) {
-        Activity activity = getActivity();
-        if (activity instanceof ContextsActivity) {
-            ((ContextsActivity) activity).trackEvent(action);
-        }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        instanceStateHelper.onRestore(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        instanceStateHelper.onBackup(savedInstanceState);
     }
 
     @Override

@@ -2,67 +2,75 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    >
-
-    <ImageView
-        android:id="@+id/book_item_icon"
-        android:layout_width="42dp"
-        android:layout_height="match_parent"
-        android:scaleType="center" />
+    android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/layout_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="10dp">
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
 
-        <LinearLayout
-            style="@style/rowItem"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/book_item_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:textSize="?textSizeMedium" />
-
-            <TextView
-                android:id="@+id/book_item_symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textSize="?textSize" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/book_item_icon"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:scaleType="center" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="bottom"
-            android:orientation="horizontal">
+            android:orientation="vertical"
 
-            <TextView
-                android:id="@+id/book_item_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textSize="?textSizeSmall" />
+            android:paddingLeft="10dp">
 
-            <TextView
-                android:id="@+id/book_item_note"
-                android:layout_width="0dp"
+            <LinearLayout
+                style="@style/rowItem"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/book_item_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:textSize="?textSizeMedium" />
+
+                <TextView
+                    android:id="@+id/book_item_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textSize="?textSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:singleLine="true"
-                android:textSize="?textSizeSmall" />
+                android:layout_marginLeft="10dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/book_item_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textSize="?textSizeSmall" />
+
+                <TextView
+                    android:id="@+id/book_item_note"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:textSize="?textSizeSmall" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    tools:context=".ui.legacy.RecordlListActivity"
+    tools:context=".ui.legacy.RecordListActivity"
     tools:ignore="ContentDescription">
 
     <include layout="@layout/app_bar" />
@@ -22,7 +22,7 @@
         <ImageButton
             android:id="@+id/toolbar_btn_prev"
             style="@style/navActionBtn"
-            android:src="?ic_arrow_back" />
+            android:src="?ic_arrow_left" />
 
         <ImageButton
             android:id="@+id/toolbar_btn_today"
@@ -32,7 +32,7 @@
         <ImageButton
             android:id="@+id/toolbar_btn_next"
             style="@style/navActionBtn"
-            android:src="?ic_arrow_forward" />
+            android:src="?ic_arrow_right" />
 
         <ImageButton
             android:id="@+id/toolbar_btn_mode"

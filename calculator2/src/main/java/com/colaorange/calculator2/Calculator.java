@@ -18,7 +18,6 @@
  */
 package com.colaorange.calculator2;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -37,12 +36,12 @@ import android.widget.TextView;
 
 public class Calculator extends AppCompatActivity implements OnClickListener {
 
-    public static final String PARAM_START_VALUE = "cal2.startValue";
-    public static final String PARAM_NEED_RESULT = "cal2.needResult";
-    public static final String PARAM_RESULT_VALUE = "cal2.resultValue";
+    public static final String ARG_START_VALUE = "cal2.startValue";
+    public static final String ARG_NEED_RESULT = "cal2.needResult";
+    public static final String ARG_RESULT_VALUE = "cal2.resultValue";
 
     //"dark" or "light"
-    public static final String PARAM_THEME = "cal2.theme";
+    public static final String ARG_THEME = "cal2.theme";
 
     public static final String THEME_DARK = "dark";
     public static final String THEME_LIGHT = "light";
@@ -73,7 +72,7 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        String theme = getIntent().getExtras().getString(PARAM_THEME, THEME_DARK);
+        String theme = getIntent().getExtras().getString(ARG_THEME, THEME_DARK);
 
         if(theme.equals(THEME_LIGHT)){
             setTheme(R.style.Cal2Theme_Light);
@@ -106,8 +105,8 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
 
 
         /*modify by dennis, provide initial value  */
-        boolean needresult = getIntent().getExtras().getBoolean(PARAM_NEED_RESULT, false);
-        String startValue = getIntent().getExtras().getString(PARAM_START_VALUE);
+        boolean needresult = getIntent().getExtras().getBoolean(ARG_NEED_RESULT, false);
+        String startValue = getIntent().getExtras().getString(ARG_START_VALUE);
 
         if (startValue != null) {
             mLogic.setNumbericResult(startValue);
@@ -229,7 +228,7 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
         if (v.getId() == R.id.cal2_ok) {
             String result = mLogic.getNumbericResult();
             Intent intent = new Intent();
-            intent.putExtra(PARAM_RESULT_VALUE, result);
+            intent.putExtra(ARG_RESULT_VALUE, result);
             setResult(RESULT_OK, intent);
             finish();
         } else if (v.getId() == R.id.cal2_close) {
