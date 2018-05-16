@@ -1,11 +1,8 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Intent;
 
-import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.R;
@@ -36,25 +33,25 @@ public class MainDesktop extends AbstractDesktop {
             }
         }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_add_record, true, false, 999);
 
-        Intent intent = new Intent(activity, RecordlListActivity.class);
-        intent.putExtra(RecordlListActivity.ARG_MODE, RecordlListActivity.MODE_DAY);
+        Intent intent = new Intent(activity, RecordMgntActivity.class);
+        intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_DAY);
         DesktopItem daylist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_reclist_day), R.drawable.dtitem_detail_day);
+                i18n.string(R.string.label_daily_list), R.drawable.dtitem_detail_day);
 
-        intent = new Intent(activity, RecordlListActivity.class);
-        intent.putExtra(RecordlListActivity.ARG_MODE, RecordlListActivity.MODE_WEEK);
+        intent = new Intent(activity, RecordMgntActivity.class);
+        intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_WEEK);
         DesktopItem weeklist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_reclist_week), R.drawable.dtitem_detail_week);
+                i18n.string(R.string.label_weekly_list), R.drawable.dtitem_detail_week);
 
-        intent = new Intent(activity, RecordlListActivity.class);
-        intent.putExtra(RecordlListActivity.ARG_MODE, RecordlListActivity.MODE_MONTH);
+        intent = new Intent(activity, RecordMgntActivity.class);
+        intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_MONTH);
         DesktopItem monthlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_reclist_month), R.drawable.dtitem_detail_month);
+                i18n.string(R.string.label_monthly_list), R.drawable.dtitem_detail_month);
 
-        intent = new Intent(activity, RecordlListActivity.class);
-        intent.putExtra(RecordlListActivity.ARG_MODE, RecordlListActivity.MODE_YEAR);
+        intent = new Intent(activity, RecordMgntActivity.class);
+        intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_YEAR);
         DesktopItem yearlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_reclist_year), R.drawable.dtitem_detail_year);
+                i18n.string(R.string.label_yearly_list), R.drawable.dtitem_detail_year);
 
         DesktopItem accmgntdt = new DesktopItem(new ActivityRun(activity, AccountMgntActivity.class),
                 i18n.string(R.string.dtitem_accmgnt), R.drawable.dtitem_account);

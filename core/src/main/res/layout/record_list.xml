@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:background="?appPrimaryLightColor"
     android:orientation="vertical"
-    tools:context=".ui.legacy.RecordlListActivity"
+    tools:context=".ui.legacy.RecordListActivity"
     tools:ignore="ContentDescription">
 
     <include layout="@layout/app_bar" />

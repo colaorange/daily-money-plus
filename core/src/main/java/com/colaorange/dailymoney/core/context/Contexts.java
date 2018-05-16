@@ -533,6 +533,7 @@ public class Contexts {
 
         String BALANCE = "balance_mgnt-";
         String RECORD_LIST = "reclist-";
+        String RECORD = "rec-";
         String PREFENCE = "prefs-";
         String FIRST_TIME = "first-";
         String EXPORT = "export-";

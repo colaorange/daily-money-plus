@@ -11,7 +11,7 @@
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.DesktopActivity">Desktop</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity">BookMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.BookEditorActivity">BookEditor</screenName>
-    <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordlListActivity">RecordlMgnt</screenName>
+    <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordListActivity">RecordlMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity">RecordEditor</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity">AccountMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountEditorActivity">AccountEditor</screenName>

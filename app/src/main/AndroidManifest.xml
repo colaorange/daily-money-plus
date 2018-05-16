@@ -42,8 +42,12 @@
             android:label="@string/title_bookmgnt" />
         <activity android:name=".core.ui.legacy.BookEditorActivity" />
         <activity
-            android:name=".core.ui.legacy.RecordlListActivity"
+            android:name=".core.ui.legacy.RecordListActivity"
             android:label="@string/title_reclist" />
+        <activity
+            android:name=".core.ui.legacy.RecordMgntActivity"
+            android:label="@string/title_recmgnt" />
+
         <activity android:name=".core.ui.legacy.RecordEditorActivity"/>
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"

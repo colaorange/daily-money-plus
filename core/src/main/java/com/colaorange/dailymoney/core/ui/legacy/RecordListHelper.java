@@ -236,7 +236,6 @@ public class RecordListHelper implements OnItemClickListener {
         public void bindViewValue(Record record, View convertView) {
 
             LinearLayout vlayout = convertView.findViewById(R.id.record_item_layout);
-            LinearLayout vinner = convertView.findViewById(R.id.record_item_layout);
             LinearLayout vfromborder = convertView.findViewById(R.id.record_item_from_border);
             LinearLayout vtoborder = convertView.findViewById(R.id.record_item_to_border);
             TextView vfrom = convertView.findViewById(R.id.detail_mgnt_item_from);

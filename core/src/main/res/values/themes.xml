@@ -105,6 +105,66 @@
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
     </style>
 
+    <style name="themeCola">
+
+        <item name="appPrimaryColor">@color/themeColaPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeColaPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeColaSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeColaSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
+
+        <item name="appbarTheme">@style/darkAppbarTheme</item>
+        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
+
+        <item name="defaultSelector">@drawable/selector_dark</item>
+
+        <item name="accountAssetTextColor">@color/assetTextLight</item>
+        <item name="accountIncomeTextColor">@color/incomeTextLight</item>
+        <item name="accountExpenseTextColor">@color/expenseTextLight</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextLight</item>
+        <item name="accountOtherTextColor">@color/otherTextLight</item>
+        <item name="accountUnknownTextColor">@color/unknownTextLight</item>
+
+        <item name="accountAssetBgColor">@color/assetBgDark</item>
+        <item name="accountIncomeBgColor">@color/incomeBgDark</item>
+        <item name="accountExpenseBgColor">@color/expenseBgDark</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgDark</item>
+        <item name="accountOtherBgColor">@color/otherBgDark</item>
+        <item name="accountUnknownBgColor">@color/unknownBgDark</item>
+
+        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
+        <item name="infoCardTextColor">?appSecondaryLightColor</item>
+        <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeColaBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeColaPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeColaPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeColaSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeColaSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeColaSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeColaSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeColaPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
+
+        <!--
+        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
+        -->
+    </style>
 
     <style name="themeLemon">
 
@@ -138,8 +198,8 @@
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
 
-        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
-        <item name="infoCardTextColor">?appSecondaryTextColor</item>
+        <item name="infoCardBgColor">?appSecondaryLightColor</item>
+        <item name="infoCardTextColor">?appSecondaryDarkColor</item>
         <item name="balanceHeadBgColor">@color/themeLemonBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeLemonBalanceItemBg</item>
 
@@ -180,66 +240,6 @@
         -->
     </style>
 
-    <style name="themeCola">
-
-        <item name="appPrimaryColor">@color/themeColaPrimary</item>
-        <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
-        <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
-        <item name="appPrimaryTextColor">@color/themeColaPrimaryText</item>
-
-        <item name="appSecondaryColor">@color/themeColaSecondary</item>
-        <item name="appSecondaryDarkColor">@color/themeColaSecondaryDark</item>
-        <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
-        <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
-
-        <item name="appbarTheme">@style/darkAppbarTheme</item>
-        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
-
-        <item name="defaultSelector">@drawable/selector_dark</item>
-
-        <item name="accountAssetTextColor">@color/assetTextLight</item>
-        <item name="accountIncomeTextColor">@color/incomeTextLight</item>
-        <item name="accountExpenseTextColor">@color/expenseTextLight</item>
-        <item name="accountLiabilityTextColor">@color/liabilityTextLight</item>
-        <item name="accountOtherTextColor">@color/otherTextLight</item>
-        <item name="accountUnknownTextColor">@color/unknownTextLight</item>
-
-        <item name="accountAssetBgColor">@color/assetBgDark</item>
-        <item name="accountIncomeBgColor">@color/incomeBgDark</item>
-        <item name="accountExpenseBgColor">@color/expenseBgDark</item>
-        <item name="accountLiabilityBgColor">@color/liabilityBgDark</item>
-        <item name="accountOtherBgColor">@color/otherBgDark</item>
-        <item name="accountUnknownBgColor">@color/unknownBgDark</item>
-
-        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
-        <item name="infoCardTextColor">?appSecondaryTextColor</item>
-        <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBg</item>
-        <item name="balanceItemBgColor">@color/themeColaBalanceItemBg</item>
-
-
-        <!--overwrite color pallet -->
-        <!-- app branding color for the app bar-->
-        <!-- app branding color for the app bar-->
-        <item name="colorPrimary">@color/themeColaPrimary</item>
-        <!-- darker color for app status or action bar -->
-        <item name="colorPrimaryDark">@color/themeColaPrimaryDark</item>
-        <!-- ui controls like checkboxs and text fields -->
-        <item name="colorAccent">@color/themeColaSecondary</item>
-        <!-- optional for normal status of control -->
-        <item name="colorControlNormal">@color/themeColaSecondaryLight</item>
-        <!-- optional for activated/checked status of control -->
-        <item name="colorControlActivated">@color/themeColaSecondary</item>
-        <!-- optional for ripple of control -->
-        <item name="colorControlHighlight">@color/themeColaSecondaryDark</item>
-
-        <item name="colorButtonNormal">@color/themeColaPrimary</item>
-
-        <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
-
-        <!--
-        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        -->
-    </style>
 
     <style name="themeOrange">
 
@@ -272,8 +272,8 @@
         <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
-        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
-        <item name="infoCardTextColor">?appSecondaryTextColor</item>
+        <item name="infoCardBgColor">?appSecondaryLightColor</item>
+        <item name="infoCardTextColor">?appSecondaryDarkColor</item>
         <item name="balanceHeadBgColor">@color/themeOrangeBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeOrangeBalanceItemBg</item>
 
@@ -329,8 +329,8 @@
         <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
-        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
-        <item name="infoCardTextColor">?appSecondaryTextColor</item>
+        <item name="infoCardBgColor">?appSecondaryLightColor</item>
+        <item name="infoCardTextColor">?appSecondaryDarkColor</item>
         <item name="balanceHeadBgColor">@color/themeSakuraBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeSakuraBalanceItemBg</item>
 

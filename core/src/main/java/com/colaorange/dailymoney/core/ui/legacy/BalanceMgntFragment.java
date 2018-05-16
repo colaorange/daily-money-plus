@@ -264,23 +264,24 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
     @Override
     public void onStart() {
+        lookupQueue().subscribe(this);
         super.onStart();
 
         EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_START);
         eb.withData(new FragInfo(pos,targetDate,targetStartDate,targetEndDate));
         lookupQueue().publish(eb.build());
 
-        lookupQueue().subscribe(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        lookupQueue().unsubscribe(this);
-
         EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_STOP);
         eb.withData(pos);
         lookupQueue().publish(eb.build());
+        
+        lookupQueue().unsubscribe(this);
+
     }
 
     @Override

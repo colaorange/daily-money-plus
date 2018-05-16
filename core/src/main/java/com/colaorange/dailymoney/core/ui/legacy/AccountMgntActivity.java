@@ -162,8 +162,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
 
     @Override
     public void onStart() {
-        super.onStart();
         lookupQueue().subscribe(this);
+        super.onStart();
     }
 
     @Override

@@ -107,8 +107,8 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
 
     @Override
     public void onStart() {
-        super.onStart();
         lookupQueue().subscribe(this);
+        super.onStart();
     }
 
     @Override

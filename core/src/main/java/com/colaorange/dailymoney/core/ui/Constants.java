@@ -22,6 +22,8 @@ public class Constants {
 
     public static final int YEAR_LOOK_AFTER = 200;
     public static final int MONTH_LOOK_AFTER = YEAR_LOOK_AFTER * 12;
+    public static final int WEEK_LOOK_AFTER = YEAR_LOOK_AFTER * 52;
+    public static final int DAY_LOOK_AFTER = YEAR_LOOK_AFTER * 365;
 
 
     public static final String LOCAL_URL_PREFIX = "file:///android_asset/";

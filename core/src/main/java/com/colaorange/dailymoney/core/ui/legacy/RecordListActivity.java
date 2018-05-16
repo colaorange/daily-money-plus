@@ -32,7 +32,7 @@ import com.colaorange.dailymoney.core.ui.Constants;
 /**
  * @author dennis
  */
-public class RecordlListActivity extends ContextsActivity implements OnClickListener {
+public class RecordListActivity extends ContextsActivity implements OnClickListener {
 
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
@@ -40,8 +40,8 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     public static final int MODE_YEAR = 3;
     public static final int MODE_ALL = 4;
 
-    public static final String ARG_MODE = "dtlist.mode";
-    public static final String ARG_TARGET_DATE = "dtlist.target";
+    public static final String ARG_MODE = "mode";
+    public static final String ARG_BASE_DATE = "baseData";
 
     RecordListHelper recordListHelper;
 
@@ -55,7 +55,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
 
     View toolbarView;
 
-    private Date targetDate;
+    private Date baseDate;
     private Date currentDate;
     private int mode = MODE_WEEK;
 
@@ -80,13 +80,13 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
     private void initArgs() {
         Bundle b = getIntentExtras();
         mode = b.getInt(ARG_MODE, MODE_WEEK);
-        Object o = b.get(ARG_TARGET_DATE);
+        Object o = b.get(ARG_BASE_DATE);
         if (o instanceof Date) {
-            targetDate = (Date) o;
+            baseDate = (Date) o;
         } else {
-            targetDate = new Date();
+            baseDate = new Date();
         }
-        currentDate = targetDate;
+        currentDate = baseDate;
     }
 
     private void initMembers() {
@@ -112,7 +112,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
         recordListHelper = new RecordListHelper(this, true, new RecordListHelper.OnRecordListener() {
             @Override
             public void onRecordDeleted(Record record) {
-                GUIs.shortToast(RecordlListActivity.this, i18n().string(R.string.msg_record_deleted));
+                GUIs.shortToast(RecordListActivity.this, i18n().string(R.string.msg_record_deleted));
                 refreshUI();
                 trackEvent(TE.DELETE_RECORD);
             }
@@ -163,19 +163,19 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
                 toolbarView.setVisibility(TextView.GONE);
                 break;
             case MODE_MONTH:
-                setTitle(R.string.dtitem_reclist_month);
+                setTitle(R.string.label_monthly_list);
                 break;
             case MODE_WEEK:
-                setTitle(R.string.dtitem_reclist_week);
+                setTitle(R.string.label_weekly_list);
                 break;
             case MODE_DAY:
-                setTitle(R.string.dtitem_reclist_day);
+                setTitle(R.string.label_daily_list);
                 break;
             case MODE_YEAR:
-                setTitle(R.string.dtitem_reclist_year);
+                setTitle(R.string.label_yearly_list);
                 break;
             default:
-                setTitle(R.string.dtitem_reclist_month);
+                setTitle(R.string.label_monthly_list);
                 break;
         }
     }
@@ -442,7 +442,7 @@ public class RecordlListActivity extends ContextsActivity implements OnClickList
             case MODE_MONTH:
             case MODE_DAY:
             case MODE_YEAR:
-                currentDate = targetDate;
+                currentDate = baseDate;
                 break;
         }
         refreshData();
