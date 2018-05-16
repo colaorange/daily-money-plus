@@ -70,7 +70,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
 
             @Override
             public boolean onReselect(Book selected) {
-                doEditBook(selected);
+                doSetWorkingBook(selected);
                 return true;
             }
         });

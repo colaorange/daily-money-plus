@@ -13,7 +13,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_new"
-        android:icon="?ic_add"
+        android:icon="@drawable/icon_add_record"
         android:title="@string/act_new"
         app:showAsAction="always" />
 </menu>
