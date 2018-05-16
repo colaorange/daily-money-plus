@@ -65,7 +65,7 @@
             android:name=".core.ui.legacy.DataMaintenanceActivity"
             android:label="@string/title_datamain" />
         <activity
-            android:name=".core.ui.legacy.BalanceActivity"
+            android:name=".core.ui.legacy.BalanceMgntActivity"
             android:label="@string/label_balance" />
         <activity
             android:name="org.achartengine.GraphicalActivity"

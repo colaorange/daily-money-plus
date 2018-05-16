@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?appPrimaryLightColor"
-    tools:context=".ui.legacy.BalanceActivity">
+    tools:context=".ui.legacy.BalanceMgntActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

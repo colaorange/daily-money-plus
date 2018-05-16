@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * @author dennis
  */
-public class BalanceActivity extends ContextsActivity implements EventQueue.EventListener {
+public class BalanceMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
     public static final int MODE_MONTH = 0;
     public static final int MODE_YEAR = 1;
@@ -58,7 +58,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
     private DateFormat yearFormat;
 
-    private Map<Integer, FragInfo> fragInfoMap;
+    private Map<Integer, BalanceMgntFragment.FragInfo> fragInfoMap;
 
     private ActionMode actionMode;
     private Balance actionObj;
@@ -66,10 +66,11 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.balance);
+        setContentView(R.layout.balance_mgnt);
         initArgs();
         initMembers();
-        refreshUI();
+        refreshToolbar();
+        resetPager();
     }
 
     @Override
@@ -108,7 +109,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
             @Override
             public void onPageSelected(int position) {
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.Balance.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_CLEAR_SELECTION).build());
             }
 
             @Override
@@ -137,11 +138,6 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
     }
 
-    private void refreshUI() {
-        refreshToolbar();
-        resetPager();
-    }
-
 
     private void refreshToolbar() {
         if (totalMode) {
@@ -160,6 +156,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     }
 
     private void resetPager() {
+        fragInfoMap.clear();
         adapter = new BalancePagerAdapter(getSupportFragmentManager());
         vPager.setAdapter(adapter);
         vPager.setCurrentItem(adapter.getBasePos());
@@ -171,13 +168,12 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
         switch (mode) {
             case MODE_MONTH:
                 mode = MODE_YEAR;
-                resetPager();
-                break;
             case MODE_YEAR:
                 mode = MODE_MONTH;
-                resetPager();
                 break;
         }
+        refreshToolbar();
+        resetPager();
     }
 
     private void doNext() {
@@ -202,7 +198,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.balance_menu, menu);
+        inflater.inflate(R.menu.balance_mgnt_menu, menu);
         menu.findItem(R.id.menu_hierarchy).setChecked(preference().isHierarchicalBalance());
 
 //        MenuItem menuItem = menu.findItem(R.id.menu_operations);
@@ -215,7 +211,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 //        amView.setBackgroundColor(Color.RED);
 
 //        Menu menuObject = amView.getMenu();
-//        inflater.inflate(R.menu.balance_operations_menu, menuObject);
+//        inflater.inflate(R.menu.balance_mgnt_operations_menu, menuObject);
 //
 //        amView.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
 //            public boolean onMenuItemClick(MenuItem item) {
@@ -245,7 +241,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
-                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.Balance.ON_RELOAD_FRAGMENT).build());
+                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT).build());
                 }
             });
             return true;
@@ -264,21 +260,18 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.Balance.ON_SELECT_BALANCE:
+            case QEvents.BalanceMgnt.ON_SELECT_BALANCE:
                 doSelectBalance((Balance) event.getData());
                 break;
-            case QEvents.Balance.ON_RESELECT_BALANCE:
+            case QEvents.BalanceMgnt.ON_RESELECT_BALANCE:
                 doRecordList((Balance) event.getData());
                 break;
-            case QEvents.Balance.ON_FRAGMENT_START:
-                FragInfo info = new FragInfo((Integer) event.getArg(QEvents.Balance.ARG_FRAG_POS),
-                        (Date) event.getArg(QEvents.Balance.ARG_FRAG_DATE),
-                        (Date) event.getArg(QEvents.Balance.ARG_FRAG_START_DATE),
-                        (Date) event.getArg(QEvents.Balance.ARG_FRAG_END_DATE));
+            case QEvents.BalanceMgnt.ON_FRAGMENT_START:
+                BalanceMgntFragment.FragInfo info = (BalanceMgntFragment.FragInfo)event.getData();
                 fragInfoMap.put(info.pos, info);
                 break;
-            case QEvents.Balance.ON_FRAGMENT_STOP:
-                fragInfoMap.remove(event.getArg(QEvents.Balance.ARG_FRAG_POS));
+            case QEvents.BalanceMgnt.ON_FRAGMENT_STOP:
+                fragInfoMap.remove(event.getData());
                 break;
         }
     }
@@ -286,11 +279,11 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
     private void doRecordList(Balance balance) {
         if (balance.getTarget() == null) {//just in case?
-            Logger.w("balance target is null");
+            Logger.w("balance_mgnt target is null");
             return;
         }
 
-        FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
             return;
@@ -318,7 +311,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                 @Override
                 public void run() {
                     //user might add record, reload it.
-                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.Balance.ON_RELOAD_FRAGMENT).build());
+                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT).build());
                 }
             });
         }
@@ -326,7 +319,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
 
     private void doPieChart(final Balance b) {
-        final FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
             return;
@@ -355,14 +348,14 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                     list.add(balance);
                 }
                 trackEvent(TE.CHART + "pie");
-                Intent intent = new BalancePieChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(at, list);
+                Intent intent = new BalancePieChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(at, list);
                 startActivity(intent);
             }
         });
     }
 
     private void doYearlyTimeChart(final Balance b) {
-        final FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
             return;
@@ -402,7 +395,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                     }
                 }
                 trackEvent(TE.CHART + "yt");
-                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_timechart, at.getDisplay(i18n), yearFormat.format(fragInfo.date)), balances);
                 startActivity(intent);
             }
@@ -410,7 +403,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     }
 
     private void doYearlyCumulativeTimeChart(final Balance b) {
-        final FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
             return;
@@ -454,7 +447,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                     }
                 }
                 trackEvent(TE.CHART + "yct");
-                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_cumulative_timechart, at.getDisplay(i18n), yearFormat.format(fragInfo.date)), balances);
                 startActivity(intent);
             }
@@ -463,7 +456,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
 
 
     private void doYearlyRunChart() {
-        final FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
             return;
@@ -502,7 +495,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                     }
                 }
                 trackEvent(TE.CHART + "yr");
-                Intent intent = new BalanceTimeChart(BalanceActivity.this, GUIs.getOrientation(BalanceActivity.this), GUIs.getDPRatio(BalanceActivity.this)).createIntent(
+                Intent intent = new BalanceTimeChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(
                         i18n.string(R.string.label_balance_yearly_runchart, yearFormat.format(fragInfo.date)), balances);
                 startActivity(intent);
             }
@@ -510,9 +503,6 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
     }
 
     public class BalancePagerAdapter extends FragmentPagerAdapter {
-
-
-        private int yearToLookAfter = 100;
 
         int basePos;
         int maxPos;
@@ -537,7 +527,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
             }
             basePos -= 1;//just for prvent hit boundary
 
-            maxPos = basePos + (mode == MODE_MONTH ? yearToLookAfter * 12 : yearToLookAfter);
+            maxPos = basePos + (mode == MODE_MONTH ? Constants.MONTH_LOOK_AFTER : Constants.YEAR_LOOK_AFTER);
         }
 
         public int getBasePos() {
@@ -561,12 +551,12 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
                 targetDate = calHelper.yearAfter(baseDate, diff);
             }
 
-            BalanceFragment f = new BalanceFragment();
+            BalanceMgntFragment f = new BalanceMgntFragment();
             Bundle b = new Bundle();
-            b.putInt(BalanceFragment.ARG_POS, position);
-            b.putInt(BalanceFragment.ARG_MODE, mode);
-            b.putBoolean(BalanceFragment.ARG_TOTAL_MODE, totalMode);
-            b.putSerializable(BalanceFragment.ARG_TARGET_DATE, targetDate);
+            b.putInt(BalanceMgntFragment.ARG_POS, position);
+            b.putInt(BalanceMgntFragment.ARG_MODE, mode);
+            b.putBoolean(BalanceMgntFragment.ARG_TOTAL_MODE, totalMode);
+            b.putSerializable(BalanceMgntFragment.ARG_TARGET_DATE, targetDate);
             f.setArguments(b);
             return f;
         }
@@ -579,7 +569,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
         //onCreateActionMode(ActionMode, Menu) once on initial creation.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.balance_item_menu, menu);//Inflate the menu over action mode
+            mode.getMenuInflater().inflate(R.menu.balance_mgnt_item_menu, menu);//Inflate the menu over action mode
             return true;
         }
 
@@ -628,22 +618,7 @@ public class BalanceActivity extends ContextsActivity implements EventQueue.Even
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.Balance.ON_CLEAR_SELECTION).build());
-        }
-    }
-
-
-    static class FragInfo implements Serializable{
-        final int pos;
-        final Date date;
-        final Date startDate;
-        final Date endDate;
-
-        public FragInfo(int pos, Date date, Date startDate, Date endDate) {
-            this.pos = pos;
-            this.date = date;
-            this.startDate = startDate;
-            this.endDate = endDate;
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_CLEAR_SELECTION).build());
         }
     }
 }

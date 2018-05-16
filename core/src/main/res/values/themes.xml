@@ -28,6 +28,8 @@
     <attr name="accountOtherBgColor" format="color" />
     <attr name="accountUnknownBgColor" format="color" />
 
+    <attr name="infoCardBgColor" format="reference" />
+    <attr name="infoCardTextColor" format="reference" />
     <attr name="balanceHeadBgColor" format="reference" />
     <attr name="balanceItemBgColor" format="reference" />
 
@@ -135,6 +137,9 @@
         <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
+
+        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
+        <item name="infoCardTextColor">?appSecondaryTextColor</item>
         <item name="balanceHeadBgColor">@color/themeLemonBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeLemonBalanceItemBg</item>
 
@@ -206,6 +211,8 @@
         <item name="accountOtherBgColor">@color/otherBgDark</item>
         <item name="accountUnknownBgColor">@color/unknownBgDark</item>
 
+        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
+        <item name="infoCardTextColor">?appSecondaryTextColor</item>
         <item name="balanceHeadBgColor">@color/themeColaBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeColaBalanceItemBg</item>
 
@@ -265,6 +272,8 @@
         <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
+        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
+        <item name="infoCardTextColor">?appSecondaryTextColor</item>
         <item name="balanceHeadBgColor">@color/themeOrangeBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeOrangeBalanceItemBg</item>
 
@@ -320,6 +329,8 @@
         <item name="accountOtherBgColor">@color/otherBgLight</item>
         <item name="accountUnknownBgColor">@color/unknownBgLight</item>
 
+        <item name="infoCardBgColor">?appSecondaryDarkColor</item>
+        <item name="infoCardTextColor">?appSecondaryTextColor</item>
         <item name="balanceHeadBgColor">@color/themeSakuraBalanceHeadBg</item>
         <item name="balanceItemBgColor">@color/themeSakuraBalanceItemBg</item>
 

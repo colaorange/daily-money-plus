@@ -20,6 +20,9 @@ public class Constants {
     public static final int REQUEST_PASSWORD_PROTECTION_CODE = 5;
     public static final int REQUEST_BOOK_EDITOR_CODE = 6;
 
+    public static final int YEAR_LOOK_AFTER = 200;
+    public static final int MONTH_LOOK_AFTER = YEAR_LOOK_AFTER * 12;
+
 
     public static final String LOCAL_URL_PREFIX = "file:///android_asset/";
 

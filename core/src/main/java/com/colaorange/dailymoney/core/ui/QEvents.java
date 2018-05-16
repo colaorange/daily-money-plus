@@ -12,26 +12,34 @@ public class QEvents {
 
         //fragment -> activity
         public String ON_SELECT_ACCOUNT = "accountMgnt:onSelectAccount";
-        public String ON_RESELECT_ACCOUNT = "accountMgnt:onReselectedAccount";
+        public String ON_RESELECT_ACCOUNT = "accountMgnt:onReselectAccount";
     }
 
 
-    public interface Balance {
+    public interface BalanceMgnt {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "balance:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "balance:onReloadFragment";
+        public String ON_CLEAR_SELECTION = "balanceMgnt:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "balanceMgnt:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_BALANCE = "balance:onSelectBalance";
-        public String ON_RESELECT_BALANCE = "balance:onReselectedBalance";
-        public String ON_FRAGMENT_START = "balance:onFragmentStart";
-        public String ON_FRAGMENT_STOP = "balance:onFragmentStop";
+        public String ON_SELECT_BALANCE = "balanceMgnt:onSelectBalance";
+        public String ON_RESELECT_BALANCE = "balanceMgnt:onReselectBalance";
+        public String ON_FRAGMENT_START = "balanceMgnt:onFragmentStart";
+        public String ON_FRAGMENT_STOP = "balanceMgnt:onFragmentStop";
+
+    }
 
 
-        public String ARG_FRAG_START_DATE = "fragStartDate";
-        public String ARG_FRAG_END_DATE = "fragEndDate";
-        public String ARG_FRAG_DATE = "fragDate";
-        public String ARG_FRAG_POS = "fragPos";
+    public interface RecordMgnt {
+        //activity -> fragment
+        public String ON_CLEAR_SELECTION = "recordMgnt:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "recordMgnt:onReloadFragment";
+
+        //fragment -> activity
+        public String ON_SELECT_RECORD = "recordMgnt:onSelectRecord";
+        public String ON_RESELECT_RECORD = "recordMgnt:onReselectRecord";
+        public String ON_FRAGMENT_START = "recordMgnt:onFragmentStart";
+        public String ON_FRAGMENT_STOP = "recordMgnt:onFragmentStop";
 
     }
 

@@ -28,6 +28,7 @@ import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +40,7 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class BalanceFragment extends ContextsFragment implements EventQueue.EventListener {
+public class BalanceMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
     public static final String ARG_TARGET_DATE = "targetDate";
     public static final String ARG_MODE = "mode";
@@ -74,7 +75,7 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.balance_frag, container, false);
+        rootView = inflater.inflate(R.layout.balance_mgnt_frag, container, false);
         return rootView;
     }
 
@@ -90,7 +91,7 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
 
     private void initArgs() {
         Bundle args = getArguments();
-        mode = args.getInt(ARG_MODE, BalanceActivity.MODE_MONTH);
+        mode = args.getInt(ARG_MODE, BalanceMgntActivity.MODE_MONTH);
         pos = args.getInt(ARG_POS, 0);
         totalMode = args.getBoolean(ARG_TOTAL_MODE, true);
         Object o = args.get(ARG_TARGET_DATE);
@@ -126,12 +127,12 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Balance>() {
             @Override
             public void onSelect(Set<Balance> selection) {
-                lookupQueue().publish(QEvents.Balance.ON_SELECT_BALANCE, selection.size() == 0 ? null : selection.iterator().next());
+                lookupQueue().publish(QEvents.BalanceMgnt.ON_SELECT_BALANCE, selection.size() == 0 ? null : selection.iterator().next());
             }
 
             @Override
             public boolean onReselect(Balance selected) {
-                lookupQueue().publish(QEvents.Balance.ON_RESELECT_BALANCE, selected);
+                lookupQueue().publish(QEvents.BalanceMgnt.ON_RESELECT_BALANCE, selected);
                 return true;
             }
         });
@@ -146,7 +147,7 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
         vInfo.setText("");
 
         switch (mode) {
-            case BalanceActivity.MODE_YEAR:
+            case BalanceMgntActivity.MODE_YEAR:
                 targetEndDate = cal.yearEndDate(targetDate);
                 targetStartDate = totalMode ? null : cal.yearStartDate(targetDate);
                 break;
@@ -232,12 +233,12 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
 
                 // update info
                 if (totalMode) {
-                    if (mode == BalanceActivity.MODE_MONTH) {
+                    if (mode == BalanceMgntActivity.MODE_MONTH) {
                         Date monthStart = cal.monthStartDate(targetDate);
                         Date monthEnd = cal.monthEndDate(targetDate);
                         vInfo.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthEnd)));
-                    } else if (mode == BalanceActivity.MODE_YEAR) {
+                    } else if (mode == BalanceMgntActivity.MODE_YEAR) {
                         Date yearStart = cal.yearStartDate(targetDate);
                         Date yearEnd = cal.yearEndDate(targetDate);
 
@@ -245,12 +246,12 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
                                 yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 } else {
-                    if (mode == BalanceActivity.MODE_MONTH) {
+                    if (mode == BalanceMgntActivity.MODE_MONTH) {
                         Date monthStart = cal.monthStartDate(targetDate);
                         Date monthEnd = cal.monthEndDate(targetDate);
                         vInfo.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthStart), monthDateFormat.format(monthEnd)));
-                    } else if (mode == BalanceActivity.MODE_YEAR) {
+                    } else if (mode == BalanceMgntActivity.MODE_YEAR) {
                         Date yearStart = cal.yearStartDate(targetDate);
                         Date yearEnd = cal.yearEndDate(targetDate);
                         vInfo.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(yearStart),
@@ -265,11 +266,8 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
     public void onStart() {
         super.onStart();
 
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.Balance.ON_FRAGMENT_START);
-        eb.withArg(QEvents.Balance.ARG_FRAG_POS, pos);
-        eb.withArg(QEvents.Balance.ARG_FRAG_DATE, targetDate);
-        eb.withArg(QEvents.Balance.ARG_FRAG_START_DATE, targetStartDate);
-        eb.withArg(QEvents.Balance.ARG_FRAG_END_DATE, targetEndDate);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_START);
+        eb.withData(new FragInfo(pos,targetDate,targetStartDate,targetEndDate));
         lookupQueue().publish(eb.build());
 
         lookupQueue().subscribe(this);
@@ -280,18 +278,18 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
         super.onStop();
         lookupQueue().unsubscribe(this);
 
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.Balance.ON_FRAGMENT_STOP);
-        eb.withArg(QEvents.Balance.ARG_FRAG_END_DATE, pos);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_STOP);
+        eb.withData(pos);
         lookupQueue().publish(eb.build());
     }
 
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.Balance.ON_CLEAR_SELECTION:
+            case QEvents.BalanceMgnt.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
-            case QEvents.Balance.ON_RELOAD_FRAGMENT:
+            case QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT:
                 reloadData();
                 break;
         }
@@ -306,7 +304,7 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
         @NonNull
         @Override
         public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View viewItem = inflater.inflate(R.layout.balance_item, parent, false);
+            View viewItem = inflater.inflate(R.layout.balance_mgnt_item, parent, false);
             return new BalanceViewHolder(this, viewItem);
         }
 
@@ -389,6 +387,20 @@ public class BalanceFragment extends ContextsFragment implements EventQueue.Even
             vname.setTextColor(textColor);
             vmoney.setTextColor(textColor);
 
+        }
+    }
+
+    static public class FragInfo implements Serializable {
+        final public int pos;
+        final public Date date;
+        final public Date startDate;
+        final public Date endDate;
+
+        public FragInfo(int pos, Date date, Date startDate, Date endDate) {
+            this.pos = pos;
+            this.date = date;
+            this.startDate = startDate;
+            this.endDate = endDate;
         }
     }
 }

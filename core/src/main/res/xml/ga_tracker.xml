@@ -11,13 +11,13 @@
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.DesktopActivity">Desktop</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity">BookMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.BookEditorActivity">BookEditor</screenName>
-    <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordlListActivity">RecordlList</screenName>
+    <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordlListActivity">RecordlMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity">RecordEditor</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity">AccountMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountEditorActivity">AccountEditor</screenName>
-    <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountRecordListActivity">AccountRecordList</screenName>
+    <screenName name="com.colaorange.dailymoney.core.ui.legacy.AccountRecordListActivity">AccountRecordMgnt</screenName>
     <screenName name="com.colaorange.dailymoney.core.ui.legacy.DataMaintenanceActivity">DataMaintenance</screenName>
-    <screenName name="com.colaorange.dailymoney.core.ui.legacy.BalanceActivity">Balance</screenName>
+    <screenName name="com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity">BalanceMgnt</screenName>
     <screenName name="org.achartengine.GraphicalActivity">achartengine.Graphical</screenName>
 
     <screenName name="com.colaorange.dailymoney.core.ui.pref.PrefsActivity">Prefs</screenName>
