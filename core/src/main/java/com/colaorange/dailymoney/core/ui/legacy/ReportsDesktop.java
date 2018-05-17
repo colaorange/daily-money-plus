@@ -42,7 +42,7 @@ public class ReportsDesktop extends AbstractDesktop {
         intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, true);
         intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
         DesktopItem totalBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month, true,true, 197);
+                i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month, true,false, 197);
         addItem(totalBalance);
     }
 

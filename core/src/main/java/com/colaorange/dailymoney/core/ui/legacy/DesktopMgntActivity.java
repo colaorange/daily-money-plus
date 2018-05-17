@@ -1,0 +1,439 @@
+package com.colaorange.dailymoney.core.ui.legacy;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.InstanceState;
+import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.data.BalanceHelper;
+import com.colaorange.dailymoney.core.data.Book;
+import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.data.IMasterDataProvider;
+import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
+import com.colaorange.dailymoney.core.ui.QEvents;
+import com.colaorange.dailymoney.core.ui.StartupActivity;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author dennis
+ */
+public class DesktopMgntActivity extends ContextsActivity implements EventQueue.EventListener {
+
+
+    private TabLayout vAppTabs;
+
+    private ViewPager vPager;
+
+    private ActionMode actionMode;
+    private DesktopItem actionObj;
+
+    @InstanceState
+    private String currentDesktopLabel = null;
+
+    private List<Desktop> desktops;
+
+
+    Map<String, Desktop> supportedDesktops;
+
+    private TextView vInfoWeeklyExpense;
+    private TextView vInfoMonthlyExpense;
+    private TextView vInfoCumulativeCash;
+
+    @InstanceState
+    private Boolean firstTime;
+
+
+    public DesktopMgntActivity() {
+    }
+
+
+    public Map<String, Desktop> getSupportedDesktops() {
+        return java.util.Collections.unmodifiableMap(supportedDesktops);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.desktop_mgnt);
+
+        supportedDesktops = new LinkedHashMap<>();
+        for (Desktop dt : new Desktop[]{new MainDesktop(this), new ReportsDesktop(this), new TestsDesktop(this)}) {
+            supportedDesktops.put(dt.getLabel(), dt);
+        }
+
+        initArgs();
+        initMembers();
+    }
+
+    private void initArgs() {
+        if (firstTime == null) {
+            Bundle bundle = getIntentExtras();
+            firstTime = bundle.getBoolean(StartupActivity.ARG_FIRST_TIME, false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadData();
+    }
+
+    private void initMembers() {
+        vInfoWeeklyExpense = findViewById(R.id.desktop_weekly_expense);
+        vInfoMonthlyExpense = findViewById(R.id.desktop_monthly_expense);
+        vInfoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
+
+        vAppTabs = findViewById(R.id.appTabs);
+        vPager = findViewById(R.id.viewpager);
+
+        vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                currentDesktopLabel = desktops.get(tab.getPosition()).getLabel();
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //is it possible?
+                currentDesktopLabel = null;
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+
+                //don't refresh it, there must be a selected.
+//                refreshTab();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                currentDesktopLabel = desktops.get(tab.getPosition()).getLabel();
+            }
+        });
+    }
+
+
+    @Override
+    public void onStart() {
+        lookupQueue().subscribe(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
+            GUIs.delayPost(new Runnable() {
+                @Override
+                public void run() {
+                    reloadData();
+
+                }
+            });
+
+        }
+    }
+
+    private void reloadData() {
+        List<Desktop> temp = new LinkedList<>();
+        for (Desktop dt : supportedDesktops.values()) {
+            if (dt.isAvailable()) {
+                temp.add(dt);
+            }
+        }
+
+        if (temp.equals(desktops)) {
+            lookupQueue().publish(QEvents.DesktopMgnt.ON_RELOAD_FRAGMENT, null);
+        } else {
+            desktops = temp;
+
+            int selpos = 0;
+            int i = 0;
+            for (Desktop d : desktops) {
+                if (d.getLabel().equals(currentDesktopLabel)) {
+                    selpos = i;
+                    break;
+                }
+                i++;
+            }
+            currentDesktopLabel = desktops.get(selpos).getLabel();
+
+            vPager.setAdapter(new DesktopTypePagerAdapter(getSupportFragmentManager(), desktops));
+
+            vAppTabs.setupWithViewPager(vPager);
+            vAppTabs.getTabAt(selpos).select();
+        }
+
+        CalendarHelper calHelper = calendarHelper();
+        I18N i18n = i18n();
+
+        IMasterDataProvider imdp = Contexts.instance().getMasterDataProvider();
+        Book book = imdp.findBook(Contexts.instance().getWorkingBookId());
+        String symbol = book.getSymbol();
+        if (symbol == null || "".equals(symbol)) {
+            setTitle(book.getName());
+        } else {
+            setTitle(book.getName() + " ( " + symbol + " )");
+        }
+
+//        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
+
+        Date now = new Date();
+        Date start = calHelper.weekStartDate(now);
+        Date end = calHelper.weekEndDate(now);
+        AccountType type = AccountType.EXPENSE;
+        double b = BalanceHelper.calculateBalance(type, start, end).getMoney();
+        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
+
+        start = calHelper.monthStartDate(now);
+        end = calHelper.monthEndDate(now);
+        b = BalanceHelper.calculateBalance(type, start, end).getMoney();
+        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
+
+
+        IDataProvider idp = Contexts.instance().getDataProvider();
+        List<Account> acl = idp.listAccount(AccountType.ASSET);
+        b = 0;
+        for (Account ac : acl) {
+            if (ac.isCashAccount()) {
+                b += BalanceHelper.calculateBalance(ac, null, calHelper.toDayEnd(now)).getMoney();
+            }
+        }
+        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.desktop_mgnt_menu, menu);
+
+        List<DesktopItem> menuItems = new ArrayList<>();
+        for (Desktop d : desktops) {
+            for (DesktopItem item : d.getMenuItems()) {
+                menuItems.add(item);
+            }
+        }
+
+        Collections.sort(menuItems, new Comparator<DesktopItem>() {
+            public int compare(DesktopItem item1, DesktopItem item2) {
+                return Integer.valueOf(item2.getPriority()).compareTo(Integer.valueOf(item1.getPriority()));
+            }
+        });
+
+        for (DesktopItem item : menuItems) {
+            MenuItem mi = menu.add(item.getLabel());
+            mi.setOnMenuItemClickListener(new DesktopItemClickListener(item));
+        }
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_new) {
+            doNewRecord();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void doNewRecord() {
+        Intent intent = null;
+        intent = new Intent(this, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
+        startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
+    }
+
+    @Override
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()) {
+            case QEvents.DesktopMgnt.ON_SELECT_DESKTOP_TEIM:
+                doSelectDesktopItem((DesktopItem) event.getData());
+                break;
+            case QEvents.DesktopMgnt.ON_RESELECT_DESKTOP_TEIM:
+                doRunDesktopItem((DesktopItem) event.getData());
+                break;
+        }
+    }
+
+
+    private void doSelectDesktopItem(DesktopItem item) {
+        if (item == null && actionMode != null) {
+            actionMode.finish();
+            return;
+        }
+
+        if (item != null) {
+            actionObj = item;
+            if (actionMode == null) {
+                actionMode = this.startSupportActionMode(new DesktopActionModeCallback());
+            } else {
+                actionMode.invalidate();
+            }
+            actionMode.setTitle(item.getLabel());
+
+            actionObj.run();
+        }
+
+    }
+
+    private void doRunDesktopItem(DesktopItem item) {
+        actionObj.run();
+    }
+
+
+    public static class DesktopTypePagerAdapter extends FragmentPagerAdapter {
+        List<Desktop> desktops;
+
+        public DesktopTypePagerAdapter(FragmentManager fm, List<Desktop> desktops) {
+            super(fm);
+            this.desktops = desktops;
+        }
+
+        @Override
+        public int getCount() {
+            return desktops.size();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment f = new DesktopMgntFragment();
+            Bundle b = new Bundle();
+            b.putString(DesktopMgntFragment.ARG_DESKTOP_LABEL, desktops.get(position).getLabel());
+            f.setArguments(b);
+            return f;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return desktops.get(position).getLabel();
+        }
+    }
+
+
+    private class DesktopActionModeCallback implements ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.desktop_mgnt_item_menu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
+            //So here show action menu according to SDK Levels
+
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_run) {
+                actionObj.run();
+                return true;
+            }
+            return false;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionObj = null;
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+        }
+    }
+
+    private boolean handleFirstTime() {
+        boolean fvt = contexts().getAndSetFirstVersionTime();
+        if (firstTime) {
+            //TODO minor bug, firstTime to false is no usage when onStop be called, have to save to savedInstanceState
+            firstTime = false;
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(DesktopMgntActivity.this, LocalWebViewActivity.class);
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
+                    startActivity(intent);
+                }
+            });
+            return true;
+        } else if (fvt) {
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(DesktopMgntActivity.this, LocalWebViewActivity.class);
+                    intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
+                    intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
+                    startActivity(intent);
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+
+    public class DesktopItemClickListener implements MenuItem.OnMenuItemClickListener {
+
+        DesktopItem dtitem;
+
+        public DesktopItemClickListener(DesktopItem dtitem) {
+            this.dtitem = dtitem;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            dtitem.run();
+            return true;
+        }
+
+    }
+
+    @Override
+    public int getActionBarHomeAsUp() {
+        return homeAsUpNone;
+    }
+}

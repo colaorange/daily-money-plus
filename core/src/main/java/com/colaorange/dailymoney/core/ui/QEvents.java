@@ -5,6 +5,17 @@ package com.colaorange.dailymoney.core.ui;
  */
 public class QEvents {
 
+    public interface DesktopMgnt {
+        //activity -> fragment
+        public String ON_CLEAR_SELECTION = "desktopMgnt:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "desktopMgnt:onReloadFragment";
+
+        //fragment -> activity
+        public String ON_SELECT_DESKTOP_TEIM = "desktopMgnt:onSelectDesktopItem";
+        public String ON_RESELECT_DESKTOP_TEIM = "desktopMgnt:onReselectDesktopItem";
+    }
+
+
     public interface AccountMgnt {
         //activity -> fragment
         public String ON_CLEAR_SELECTION = "accountMgnt:onClearSelection";

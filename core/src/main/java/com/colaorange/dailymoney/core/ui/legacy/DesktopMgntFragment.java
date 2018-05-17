@@ -1,0 +1,192 @@
+package com.colaorange.dailymoney.core.ui.legacy;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.colaorange.commons.util.Formats;
+import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.ContextsFragment;
+import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.ui.QEvents;
+import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @author dennis
+ */
+public class DesktopMgntFragment extends ContextsFragment implements EventQueue.EventListener {
+
+    public static final String ARG_DESKTOP_LABEL = "desktopLabel";
+
+    private String desktopLabel = null;
+
+    private Desktop desktop = null;
+
+    private List<DesktopItem> recyclerDataList;
+
+    View vNoData;
+    private RecyclerView vRecycler;
+
+    private DesktopItemRecyclerAdapter recyclerAdapter;
+
+    private LayoutInflater inflater;
+
+    private View rootView;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.desktop_mgnt_frag, container, false);
+        return rootView;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initArgs();
+        initMembers();
+        reloadData();
+    }
+
+
+    private void initArgs() {
+        Bundle args = getArguments();
+        desktopLabel = args.getString(ARG_DESKTOP_LABEL);
+
+    }
+
+    private void initMembers() {
+
+        ContextsActivity activity = getContextsActivity();
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        vNoData = rootView.findViewById(R.id.no_data);
+
+        recyclerDataList = new LinkedList<>();
+        recyclerAdapter = new DesktopItemRecyclerAdapter(activity, recyclerDataList);
+        vRecycler = rootView.findViewById(R.id.desktop_mgnt_recycler);
+        GridLayoutManager glm = new GridLayoutManager(activity, calColumn());
+        vRecycler.setLayoutManager(glm);
+        vRecycler.setAdapter(recyclerAdapter);
+
+
+        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<DesktopItem>() {
+            @Override
+            public void onSelect(Set<DesktopItem> selection) {
+                lookupQueue().publish(QEvents.DesktopMgnt.ON_SELECT_DESKTOP_TEIM, selection.size() == 0 ? null : selection.iterator().next());
+            }
+
+            @Override
+            public boolean onReselect(DesktopItem selected) {
+                lookupQueue().publish(QEvents.DesktopMgnt.ON_RESELECT_DESKTOP_TEIM, selected);
+                return true;
+            }
+        });
+    }
+
+    private int calColumn() {
+//        ypedValue textSize = this.resolveThemeAttr(R.attr.textSize);
+//        int width = (int)(TypedValue.complexToDimensionPixelSize(textSize.data, getResources().getDisplayMetrics()) * 5.5);
+//
+//        vGrid.setColumnWidth(width);
+        return 4;
+    }
+
+    private void reloadData() {
+
+        Map<String,Desktop> supportedDesktosp = ((DesktopMgntActivity)getContextsActivity()).getSupportedDesktops();
+
+        Desktop desktop = supportedDesktosp.get(desktopLabel);
+
+        List<DesktopItem> data = desktop.getDesktopItems();
+
+        recyclerDataList.clear();
+
+        if(data.size()==0){
+            vRecycler.setVisibility(View.GONE);
+            vNoData.setVisibility(View.VISIBLE);
+        }else {
+            vRecycler.setVisibility(View.VISIBLE);
+            vNoData.setVisibility(View.GONE);
+            recyclerDataList.addAll(data);
+        }
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        lookupQueue().subscribe(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
+    }
+
+    @Override
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()) {
+            case QEvents.DesktopMgnt.ON_CLEAR_SELECTION:
+                recyclerAdapter.clearSelection();
+                break;
+            case QEvents.DesktopMgnt.ON_RELOAD_FRAGMENT:
+                recyclerAdapter.clearSelection();
+                reloadData();
+                break;
+        }
+    }
+
+    public class DesktopItemRecyclerAdapter extends SelectableRecyclerViewAdaptor<DesktopItem, DesktopViewHolder> {
+
+        public DesktopItemRecyclerAdapter(ContextsActivity activity, List<DesktopItem> data) {
+            super(activity, data);
+        }
+
+        @NonNull
+        @Override
+        public DesktopViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View viewItem = inflater.inflate(R.layout.desktop_mgnt_item, parent, false);
+            return new DesktopViewHolder(this, viewItem);
+        }
+    }
+
+    public class DesktopViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<DesktopItemRecyclerAdapter, DesktopItem> {
+
+        public DesktopViewHolder(DesktopItemRecyclerAdapter adapter, View itemView) {
+            super(adapter, itemView);
+        }
+
+        @Override
+        public void bindViewValue(DesktopItem desktopItem) {
+            super.bindViewValue(desktopItem);
+
+            ImageView vicon = itemView.findViewById(R.id.desktop_icon);
+            TextView vtext = itemView.findViewById(R.id.desktop_label);
+
+            vicon.setImageResource(desktopItem.getIcon());
+            vtext.setText(desktopItem.getLabel());
+
+        }
+    }
+}

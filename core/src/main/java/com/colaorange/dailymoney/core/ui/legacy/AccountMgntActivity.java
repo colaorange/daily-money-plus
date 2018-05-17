@@ -215,7 +215,6 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
                 doSelectAccount((Account)event.getData());
                 break;
             case QEvents.AccountMgnt.ON_RESELECT_ACCOUNT:
-                Account account = event.getData();
                 doEditAccount((Account)event.getData());
                 break;
         }

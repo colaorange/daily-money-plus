@@ -11,6 +11,7 @@ import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.legacy.DesktopActivity;
+import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
@@ -99,7 +100,7 @@ public class StartupActivity extends ContextsActivity {
     }
 
     private void doNextActivity() {
-        Intent intent = new Intent(StartupActivity.this, DesktopActivity.class);
+        Intent intent = new Intent(StartupActivity.this, DesktopMgntActivity.class);
         intent.putExtra(ARG_FIRST_TIME, firstTime);
         startActivity(intent);
         started = true;

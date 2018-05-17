@@ -38,6 +38,9 @@
             android:name=".core.ui.legacy.DesktopActivity"
             android:label="@string/app_name" />
         <activity
+            android:name=".core.ui.legacy.DesktopMgntActivity"
+            android:label="@string/app_name" />
+        <activity
             android:name=".core.ui.legacy.BookMgntActivity"
             android:label="@string/title_bookmgnt" />
         <activity android:name=".core.ui.legacy.BookEditorActivity" />
@@ -74,12 +77,6 @@
         <activity
             android:name="org.achartengine.GraphicalActivity"
             android:theme="@style/Theme.AppCompat" />
-
-
-        <activity
-            android:name=".core.ui.legacy.TabbedActivity"
-            android:label="Tabbed">
-        </activity>
 
         <receiver
             android:name=".core.bg.StartupReceiver"
