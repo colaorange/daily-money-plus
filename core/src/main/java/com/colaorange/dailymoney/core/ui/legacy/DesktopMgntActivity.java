@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,8 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -90,6 +94,8 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
         initArgs();
         initMembers();
+
+        handleFirstTime();
     }
 
     private void initArgs() {
@@ -118,6 +124,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             public void onTabSelected(TabLayout.Tab tab) {
                 currentDesktopLabel = desktops.get(tab.getPosition()).getLabel();
                 lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+                refreshTab();
             }
 
             @Override
@@ -137,6 +144,22 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         });
     }
 
+    private void refreshTab(){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int i=0;
+        for(Desktop a: desktops){
+            View tab = vAppTabs.getTabAt(i).getCustomView();
+            if(tab==null) {
+                tab = (View) inflater.inflate(R.layout.regular_tab, null);
+                vAppTabs.getTabAt(i).setCustomView(tab);
+            }
+            TextView vtext = tab.findViewById(R.id.tab_text);
+            //follow original tab design
+            vtext.setText(a.getLabel());
+            i++;
+        }
+
+    }
 
     @Override
     public void onStart() {
@@ -194,6 +217,8 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
             vAppTabs.setupWithViewPager(vPager);
             vAppTabs.getTabAt(selpos).select();
+
+            refreshTab();
         }
 
         CalendarHelper calHelper = calendarHelper();
@@ -389,7 +414,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     private boolean handleFirstTime() {
         boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime) {
-            //TODO minor bug, firstTime to false is no usage when onStop be called, have to save to savedInstanceState
             firstTime = false;
             GUIs.post(new Runnable() {
                 @Override
@@ -436,4 +460,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     public int getActionBarHomeAsUp() {
         return homeAsUpNone;
     }
+
+
 }

@@ -82,14 +82,14 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         vAppTabs.setupWithViewPager(vPager);
         vAppTabs.getTabAt(selpos).select();
 
-        refreshTab(true);
+        refreshTab();
 
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedTypes[tab.getPosition()].getType();
                 lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
-                refreshTab(false);
+                refreshTab();
             }
 
             @Override
@@ -109,14 +109,14 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         });
     }
 
-    private void refreshTab(boolean init){
-        Map<AccountType,Integer> textColorMap = getAccountTextColorMap();
+    private void refreshTab() {
+        Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int i=0;
-        for(AccountType a: supportedTypes){
+        int i = 0;
+        for (AccountType a : supportedTypes) {
             int icon;
             boolean selected = a.getType().equals(currentAccountType);
-            switch(a){
+            switch (a) {
                 case INCOME:
                     icon = R.drawable.tab_income;
                     break;
@@ -137,21 +137,19 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
                     icon = R.drawable.tab_unknow;
                     break;
             }
-            View tab;
-            if(init) {
-                tab = (View) inflater.inflate(R.layout.regular_tab, null);
+            View tab = vAppTabs.getTabAt(i).getCustomView();
+            if (tab == null) {
+                tab = (View) inflater.inflate(R.layout.regular_icon_tab, null);
                 vAppTabs.getTabAt(i).setCustomView(tab);
-            }else{
-                tab = vAppTabs.getTabAt(i).getCustomView();
             }
             TextView vtext = tab.findViewById(R.id.tab_text);
             ImageView vicon = tab.findViewById(R.id.tab_icon);
             //follow original tab design
-            vtext.setText(a.getDisplay(i18n()).toUpperCase());
+            vtext.setText(a.getDisplay(i18n()));
             //ugly when set color
-            if(selected) {
+            if (selected) {
                 vtext.setTextColor(textColorMap.get(a));
-            }else{
+            } else {
                 vtext.setTextColor(resolveThemeAttrResData(R.attr.appPrimaryTextColor));
             }
             vicon.setImageDrawable(buildNonSelectedIcon(icon, selected));
@@ -212,10 +210,10 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
             case QEvents.AccountMgnt.ON_SELECT_ACCOUNT:
-                doSelectAccount((Account)event.getData());
+                doSelectAccount((Account) event.getData());
                 break;
             case QEvents.AccountMgnt.ON_RESELECT_ACCOUNT:
-                doEditAccount((Account)event.getData());
+                doEditAccount((Account) event.getData());
                 break;
         }
     }

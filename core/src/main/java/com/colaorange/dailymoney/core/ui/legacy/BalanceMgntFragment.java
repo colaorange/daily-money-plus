@@ -369,7 +369,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
             } else {
                 int bg = mask & activity.resolveThemeAttrResData(R.attr.balanceItemBgColor);
                 if (selected) {
-                    bg = Colors.darken(bg, 0.07f);
+                    bg = Colors.darken(bg, 0.15f);
                 }
                 vlayout.setBackgroundColor(bg);
                 if (lightTheme) {

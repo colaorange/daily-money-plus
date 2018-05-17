@@ -194,11 +194,7 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
             vnote.setText(book.getNote());
             vsymbol.setText(book.getSymbol());
 
-            if (book.getId() == workingBookId) {
-                vicon.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_active));
-            } else {
-                vicon.setImageDrawable(Contexts.instance().getDrawable(R.drawable.book_notactive));
-            }
+            vicon.setImageDrawable(activity.buildGrayIcon(R.drawable.book, book.getId() == workingBookId));
         }
     }
 

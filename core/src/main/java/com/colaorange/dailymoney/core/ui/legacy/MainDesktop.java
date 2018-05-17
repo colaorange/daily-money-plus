@@ -73,20 +73,20 @@ public class MainDesktop extends AbstractDesktop {
         addItem(yearlist);
         addItem(accmgntdt);
         addItem(bookmgntdt);
-        addItem(prefdt);
         addItem(datamaindt);
+        addItem(prefdt);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_how2use);
         intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n.string(R.string.label_how2use));
         DesktopItem how2use = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_how2use), R.drawable.dtitem_how2use, true, false, -998);
+                i18n.string(R.string.label_how2use), R.drawable.dtitem_how2use, true, true, -998);
 
         intent = new Intent(activity, LocalWebViewActivity.class);
         intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
         intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
         DesktopItem about = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_about), R.drawable.dtitem_about, true, false, -999);
+                i18n.string(R.string.label_about), -1, false, true, -999);
 
         addItem(how2use);
         addItem(about);

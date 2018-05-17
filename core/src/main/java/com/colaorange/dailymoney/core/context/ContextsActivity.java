@@ -3,6 +3,10 @@ package com.colaorange.dailymoney.core.context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -379,11 +383,32 @@ public class ContextsActivity extends AppCompatActivity {
 
         drawable = drawable.mutate();
         if (isLightTheme()) {
+            //porterduff
             //https://blog.csdn.net/t12x3456/article/details/10432935
-            drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
+
+            //we use lighting, not porterduff
+            ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x005F5F5F); // lighten
+            drawable.setColorFilter(filter);
         } else {
-            drawable.setColorFilter(0x5FFFFFFF, PorterDuff.Mode.MULTIPLY);
+            ColorFilter filter = new LightingColorFilter(0xFF5F5F5F, 0x00000000);  // darken
+            drawable.setColorFilter(filter);
         }
+        return drawable;
+    }
+
+    public Drawable buildGrayIcon(int drawableResId, boolean skip) {
+        Drawable drawable = getResources().getDrawable(drawableResId);
+        if (skip) {
+            return drawable;
+        }
+
+        drawable = drawable.mutate();
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+        drawable.setColorFilter(filter);
         return drawable;
     }
 

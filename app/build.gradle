@@ -7,8 +7,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 180516002
-        versionName "0.10.1"
+        versionCode 180517001
+        versionName "0.10.1-freshly-20180517"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions{

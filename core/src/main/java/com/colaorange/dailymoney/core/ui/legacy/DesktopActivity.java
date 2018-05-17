@@ -46,6 +46,7 @@ import java.util.List;
 /**
  * @author dennis
  */
+@Deprecated
 @InstanceState
 public class DesktopActivity extends ContextsActivity implements OnTabChangeListener, OnItemClickListener {
 
