@@ -8,6 +8,7 @@
  #17 Material Design in account management
  #19 Material Design in balance list
  #18 Material Design in record list
+ #21 Display no data when there is no data 
 
 === Bugs ===
  #   No selection effect on account-reclist

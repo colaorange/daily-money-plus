@@ -43,7 +43,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
     public static final String ARG_BASE_DATE = "baseData";
 
     private ViewPager vPager;
-    RecordPagerAdapter adapter;
+    private RecordPagerAdapter adapter;
 
     private Date baseDate;
 

@@ -55,13 +55,14 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     public static final String ARG_MODE = "mode";
     public static final String ARG_POS = "pos";
 
+    private View vNoData;
     private TextView vInfo;
-    TextView vSumIncome;
-    TextView vSumExpense;
-    TextView vSumAsset;
-    TextView vSumLiability;
-    TextView vSumOther;
-    TextView vSumUnknow;
+    private TextView vSumIncome;
+    private TextView vSumExpense;
+    private TextView vSumAsset;
+    private TextView vSumLiability;
+    private TextView vSumOther;
+    private TextView vSumUnknow;
 
     private Date targetDate;
     private int mode;
@@ -140,6 +141,8 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         weekDayFormat = preference.getWeekDayFormat();// Wed.
         textSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSize).data);
         textSizeMedium = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeMedium).data);
+
+        vNoData = rootView.findViewById(R.id.no_data);
 
         vInfo = rootView.findViewById(R.id.record_info);
         vSumIncome = rootView.findViewById(R.id.sum_income);
@@ -252,7 +255,14 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                 I18N i18n = i18n();
 
                 recyclerDataList.clear();
-                recyclerDataList.addAll(data);
+                if(count==0){
+                    vRecycler.setVisibility(View.GONE);
+                    vNoData.setVisibility(View.VISIBLE);
+                }else{
+                    vRecycler.setVisibility(View.VISIBLE);
+                    vNoData.setVisibility(View.GONE);
+                    recyclerDataList.addAll(data);
+                }
                 recyclerAdapter.notifyDataSetChanged();
 
                 vSumUnknow.setVisibility(TextView.GONE);

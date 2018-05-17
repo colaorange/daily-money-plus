@@ -6,6 +6,8 @@
     android:orientation="vertical"
     tools:showIn="@layout/account_mgnt">
 
+    <include layout="@layout/no_data"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/account_mgnt_recycler"
         android:layout_width="match_parent"

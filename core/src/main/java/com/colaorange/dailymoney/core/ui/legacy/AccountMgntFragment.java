@@ -39,6 +39,7 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
 
     private List<Account> recyclerDataList;
 
+    View vNoData;
     private RecyclerView vRecycler;
 
     private AccountRecyclerAdapter recyclerAdapter;
@@ -76,6 +77,8 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         ContextsActivity activity = getContextsActivity();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        vNoData = rootView.findViewById(R.id.no_data);
+
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new AccountRecyclerAdapter(activity, recyclerDataList);
         vRecycler = rootView.findViewById(R.id.account_mgnt_recycler);
@@ -100,8 +103,18 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
 
     private void reloadData() {
         IDataProvider idp = contexts().getDataProvider();
+        List<Account> data = idp.listAccount(accountType);
+
         recyclerDataList.clear();
-        recyclerDataList.addAll(idp.listAccount(accountType));
+
+        if(data.size()==0){
+            vRecycler.setVisibility(View.GONE);
+            vNoData.setVisibility(View.VISIBLE);
+        }else {
+            vRecycler.setVisibility(View.VISIBLE);
+            vNoData.setVisibility(View.GONE);
+            recyclerDataList.addAll(data);
+        }
         recyclerAdapter.notifyDataSetChanged();
     }
 
