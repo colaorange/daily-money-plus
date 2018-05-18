@@ -24,7 +24,7 @@ import com.colaorange.dailymoney.core.ui.Constants;
 public class TestsDesktop extends AbstractDesktop {
     
     public TestsDesktop(Activity activity) {
-        super(activity);
+        super("tests", activity);
         
     }
     

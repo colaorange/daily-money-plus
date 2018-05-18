@@ -23,19 +23,26 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp">
 
-            <TextView
-                android:id="@+id/data_maintenance_workingfolder"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@android:drawable/ic_dialog_info"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:text="@string/label_prefs_workingfolder"
-                android:textSize="?textSize" />
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/storage_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:paddingRight="10dp" />
+                <TextView
+                    android:id="@+id/working_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_prefs_workingfolder"
+                    android:textSize="?textSize" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/data_maintenance_request_permission"
+                android:id="@+id/request_permission"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -60,7 +67,7 @@
                     android:textSize="?textSize" />
 
                 <TextView
-                    android:id="@+id/datamain_lastbackup"
+                    android:id="@+id/lastbackup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -69,7 +76,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/data_maintenance_backup"
+                android:id="@+id/backup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -79,7 +86,7 @@
                 android:textSize="?textSize" />
 
             <Button
-                android:id="@+id/data_maintenance_export_csv"
+                android:id="@+id/export_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_import_export"
@@ -88,7 +95,7 @@
                 android:textSize="?textSize" />
 
             <Button
-                android:id="@+id/data_maintenance_share_csv"
+                android:id="@+id/share_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -99,7 +106,7 @@
 
 
             <Button
-                android:id="@+id/data_maintenance_restore"
+                android:id="@+id/restore"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -109,7 +116,7 @@
                 android:textSize="?textSize" />
 
             <Button
-                android:id="@+id/data_maintenance_import_csv"
+                android:id="@+id/import_csv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -119,7 +126,7 @@
                 android:textSize="?textSize" />
 
             <Button
-                android:id="@+id/data_maintenance_reset"
+                android:id="@+id/reset"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -131,7 +138,7 @@
             <!--TODO should move to developer-->
 
             <Button
-                android:id="@+id/data_maintenance_clear_folder"
+                android:id="@+id/clear_folder"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -142,7 +149,7 @@
                 android:visibility="gone" />
 
             <Button
-                android:id="@+id/data_maintenance_create_default"
+                android:id="@+id/create_default"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_settings_backup_restore"

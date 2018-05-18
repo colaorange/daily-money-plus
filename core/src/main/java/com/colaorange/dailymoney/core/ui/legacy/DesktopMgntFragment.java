@@ -4,25 +4,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.Preference;
-import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 
@@ -36,9 +31,9 @@ import java.util.Set;
  */
 public class DesktopMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final String ARG_DESKTOP_LABEL = "desktopLabel";
+    public static final String ARG_DESKTOP_NAME = "desktopName";
 
-    private String desktopLabel = null;
+    private String desktopName = null;
 
     private Desktop desktop = null;
 
@@ -72,7 +67,7 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
 
     private void initArgs() {
         Bundle args = getArguments();
-        desktopLabel = args.getString(ARG_DESKTOP_LABEL);
+        desktopName = args.getString(ARG_DESKTOP_NAME);
 
     }
 
@@ -128,7 +123,7 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
 
         Map<String,Desktop> supportedDesktosp = ((DesktopMgntActivity)getContextsActivity()).getSupportedDesktops();
 
-        Desktop desktop = supportedDesktosp.get(desktopLabel);
+        Desktop desktop = supportedDesktosp.get(desktopName);
 
         List<DesktopItem> data = desktop.getDesktopItems();
 

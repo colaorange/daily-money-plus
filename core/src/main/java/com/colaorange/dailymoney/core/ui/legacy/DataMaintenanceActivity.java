@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
@@ -62,7 +63,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void refreshUI() {
 
-        Button requestPermissionBtn = findViewById(R.id.data_maintenance_request_permission);
+        Button requestPermissionBtn = findViewById(R.id.request_permission);
         //only for 6.0(23+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()) {
             requestPermissionBtn.setVisibility(View.VISIBLE);
@@ -71,17 +72,18 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
 
         //working fodler accessibility
-        TextView workingFolderText = findViewById(R.id.data_maintenance_workingfolder);
-        //test accessable
+        TextView vWorkingFolder = findViewById(R.id.working_folder);
+        ImageView vIcon = findViewById(R.id.storage_icon);
+        //test accessibility
         if (contexts().hasWorkingFolderPermission()) {
-            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_info), null, null, null);
-            workingFolderText.setText(workingFolder.getAbsolutePath());
+            vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_info));
+            vWorkingFolder.setText(workingFolder.getAbsolutePath());
         } else {
-            workingFolderText.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.ic_dialog_alert), null, null, null);
-            workingFolderText.setText(i18n().string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
+            vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_warning));
+            vWorkingFolder.setText(i18n().string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
         }
 
-        TextView lastBackupText = findViewById(R.id.datamain_lastbackup);
+        TextView lastBackupText = findViewById(R.id.lastbackup);
 
         if (preference().getLastBackup() != null) {
             lastBackupText.setText(preference().getLastBackup());
@@ -89,39 +91,39 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     private void initMembers() {
-        findViewById(R.id.data_maintenance_request_permission).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_backup).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_export_csv).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_share_csv).setOnClickListener(this);
+        findViewById(R.id.request_permission).setOnClickListener(this);
+        findViewById(R.id.backup).setOnClickListener(this);
+        findViewById(R.id.export_csv).setOnClickListener(this);
+        findViewById(R.id.share_csv).setOnClickListener(this);
 
-        findViewById(R.id.data_maintenance_restore).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_import_csv).setOnClickListener(this);
+        findViewById(R.id.restore).setOnClickListener(this);
+        findViewById(R.id.import_csv).setOnClickListener(this);
 
         //TODO move to developer
-        findViewById(R.id.data_maintenance_reset).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_clear_folder).setOnClickListener(this);
-        findViewById(R.id.data_maintenance_create_default).setOnClickListener(this);
+        findViewById(R.id.reset).setOnClickListener(this);
+        findViewById(R.id.clear_folder).setOnClickListener(this);
+        findViewById(R.id.create_default).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.data_maintenance_request_permission) {
+        if (v.getId() == R.id.request_permission) {
             doRequestPermission();
-        } else if (v.getId() == R.id.data_maintenance_import_csv) {
+        } else if (v.getId() == R.id.import_csv) {
             doImportCSV();
-        } else if (v.getId() == R.id.data_maintenance_export_csv) {
+        } else if (v.getId() == R.id.export_csv) {
             doExportCSV();
-        } else if (v.getId() == R.id.data_maintenance_share_csv) {
+        } else if (v.getId() == R.id.share_csv) {
             doShareCSV();
-        } else if (v.getId() == R.id.data_maintenance_backup) {
+        } else if (v.getId() == R.id.backup) {
             doBackup();
-        } else if (v.getId() == R.id.data_maintenance_restore) {
+        } else if (v.getId() == R.id.restore) {
             doRestore();
-        } else if (v.getId() == R.id.data_maintenance_reset) {
+        } else if (v.getId() == R.id.reset) {
             doReset();
-        } else if (v.getId() == R.id.data_maintenance_create_default) {
+        } else if (v.getId() == R.id.create_default) {
             doCreateDefault();
-        } else if (v.getId() == R.id.data_maintenance_clear_folder) {
+        } else if (v.getId() == R.id.clear_folder) {
             doClearFolder();
         }
     }

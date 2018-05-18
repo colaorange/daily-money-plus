@@ -60,7 +60,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     private DesktopItem actionObj;
 
     @InstanceState
-    private String currentDesktopLabel = null;
+    private String currentDesktopName = null;
 
     private List<Desktop> desktops;
 
@@ -90,11 +90,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.desktop_mgnt);
 
-        supportedDesktops = new LinkedHashMap<>();
-        for (Desktop dt : new Desktop[]{new MainDesktop(this), new ReportsDesktop(this), new TestsDesktop(this)}) {
-            supportedDesktops.put(dt.getLabel(), dt);
-        }
-
         initArgs();
         initMembers();
 
@@ -121,6 +116,11 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
                 }
             });
         }
+
+        supportedDesktops = new LinkedHashMap<>();
+        for (Desktop dt : new Desktop[]{new MainDesktop(this), new ReportsDesktop(this), new TestsDesktop(this)}) {
+            supportedDesktops.put(dt.getName(), dt);
+        }
     }
 
     private void initArgs() {
@@ -133,6 +133,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     protected void onResume() {
         super.onResume();
+
         reloadData();
     }
 
@@ -148,7 +149,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                currentDesktopLabel = desktops.get(tab.getPosition()).getLabel();
+                currentDesktopName = desktops.get(tab.getPosition()).getLabel();
                 lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
                 refreshTab();
             }
@@ -156,7 +157,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
-                currentDesktopLabel = null;
+                currentDesktopName = null;
                 lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
 
                 //don't refresh it, there must be a selected.
@@ -165,7 +166,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                currentDesktopLabel = desktops.get(tab.getPosition()).getLabel();
+                currentDesktopName = desktops.get(tab.getPosition()).getLabel();
             }
         });
     }
@@ -215,6 +216,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     }
 
     private void reloadData() {
+
         List<Desktop> temp = new LinkedList<>();
         for (Desktop dt : supportedDesktops.values()) {
             if (dt.isAvailable()) {
@@ -230,13 +232,13 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             int selpos = 0;
             int i = 0;
             for (Desktop d : desktops) {
-                if (d.getLabel().equals(currentDesktopLabel)) {
+                if (d.getLabel().equals(currentDesktopName)) {
                     selpos = i;
                     break;
                 }
                 i++;
             }
-            currentDesktopLabel = desktops.get(selpos).getLabel();
+            currentDesktopName = desktops.get(selpos).getLabel();
 
             vPager.setAdapter(new DesktopTypePagerAdapter(getSupportFragmentManager(), desktops));
 
@@ -385,7 +387,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         public Fragment getItem(int position) {
             Fragment f = new DesktopMgntFragment();
             Bundle b = new Bundle();
-            b.putString(DesktopMgntFragment.ARG_DESKTOP_LABEL, desktops.get(position).getLabel());
+            b.putString(DesktopMgntFragment.ARG_DESKTOP_NAME, desktops.get(position).getName());
             f.setArguments(b);
             return f;
         }

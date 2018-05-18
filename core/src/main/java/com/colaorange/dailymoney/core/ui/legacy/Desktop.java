@@ -20,21 +20,23 @@ public class Desktop {
 
     public static final int NO_ICON = -1;
 
+    final protected String name;
     protected String label;
     protected int icon;
     protected Activity activity;
 
     List<DesktopItem> items = new ArrayList<DesktopItem>();
 
-    public Desktop(Activity activity){
-        this(activity,"",NO_ICON);
+    public Desktop(String name, Activity activity){
+        this(name,activity,"",NO_ICON);
     }
     
-    public Desktop(Activity activity,String label, int icon) {
-        this(activity,label, icon, null);
+    public Desktop(String name, Activity activity,String label, int icon) {
+        this(name,activity,label, icon, null);
     }
 
-    public Desktop(Activity activity,String label, int icon, List<DesktopItem> items) {
+    public Desktop(String name, Activity activity,String label, int icon, List<DesktopItem> items) {
+        this.name = name;
         this.activity = activity;
         this.label = label;
         this.icon = icon;
@@ -87,6 +89,10 @@ public class Desktop {
             }
         }
         return list;
+    }
+
+    public String getName() {
+        return name;
     }
 
 

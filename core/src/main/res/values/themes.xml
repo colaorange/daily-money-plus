@@ -64,13 +64,13 @@
     <attr name="ic_check" format="reference" />
     <attr name="ic_set_working" format="reference" />
     <attr name="ic_operations" format="reference" />
-
     <attr name="ic_list" format="reference" />
     <attr name="ic_pie_chart" format="reference" />
     <attr name="ic_series_chart" format="reference" />
     <attr name="ic_multiline_chart" format="reference" />
-
     <attr name="ic_play" format="reference" />
+    <attr name="ic_info" format="reference" />
+    <attr name="ic_warning" format="reference" />
 
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
@@ -413,6 +413,8 @@
 
         <item name="ic_play">@drawable/ic_play_arrow_light_24dp</item>
         <item name="ic_template">@drawable/ic_label_outline_light_24dp</item>
+        <item name="ic_info">@drawable/ic_info_light_24dp</item>
+        <item name="ic_warning">@drawable/ic_warning_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -447,6 +449,9 @@
 
         <item name="ic_play">@drawable/ic_play_arrow_dark_24dp</item>
         <item name="ic_template">@drawable/ic_label_outline_dark_24dp</item>
+        <item name="ic_info">@drawable/ic_info_dark_24dp</item>
+        <item name="ic_warning">@drawable/ic_warning_dark_24dp</item>
+
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

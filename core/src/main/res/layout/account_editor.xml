@@ -46,6 +46,7 @@
 
             <LinearLayout
                 style="@style/editorFieldInput"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <EditText
@@ -76,12 +77,14 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
+            android:drawablePadding="6dp"
             android:text="@string/act_cancel"
             android:textSize="?textSize" />
 
@@ -89,6 +92,7 @@
             android:id="@+id/btn_close"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
+            android:drawablePadding="6dp"
             android:text="@string/act_close"
             android:textSize="?textSize"
             android:visibility="gone" />
@@ -97,6 +101,7 @@
             android:id="@+id/btn_ok"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_add"
+            android:drawablePadding="6dp"
             android:text="@string/act_ok"
             android:textSize="?textSize" />
     </LinearLayout>
