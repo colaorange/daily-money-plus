@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import java.util.LinkedHashMap;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class RecordTemplateCollection extends JsonObject {
 

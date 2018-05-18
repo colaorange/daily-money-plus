@@ -14,7 +14,7 @@ import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 @InstanceState
 public class StartupActivity extends ContextsActivity {

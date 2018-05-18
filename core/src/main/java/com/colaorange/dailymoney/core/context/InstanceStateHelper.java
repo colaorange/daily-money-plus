@@ -16,7 +16,7 @@ import java.util.List;
 
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class InstanceStateHelper {
 

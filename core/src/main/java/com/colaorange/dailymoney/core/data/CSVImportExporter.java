@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class CSVImportExporter {
     private static final String APPVER = "appver:";

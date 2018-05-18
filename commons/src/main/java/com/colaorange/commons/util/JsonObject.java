@@ -7,7 +7,7 @@ import java.io.ObjectOutput;
 import java.io.Serializable;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class JsonObject implements Serializable, Cloneable {
 

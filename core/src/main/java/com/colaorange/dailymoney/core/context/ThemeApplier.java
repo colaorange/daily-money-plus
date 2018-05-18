@@ -6,7 +6,7 @@ import android.support.design.widget.AppBarLayout;
 import com.colaorange.dailymoney.core.R;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class ThemeApplier {
     ContextsActivity activity;

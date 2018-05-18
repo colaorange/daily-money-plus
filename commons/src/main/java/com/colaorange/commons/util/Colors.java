@@ -3,7 +3,7 @@ package com.colaorange.commons.util;
 import android.graphics.Color;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class Colors {
 

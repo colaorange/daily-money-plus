@@ -19,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class Preference {
 

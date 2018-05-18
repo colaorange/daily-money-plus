@@ -6,7 +6,7 @@ import com.colaorange.dailymoney.core.util.I18N;
 import com.google.gson.annotations.Expose;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class RecordTemplate {
     @Expose
