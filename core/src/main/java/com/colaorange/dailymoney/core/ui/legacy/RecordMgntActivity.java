@@ -480,7 +480,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
         I18N i18n = i18n();
         List<String> items = new LinkedList<>();
-        RecordTemplateCollection col = preference().getTemplates();
+        RecordTemplateCollection col = preference().getRecordTemplates();
         String nodata = i18n.string(R.string.msg_no_data);
         for (int i = 0; i < col.size(); i++) {
             RecordTemplate t = col.getTemplateIfAny(i);
@@ -492,9 +492,9 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
 
-                        RecordTemplateCollection col = preference().getTemplates();
+                        RecordTemplateCollection col = preference().getRecordTemplates();
                         col.setTemplate(which, actionObj.getFrom(), actionObj.getTo(), actionObj.getNote());
-                        preference().updateTemplates(col);
+                        preference().updateRecordTemplates(col);
                         trackEvent(TE.SET_TEMPLATE + which);
                     }
                 }).show();

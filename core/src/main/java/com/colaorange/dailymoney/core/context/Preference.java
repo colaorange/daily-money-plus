@@ -691,7 +691,7 @@ public class Preference {
         return lastToAccount;
     }
 
-    public RecordTemplateCollection getTemplates(){
+    public RecordTemplateCollection getRecordTemplates(){
         int bookid = getWorkingBookId();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         String json = prefs.getString("templates-"+bookid, null);
@@ -711,13 +711,19 @@ public class Preference {
         return templates;
     }
 
-    public void updateTemplates(RecordTemplateCollection templates){
+    public void updateRecordTemplates(RecordTemplateCollection templates){
         int bookid = getWorkingBookId();
         templates.book = bookid;
         String json = templates.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("templates-"+bookid, json);
+        editor.commit();
+    }
+    public void clearRecordTemplates(int bookid){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("templates-"+bookid);
         editor.commit();
     }
 }

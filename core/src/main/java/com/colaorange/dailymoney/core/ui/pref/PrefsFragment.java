@@ -18,6 +18,7 @@ import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
+import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -35,7 +36,6 @@ import java.util.Set;
 public class PrefsFragment extends ContextsPrefsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -45,6 +45,32 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         initDisplayPrefs(i18n);
         initAccountingPrefs(i18n);
         initDataPrefs(i18n);
+        initWorkingBookPrefs(i18n);
+    }
+
+    private void initWorkingBookPrefs(final I18N i18n) {
+        try {
+            Preference pref = findPreference("clear_templates");
+            if (pref != null) {
+                pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        try {
+                            trackEvent(preference.getKey());
+                            Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
+
+                            GUIs.shortToast(getActivity(), i18n.string(R.string.msg_finished, i18n.string(R.string.act_clear_templates)));
+                        } catch (Exception x) {
+                            Logger.w(x.getMessage(), x);
+                            trackEvent(preference.getKey() + "_fail");
+                        }
+                        return true;
+                    }
+                });
+            }
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
     }
 
     private void initDisplayPrefs(I18N i18n) {
@@ -82,7 +108,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 }
                 strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
 
-                ((MultiSelectListPreference)pref).setValues(strs);
+                ((MultiSelectListPreference) pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
@@ -110,7 +136,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 }
                 strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
 
-                ((MultiSelectListPreference)pref).setValues(strs);
+                ((MultiSelectListPreference) pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }

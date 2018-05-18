@@ -137,7 +137,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         items.add(i18n.string(R.string.label_usual));
         items.add(i18n.string(R.string.label_latest_used));
 
-        RecordTemplateCollection col = preference().getTemplates();
+        RecordTemplateCollection col = preference().getRecordTemplates();
         String nodataStr = i18n.string(R.string.msg_no_data);
         String templateStr = i18n.string(R.string.label_template);
         for (int i = 0; i < col.size(); i++) {
@@ -187,7 +187,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 break;
             case BOOKMARK_TEMPLATE:
             default:
-                RecordTemplateCollection col = preference().getTemplates();
+                RecordTemplateCollection col = preference().getRecordTemplates();
                 RecordTemplate t = col.getTemplateIfAny(bookmark - BOOKMARK_TEMPLATE);
                 if (t != null) {
                     workingRecord.setFrom(t.from);

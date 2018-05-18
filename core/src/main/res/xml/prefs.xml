@@ -117,6 +117,14 @@
             android:title="@string/label_prefs_startday_year_month_day" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/label_working_book">
+        <Preference
+            android:key="clear_templates"
+            android:persistent="false"
+            android:title="@string/act_clear_templates" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/label_prefcat_others">
         <Preference android:title="@string/label_prefcat_contribution">
             <intent
