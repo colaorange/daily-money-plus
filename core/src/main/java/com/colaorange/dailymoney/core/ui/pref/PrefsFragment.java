@@ -50,20 +50,32 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
 
     private void initWorkingBookPrefs(final I18N i18n) {
         try {
+            final String actionStr = i18n.string(R.string.act_clear_templates);
             Preference pref = findPreference("clear_templates");
             if (pref != null) {
                 pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        try {
-                            trackEvent(preference.getKey());
-                            Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
+                    public boolean onPreferenceClick(final Preference preference) {
 
-                            GUIs.shortToast(getActivity(), i18n.string(R.string.msg_finished, i18n.string(R.string.act_clear_templates)));
-                        } catch (Exception x) {
-                            Logger.w(x.getMessage(), x);
-                            trackEvent(preference.getKey() + "_fail");
-                        }
+                        GUIs.OnFinishListener l = new GUIs.OnFinishListener() {
+                            @Override
+                            public boolean onFinish(Object data) {
+                                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                                    try {
+                                        trackEvent(preference.getKey());
+                                        Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
+
+                                        GUIs.shortToast(getActivity(), i18n.string(R.string.msg_finished, actionStr));
+                                    } catch (Exception x) {
+                                        Logger.w(x.getMessage(), x);
+                                        trackEvent(preference.getKey() + "_fail");
+                                    }
+                                }
+                                return true;
+                            }
+                        };
+
+                        GUIs.confirm(getActivity(), i18n.string(R.string.qmsg_common_confirm, actionStr), l);
                         return true;
                     }
                 });
