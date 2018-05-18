@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/record_item_to_border"
-        android:layout_width="10dp"
+        android:layout_width="3dp"
         android:layout_height="match_parent"
         android:orientation="vertical"/>
     <LinearLayout

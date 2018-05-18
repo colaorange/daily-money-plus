@@ -19,12 +19,15 @@ import com.colaorange.calculator2.Calculator;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.RecordTemplate;
+import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.AccountIndentNode;
@@ -59,6 +62,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
      */
     public static final String ARG_RECORD = "record";
 
+    public static final int BOOKMARK_USUAL = 0;
+    public static final int BOOKMARK_LATEST = 1;
+    public static final int BOOKMARK_TEMPLATE = 2;
+
 
     private boolean modeCreate;
     private int counterCreate;
@@ -78,9 +85,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private Spinner vFromAccount;
     private Spinner vToAccount;
 
-    private EditText vRecordDate;
-    private EditText vRecordNote;
-    private EditText vRecordMoney;
+    private EditText vDate;
+    private EditText vNote;
+    private EditText vMoney;
 
     private Button btnOk;
     private Button btnCancel;
@@ -89,7 +96,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private float nodePaddingBase;
 
     //0:usual, 1:last
-    private int bookmarkMode = 0;
+    private int bookmark = BOOKMARK_USUAL;
 
     DateFormat weekDayFormat;
 
@@ -107,27 +114,42 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.record_editor_menu, menu);
-        GUIs.post(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.menu_bookmark).setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        doShowBookmarkModeDlg();
-                        return true;
-                    }
-                });
-            }
-        });
+        //disable long press to show dlg, we show dlg when click directly
+//        GUIs.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                findViewById(R.id.menu_bookmark).setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+//                        doShowBookmarkModeDlg();
+//                        return true;
+//                    }
+//                });
+//            }
+//        });
         return true;
     }
 
     private void doShowBookmarkModeDlg() {
+        I18N i18n = i18n();
+        List<String> items = new LinkedList<>();
+
+        items.add(i18n.string(R.string.label_usual));
+        items.add(i18n.string(R.string.label_latest_used));
+
+        RecordTemplateCollection col = preference().getTemplates();
+        String nodataStr = i18n.string(R.string.msg_no_data);
+        String templateStr = i18n.string(R.string.label_template);
+        for (int i = 0; i < col.size(); i++) {
+            RecordTemplate t = col.getTemplateIfAny(i);
+            items.add((i + 1) + ". " + (t == null ? nodataStr : (t.toString(i18n))));
+        }
+
         new AlertDialog.Builder(this).setTitle(i18n().string(R.string.act_bookmark))
-                .setItems(R.array.record_editor_bookmark_options, new DialogInterface.OnClickListener() {
+                .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
-                        doBookmarkMode(bookmarkMode = which);
+                        doBookmarkMode(bookmark = which);
                     }
                 }).show();
     }
@@ -136,10 +158,11 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_bookmark) {
-            if (++bookmarkMode > 1) {
-                bookmarkMode = 0;
-            }
-            doBookmarkMode(bookmarkMode);
+//            if (++bookmark >= BOOKMARK_TEMPLATE) {
+//                bookmark = BOOKMARK_USUAL;
+//            }
+//            doBookmarkMode(bookmark);
+            doShowBookmarkModeDlg();
             return true;
         } else if (item.getItemId() == R.id.menu_swap) {
             String from = workingRecord.getFrom();
@@ -151,17 +174,30 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         return super.onOptionsItemSelected(item);
     }
 
-    private void doBookmarkMode(int bookmarkMode) {
+    private void doBookmarkMode(int bookmark) {
 
-        switch (bookmarkMode) {
-            case 1:
+        switch (bookmark) {
+            case BOOKMARK_USUAL:
+                workingRecord.setFrom("");
+                workingRecord.setTo("");
+                break;
+            case BOOKMARK_LATEST:
                 workingRecord.setFrom(preference().getLastFromAccount());
                 workingRecord.setTo(preference().getLastToAccount());
                 break;
-            case 0:
+            case BOOKMARK_TEMPLATE:
             default:
-                workingRecord.setFrom("");
-                workingRecord.setTo("");
+                RecordTemplateCollection col = preference().getTemplates();
+                RecordTemplate t = col.getTemplateIfAny(bookmark - BOOKMARK_TEMPLATE);
+                if (t != null) {
+                    workingRecord.setFrom(t.from);
+                    workingRecord.setTo(t.to);
+                    if (Strings.isBlank(workingRecord.getNote()) && !Strings.isBlank(t.note)) {
+                        workingRecord.setNote(t.note);
+                        vNote.setText(workingRecord.getNote());
+                    }
+                }
+
                 break;
         }
 
@@ -208,16 +244,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         boolean archived = workingRecord.isArchived();
 
-        vRecordDate = findViewById(R.id.record_date);
-        vRecordDate.setText(dateFormat.format(workingRecord.getDate())+" ( "+weekDayFormat.format(workingRecord.getDate())+" )");
-        vRecordDate.setEnabled(!archived);
+        vDate = findViewById(R.id.record_date);
+        vDate.setText(dateFormat.format(workingRecord.getDate()) + " ( " + weekDayFormat.format(workingRecord.getDate()) + " )");
+        vDate.setEnabled(!archived);
 
-        vRecordMoney = findViewById(R.id.record_money);
-        vRecordMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
-        vRecordMoney.setEnabled(!archived);
+        vMoney = findViewById(R.id.record_money);
+        vMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
+        vMoney.setEnabled(!archived);
 
-        vRecordNote = findViewById(R.id.record_note);
-        vRecordNote.setText(workingRecord.getNote());
+        vNote = findViewById(R.id.record_note);
+        vNote.setText(workingRecord.getNote());
 
         if (!archived) {
             findViewById(R.id.btn_prev).setOnClickListener(this);
@@ -234,7 +270,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } else {
             btnOk.setCompoundDrawablesWithIntrinsicBounds(resolveThemeAttrResId(R.attr.ic_save), 0, 0, 0);
             btnOk.setText(R.string.act_update);
-            vRecordMoney.requestFocus();
+            vMoney.requestFocus();
         }
         btnOk.setOnClickListener(this);
 
@@ -419,7 +455,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     }
 
     private void updateDateEditor(Date d) {
-        vRecordDate.setText(dateFormat.format(d)+" ( "+weekDayFormat.format(d)+" )");
+        vDate.setText(dateFormat.format(d) + " ( " + weekDayFormat.format(d) + " )");
     }
 
     @Override
@@ -433,14 +469,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             doClose();
         } else if (v.getId() == R.id.btn_prev) {
             try {
-                Date d = dateFormat.parse(vRecordDate.getText().toString());
+                Date d = dateFormat.parse(vDate.getText().toString());
                 updateDateEditor(cal.yesterday(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
             }
         } else if (v.getId() == R.id.btn_next) {
             try {
-                Date d = dateFormat.parse(vRecordDate.getText().toString());
+                Date d = dateFormat.parse(vDate.getText().toString());
                 updateDateEditor(cal.tomorrow(d));
             } catch (ParseException e) {
                 Logger.e(e.getMessage(), e);
@@ -449,7 +485,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             updateDateEditor(cal.today());
         } else if (v.getId() == R.id.btn_datepicker) {
             try {
-                Date d = dateFormat.parse(vRecordDate.getText().toString());
+                Date d = dateFormat.parse(vDate.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
                     public boolean onFinish(Object data) {
@@ -473,7 +509,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         String start = "";
         try {
-            start = Formats.editorTextNumberDecimalToCal2(vRecordMoney.getText().toString());
+            start = Formats.editorTextNumberDecimalToCal2(vMoney.getText().toString());
         } catch (Exception x) {
         }
 
@@ -487,7 +523,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
-                vRecordMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
+                vMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
             }
         }
@@ -510,9 +546,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                     i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_to_account)));
             return;
         }
-        String datestr = vRecordDate.getText().toString().trim();
+        String datestr = vDate.getText().toString().trim();
         if ("".equals(datestr)) {
-            vRecordDate.requestFocus();
+            vDate.requestFocus();
             GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_date)));
             return;
         }
@@ -526,9 +562,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String moneystr = vRecordMoney.getText().toString();
+        String moneystr = vMoney.getText().toString();
         if ("".equals(moneystr)) {
-            vRecordMoney.requestFocus();
+            vMoney.requestFocus();
             GUIs.alert(this, i18n.string(R.string.msg_field_empty, i18n.string(R.string.label_money)));
             return;
         }
@@ -544,7 +580,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        String note = vRecordNote.getText().toString();
+        String note = vNote.getText().toString();
 
         Account fromAcc = fromAccountList.get(fromPos).getAccount();
         Account toAcc = toAccountList.get(toPos).getAccount();
@@ -570,9 +606,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             workingRecord = clone(workingRecord);
             workingRecord.setMoney(0D);
             workingRecord.setNote("");
-            vRecordMoney.setText("");
-            vRecordMoney.requestFocus();
-            vRecordNote.setText("");
+            vMoney.setText("");
+            vMoney.requestFocus();
+            vNote.setText("");
             counterCreate++;
             btnOk.setText(i18n.string(R.string.act_create) + "(" + counterCreate + ")");
             btnCancel.setVisibility(Button.GONE);

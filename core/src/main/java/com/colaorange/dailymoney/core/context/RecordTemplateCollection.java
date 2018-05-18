@@ -14,7 +14,7 @@ public class RecordTemplateCollection extends JsonObject {
     public static final int MAX_SIZE = 10;
 
     @Expose
-    int bookId;
+    int book;
 
     @Expose
     LinkedHashMap<Integer, RecordTemplate> templates;
@@ -23,9 +23,9 @@ public class RecordTemplateCollection extends JsonObject {
     protected RecordTemplateCollection() {
     }
 
-    public RecordTemplateCollection(int bookId) {
+    public RecordTemplateCollection(int book) {
         //read from preference
-        this.bookId = bookId;
+        this.book = book;
     }
 
 
@@ -35,20 +35,27 @@ public class RecordTemplateCollection extends JsonObject {
 
     public RecordTemplate getTemplateIfAny(int index) {
         checkIdx(index);
-        return templates.get(index);
+        return templates==null?null:templates.get(index);
     }
 
-    public void setBookmark(int index, String from, String to) {
+    public void setTemplate(int index, String from, String to, String note) {
         checkIdx(index);
-        templates.put(index, new RecordTemplate(index, from, to));
+        if(templates==null){
+            templates = new LinkedHashMap<>();
+        }
+        templates.put(index, new RecordTemplate(index, from, to, note));
     }
 
     public void clear(int index) {
-        templates.remove(index);
+        if(templates!=null){
+            templates.remove(index);
+        }
     }
 
     public void clear() {
-        templates.clear();
+        if(templates!=null) {
+            templates.clear();
+        }
     }
 
     private void checkIdx(int idx) {
@@ -64,14 +71,14 @@ public class RecordTemplateCollection extends JsonObject {
 
         RecordTemplateCollection that = (RecordTemplateCollection) o;
 
-        return bookId == that.bookId;
+        return book == that.book;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + bookId;
+        result = prime * result + book;
         return result;
     }
 }

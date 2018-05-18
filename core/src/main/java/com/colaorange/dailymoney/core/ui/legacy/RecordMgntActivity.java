@@ -1,12 +1,14 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,15 +19,20 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.RecordTemplate;
+import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -108,7 +115,6 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         });
         fragInfoMap = new LinkedHashMap<>();
     }
-
 
 
     private void doSelectRecord(Record record) {
@@ -315,14 +321,25 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                 public void run() {
                     //user might add record, reload it.
                     publishReloadFragment();
+
+                    //refresh action mode
+                    if(actionMode!=null){
+                        actionObj = contexts().getDataProvider().findRecord(actionObj.getId());
+                        if(actionObj==null){
+                            actionMode.finish();
+                        }else {
+                            actionMode.setTitle(Contexts.instance().toFormattedMoneyString(actionObj.getMoney()));
+                        }
+                    }
                 }
             });
         }
     }
 
-    private void publishReloadFragment(){
+    private void publishReloadFragment() {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_RELOAD_FRAGMENT).build());
     }
+
     private void publishClearSelection() {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_CLEAR_SELECTION).build());
     }
@@ -354,10 +371,10 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
             if (mode == MODE_MONTH) {
                 basePos = diffYear * 12 + calbase.get(Calendar.MONTH) - cal0.get(Calendar.MONTH);
                 maxPos = basePos + Constants.MONTH_LOOK_AFTER;
-            }else if (mode == MODE_WEEK) {
+            } else if (mode == MODE_WEEK) {
                 basePos = diffYear * 52 + calbase.get(Calendar.WEEK_OF_YEAR) - cal0.get(Calendar.WEEK_OF_YEAR);
                 maxPos = basePos + Constants.WEEK_LOOK_AFTER;
-            }else if (mode == MODE_DAY) {
+            } else if (mode == MODE_DAY) {
                 basePos = diffYear * 365 + calbase.get(Calendar.DAY_OF_YEAR) - cal0.get(Calendar.DAY_OF_YEAR);
                 maxPos = basePos + Constants.DAY_LOOK_AFTER;
             } else {
@@ -373,7 +390,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
         @Override
         public int getCount() {
-            return maxPos+1;
+            return maxPos + 1;
         }
 
         @Override
@@ -442,6 +459,8 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
             } else if (item.getItemId() == R.id.menu_copy) {
                 doCopyRecord(actionObj);
                 return true;
+            } else if (item.getItemId() == R.id.menu_set_template) {
+                doSetTemplate(actionObj);
             }
             return false;
         }
@@ -455,5 +474,29 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
             actionObj = null;
             publishClearSelection();
         }
+    }
+
+    private void doSetTemplate(final Record actionObj) {
+
+        I18N i18n = i18n();
+        List<String> items = new LinkedList<>();
+        RecordTemplateCollection col = preference().getTemplates();
+        String nodata = i18n.string(R.string.msg_no_data);
+        for (int i = 0; i < col.size(); i++) {
+            RecordTemplate t = col.getTemplateIfAny(i);
+            items.add((i + 1) + ". " + (t == null ? nodata : (t.toString(i18n))));
+        }
+
+        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_set_tempalte))
+                .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+
+                        RecordTemplateCollection col = preference().getTemplates();
+                        col.setTemplate(which, actionObj.getFrom(), actionObj.getTo(), actionObj.getNote());
+                        preference().updateTemplates(col);
+                        trackEvent(TE.SET_TEMPLATE + which);
+                    }
+                }).show();
     }
 }

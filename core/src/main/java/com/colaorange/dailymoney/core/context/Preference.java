@@ -700,7 +700,7 @@ public class Preference {
         if(json!=null){
             try {
                 templates =  Jsons.fromJson(json, RecordTemplateCollection.class);
-                templates.bookId = bookid;
+                templates.book = bookid;
             }catch(Exception x){
                 Logger.w(x.getMessage(),x );
             }
@@ -713,7 +713,7 @@ public class Preference {
 
     public void updateTemplates(RecordTemplateCollection templates){
         int bookid = getWorkingBookId();
-        templates.bookId = bookid;
+        templates.book = bookid;
         String json = templates.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
