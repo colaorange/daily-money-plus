@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Jsons;
 import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
@@ -18,7 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class Preference {
 
@@ -119,6 +120,8 @@ public class Preference {
 
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
+
+    RecordTemplateCollection bookmarkCollections;
 
     ContextsApp contextsApp;
 
@@ -686,5 +689,41 @@ public class Preference {
 
     public String getLastToAccount() {
         return lastToAccount;
+    }
+
+    public RecordTemplateCollection getRecordTemplates(){
+        int bookid = getWorkingBookId();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        String json = prefs.getString("templates-"+bookid, null);
+
+        RecordTemplateCollection templates = null;
+        if(json!=null){
+            try {
+                templates =  Jsons.fromJson(json, RecordTemplateCollection.class);
+                templates.book = bookid;
+            }catch(Exception x){
+                Logger.w(x.getMessage(),x );
+            }
+        }
+        if(templates==null){
+            templates = new RecordTemplateCollection(bookid);
+        }
+        return templates;
+    }
+
+    public void updateRecordTemplates(RecordTemplateCollection templates){
+        int bookid = getWorkingBookId();
+        templates.book = bookid;
+        String json = templates.toJson();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("templates-"+bookid, json);
+        editor.commit();
+    }
+    public void clearRecordTemplates(int bookid){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("templates-"+bookid);
+        editor.commit();
     }
 }

@@ -1,7 +1,7 @@
 package com.colaorange.material;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class Dummy {
 }

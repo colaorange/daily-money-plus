@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -35,6 +35,7 @@ import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +53,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
 
     private TabLayout vAppTabs;
-
+    private View vInfoPannel;
     private ViewPager vPager;
 
     private ActionMode actionMode;
@@ -72,6 +73,8 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
     @InstanceState
     private Boolean firstTime;
+
+    private boolean infoPanelFix = false;
 
 
     public DesktopMgntActivity() {
@@ -96,6 +99,28 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         initMembers();
 
         handleFirstTime();
+
+        //a hard fix for cutted vParger with largeTextSize infoPanel.
+        ViewTreeObserver vto = vInfoPannel.getViewTreeObserver();
+        if(vto.isAlive()){
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    try {
+                        if (infoPanelFix) {
+                            infoPanelFix = false;
+                            int height = vInfoPannel.getHeight();
+                            vPager.setPadding(vPager.getPaddingLeft(), vPager.getPaddingTop(), vPager.getPaddingRight(), height);
+                        }
+                    }catch(Exception x){
+                        infoPanelFix = false;
+                        //just in case
+                        Logger.w(x.getMessage(), x);
+                    }
+
+                }
+            });
+        }
     }
 
     private void initArgs() {
@@ -117,6 +142,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         vInfoCumulativeCash = findViewById(R.id.desktop_cumulative_cash);
 
         vAppTabs = findViewById(R.id.appTabs);
+        vInfoPannel = findViewById(R.id.info_panel);
         vPager = findViewById(R.id.viewpager);
 
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -144,12 +170,12 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         });
     }
 
-    private void refreshTab(){
+    private void refreshTab() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int i=0;
-        for(Desktop a: desktops){
+        int i = 0;
+        for (Desktop a : desktops) {
             View tab = vAppTabs.getTabAt(i).getCustomView();
-            if(tab==null) {
+            if (tab == null) {
                 tab = (View) inflater.inflate(R.layout.regular_tab, null);
                 vAppTabs.getTabAt(i).setCustomView(tab);
             }
@@ -182,7 +208,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
                 @Override
                 public void run() {
                     reloadData();
-
                 }
             });
 
@@ -258,6 +283,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         }
         vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
 
+        infoPanelFix = true;
     }
 
 

@@ -119,7 +119,8 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
         GUIs.confirm(activity, i18n.string(R.string.qmsg_delete_book, book.getName()), new GUIs.OnFinishListener() {
             public boolean onFinish(Object data) {
                 if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
-                    boolean r = Contexts.instance().getMasterDataProvider().deleteBook(book.getId());
+                    int bookid = book.getId();
+                    boolean r = Contexts.instance().getMasterDataProvider().deleteBook(bookid);
                     if (r) {
                         if (listener != null) {
                             listener.onDeleteBook(book);
@@ -127,7 +128,9 @@ public class BookRecyclerHelper /*implements OnItemClickListener */ {
                             recyclerAdapter.remove(book);
                             recyclerAdapter.notifyDataSetChanged();
                         }
-                        Contexts.instance().deleteData(book);
+                        Contexts ctxs = Contexts.instance();
+                        ctxs.getPreference().clearRecordTemplates(bookid);
+                        ctxs.deleteData(book);
                     }
                 }
                 return true;

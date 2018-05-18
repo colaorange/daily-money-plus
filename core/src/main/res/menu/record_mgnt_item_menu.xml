@@ -12,6 +12,11 @@
         android:title="@string/act_copy"
         app:showAsAction="always"/>
     <item
+        android:id="@+id/menu_set_template"
+        android:icon="?ic_template"
+        android:title="@string/act_set_template"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/menu_delete"
         android:icon="?ic_delete_forever"
         android:title="@string/act_delete"

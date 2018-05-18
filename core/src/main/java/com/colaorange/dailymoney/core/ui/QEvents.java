@@ -1,7 +1,7 @@
 package com.colaorange.dailymoney.core.ui;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class QEvents {
 

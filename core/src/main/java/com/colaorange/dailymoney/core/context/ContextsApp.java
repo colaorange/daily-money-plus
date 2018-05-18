@@ -5,7 +5,7 @@ import android.app.Application;
 import com.colaorange.dailymoney.core.util.Logger;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 
 public class ContextsApp extends Application{

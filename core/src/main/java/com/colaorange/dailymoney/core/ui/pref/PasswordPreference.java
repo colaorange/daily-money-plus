@@ -13,7 +13,7 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class PasswordPreference extends ValidatableDialogPreference {
 

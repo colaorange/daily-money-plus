@@ -1,30 +1,21 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
+import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -33,7 +24,6 @@ import java.util.Set;
  * @author dennis
  */
 public class PrefsFragment extends ContextsPrefsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-
 
 
     @Override
@@ -45,6 +35,44 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         initDisplayPrefs(i18n);
         initAccountingPrefs(i18n);
         initDataPrefs(i18n);
+        initWorkingBookPrefs(i18n);
+    }
+
+    private void initWorkingBookPrefs(final I18N i18n) {
+        try {
+            final String actionStr = i18n.string(R.string.act_clear_templates);
+            Preference pref = findPreference("clear_templates");
+            if (pref != null) {
+                pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(final Preference preference) {
+
+                        GUIs.OnFinishListener l = new GUIs.OnFinishListener() {
+                            @Override
+                            public boolean onFinish(Object data) {
+                                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                                    try {
+                                        trackEvent(preference.getKey());
+                                        Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
+
+                                        GUIs.shortToast(getActivity(), i18n.string(R.string.msg_common_finished, actionStr));
+                                    } catch (Exception x) {
+                                        Logger.w(x.getMessage(), x);
+                                        trackEvent(preference.getKey() + "_fail");
+                                    }
+                                }
+                                return true;
+                            }
+                        };
+
+                        GUIs.confirm(getActivity(), i18n.string(R.string.qmsg_common_confirm, actionStr), l);
+                        return true;
+                    }
+                });
+            }
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
     }
 
     private void initDisplayPrefs(I18N i18n) {
@@ -82,7 +110,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 }
                 strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
 
-                ((MultiSelectListPreference)pref).setValues(strs);
+                ((MultiSelectListPreference) pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
@@ -110,7 +138,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 }
                 strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
 
-                ((MultiSelectListPreference)pref).setValues(strs);
+                ((MultiSelectListPreference) pref).setValues(strs);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }

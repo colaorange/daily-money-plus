@@ -17,17 +17,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/info_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="?appPrimaryColor"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         app:alignContent="flex_start"
         app:alignItems="flex_start"
         app:flexWrap="wrap"
-        app:justifyContent="center"
-        android:layout_gravity="bottom"
-        >
+        app:justifyContent="center">
 
         <TextView
             android:id="@+id/desktop_weekly_expense"

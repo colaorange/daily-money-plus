@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
@@ -104,11 +106,22 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
     }
 
     private int calColumn() {
-//        ypedValue textSize = this.resolveThemeAttr(R.attr.textSize);
-//        int width = (int)(TypedValue.complexToDimensionPixelSize(textSize.data, getResources().getDisplayMetrics()) * 5.5);
-//
-//        vGrid.setColumnWidth(width);
-        return 4;
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 84);//72+6+6, read desktop_mgnt_item.xml
+
+        switch(preference().getTextSize()){
+            case Preference.TEXT_SIZE_LARGE:
+                noOfColumns--;
+            case Preference.TEXT_SIZE_MEDIUM:
+                noOfColumns--;
+        }
+
+
+        if(noOfColumns<2){
+            noOfColumns = 2;
+        }
+        return noOfColumns;
     }
 
     private void reloadData() {

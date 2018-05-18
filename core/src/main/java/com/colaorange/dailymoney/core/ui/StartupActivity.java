@@ -10,12 +10,11 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.ui.legacy.DesktopActivity;
 import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 @InstanceState
 public class StartupActivity extends ContextsActivity {

@@ -124,13 +124,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_ok"
-            style="@style/editorActionBtn"
-            android:drawableLeft="?ic_add"
-            android:text="@string/act_ok"
-            android:textSize="?textSize" />
-
-        <Button
             android:id="@+id/btn_cancel"
             style="@style/editorActionBtn"
             android:drawableLeft="?ic_clear"
@@ -144,5 +137,12 @@
             android:text="@string/act_close"
             android:textSize="?textSize"
             android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/editorActionBtn"
+            android:drawableLeft="?ic_add"
+            android:text="@string/act_ok"
+            android:textSize="?textSize" />
     </LinearLayout>
 </LinearLayout>

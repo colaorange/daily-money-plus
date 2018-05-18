@@ -531,6 +531,8 @@ public class Contexts {
         String DELETE_ACCOUNT = "del-acc-";
         String DELETE_RECORD = "del-rec-";
 
+        String SET_TEMPLATE = "set-tpl-";
+
         String BALANCE = "balance_mgnt-";
         String RECORD_LIST = "reclist-";
         String RECORD = "rec-";

@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public interface EventQueue {
 

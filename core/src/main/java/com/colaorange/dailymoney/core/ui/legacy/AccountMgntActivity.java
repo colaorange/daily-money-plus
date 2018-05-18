@@ -139,7 +139,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             }
             View tab = vAppTabs.getTabAt(i).getCustomView();
             if (tab == null) {
-                tab = (View) inflater.inflate(R.layout.regular_icon_tab, null);
+                tab = (View) inflater.inflate(R.layout.regular_tab_icon, null);
                 vAppTabs.getTabAt(i).setCustomView(tab);
             }
             TextView vtext = tab.findViewById(R.id.tab_text);

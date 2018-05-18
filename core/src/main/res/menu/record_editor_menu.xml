@@ -2,13 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_bookmark"
-        android:icon="?ic_from_to_bookmark"
+        android:id="@+id/menu_apply"
+        android:icon="?attr/ic_from_to_apply"
         app:showAsAction="always"
-        android:title="@string/act_bookmark"/>
+        android:title="@string/act_apply"/>
     <item
         android:id="@+id/menu_swap"
         android:icon="?ic_from_to_swap"
         app:showAsAction="ifRoom"
         android:title="@string/act_swap"/>
+    <item
+        android:id="@+id/menu_set_template"
+        android:icon="?ic_template"
+        android:title="@string/act_set_template"
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecyclerViewAdaptor.SelectableViewHolder> extends RecyclerViewAdaptor<T, VH> {
 

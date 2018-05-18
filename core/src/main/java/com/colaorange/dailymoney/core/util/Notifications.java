@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public class Notifications {
 

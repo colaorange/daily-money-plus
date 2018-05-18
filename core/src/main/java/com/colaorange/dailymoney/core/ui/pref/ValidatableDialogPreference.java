@@ -16,7 +16,7 @@ import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 
 /**
- * Created by Dennis
+ * @author Dennis
  */
 public abstract class ValidatableDialogPreference extends DialogPreference {
 
