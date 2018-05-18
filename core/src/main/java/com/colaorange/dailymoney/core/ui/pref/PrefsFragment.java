@@ -1,22 +1,13 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -25,7 +16,6 @@ import com.colaorange.dailymoney.core.util.Logger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -65,7 +55,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                                         trackEvent(preference.getKey());
                                         Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
 
-                                        GUIs.shortToast(getActivity(), i18n.string(R.string.msg_finished, actionStr));
+                                        GUIs.shortToast(getActivity(), i18n.string(R.string.msg_common_finished, actionStr));
                                     } catch (Exception x) {
                                         Logger.w(x.getMessage(), x);
                                         trackEvent(preference.getKey() + "_fail");

@@ -170,8 +170,50 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             workingRecord.setTo(from);
             refreshSpinner(false);
             return true;
+        } else if (item.getItemId() == R.id.menu_set_template) {
+            doSetTemplate();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doSetTemplate() {
+        I18N i18n = i18n();
+        List<String> items = new LinkedList<>();
+        RecordTemplateCollection col = preference().getRecordTemplates();
+        String nodatamsg = i18n.string(R.string.msg_no_data);
+        for (int i = 0; i < col.size(); i++) {
+            RecordTemplate t = col.getTemplateIfAny(i);
+            items.add((i + 1) + ". " + (t == null ? nodatamsg : (t.toString(i18n))));
+        }
+
+        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_set_tempalte))
+                .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+
+                        String from = null;
+                        String to = null;
+                        String note = null;
+
+                        int pos = vFromAccount.getSelectedItemPosition();
+                        AccountIndentNode node = pos >= 0 ? fromAccountList.get(pos) : null;
+                        if (node != null && node.getAccount() != null) {
+                            from = node.getAccount().getId();
+                        }
+                        pos = vToAccount.getSelectedItemPosition();
+                        node = pos >= 0 ? toAccountList.get(pos) : null;
+                        if (node.getAccount() != null) {
+                            to = node.getAccount().getId();
+                        }
+                        note = vNote.getText().toString();
+
+
+                        RecordTemplateCollection col = preference().getRecordTemplates();
+                        col.setTemplate(which, from, to, note);
+                        preference().updateRecordTemplates(col);
+                        trackEvent(TE.SET_TEMPLATE + which);
+                    }
+                }).show();
     }
 
     private void doBookmarkMode(int bookmark) {

@@ -400,7 +400,7 @@
         <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_light_24dp</item>
         <item name="ic_share">@drawable/ic_share_light_24dp</item>
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
-        <item name="ic_from_to_bookmark">@drawable/ic_bookmark_light_24dp</item>
+        <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_light_24dp</item>
         <item name="ic_from_to_swap">@drawable/ic_swap_vert_light_24dp</item>
         <item name="ic_check">@drawable/ic_check_light_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_light_24dp</item>
@@ -412,7 +412,7 @@
         <item name="ic_multiline_chart">@drawable/ic_multiline_chart_light_24dp</item>
 
         <item name="ic_play">@drawable/ic_play_arrow_light_24dp</item>
-        <item name="ic_template">@drawable/ic_bookmark_border_light_24dp</item>
+        <item name="ic_template">@drawable/ic_extension_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -434,7 +434,7 @@
         <item name="ic_settings_backup_restore">@drawable/ic_settings_backup_restore_dark_24dp</item>
         <item name="ic_share">@drawable/ic_share_dark_24dp</item>
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
-        <item name="ic_from_to_bookmark">@drawable/ic_bookmark_dark_24dp</item>
+        <item name="ic_from_to_bookmark">@drawable/ic_bookmark_border_dark_24dp</item>
         <item name="ic_from_to_swap">@drawable/ic_swap_vert_dark_24dp</item>
         <item name="ic_check">@drawable/ic_check_dark_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_dark_24dp</item>
@@ -446,7 +446,7 @@
         <item name="ic_multiline_chart">@drawable/ic_multiline_chart_dark_24dp</item>
 
         <item name="ic_play">@drawable/ic_play_arrow_dark_24dp</item>
-        <item name="ic_template">@drawable/ic_bookmark_border_dark_24dp</item>
+        <item name="ic_template">@drawable/ic_extension_dark_24dp</item>
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

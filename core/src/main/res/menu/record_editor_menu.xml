@@ -11,4 +11,9 @@
         android:icon="?ic_from_to_swap"
         app:showAsAction="ifRoom"
         android:title="@string/act_swap"/>
+    <item
+        android:id="@+id/menu_set_template"
+        android:icon="?ic_template"
+        android:title="@string/act_set_template"
+        app:showAsAction="ifRoom"/>
 </menu>
