@@ -62,9 +62,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
      */
     public static final String ARG_RECORD = "record";
 
-    public static final int BOOKMARK_USUAL = 0;
-    public static final int BOOKMARK_LATEST = 1;
-    public static final int BOOKMARK_TEMPLATE = 2;
+    public static final int APPLY_USUAL = 0;
+    public static final int APPLY_LATEST = 1;
+    public static final int APPLY_TEMPLATE = 2;
 
 
     private boolean modeCreate;
@@ -96,7 +96,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private float nodePaddingBase;
 
     //0:usual, 1:last
-    private int bookmark = BOOKMARK_USUAL;
+    private int applyMode = APPLY_USUAL;
 
     DateFormat weekDayFormat;
 
@@ -114,23 +114,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.record_editor_menu, menu);
-        //disable long press to show dlg, we show dlg when click directly
-//        GUIs.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                findViewById(R.id.menu_bookmark).setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-//                        doShowBookmarkModeDlg();
-//                        return true;
-//                    }
-//                });
-//            }
-//        });
         return true;
     }
 
-    private void doShowBookmarkModeDlg() {
+    private void doShowApplyModeDlg() {
         I18N i18n = i18n();
         List<String> items = new LinkedList<>();
 
@@ -145,11 +132,11 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             items.add((i + 1) + ". " + (t == null ? nodataStr : (t.toString(i18n))));
         }
 
-        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.act_bookmark))
+        new AlertDialog.Builder(this).setTitle(i18n().string(R.string.act_apply))
                 .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, final int which) {
-                        doBookmarkMode(bookmark = which);
+                        doApplyMode(applyMode = which);
                     }
                 }).show();
     }
@@ -157,12 +144,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.menu_bookmark) {
-//            if (++bookmark >= BOOKMARK_TEMPLATE) {
-//                bookmark = BOOKMARK_USUAL;
-//            }
-//            doBookmarkMode(bookmark);
-            doShowBookmarkModeDlg();
+        if (item.getItemId() == R.id.menu_apply) {
+            doShowApplyModeDlg();
             return true;
         } else if (item.getItemId() == R.id.menu_swap) {
             String from = workingRecord.getFrom();
@@ -216,21 +199,21 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 }).show();
     }
 
-    private void doBookmarkMode(int bookmark) {
+    private void doApplyMode(int applyMode) {
 
-        switch (bookmark) {
-            case BOOKMARK_USUAL:
+        switch (applyMode) {
+            case APPLY_USUAL:
                 workingRecord.setFrom("");
                 workingRecord.setTo("");
                 break;
-            case BOOKMARK_LATEST:
+            case APPLY_LATEST:
                 workingRecord.setFrom(preference().getLastFromAccount());
                 workingRecord.setTo(preference().getLastToAccount());
                 break;
-            case BOOKMARK_TEMPLATE:
+            case APPLY_TEMPLATE:
             default:
                 RecordTemplateCollection col = preference().getRecordTemplates();
-                RecordTemplate t = col.getTemplateIfAny(bookmark - BOOKMARK_TEMPLATE);
+                RecordTemplate t = col.getTemplateIfAny(applyMode - APPLY_TEMPLATE);
                 if (t != null) {
                     workingRecord.setFrom(t.from);
                     workingRecord.setTo(t.to);
