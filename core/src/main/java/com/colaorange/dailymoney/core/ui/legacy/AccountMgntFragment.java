@@ -143,45 +143,4 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         }
     }
 
-    public class AccountRecyclerAdapter extends SelectableRecyclerViewAdaptor<Account, AccountViewHolder> {
-
-        public AccountRecyclerAdapter(ContextsActivity activity, List<Account> data) {
-            super(activity, data);
-        }
-
-        @NonNull
-        @Override
-        public AccountViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View viewItem = inflater.inflate(R.layout.account_mgnt_item, parent, false);
-            return new AccountViewHolder(this, viewItem);
-        }
-    }
-
-    public class AccountViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<AccountRecyclerAdapter, Account> {
-
-        public AccountViewHolder(AccountRecyclerAdapter adapter, View itemView) {
-            super(adapter, itemView);
-        }
-
-        @Override
-        public void bindViewValue(Account account) {
-            super.bindViewValue(account);
-
-            Map<AccountType, Integer> textColorMap = getContextsActivity().getAccountTextColorMap();
-
-            TextView vname = itemView.findViewById(R.id.account_item_name);
-            TextView vid = itemView.findViewById(R.id.account_item_id);
-            TextView initvalue = itemView.findViewById(R.id.account_item_initvalue);
-
-            vname.setText(account.getName());
-            vid.setText(account.getId());
-            initvalue.setText(i18n().string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue()));
-
-            int textColor = textColorMap.get(AccountType.find(account.getType()));
-
-            vname.setTextColor(textColor);
-            vid.setTextColor(textColor);
-            initvalue.setTextColor(textColor);
-        }
-    }
 }

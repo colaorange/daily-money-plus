@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,16 +16,22 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author dennis
  */
 public class BookMgntActivity extends ContextsActivity {
 
-    BookRecyclerHelper bookRecyclerHelper;
+    private List<Book> recyclerDataList;
+    private RecyclerView vRecycler;
+    private BookRecyclerAdapter recyclerAdapter;
 
     private ActionMode actionMode;
     private Book actionObj;
@@ -51,34 +59,26 @@ public class BookMgntActivity extends ContextsActivity {
 
 
     private void initMembers() {
+        recyclerDataList = new LinkedList<>();
+        recyclerAdapter = new BookRecyclerAdapter(this, recyclerDataList);
+        vRecycler = findViewById(R.id.book_mgnt_recycler);
+        vRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        vRecycler.setLayoutManager(new LinearLayoutManager(this));
+        vRecycler.setAdapter(recyclerAdapter);
 
-        bookRecyclerHelper = new BookRecyclerHelper(this, new BookRecyclerHelper.OnBookListener() {
+
+        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Book>() {
             @Override
-            public void onSelectBook(Book book) {
-                doSelectBook(book);
+            public void onSelect(Set<Book> selection) {
+                doSelectBook(selection.size() == 0 ? null : selection.iterator().next());
             }
 
             @Override
-            public void onDeleteBook(Book book) {
-                doDeleteBook(book);
+            public boolean onReselect(Book selected) {
+                doEditBook(selected);
+                return true;
             }
         });
-
-        RecyclerView vrecycler = findViewById(R.id.book_mgnt_recycler);
-        bookRecyclerHelper.setup(vrecycler);
-
-//        registerForContextMenu(vrecycler);
-    }
-
-    private void doDeleteBook(Book book) {
-        if (book.equals(actionObj)) {
-            if (actionMode != null) {
-                actionMode.finish();
-            }
-        }
-        GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
-        reloadData();
-        trackEvent(TE.DELETE_BOOK);
     }
 
     private void doSelectBook(Book book) {
@@ -126,11 +126,79 @@ public class BookMgntActivity extends ContextsActivity {
             @Override
             public void onBusyFinish() {
                 //update data
-                bookRecyclerHelper.reloadData(data);
+                recyclerDataList.clear();
+                recyclerDataList.addAll(data);
+
+                recyclerAdapter.notifyDataSetChanged();
             }
         });
+    }
 
 
+    public void doNewBook() {
+        Intent intent = null;
+        intent = new Intent(this, BookEditorActivity.class);
+        intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, true);
+        startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
+    }
+
+
+    public void doEditBook(Book book) {
+        Intent intent = null;
+        intent = new Intent(this, BookEditorActivity.class);
+        intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(BookEditorActivity.ARG_BOOK, book);
+        startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
+    }
+
+    public void doDeleteBook(final Book book) {
+        final int workingBookId = Contexts.instance().getWorkingBookId();
+        final I18N i18n = Contexts.instance().getI18n();
+        if (book.getId() == Contexts.DEFAULT_BOOK_ID) {
+            //default book
+            GUIs.shortToast(this, R.string.msg_cannot_delete_default_book);
+            return;
+        } else if (workingBookId == book.getId()) {
+            //
+            GUIs.shortToast(this, R.string.msg_cannot_delete_working_book);
+            return;
+        }
+        GUIs.OnFinishListener l = new GUIs.OnFinishListener() {
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    int bookid = book.getId();
+                    boolean r = Contexts.instance().getMasterDataProvider().deleteBook(bookid);
+                    if (r) {
+                        if (book.equals(actionObj)) {
+                            if (actionMode != null) {
+                                actionMode.finish();
+                            }
+                        }
+                        GUIs.shortToast(BookMgntActivity.this, i18n().string(R.string.msg_book_deleted, book.getName()));
+                        reloadData();
+                        trackEvent(TE.DELETE_BOOK);
+
+                        Contexts ctxs = Contexts.instance();
+                        ctxs.getPreference().clearRecordTemplates(bookid);
+                        ctxs.deleteData(book);
+                    }
+                }
+                return true;
+            }
+        };
+        GUIs.confirm(this, i18n.string(R.string.qmsg_delete_book, book.getName()), l);
+    }
+
+    public void doSetWorkingBook(Book book) {
+        if (Contexts.instance().getWorkingBookId() == book.getId()) {
+            return;
+        }
+        Contexts.instance().setWorkingBookId(book.getId());
+        reloadData();
+    }
+
+    public void clearSelection() {
+        recyclerAdapter.clearSelection();
     }
 
 
@@ -144,7 +212,7 @@ public class BookMgntActivity extends ContextsActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_new) {
-            bookRecyclerHelper.doNewBook();
+            doNewBook();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -196,14 +264,14 @@ public class BookMgntActivity extends ContextsActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.menu_edit) {
-                bookRecyclerHelper.doEditBook(actionObj);
+                doEditBook(actionObj);
                 return true;
             } else if (item.getItemId() == R.id.menu_delete) {
-                bookRecyclerHelper.doDeleteBook(actionObj);
+                doDeleteBook(actionObj);
 //                mode.finish();//Finish action mode
                 return true;
             } else if (item.getItemId() == R.id.menu_set_working) {
-                bookRecyclerHelper.doSetWorkingBook(actionObj);
+                doSetWorkingBook(actionObj);
                 mode.invalidate();
                 return true;
             }
@@ -217,9 +285,7 @@ public class BookMgntActivity extends ContextsActivity {
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            bookRecyclerHelper.clearSelection();
+            clearSelection();
         }
-
-
     }
 }
