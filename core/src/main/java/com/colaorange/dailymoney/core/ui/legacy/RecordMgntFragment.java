@@ -60,6 +60,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     private DateFormat dateFormat;
     private DateFormat yearMonthFormat;
     private DateFormat yearFormat;
+    private DateFormat weekDayFormat;
     private DateFormat nonDigitalMonthFormat;
 
     private Date targetStartDate;
@@ -112,6 +113,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         dateFormat = preference.getDateFormat();//new SimpleDateFormat("yyyy/MM/dd");
         yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
         yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
+        weekDayFormat = preference.getWeekDayFormat();
         nonDigitalMonthFormat = preference.getNonDigitalMonthFormat();
 
         vInfo = rootView.findViewById(R.id.record_info);
@@ -132,7 +134,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         if ((f = fragmentManager.findFragmentByTag(fragTag)) != null) {
             //very strange, why a fragment is here already in create/or create again?
             //I need to read more document
-        }else{
+        } else {
 
             f = new RecordListFragment();
             Bundle b = new Bundle();
@@ -144,7 +146,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                     .disallowAddToBackStack()
                     .commit();
         }
-
 
 
         accountBgColorMap = activity.getAccountBgColorMap();
@@ -263,7 +264,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                         vInfo.setText(i18n.string(R.string.label_month_details, sb.toString(), Integer.toString(count)));
                         break;
                     case MODE_DAY:
-                        vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(targetDate), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(targetDate) + " " + weekDayFormat.format(targetDate), Integer.toString(count)));
                         break;
                     case MODE_YEAR:
 

@@ -121,7 +121,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         I18N i18n = i18n();
         List<String> items = new LinkedList<>();
 
-        items.add(i18n.string(R.string.label_usual));
+        items.add(i18n.string(R.string.label_default));
         items.add(i18n.string(R.string.label_latest_used));
 
         RecordTemplateCollection col = preference().getRecordTemplates();
