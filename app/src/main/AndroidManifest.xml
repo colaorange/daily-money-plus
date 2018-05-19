@@ -42,9 +42,6 @@
             android:label="@string/title_bookmgnt" />
         <activity android:name=".core.ui.legacy.BookEditorActivity" />
         <activity
-            android:name=".core.ui.legacy.RecordListActivity"
-            android:label="@string/title_reclist" />
-        <activity
             android:name=".core.ui.legacy.RecordMgntActivity"
             android:label="@string/title_recmgnt" />
 
@@ -53,7 +50,7 @@
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />
         <activity android:name=".core.ui.legacy.AccountEditorActivity" />
-        <activity android:name=".core.ui.legacy.AccountRecordListActivity" />
+        <activity android:name=".core.ui.legacy.AccountRecordListActivity" android:label="@string/title_reclist" />
         <activity
             android:name=".core.ui.pref.PrefsActivity"
             android:label="@string/title_prefs" />

@@ -26,7 +26,7 @@ public class BalanceHelper {
             b.setGroup(group);
             total += b.getMoney();
         }
-        Balance bt = new Balance(totalName, type.getType(), total, null);
+        Balance bt = new Balance(totalName, type.getType(), total, type);
         bt.setIndent(0);
         bt.setGroup(group);
         bt.setDate(items.get(0).getDate());
@@ -70,6 +70,8 @@ public class BalanceHelper {
                     sum += ib.getMoney();
                     //for search detail
                     b.setTarget(idp.toAccountId(new Account(type.getType(), fullpath, 0D)));
+                } else{
+                    //??
                 }
 
             }

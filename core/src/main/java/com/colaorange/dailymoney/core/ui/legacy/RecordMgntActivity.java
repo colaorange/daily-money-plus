@@ -223,7 +223,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_new) {
-            doNew();
+            doNewRecord();
             return true;
         } else if (item.getItemId() == R.id.menu_prev) {
             doPrev();
@@ -237,7 +237,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         return super.onOptionsItemSelected(item);
     }
 
-    private void doNew() {
+    private void doNewRecord() {
         RecordMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());

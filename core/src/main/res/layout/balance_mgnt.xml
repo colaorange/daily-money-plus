@@ -7,7 +7,7 @@
     android:background="?appPrimaryLightColor"
     tools:context=".ui.legacy.BalanceMgntActivity">
 
-    <include layout="app_bar"/>
+    <include layout="@layout/app_bar"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

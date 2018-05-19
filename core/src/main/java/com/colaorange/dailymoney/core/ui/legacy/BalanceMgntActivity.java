@@ -297,14 +297,13 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         if (fragInfo.endDate != null) {
             intent.putExtra(AccountRecordListActivity.ARG_END, fragInfo.endDate);
         }
-        intent.putExtra(AccountRecordListActivity.ARG_TARGET, balance.getTarget());
-        intent.putExtra(AccountRecordListActivity.ARG_TARGET_INFO, balance.getName());
+        intent.putExtra(AccountRecordListActivity.ARG_CONDITION, balance.getTarget());
+        intent.putExtra(AccountRecordListActivity.ARG_CONDITION_INFO, balance.getName());
         this.startActivityForResult(intent, Constants.REQUEST_ACCOUNT_RECORD_LIST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_ACCOUNT_RECORD_LIST_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -313,7 +312,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                     lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT).build());
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

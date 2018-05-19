@@ -1,90 +1,103 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.text.DateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.colaorange.dailymoney.core.data.Record;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.RecordTemplate;
+import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.QEvents;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author dennis
  */
-public class AccountRecordListActivity extends ContextsActivity {
+public class AccountRecordListActivity extends ContextsActivity implements EventQueue.EventListener {
 
-    public static final String ARG_START = "accdet.start";
-    public static final String ARG_END = "accdet.end";
-    public static final String ARG_TARGET = "accdet.target";
-    public static final String ARG_TARGET_INFO = "accdet.targetInfo";
+    public static final String ARG_START = "start";
+    public static final String ARG_END = "end";
+    /**
+     * accept AccountType, Account or the Account id path
+     */
+    public static final String ARG_CONDITION = "condition";
+    public static final String ARG_CONDITION_INFO = "info";
 
+    private TextView infoView;
 
-    RecordListHelper recordListHelper;
-
-    TextView infoView;
-
+    I18N i18n;
 
     private Date startDate;
     private Date endDate;
     private String info;
-    private Object target;
+    private Serializable condition;
+
+    private ActionMode actionMode;
+    private Record actionObj;
+
+    //there is only one, so set is to 0
+    private int pos = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_reclist);
+        setContentView(R.layout.account_record_list);
         initArgs();
         initMembers();
-        GUIs.delayPost(new Runnable() {
-            @Override
-            public void run() {
-                refreshUI();
-            }
-        }, 25);
+
+        reloadData();
     }
 
 
     private void initArgs() {
-        I18N i18n = i18n();
+        i18n = Contexts.instance().getI18n();
 
         Bundle b = getIntentExtras();
         startDate = (Date) b.get(ARG_START);
         endDate = (Date) b.get(ARG_END);
-        target = b.get(ARG_TARGET);
-        info = b.getString(ARG_TARGET_INFO);
-        info = info == null ? " " : info + " ";
+        condition = b.getSerializable(ARG_CONDITION);
+        String title = b.getString(ARG_CONDITION_INFO);
+        if(title!=null) {
+            setTitle(title);
+        }
 
         DateFormat format = preference().getDateFormat();
         String fromStr = startDate == null ? "" : format.format(startDate);
         String toStr = endDate == null ? "" : format.format(endDate);
 
-        info = info + i18n.string(R.string.label_acc_reclist_dateinfo, fromStr, toStr);
+        info = i18n.string(R.string.label_acc_reclist_dateinfo, fromStr, toStr);
 
         //TODO
-        if (target instanceof AccountType) {
-        } else if (target instanceof Account) {
-        } else if (target instanceof String) {
+        if (condition instanceof AccountType) {
+        } else if (condition instanceof Account) {
+        } else if (condition instanceof String) {
         } else {
-            throw new IllegalStateException("unknow target type " + target);
+            Logger.w("unsupported condition {}", condition);
         }
 
     }
@@ -92,21 +105,73 @@ public class AccountRecordListActivity extends ContextsActivity {
 
     private void initMembers() {
 
-        recordListHelper = new RecordListHelper(this, true, new RecordListHelper.OnRecordListener() {
-            @Override
-            public void onRecordDeleted(Record record) {
-                I18N i18n = i18n();
-                GUIs.shortToast(AccountRecordListActivity.this, i18n.string(R.string.msg_record_deleted));
-                refreshUI();
-                setResult(RESULT_OK);
+        infoView = findViewById(R.id.record_info);
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //clear frag before add frag, it might be android's bug
+        String fragTag = getClass().getName() + ":" + pos;
+        Fragment f;
+        if ((f = fragmentManager.findFragmentByTag(fragTag)) != null) {
+            //very strange, why a fragment is here already in create/or create again?
+            //I need to read more document
+        } else {
+
+            f = new RecordListFragment();
+            Bundle b = new Bundle();
+            b.putInt(RecordListFragment.ARG_POS, pos);
+            f.setArguments(b);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.frag_container, f, fragTag)
+                    .disallowAddToBackStack()
+                    .commit();
+        }
+
+
+    }
+
+    private void doSelectRecord(Record record) {
+        if (record == null && actionMode != null) {
+            actionMode.finish();
+            return;
+        }
+
+        if (record != null) {
+            actionObj = record;
+            if (actionMode == null) {
+                actionMode = this.startSupportActionMode(new RecordActionModeCallback());
+            } else {
+                actionMode.invalidate();
             }
-        });
+            actionMode.setTitle(Contexts.instance().toFormattedMoneyString(record.getMoney()));
+        }
 
-        infoView = findViewById(R.id.account_reclist_infobar);
+    }
 
-        ListView listView = findViewById(R.id.account_reclist_list);
-        recordListHelper.setup(listView);
-        registerForContextMenu(listView);
+
+    @Override
+    public void onStart() {
+        lookupQueue().subscribe(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        lookupQueue().unsubscribe(this);
+    }
+
+    @Override
+    public void onEvent(EventQueue.Event event) {
+        switch (event.getName()) {
+            case QEvents.RecordListFrag.ON_SELECT_RECORD:
+                doSelectRecord((Record) event.getData());
+                break;
+            case QEvents.RecordListFrag.ON_RESELECT_RECORD:
+                doEditRecord((Record) event.getData());
+                break;
+        }
     }
 
     @Override
@@ -116,18 +181,29 @@ public class AccountRecordListActivity extends ContextsActivity {
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
-                    refreshUI();
+                    //user might add record, reload it.
+                    reloadData();
+
+                    //refresh action mode
+                    if (actionMode != null) {
+                        actionObj = contexts().getDataProvider().findRecord(actionObj.getId());
+                        if (actionObj == null) {
+                            actionMode.finish();
+                        } else {
+                            actionMode.setTitle(Contexts.instance().toFormattedMoneyString(actionObj.getMoney()));
+                        }
+                    }
+
+                    //mark ok for changed
                     setResult(RESULT_OK);
                 }
             });
-
         }
     }
 
-    private void refreshUI() {
+    private void reloadData() {
         infoView.setText(info);
         final IDataProvider idp = contexts().getDataProvider();
-//        recordListHelper.refreshUI(idp.listAllRecord());
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
             @SuppressWarnings("unchecked")
             List<Record> data = Collections.EMPTY_LIST;
@@ -135,22 +211,26 @@ public class AccountRecordListActivity extends ContextsActivity {
 
             @Override
             public void run() {
-                if (target instanceof Account) {
-                    data = idp.listRecord((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((Account) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
-                } else if (target instanceof AccountType) {
-                    data = idp.listRecord((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((AccountType) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
-                } else if (target instanceof String) {
-                    data = idp.listRecord((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((String) target, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                if (condition instanceof Account) {
+                    data = idp.listRecord((Account) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((Account) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                } else if (condition instanceof AccountType) {
+                    data = idp.listRecord((AccountType) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((AccountType) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                } else if (condition instanceof String) {
+                    data = idp.listRecord((String) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((String) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                } else {
+                    data = Collections.emptyList();
+                    count = 0;
                 }
             }
 
             @Override
             public void onBusyFinish() {
-                recordListHelper.reloadData(data);
-                infoView.setText(info + i18n().string(R.string.label_count, count));
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordListFragment.ARG_POS, pos).build());
+
+                infoView.setText(info + i18n.string(R.string.label_count, count));
             }
         });
     }
@@ -158,41 +238,142 @@ public class AccountRecordListActivity extends ContextsActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.account_reclist_menu, menu);
+        getMenuInflater().inflate(R.menu.account_record_list_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_new) {
-            recordListHelper.doNewRecord();
+            doNewRecord();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.account_reclist_list) {
-            getMenuInflater().inflate(R.menu.account_reclist_item_menu, menu);
-        }
+    private void doNewRecord() {
+        Intent intent = null;
+        intent = new Intent(this, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
+        startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
+    }
+
+
+    private void doEditRecord(Record record) {
+        Intent intent = null;
+        intent = new Intent(this, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, false);
+        intent.putExtra(RecordEditorActivity.ARG_RECORD, record);
+        startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
+    }
+
+    public void doDeleteRecord(final Record record) {
+        GUIs.confirm(this, i18n.string(R.string.qmsg_delete_record, Contexts.instance().toFormattedMoneyString(record.getMoney())), new GUIs.OnFinishListener() {
+            public boolean onFinish(Object data) {
+                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                    boolean r = Contexts.instance().getDataProvider().deleteRecord(record.getId());
+                    if (r) {
+                        if (record.equals(actionObj)) {
+                            if (actionMode != null) {
+                                actionMode.finish();
+                            }
+                        }
+                        GUIs.shortToast(AccountRecordListActivity.this, i18n.string(R.string.msg_record_deleted));
+                        reloadData();
+                        trackEvent(TE.DELETE_RECORD);
+
+                        //mark ok for changed
+                        setResult(RESULT_OK);
+                    }
+                }
+                return true;
+            }
+        });
+
 
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        if (item.getItemId() == R.id.menu_edit) {
-            recordListHelper.doEditRecord(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_delete) {
-            recordListHelper.doDeleteRecord(info.position);
-            return true;
-        } else if (item.getItemId() == R.id.menu_copy) {
-            recordListHelper.doCopyRecord(info.position);
+    private void doSetTemplate(final Record actionObj) {
+        ;
+        List<String> items = new LinkedList<>();
+        RecordTemplateCollection col = preference().getRecordTemplates();
+        String nodata = i18n.string(R.string.msg_no_data);
+        for (int i = 0; i < col.size(); i++) {
+            RecordTemplate t = col.getTemplateIfAny(i);
+            items.add((i + 1) + ". " + (t == null ? nodata : (t.toString(i18n))));
+        }
+
+        new AlertDialog.Builder(this).setTitle(i18n.string(R.string.qmsg_set_tempalte))
+                .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int which) {
+
+                        RecordTemplateCollection col = preference().getRecordTemplates();
+                        col.setTemplate(which, actionObj.getFrom(), actionObj.getTo(), actionObj.getNote());
+                        preference().updateRecordTemplates(col);
+                        trackEvent(TE.SET_TEMPLATE + which);
+                    }
+                }).show();
+    }
+
+
+    public void doCopyRecord(final Record record) {
+        Intent intent = null;
+        intent = new Intent(this, RecordEditorActivity.class);
+        intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
+        intent.putExtra(RecordEditorActivity.ARG_RECORD, record);
+        startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
+    }
+
+    private class RecordActionModeCallback implements ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.record_mgnt_item_menu, menu);//Inflate the menu over action mode
             return true;
         }
-        return super.onContextItemSelected(item);
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+
+            //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
+            //So here show action menu according to SDK Levels
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_edit) {
+                doEditRecord(actionObj);
+                return true;
+            } else if (item.getItemId() == R.id.menu_delete) {
+                doDeleteRecord(actionObj);
+                mode.finish();//Finish action mode
+                return true;
+            } else if (item.getItemId() == R.id.menu_copy) {
+                doCopyRecord(actionObj);
+                return true;
+            } else if (item.getItemId() == R.id.menu_set_template) {
+                doSetTemplate(actionObj);
+            }
+            return false;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionObj = null;
+            publishClearSelection();
+        }
+    }
+
+    private void publishClearSelection() {
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_CLEAR_SELECTION).build());
     }
 }

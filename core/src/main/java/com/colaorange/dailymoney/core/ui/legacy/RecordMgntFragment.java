@@ -52,7 +52,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     private TextView vSumLiability;
     private TextView vSumOther;
     private TextView vSumUnknow;
-    private Fragment vListFrag;
 
     private Date targetDate;
     private int mode;
