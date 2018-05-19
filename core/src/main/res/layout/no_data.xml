@@ -7,7 +7,7 @@
     android:gravity="center"
     android:visibility="gone">
 
-    <TextView
+    <TextView android:id="@+id/no_data_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/msg_no_data"

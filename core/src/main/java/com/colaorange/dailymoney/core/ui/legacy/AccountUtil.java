@@ -9,7 +9,7 @@ import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 
 /**
- * dennis
+ * @author dennis
  */
 public class AccountUtil {
 

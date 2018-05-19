@@ -19,6 +19,7 @@ public class PrefsActivity extends ContextsActivity {
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
                 .add(R.id.prefs_main, new PrefsFragment())
+                .disallowAddToBackStack()
                 .commit();
     }
 

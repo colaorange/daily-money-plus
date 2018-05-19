@@ -253,18 +253,18 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.RecordMgnt.ON_SELECT_RECORD:
+            case QEvents.RecordListFrag.ON_SELECT_RECORD:
                 doSelectRecord((Record) event.getData());
                 break;
-            case QEvents.RecordMgnt.ON_RESELECT_RECORD:
+            case QEvents.RecordListFrag.ON_RESELECT_RECORD:
                 doEditRecord((Record) event.getData());
                 break;
-            case QEvents.RecordMgnt.ON_FRAGMENT_START:
+            case QEvents.RecordMgntFrag.ON_FRAGMENT_START:
                 RecordMgntFragment.FragInfo info = (RecordMgntFragment.FragInfo) event.getData();
                 fragInfoMap.put(info.pos, info);
 
                 break;
-            case QEvents.RecordMgnt.ON_FRAGMENT_STOP:
+            case QEvents.RecordMgntFrag.ON_FRAGMENT_STOP:
                 fragInfoMap.remove(event.getData());
 
                 break;
@@ -337,11 +337,11 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
     }
 
     private void publishReloadFragment() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_RELOAD_FRAGMENT).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMgntFrag.ON_RELOAD_FRAGMENT).build());
     }
 
     private void publishClearSelection() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_CLEAR_SELECTION).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_CLEAR_SELECTION).build());
     }
 
     public class RecordPagerAdapter extends FragmentPagerAdapter {

@@ -88,7 +88,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedTypes[tab.getPosition()].getType();
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
                 refreshTab();
             }
 
@@ -96,7 +96,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
                 currentAccountType = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
 
                 //don't refresh it, there must be a selected.
 //                refreshTab();
@@ -186,7 +186,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     }
 
     private void reloadData() {
-        lookupQueue().publish(QEvents.AccountMgnt.ON_RELOAD_FRAGMENT, null);
+        lookupQueue().publish(QEvents.AccountMgntFrag.ON_RELOAD_FRAGMENT, null);
     }
 
 
@@ -209,10 +209,10 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.AccountMgnt.ON_SELECT_ACCOUNT:
+            case QEvents.AccountMgntFrag.ON_SELECT_ACCOUNT:
                 doSelectAccount((Account) event.getData());
                 break;
-            case QEvents.AccountMgnt.ON_RESELECT_ACCOUNT:
+            case QEvents.AccountMgntFrag.ON_RESELECT_ACCOUNT:
                 doEditAccount((Account) event.getData());
                 break;
         }
@@ -359,7 +359,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgnt.ON_CLEAR_SELECTION).build());
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
         }
 
 

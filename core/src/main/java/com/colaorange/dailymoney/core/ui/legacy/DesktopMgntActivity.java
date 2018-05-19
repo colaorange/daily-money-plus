@@ -150,7 +150,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentDesktopName = desktops.get(tab.getPosition()).getLabel();
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgntFrag.ON_CLEAR_SELECTION).build());
                 refreshTab();
             }
 
@@ -158,7 +158,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
                 currentDesktopName = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgntFrag.ON_CLEAR_SELECTION).build());
 
                 //don't refresh it, there must be a selected.
 //                refreshTab();
@@ -225,7 +225,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         }
 
         if (temp.equals(desktops)) {
-            lookupQueue().publish(QEvents.DesktopMgnt.ON_RELOAD_FRAGMENT, null);
+            lookupQueue().publish(QEvents.DesktopMgntFrag.ON_RELOAD_FRAGMENT, null);
         } else {
             desktops = temp;
 
@@ -335,10 +335,10 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.DesktopMgnt.ON_SELECT_DESKTOP_TEIM:
+            case QEvents.DesktopMgntFrag.ON_SELECT_DESKTOP_TEIM:
                 doSelectDesktopItem((DesktopItem) event.getData());
                 break;
-            case QEvents.DesktopMgnt.ON_RESELECT_DESKTOP_TEIM:
+            case QEvents.DesktopMgntFrag.ON_RESELECT_DESKTOP_TEIM:
                 doRunDesktopItem((DesktopItem) event.getData());
                 break;
         }
@@ -435,7 +435,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgnt.ON_CLEAR_SELECTION).build());
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgntFrag.ON_CLEAR_SELECTION).build());
         }
     }
 

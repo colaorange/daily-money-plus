@@ -27,7 +27,6 @@ import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,7 +108,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
             @Override
             public void onPageSelected(int position) {
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_CLEAR_SELECTION).build());
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_CLEAR_SELECTION).build());
             }
 
             @Override
@@ -241,7 +240,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             GUIs.delayPost(new Runnable() {
                 @Override
                 public void run() {
-                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT).build());
+                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT).build());
                 }
             });
             return true;
@@ -260,17 +259,17 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.BalanceMgnt.ON_SELECT_BALANCE:
+            case QEvents.BalanceMgntFrag.ON_SELECT_BALANCE:
                 doSelectBalance((Balance) event.getData());
                 break;
-            case QEvents.BalanceMgnt.ON_RESELECT_BALANCE:
+            case QEvents.BalanceMgntFrag.ON_RESELECT_BALANCE:
                 doRecordList((Balance) event.getData());
                 break;
-            case QEvents.BalanceMgnt.ON_FRAGMENT_START:
+            case QEvents.BalanceMgntFrag.ON_FRAGMENT_START:
                 BalanceMgntFragment.FragInfo info = (BalanceMgntFragment.FragInfo)event.getData();
                 fragInfoMap.put(info.pos, info);
                 break;
-            case QEvents.BalanceMgnt.ON_FRAGMENT_STOP:
+            case QEvents.BalanceMgntFrag.ON_FRAGMENT_STOP:
                 fragInfoMap.remove(event.getData());
                 break;
         }
@@ -311,7 +310,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 @Override
                 public void run() {
                     //user might add record, reload it.
-                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT).build());
+                    lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT).build());
                 }
             });
         }
@@ -618,7 +617,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             //First check current fragment action mode
             actionMode = null;
             actionObj = null;
-            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_CLEAR_SELECTION).build());
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_CLEAR_SELECTION).build());
         }
     }
 }

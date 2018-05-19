@@ -456,7 +456,7 @@ public class ContextsActivity extends AppCompatActivity {
                     return q;
                 }
                 m.put(queueName, q = new EventQueueImpl(queueName));
-                Logger.d("Event queue '{}' created", queueName);
+                Logger.d("Event queue '{}:{}' created", getTitle(), queueName);
             }
         }
         return q;
@@ -515,7 +515,7 @@ public class ContextsActivity extends AppCompatActivity {
         public void subscribe(EventListener listener) {
             synchronized (listeners) {
                 listeners.add(new WeakReference<EventListener>(listener));
-                Logger.d("Event queue '{}', subscriber {}", queueName, listener);
+                Logger.d("Event queue '{}:{}', subscriber {}", getTitle(), queueName, listener);
             }
         }
 
@@ -531,20 +531,20 @@ public class ContextsActivity extends AppCompatActivity {
                 EventListener l = w.get();
                 if (l == null || l == listener) {
                     it.remove();
-                    Logger.d("Event queue '{}', unsubscriber {}", queueName, l);
+                    Logger.d("Event queue '{}:{}', unsubscriber {}", getTitle(), queueName, l);
                 }
             }
             if (listeners.size() == 0) {
                 synchronized (this) {
                     getEventQueueMap().remove(queueName);
-                    Logger.d("Event queue '{}' destroyed", queueName);
+                    Logger.d("Event queue '{}:{}' destroyed", getTitle(), queueName);
                 }
             }
         }
 
         @Override
         public void publish(Event event) {
-            Logger.d("Receive event {} to queue '{}'", event.getName(), queueName);
+            Logger.d("Receive event {} to queue '{}:{}'", event.getName(), getTitle(), queueName);
 
             trimOrUnsubscribe(null);
             List<EventListener> ls = new LinkedList<>();

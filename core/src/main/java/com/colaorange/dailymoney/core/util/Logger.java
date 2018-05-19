@@ -13,6 +13,7 @@ public class Logger {
 
     static {
         Log.i(LOG_TAG, "To enable "+LOG_TAG+" debug log, run ");
+        //adb shell setprop log.tag.daily-money DEBUG
         Log.i(LOG_TAG, "adb shell setprop log.tag."+LOG_TAG+" DEBUG");
         Log.i(LOG_TAG, "adb logcat -s "+LOG_TAG);
     }

@@ -127,12 +127,12 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Balance>() {
             @Override
             public void onSelect(Set<Balance> selection) {
-                lookupQueue().publish(QEvents.BalanceMgnt.ON_SELECT_BALANCE, selection.size() == 0 ? null : selection.iterator().next());
+                lookupQueue().publish(QEvents.BalanceMgntFrag.ON_SELECT_BALANCE, selection.size() == 0 ? null : selection.iterator().next());
             }
 
             @Override
             public boolean onReselect(Balance selected) {
-                lookupQueue().publish(QEvents.BalanceMgnt.ON_RESELECT_BALANCE, selected);
+                lookupQueue().publish(QEvents.BalanceMgntFrag.ON_RESELECT_BALANCE, selected);
                 return true;
             }
         });
@@ -267,7 +267,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         lookupQueue().subscribe(this);
         super.onStart();
 
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_START);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_FRAGMENT_START);
         eb.withData(new FragInfo(pos,targetDate,targetStartDate,targetEndDate));
         lookupQueue().publish(eb.build());
 
@@ -276,7 +276,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     @Override
     public void onStop() {
         super.onStop();
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgnt.ON_FRAGMENT_STOP);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_FRAGMENT_STOP);
         eb.withData(pos);
         lookupQueue().publish(eb.build());
         
@@ -287,10 +287,10 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.BalanceMgnt.ON_CLEAR_SELECTION:
+            case QEvents.BalanceMgntFrag.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
-            case QEvents.BalanceMgnt.ON_RELOAD_FRAGMENT:
+            case QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT:
                 reloadData();
                 break;
         }

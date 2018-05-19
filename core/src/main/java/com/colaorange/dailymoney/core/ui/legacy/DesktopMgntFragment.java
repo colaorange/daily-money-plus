@@ -89,12 +89,12 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<DesktopItem>() {
             @Override
             public void onSelect(Set<DesktopItem> selection) {
-                lookupQueue().publish(QEvents.DesktopMgnt.ON_SELECT_DESKTOP_TEIM, selection.size() == 0 ? null : selection.iterator().next());
+                lookupQueue().publish(QEvents.DesktopMgntFrag.ON_SELECT_DESKTOP_TEIM, selection.size() == 0 ? null : selection.iterator().next());
             }
 
             @Override
             public boolean onReselect(DesktopItem selected) {
-                lookupQueue().publish(QEvents.DesktopMgnt.ON_RESELECT_DESKTOP_TEIM, selected);
+                lookupQueue().publish(QEvents.DesktopMgntFrag.ON_RESELECT_DESKTOP_TEIM, selected);
                 return true;
             }
         });
@@ -155,10 +155,10 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.DesktopMgnt.ON_CLEAR_SELECTION:
+            case QEvents.DesktopMgntFrag.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
-            case QEvents.DesktopMgnt.ON_RELOAD_FRAGMENT:
+            case QEvents.DesktopMgntFrag.ON_RELOAD_FRAGMENT:
                 recyclerAdapter.clearSelection();
                 reloadData();
                 break;

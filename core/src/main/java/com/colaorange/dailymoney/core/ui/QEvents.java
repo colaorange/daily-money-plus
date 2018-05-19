@@ -5,32 +5,32 @@ package com.colaorange.dailymoney.core.ui;
  */
 public class QEvents {
 
-    public interface DesktopMgnt {
+    public interface DesktopMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "desktopMgnt:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "desktopMgnt:onReloadFragment";
+        public String ON_CLEAR_SELECTION = "DesktopMgntFrag:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "DesktopMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_DESKTOP_TEIM = "desktopMgnt:onSelectDesktopItem";
-        public String ON_RESELECT_DESKTOP_TEIM = "desktopMgnt:onReselectDesktopItem";
+        public String ON_SELECT_DESKTOP_TEIM = "DesktopMgntFrag:onSelectDesktopItem";
+        public String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
     }
 
 
-    public interface AccountMgnt {
+    public interface AccountMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "accountMgnt:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "accountMgnt:onReloadFragment";
+        public String ON_CLEAR_SELECTION = "AccountMgntFrag:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "AccountMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_ACCOUNT = "accountMgnt:onSelectAccount";
-        public String ON_RESELECT_ACCOUNT = "accountMgnt:onReselectAccount";
+        public String ON_SELECT_ACCOUNT = "AccountMgntFrag:onSelectAccount";
+        public String ON_RESELECT_ACCOUNT = "AccountMgntFrag:onReselectAccount";
     }
 
 
-    public interface BalanceMgnt {
+    public interface BalanceMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "balanceMgnt:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "balanceMgnt:onReloadFragment";
+        public String ON_CLEAR_SELECTION = "BalanceMgntFrag:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "BalanceMgntFrag:onReloadFragment";
 
         //fragment -> activity
         public String ON_SELECT_BALANCE = "balanceMgnt:onSelectBalance";
@@ -41,16 +41,24 @@ public class QEvents {
     }
 
 
-    public interface RecordMgnt {
+    public interface RecordMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "recordMgnt:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "recordMgnt:onReloadFragment";
+        public String ON_RELOAD_FRAGMENT = "RecordMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_RECORD = "recordMgnt:onSelectRecord";
-        public String ON_RESELECT_RECORD = "recordMgnt:onReselectRecord";
-        public String ON_FRAGMENT_START = "recordMgnt:onFragmentStart";
-        public String ON_FRAGMENT_STOP = "recordMgnt:onFragmentStop";
+        public String ON_FRAGMENT_START = "RecordMgntFrag:onFragmentStart";
+        public String ON_FRAGMENT_STOP = "RecordMgntFrag:onFragmentStop";
+
+    }
+
+    public interface RecordListFrag {
+        //activity -> fragment
+        public String ON_CLEAR_SELECTION = "RecordListFrag:onClearSelection";
+        public String ON_RELOAD_FRAGMENT = "RecordListFrag:onReloadFragment";
+
+        //fragment -> activity
+        public String ON_SELECT_RECORD = "RecordListFrag:onSelectRecord";
+        public String ON_RESELECT_RECORD = "RecordListFrag:onReselectRecord";
 
     }
 

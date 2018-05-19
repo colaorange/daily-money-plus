@@ -1,43 +1,33 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Colors;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.Preference;
-import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.QEvents;
-import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author dennis
@@ -55,7 +45,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     public static final String ARG_MODE = "mode";
     public static final String ARG_POS = "pos";
 
-    private View vNoData;
     private TextView vInfo;
     private TextView vSumIncome;
     private TextView vSumExpense;
@@ -63,6 +52,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     private TextView vSumLiability;
     private TextView vSumOther;
     private TextView vSumUnknow;
+    private Fragment vListFrag;
 
     private Date targetDate;
     private int mode;
@@ -76,19 +66,14 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     private Date targetStartDate;
     private Date targetEndDate;
 
-
-    private List<Record> recyclerDataList;
-    private RecyclerView vRecycler;
-    private RecordRecyclerAdapter recyclerAdapter;
-
     private View rootView;
 
-    private Map<String, Account> accountMap = new HashMap<>();
     Map<AccountType, Integer> accountBgColorMap;
     Map<AccountType, Integer> accountTextColorMap;
     I18N i18n;
 
     boolean lightTheme;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,8 +115,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
         nonDigitalMonthFormat = preference.getNonDigitalMonthFormat();
 
-        vNoData = rootView.findViewById(R.id.no_data);
-
         vInfo = rootView.findViewById(R.id.record_info);
         vSumIncome = rootView.findViewById(R.id.sum_income);
         vSumExpense = rootView.findViewById(R.id.sum_expense);
@@ -142,27 +125,28 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
         vInfo = rootView.findViewById(R.id.record_info);
 
-        recyclerDataList = new LinkedList<>();
-        recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
-        recyclerAdapter.setAccountMap(accountMap);
-        vRecycler = rootView.findViewById(R.id.record_recycler);
-        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
-        vRecycler.setLayoutManager(new LinearLayoutManager(activity));
-        vRecycler.setAdapter(recyclerAdapter);
+
+        FragmentManager fragmentManager = getChildFragmentManager();
+        //clear frag before add frag, it might be android's bug
+        String fragTag = getClass().getName() + ":" + pos;
+        Fragment f;
+        if ((f = fragmentManager.findFragmentByTag(fragTag)) != null) {
+            //very strange, why a fragment is here already in create/or create again?
+            //I need to read more document
+        }else{
+
+            f = new RecordListFragment();
+            Bundle b = new Bundle();
+            b.putInt(RecordListFragment.ARG_POS, pos);
+            f.setArguments(b);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.frag_container, f, fragTag)
+                    .disallowAddToBackStack()
+                    .commit();
+        }
 
 
-        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Record>() {
-            @Override
-            public void onSelect(Set<Record> selection) {
-                lookupQueue().publish(QEvents.RecordMgnt.ON_SELECT_RECORD, selection.size() == 0 ? null : selection.iterator().next());
-            }
-
-            @Override
-            public boolean onReselect(Record selected) {
-                lookupQueue().publish(QEvents.RecordMgnt.ON_RESELECT_RECORD, selected);
-                return true;
-            }
-        });
 
         accountBgColorMap = activity.getAccountBgColorMap();
         accountTextColorMap = activity.getAccountTextColorMap();
@@ -208,11 +192,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
         final IDataProvider idp = contexts().getDataProvider();
 
-        accountMap.clear();
-        for (Account acc : idp.listAccount(null)) {
-            accountMap.put(acc.getId(), acc);
-        }
-
         final boolean sameYear = cal.isSameYear(targetStartDate, targetEndDate);
         final boolean sameMonth = cal.isSameMonth(targetStartDate, targetEndDate);
 
@@ -241,22 +220,8 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
             @Override
             public void onBusyFinish() {
                 CalendarHelper cal = calendarHelper();
-                I18N i18n = i18n();
 
-                //refresh account
-                recyclerAdapter.setAccountMap(accountMap);
-
-                //refresh data
-                recyclerDataList.clear();
-                if(count==0){
-                    vRecycler.setVisibility(View.GONE);
-                    vNoData.setVisibility(View.VISIBLE);
-                }else{
-                    vRecycler.setVisibility(View.VISIBLE);
-                    vNoData.setVisibility(View.GONE);
-                    recyclerDataList.addAll(data);
-                }
-                recyclerAdapter.notifyDataSetChanged();
+                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordListFragment.ARG_POS, pos).build());
 
                 vSumUnknow.setVisibility(TextView.GONE);
 
@@ -333,7 +298,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
         super.onStart();
 
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_FRAGMENT_START);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.RecordMgntFrag.ON_FRAGMENT_START);
         eb.withData(new FragInfo(pos, targetDate, targetStartDate, targetEndDate));
         lookupQueue().publish(eb.build());
 
@@ -345,10 +310,9 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         super.onStop();
         lookupQueue().unsubscribe(this);
 
-        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.RecordMgnt.ON_FRAGMENT_STOP);
+        EventQueue.EventBuilder eb = new EventQueue.EventBuilder(QEvents.RecordMgntFrag.ON_FRAGMENT_STOP);
         eb.withData(pos);
         lookupQueue().publish(eb.build());
-
 
 
     }
@@ -356,10 +320,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.RecordMgnt.ON_CLEAR_SELECTION:
-                recyclerAdapter.clearSelection();
-                break;
-            case QEvents.RecordMgnt.ON_RELOAD_FRAGMENT:
+            case QEvents.RecordMgntFrag.ON_RELOAD_FRAGMENT:
                 reloadData();
                 break;
         }
