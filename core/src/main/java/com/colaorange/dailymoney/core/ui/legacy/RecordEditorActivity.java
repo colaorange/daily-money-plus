@@ -660,7 +660,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private void doClose() {
         setResult(RESULT_OK);
-        GUIs.shortToast(this, i18n().string(R.string.msg_created_detail, counterCreate));
+        GUIs.shortToast(this, i18n().string(R.string.msg_created_record, counterCreate));
         finish();
     }
 

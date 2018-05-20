@@ -1,5 +1,8 @@
 package com.colaorange.dailymoney.core.context;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -11,7 +14,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -24,6 +29,7 @@ import android.view.MenuItem;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.ui.StartupActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -47,7 +53,8 @@ public class ContextsActivity extends AppCompatActivity {
     public static final String DEFAULT_EVENT_QUEUE = "default";
 
     private long onCreateTime;
-    private static long recreateTimeMark;
+    private static volatile long globalRecreateTimeMark;
+    private static volatile boolean globalColdRestartMark;
 
     private Map<AccountType, Integer> accountTextColorMap;
     private Map<AccountType, Integer> accountBgColorMap;
@@ -108,7 +115,7 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     public void markWholeRecreate() {
-        recreateTimeMark = System.currentTimeMillis();
+        globalRecreateTimeMark = System.currentTimeMillis();
     }
 
     /*
@@ -126,7 +133,7 @@ public class ContextsActivity extends AppCompatActivity {
 
 
     protected void restartApp(boolean passedProtection) {
-        //TODO
+        //TODO passProtection
         Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -135,6 +142,22 @@ public class ContextsActivity extends AppCompatActivity {
 //        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
 
         startActivity(i);
+    }
+
+    protected void restartAppCold() {
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Intent mStartActivity = new Intent(this, StartupActivity.class);
+//            int mPendingIntentId = 123456;
+//            PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+//            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+//            finishAndRemoveTask();
+//        } else {
+            globalColdRestartMark = true;
+            finish();
+//        }
     }
 
     public boolean isNoActionBarTheme() {
@@ -167,18 +190,12 @@ public class ContextsActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         for (int g : grantResults) {
             if (g == PackageManager.PERMISSION_GRANTED) {
-                //simply reload this activie
-                makeRestart();
+                recreate();
                 break;
             }
         }
     }
 
-    protected void makeRestart() {
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
 
     public void trackEvent(String action) {
         Contexts ctxs = Contexts.instance();
@@ -209,6 +226,21 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        if (globalColdRestartMark) {
+
+            //pending restart
+            Intent mStartActivity = new Intent(this, StartupActivity.class);
+            int mPendingIntentId = 1;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+
+            globalColdRestartMark = false;
+            //force quit
+            int pid = Process.myPid();
+            Process.killProcess(pid);
+            System.exit(0);
+        }
     }
 
     @Override
@@ -225,13 +257,13 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     private void checkRecreate() {
-        if (recreateTimeMark > onCreateTime) {
+        if (globalRecreateTimeMark > onCreateTime) {
             recreate();
         }
     }
 
-    protected void makeRecreate() {
-        recreateTimeMark = System.currentTimeMillis();
+    protected void makeGlobalRecreate() {
+        globalRecreateTimeMark = System.currentTimeMillis();
     }
 
 
@@ -387,7 +419,7 @@ public class ContextsActivity extends AppCompatActivity {
             //https://blog.csdn.net/t12x3456/article/details/10432935
 
             //we use lighting, not porterduff
-            ColorFilter filter = new LightingColorFilter(0xFFFFFFFF , 0x005F5F5F); // lighten
+            ColorFilter filter = new LightingColorFilter(0xFFFFFFFF, 0x005F5F5F); // lighten
             drawable.setColorFilter(filter);
         } else {
             ColorFilter filter = new LightingColorFilter(0xFF5F5F5F, 0x00000000);  // darken

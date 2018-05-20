@@ -1,9 +1,5 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.util.Date;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -18,15 +14,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
-import com.colaorange.dailymoney.core.util.GUIs;
-import com.colaorange.dailymoney.core.util.Logger;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.data.DataBackupRestorer;
+import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.CSVImportExporter;
+import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * @author dennis
@@ -179,7 +179,14 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     if (lastBakcup != null) {
                         preference().setLastBackupTime(lastBakcup);
                     }
-                    GUIs.alert(DataMaintenanceActivity.this, msg);
+                    //theme, templates is possible changed
+                    GUIs.alert(DataMaintenanceActivity.this, msg, new GUIs.OnFinishListener() {
+                        @Override
+                        public boolean onFinish(Object data) {
+                            restartAppCold();
+                            return true;
+                        }
+                    });
                 } else {
                     GUIs.alert(DataMaintenanceActivity.this, result.getErr());
                 }

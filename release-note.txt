@@ -17,6 +17,7 @@
  #5   No next input button in receditor
  #2   support selected date when creating in reclist
  #16  RuntimeException when starting service
+ #23  after restored, the preference doesn't back at the same run time
 
 ====================================================================================================
 == 0.10.0 ==

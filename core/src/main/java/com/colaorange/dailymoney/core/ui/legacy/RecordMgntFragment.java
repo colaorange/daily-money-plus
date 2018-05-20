@@ -261,7 +261,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                             sb.append(" ").append(nonDigitalMonthFormat.format(targetStartDate)).append(", ").append(cal.dayOfMonth(targetStartDate)).append(" - ")
                                     .append(nonDigitalMonthFormat.format(targetEndDate)).append(" ").append(cal.dayOfMonth(targetEndDate));
                         }
-                        vInfo.setText(i18n.string(R.string.label_month_details, sb.toString(), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_month_records, sb.toString(), Integer.toString(count)));
                         break;
                     case MODE_DAY:
                         vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(targetDate) + " " + weekDayFormat.format(targetDate), Integer.toString(count)));

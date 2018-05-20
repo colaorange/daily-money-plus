@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class GUIs {
 
     private static Handler guiHandler;
 
-    static public void alert(Context context, String title, String msg, String oktext, int icon) {
+    static public void alert(Context context, String title, String msg, String oktext, int icon, @Nullable final OnFinishListener listener) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         if (title != null) {
             alertDialog.setTitle(title);
@@ -50,6 +51,9 @@ public class GUIs {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, oktext, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                if (listener != null) {
+                    listener.onFinish(which);
+                }
             }
         });
         if (icon != NO_ICON_RES) {
@@ -59,12 +63,20 @@ public class GUIs {
         alertDialog.show();
     }
 
+    static public void alert(Context context, String msg, @Nullable final OnFinishListener listener) {
+        alert(context, null, msg, context.getString(R.string.act_ok), NO_ICON_RES, listener);
+    }
+
+    static public void alert(Context context, int msg, @Nullable final OnFinishListener listener) {
+        alert(context, null, context.getString(msg), context.getString(R.string.act_ok), NO_ICON_RES, listener);
+    }
+
     static public void alert(Context context, String msg) {
-        alert(context, null, msg, context.getString(R.string.act_ok), NO_ICON_RES);
+        alert(context, null, msg, context.getString(R.string.act_ok), NO_ICON_RES, null);
     }
 
     static public void alert(Context context, int msg) {
-        alert(context, null, context.getString(msg), context.getString(R.string.act_ok), NO_ICON_RES);
+        alert(context, null, context.getString(msg), context.getString(R.string.act_ok), NO_ICON_RES, null);
     }
 
     static public void confirm(Context context, int msg, OnFinishListener listener) {
