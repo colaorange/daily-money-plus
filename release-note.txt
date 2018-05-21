@@ -1,4 +1,11 @@
 
+== 0.10.2 ==
+=== Features ===
+
+=== Bugs ===
+ #24 always popped up about page
+
+====================================================================================================
 == 0.10.1 ==
 === Features ===
  ##  re-support Italian
@@ -19,7 +26,6 @@
  #16  RuntimeException when starting service
  #23  after restored, the preference doesn't back at the same run time
 
-====================================================================================================
 == 0.10.0 ==
 === Features ===
  # Theme : Cola, Orange, Sakura, Lemon

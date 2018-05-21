@@ -45,6 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author dennis
@@ -75,6 +76,8 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     private Boolean firstTime;
 
     private boolean infoPanelFix = false;
+
+    private static AtomicBoolean globalHandleFisrtTime = new AtomicBoolean(false);
 
 
     public DesktopMgntActivity() {
@@ -440,6 +443,13 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     }
 
     private boolean handleFirstTime() {
+
+        //#24 always popped up about page
+        //after recreate the firstime state is still lost, use a extra flag to control this case
+        if(!globalHandleFisrtTime.compareAndSet(false, true)){
+            return false;
+        }
+
         boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime) {
             firstTime = false;
