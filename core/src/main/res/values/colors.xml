@@ -29,7 +29,7 @@
     <color name="themeOrangeSecondaryLight">#90dd8e</color>
     <color name="themeOrangeSecondaryText">#e0e0e0</color>
 
-    <color name="themeOrangeBalanceHeadBg">#a17500</color>
+    <color name="themeOrangeBalanceHeadBg">#836107</color>
     <color name="themeOrangeBalanceItemBg">#fff0e4</color>
 
     <!--sakura-->
@@ -54,7 +54,7 @@
     <color name="themeColaPrimaryText">#e0e0e0</color>
 
     <color name="themeColaSecondary">#0ad2df</color>
-    <color name="themeColaSecondaryDark">#257ca3</color>
+    <color name="themeColaSecondaryDark">#19536c</color>
     <color name="themeColaSecondaryLight">#dcf3ff</color>
     <color name="themeColaSecondaryText">#333333</color>
 
@@ -65,40 +65,40 @@
 
     <!-- http://colorschemedesigner.com/csd-3.5/ -->
     <color name="expenseText">#ff9ab5</color>
-    <color name="expenseTextLight">#ffb3c8</color>
-    <color name="expenseTextDark">#8f5666</color>
+    <color name="expenseTextLight">#ffcdda</color>
+    <color name="expenseTextDark">#593640</color>
     <color name="expenseBgLight">#ffc7d6</color>
-    <color name="expenseBgDark">#964261</color>
+    <color name="expenseBgDark">#5d283c</color>
 
     <color name="incomeText">#7AFFA2</color>
-    <color name="incomeTextLight">#b6ffcc</color>
-    <color name="incomeTextDark">#00761e</color>
+    <color name="incomeTextLight">#ccffdb</color>
+    <color name="incomeTextDark">#008a23</color>
     <color name="incomeBgLight">#9bffb9</color>
-    <color name="incomeBgDark">#448f4b</color>
+    <color name="incomeBgDark">#2b592f</color>
 
     <color name="assetText">#f6d174</color>
-    <color name="assetTextLight">#fede97</color>
-    <color name="assetTextDark">#89743f</color>
+    <color name="assetTextLight">#ffefcc</color>
+    <color name="assetTextDark">#816d3b</color>
     <color name="assetBgLight">#fee6b2</color>
-    <color name="assetBgDark">#906d16</color>
+    <color name="assetBgDark">#735712</color>
 
     <color name="liabilityText">#7a94ff</color>
-    <color name="liabilityTextLight">#9bafff</color>
-    <color name="liabilityTextDark">#44538f</color>
+    <color name="liabilityTextLight">#ccd6ff</color>
+    <color name="liabilityTextDark">#2c365d</color>
     <color name="liabilityBgLight">#b6c4ff</color>
-    <color name="liabilityBgDark">#183096</color>
+    <color name="liabilityBgDark">#122572</color>
 
     <color name="otherText">#61cfff</color>
-    <color name="otherTextLight">#89dbff</color>
-    <color name="otherTextDark">#36748f</color>
+    <color name="otherTextLight">#ccefff</color>
+    <color name="otherTextDark">#265164</color>
     <color name="otherBgLight">#a8e5ff</color>
-    <color name="otherBgDark">#106d96</color>
+    <color name="otherBgDark">#0d5777</color>
 
     <color name="unknownText">#555555</color>
-    <color name="unknownTextLight">#aaaaaa</color>
+    <color name="unknownTextLight">#e6e6e6</color>
     <color name="unknownTextDark">#303030</color>
     <color name="unknownBgLight">#bbbbbb</color>
-    <color name="unknownBgDark">#101010</color>
+    <color name="unknownBgDark">#424242</color>
 
     <!-- FF - no transparent -->
 
