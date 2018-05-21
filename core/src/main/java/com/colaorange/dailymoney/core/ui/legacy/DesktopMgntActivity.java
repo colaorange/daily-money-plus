@@ -4,17 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -33,6 +42,8 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
+import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter;
+import com.colaorange.dailymoney.core.ui.helper.NavMenuListLoader;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -45,6 +56,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author dennis
@@ -55,6 +67,11 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     private TabLayout vAppTabs;
     private View vInfoPannel;
     private ViewPager vPager;
+    private DrawerLayout vDrawer;
+    private ListView vNavMenuList;
+    private NavMenuAdapter navMenuAdapter;
+    private List<NavMenuAdapter.NavMenuObj> navMenuList;
+
 
     private ActionMode actionMode;
     private DesktopItem actionObj;
@@ -76,6 +93,8 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
     private boolean infoPanelFix = false;
 
+    private static AtomicBoolean globalHandleFisrtTime = new AtomicBoolean(false);
+
 
     public DesktopMgntActivity() {
     }
@@ -88,16 +107,17 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.desktop_mgnt);
+        setContentView(R.layout.desktop_drawer);
 
         initArgs();
         initMembers();
+        initMemberDrawer();
 
         handleFirstTime();
 
         //a hard fix for cutted vParger with largeTextSize infoPanel.
         ViewTreeObserver vto = vInfoPannel.getViewTreeObserver();
-        if(vto.isAlive()){
+        if (vto.isAlive()) {
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -107,7 +127,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
                             int height = vInfoPannel.getHeight();
                             vPager.setPadding(vPager.getPaddingLeft(), vPager.getPaddingTop(), vPager.getPaddingRight(), height);
                         }
-                    }catch(Exception x){
+                    } catch (Exception x) {
                         infoPanelFix = false;
                         //just in case
                         Logger.w(x.getMessage(), x);
@@ -170,6 +190,43 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             }
         });
     }
+
+    protected void initMemberDrawer() {
+
+        vDrawer = findViewById(R.id.app_drawer);
+        vNavMenuList = findViewById(R.id.app_drawer_menu_list);
+        NavigationView vnav = (NavigationView) findViewById(R.id.app_drawer_nav);
+
+        //parpare data
+        navMenuList = new LinkedList<>();
+
+        new NavMenuListLoader(this).reload(navMenuList);
+
+
+        navMenuAdapter = new NavMenuAdapter(this, navMenuList);
+        vNavMenuList.setAdapter(navMenuAdapter);
+
+        vNavMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NavMenuAdapter.NavMenuObj obj = (NavMenuAdapter.NavMenuObj) navMenuAdapter.getItem(position);
+                if (obj instanceof NavMenuAdapter.NavMenuItem && ((NavMenuAdapter.NavMenuItem) obj).getListener() != null) {
+                    ((NavMenuAdapter.NavMenuItem) obj).getListener().onClick(view);
+                }
+            }
+        });
+
+    }
+
+
+    private boolean doNavigationItemSelected(MenuItem menuItem) {
+        vDrawer.closeDrawers();
+
+        //
+
+        return true;
+    }
+
 
     private void refreshTab() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -440,6 +497,13 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     }
 
     private boolean handleFirstTime() {
+
+        //#24 always popped up about page
+        //after recreate the firstime state is still lost, use a extra flag to control this case
+        if (!globalHandleFisrtTime.compareAndSet(false, true)) {
+            return false;
+        }
+
         boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime) {
             firstTime = false;
@@ -486,7 +550,16 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
     @Override
     public int getActionBarHomeAsUp() {
-        return homeAsUpNone;
+        return homeAsUpAppId;
+    }
+
+    @Override
+    public void onActionBarHomeAsUp(int resId) {
+        if (resId == homeAsUpAppId) {
+            vDrawer.openDrawer(GravityCompat.START);
+            return;
+        }
+        super.onActionBarHomeAsUp(resId);
     }
 
 
