@@ -15,6 +15,12 @@ public class QEvents {
         public String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
     }
 
+    public interface CardsFrag {
+        //activity -> fragment
+        public String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
+        public String ON_RELOAD_CARD_VIEW = "CardsFrag:onReloadCardView";
+    }
+
 
     public interface AccountMgntFrag {
         //activity -> fragment

@@ -1,6 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
-import com.colaorange.commons.util.JsonObject;
+import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;
 
 import java.util.LinkedList;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Created by Dennis
  */
-public class CardCollection extends JsonObject {
+public class CardCollection extends JsonBase {
 
     @Expose
     String title;
@@ -89,4 +89,21 @@ public class CardCollection extends JsonObject {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CardCollection that = (CardCollection) o;
+
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        return cards != null ? cards.equals(that.cards) : that.cards == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (cards != null ? cards.hashCode() : 0);
+        return result;
+    }
 }

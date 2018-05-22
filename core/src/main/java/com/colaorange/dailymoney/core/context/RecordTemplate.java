@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
-import com.colaorange.commons.util.JsonObject;
-import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.commons.util.JsonBase;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.google.gson.annotations.Expose;
@@ -9,7 +8,7 @@ import com.google.gson.annotations.Expose;
 /**
  * @author Dennis
  */
-public class RecordTemplate extends JsonObject {
+public class RecordTemplate extends JsonBase {
     @Expose
     public final int index;
     @Expose

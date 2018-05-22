@@ -13,14 +13,14 @@ import com.colaorange.dailymoney.core.util.Logger;
 /**
  * Created by Dennis
  */
-public class DefaultCardsHelper {
+public class DefaultCardsCreator {
     ContextsActivity activity;
 
-    public DefaultCardsHelper(ContextsActivity activity) {
+    public DefaultCardsCreator(ContextsActivity activity) {
         this.activity = activity;
     }
 
-    public void createDefaultCards() {
+    public void create() {
         Contexts ctx = Contexts.instance();
         Preference preference = ctx.getPreference();
         CardCollection cards = preference.getCards(0);
@@ -29,12 +29,13 @@ public class DefaultCardsHelper {
             Logger.w("cards is not empty, ignore it");
             return;
         }
-        Card card = new Card(CardType.NAV_PAGES);
+        cards.setTitle("Test 1");
+        Card card = new Card(CardType.NAV_PAGES, "card 1");
         card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(NavPage.RECORD_EDITOR,
                 NavPage.DAILY_LIST, NavPage.MONTHLY_LIST, NavPage.MONTHLY_BALANCE, NavPage.CUMULATIVE_BALANCE));
         cards.add(card);
 
-        card = new Card(CardType.INFO_EXPENSE);
+        card = new Card(CardType.INFO_EXPENSE, "card 2");
         card.withArg(CardFacade.ARG_INFO_EXPENSE_CASH, true);
         card.withArg(CardFacade.ARG_INFO_EXPENSE_WEEKLY_EXPENSE, true);
         card.withArg(CardFacade.ARG_INFO_EXPENSE_MONTHLY_EXPENSE, true);

@@ -725,6 +725,10 @@ public class Preference {
         editor.commit();
     }
 
+    public int getCardsSize(){
+        //todo, handling disabled cards
+        return 1;
+    }
     public CardCollection getCards(int index){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         String json = prefs.getString("cards-"+index, null);

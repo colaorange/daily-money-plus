@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
+import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;
 
 import java.util.LinkedHashMap;
@@ -8,14 +9,14 @@ import java.util.Map;
 /**
  * Created by Dennis
  */
-public class Card {
+public class Card extends JsonBase {
 
     @Expose
     CardType type;
     @Expose
     String title;
     @Expose
-    Map<String, Object> args;
+    LinkedHashMap<String, Object> args;
 
     protected Card() {
 
@@ -48,5 +49,26 @@ public class Card {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Card card = (Card) o;
+
+        if (type != card.type) return false;
+        if (title != null ? !title.equals(card.title) : card.title != null) return false;
+        return args != null ? args.equals(card.args) : card.args == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (args != null ? args.hashCode() : 0);
+        return result;
     }
 }
