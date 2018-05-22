@@ -212,7 +212,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                 vDrawer.closeDrawer(GravityCompat.START);
                 //let drawer close first
-                GUIs.delayPost(new Runnable(){
+                GUIs.delayPost(new Runnable() {
                     @Override
                     public void run() {
                         NavMenuAdapter.NavMenuObj obj = (NavMenuAdapter.NavMenuObj) navMenuAdapter.getItem(position);
@@ -220,20 +220,23 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
                             ((NavMenuAdapter.NavMenuItem) obj).getListener().onClick(view);
                         }
                     }
-                },100);
+                }, 100);
 
             }
         });
 
     }
 
-
-    private boolean doNavigationItemSelected(MenuItem menuItem) {
-        vDrawer.closeDrawers();
-
-        //
-
-        return true;
+    @Override
+    public void onBackPressed() {
+        if (vDrawer.isDrawerOpen(GravityCompat.START)) {
+            vDrawer.closeDrawer(GravityCompat.START);
+            return;
+        } else if (vPager.getCurrentItem() > 0) {
+            vPager.setCurrentItem(0);
+            return;
+        }
+        super.onBackPressed();
     }
 
 
