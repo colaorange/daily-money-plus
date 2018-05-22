@@ -10,6 +10,7 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.ui.cards.DefaultCardsHelper;
 import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
@@ -108,6 +109,10 @@ public class StartupActivity extends ContextsActivity {
 
 
     private void doFirstTime() {
+
+        new DefaultCardsHelper(this).createDefaultCards();
+
+
         IDataProvider idp = contexts().getDataProvider();
         if (idp.listAccount(null).size() == 0) {//just in case
             new DataCreator(idp, i18n()).createDefaultAccount();

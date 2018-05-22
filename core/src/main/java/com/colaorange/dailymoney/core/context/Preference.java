@@ -121,8 +121,6 @@ public class Preference {
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
 
-    RecordTemplateCollection bookmarkCollections;
-
     ContextsApp contextsApp;
 
     public Preference(ContextsApp contextsApp) {
@@ -724,6 +722,38 @@ public class Preference {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("templates-"+bookid);
+        editor.commit();
+    }
+
+    public CardCollection getCards(int index){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        String json = prefs.getString("cards-"+index, null);
+
+        CardCollection cards = null;
+        if(json!=null){
+            try {
+                cards =  Jsons.fromJson(json, CardCollection.class);
+            }catch(Exception x){
+                Logger.w(x.getMessage(),x );
+            }
+        }
+        if(cards==null){
+            cards = new CardCollection();
+        }
+        return cards;
+    }
+
+    public void updateCards(int index, CardCollection cards){
+        String json = cards.toJson();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("cards-"+index, json);
+        editor.commit();
+    }
+    public void removeCards(int index){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("cards-"+index);
         editor.commit();
     }
 }

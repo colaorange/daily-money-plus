@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.helper;
+package com.colaorange.dailymoney.core.ui.nav;
 
 import android.content.Intent;
 import android.view.View;
@@ -6,20 +6,17 @@ import android.view.View;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.DataMaintenanceActivity;
-import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter.NavMenuHeader;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter.NavMenuDivider;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter.NavMenuItem;
+import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuHeader;
+import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuDivider;
+import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuItem;
 import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordMgntActivity;
 import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -29,25 +26,7 @@ import java.util.List;
  * Created by Dennis
  */
 public class NavMenuHelper {
-    public static enum Page {
-        RECORD_EDITOR,
-        DAILY_LIST,
-        WEEKLY_LIST,
-        MONTHLY_LIST,
-        YEARLY_LIST,
-        ACCOUNT_MGNT,
-        BOOK_MGNT,
-        DATA_MAIN,
-        PREFS,
-        HOW2USE,
-        ABOUT,
-        CONTRIBUTOR,
-        WHATISNEW,
-        HISTORY,
-        MONTHLY_BALANCE,
-        YEARLY_BALANCE,
-        CUMULATIVE_BALANCE,
-    }
+
 
 
     ContextsActivity activity;
@@ -59,36 +38,36 @@ public class NavMenuHelper {
     public void reload(List<NavMenuAdapter.NavMenuObj> navMenuList) {
         I18N i18n = Contexts.instance().getI18n();
 
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_addrec), new DoPageListener(Page.RECORD_EDITOR), getPageIcon(Page.RECORD_EDITOR)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_addrec), new DoPageListener(NavPage.RECORD_EDITOR), getPageIcon(NavPage.RECORD_EDITOR)));
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_record)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_daily_list), new DoPageListener(Page.DAILY_LIST), getPageIcon(Page.DAILY_LIST)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_weekly_list), new DoPageListener(Page.WEEKLY_LIST), getPageIcon(Page.WEEKLY_LIST)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_monthly_list), new DoPageListener(Page.MONTHLY_BALANCE), getPageIcon(Page.MONTHLY_BALANCE)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_yearly_list), new DoPageListener(Page.YEARLY_BALANCE), getPageIcon(Page.YEARLY_BALANCE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_daily_list), new DoPageListener(NavPage.DAILY_LIST), getPageIcon(NavPage.DAILY_LIST)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_weekly_list), new DoPageListener(NavPage.WEEKLY_LIST), getPageIcon(NavPage.WEEKLY_LIST)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_monthly_list), new DoPageListener(NavPage.MONTHLY_BALANCE), getPageIcon(NavPage.MONTHLY_BALANCE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_yearly_list), new DoPageListener(NavPage.YEARLY_BALANCE), getPageIcon(NavPage.YEARLY_BALANCE)));
         navMenuList.add(new NavMenuDivider());
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_accmgnt), new DoPageListener(Page.ACCOUNT_MGNT), getPageIcon(Page.ACCOUNT_MGNT)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_books), new DoPageListener(Page.BOOK_MGNT), getPageIcon(Page.BOOK_MGNT)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_accmgnt), new DoPageListener(NavPage.ACCOUNT_MGNT), getPageIcon(NavPage.ACCOUNT_MGNT)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_books), new DoPageListener(NavPage.BOOK_MGNT), getPageIcon(NavPage.BOOK_MGNT)));
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_reports)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_monthly_balance), new DoPageListener(Page.MONTHLY_BALANCE), getPageIcon(Page.MONTHLY_BALANCE)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_yearly_balance), new DoPageListener(Page.YEARLY_BALANCE), getPageIcon(Page.YEARLY_BALANCE)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_cumulative_balance), new DoPageListener(Page.CUMULATIVE_BALANCE), getPageIcon(Page.CUMULATIVE_BALANCE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_monthly_balance), new DoPageListener(NavPage.MONTHLY_BALANCE), getPageIcon(NavPage.MONTHLY_BALANCE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_yearly_balance), new DoPageListener(NavPage.YEARLY_BALANCE), getPageIcon(NavPage.YEARLY_BALANCE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_report_cumulative_balance), new DoPageListener(NavPage.CUMULATIVE_BALANCE), getPageIcon(NavPage.CUMULATIVE_BALANCE)));
         navMenuList.add(new NavMenuDivider());
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_datamain), new DoPageListener(Page.DATA_MAIN), getPageIcon(Page.DATA_MAIN)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_prefs), new DoPageListener(Page.PREFS), getPageIcon(Page.PREFS)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_datamain), new DoPageListener(NavPage.DATA_MAIN), getPageIcon(NavPage.DATA_MAIN)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.dtitem_prefs), new DoPageListener(NavPage.PREFS), getPageIcon(NavPage.PREFS)));
         navMenuList.add(new NavMenuDivider());
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_what_is_new), new DoPageListener(Page.WHATISNEW), getPageIcon(Page.WHATISNEW)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_history), new DoPageListener(Page.HISTORY), getPageIcon(Page.HISTORY)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_contributor), new DoPageListener(Page.CONTRIBUTOR), getPageIcon(Page.CONTRIBUTOR)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_how2use), new DoPageListener(Page.HOW2USE), getPageIcon(Page.HOW2USE)));
-        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_about), new DoPageListener(Page.ABOUT), getPageIcon(Page.ABOUT)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_what_is_new), new DoPageListener(NavPage.WHATISNEW), getPageIcon(NavPage.WHATISNEW)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_history), new DoPageListener(NavPage.HISTORY), getPageIcon(NavPage.HISTORY)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_contributor), new DoPageListener(NavPage.CONTRIBUTOR), getPageIcon(NavPage.CONTRIBUTOR)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_how2use), new DoPageListener(NavPage.HOW2USE), getPageIcon(NavPage.HOW2USE)));
+        navMenuList.add(new NavMenuItem(i18n.string(R.string.label_about), new DoPageListener(NavPage.ABOUT), getPageIcon(NavPage.ABOUT)));
     }
 
     public class DoPageListener implements View.OnClickListener {
-        Page page;
+        NavPage page;
 
-        public DoPageListener(Page page) {
+        public DoPageListener(NavPage page) {
             this.page = page;
         }
 
@@ -98,7 +77,7 @@ public class NavMenuHelper {
         }
     }
 
-    public int getPageIcon(Page page) {
+    public int getPageIcon(NavPage page) {
         switch (page) {
             case RECORD_EDITOR:
                 return R.drawable.dtitem_add_record;
@@ -135,7 +114,7 @@ public class NavMenuHelper {
         }
     }
 
-    public void doPage(Page page) {
+    public void doPage(NavPage page) {
         I18N i18n = Contexts.instance().getI18n();
         Intent intent = null;
         switch (page) {

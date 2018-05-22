@@ -38,8 +38,9 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuHelper;
+import com.colaorange.dailymoney.core.ui.cards.DefaultCardsHelper;
+import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
+import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -534,6 +535,12 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             });
             return true;
         } else if (fvt) {
+
+            if (Contexts.instance().getPreference().getCards(0).size() == 0) {
+                new DefaultCardsHelper(this).createDefaultCards();
+            }
+
+
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
