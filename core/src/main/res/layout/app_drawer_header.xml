@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="128dp"
+    android:layout_height="@dimen/nav_drawer_header_height"
     android:background="?attr/colorPrimaryDark"
-    android:padding="16dp"
     android:theme="?appPopupTheme"
     android:orientation="vertical"
     android:gravity="bottom">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/app_nav_header"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
 
     <TextView
+        android:id="@+id/app_drawer_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My header title"
-        android:textAppearance="@style/appbarTextAppearance"/>
+        android:textAppearance="@style/appbarTextAppearance"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        />
 
-</LinearLayout>
+</RelativeLayout>

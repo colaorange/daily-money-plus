@@ -19,4 +19,8 @@
 
 
     <dimen name="float_add_margin">16dp</dimen>
+
+    <dimen name="nav_drawer_width">304dp</dimen>
+    <dimen name="nav_drawer_header_height">138dp</dimen>
+    <dimen name="nav_drawer_menu_margin_top">140dp</dimen>
 </resources>

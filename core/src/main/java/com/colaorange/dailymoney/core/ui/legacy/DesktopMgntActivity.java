@@ -17,12 +17,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,7 +39,7 @@ import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
 import com.colaorange.dailymoney.core.ui.helper.NavMenuAdapter;
-import com.colaorange.dailymoney.core.ui.helper.NavMenuListLoader;
+import com.colaorange.dailymoney.core.ui.helper.NavMenuHelper;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -68,6 +64,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     private View vInfoPannel;
     private ViewPager vPager;
     private DrawerLayout vDrawer;
+    private TextView vDrawerTitle;
     private ListView vNavMenuList;
     private NavMenuAdapter navMenuAdapter;
     private List<NavMenuAdapter.NavMenuObj> navMenuList;
@@ -195,12 +192,16 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
         vDrawer = findViewById(R.id.app_drawer);
         vNavMenuList = findViewById(R.id.app_drawer_menu_list);
+
         NavigationView vnav = (NavigationView) findViewById(R.id.app_drawer_nav);
+
+        //weird, wtf, it is in a unknow scope
+        vDrawerTitle = vnav.getHeaderView(0).findViewById(R.id.app_drawer_title);
 
         //parpare data
         navMenuList = new LinkedList<>();
 
-        new NavMenuListLoader(this).reload(navMenuList);
+        new NavMenuHelper(this).reload(navMenuList);
 
 
         navMenuAdapter = new NavMenuAdapter(this, navMenuList);
@@ -208,11 +209,19 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
         vNavMenuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NavMenuAdapter.NavMenuObj obj = (NavMenuAdapter.NavMenuObj) navMenuAdapter.getItem(position);
-                if (obj instanceof NavMenuAdapter.NavMenuItem && ((NavMenuAdapter.NavMenuItem) obj).getListener() != null) {
-                    ((NavMenuAdapter.NavMenuItem) obj).getListener().onClick(view);
-                }
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                vDrawer.closeDrawer(GravityCompat.START);
+                //let drawer close first
+                GUIs.delayPost(new Runnable(){
+                    @Override
+                    public void run() {
+                        NavMenuAdapter.NavMenuObj obj = (NavMenuAdapter.NavMenuObj) navMenuAdapter.getItem(position);
+                        if (obj instanceof NavMenuAdapter.NavMenuItem && ((NavMenuAdapter.NavMenuItem) obj).getListener() != null) {
+                            ((NavMenuAdapter.NavMenuItem) obj).getListener().onClick(view);
+                        }
+                    }
+                },100);
+
             }
         });
 
@@ -311,11 +320,15 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         IMasterDataProvider imdp = Contexts.instance().getMasterDataProvider();
         Book book = imdp.findBook(Contexts.instance().getWorkingBookId());
         String symbol = book.getSymbol();
+        String title;
         if (symbol == null || "".equals(symbol)) {
-            setTitle(book.getName());
+            title = book.getName();
         } else {
-            setTitle(book.getName() + " ( " + symbol + " )");
+            title = book.getName() + " ( " + symbol + " )";
         }
+
+        setTitle(title);
+        vDrawerTitle.setText(title);
 
 //        infoBook.setVisibility(imdp.listAllBook().size()<=1?TextView.GONE:TextView.VISIBLE);
 
