@@ -17,8 +17,8 @@
         android:title="@string/act_move_down"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_remove"
+        android:id="@+id/menu_delete"
         android:icon="?ic_delete_forever"
         android:title="@string/act_delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

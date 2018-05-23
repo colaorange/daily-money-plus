@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.FinalVar;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -22,11 +22,9 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -127,42 +125,53 @@ public class InfoExpenseFragment extends ContextsFragment implements EventQueue.
         }
 
         //don't show content to highlight user , it is edit now
-        if (preference.isCardsEditMode()){
+        if (preference.isCardsEditMode()) {
             vContent.setVisibility(View.GONE);
             return;
         }
         vContent.setVisibility(View.VISIBLE);
 
-        CalendarHelper calHelper = calendarHelper();
+        GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-        card = preference.getCards(cardPos).get(pos);
+            FinalVar<Double> varWE = new FinalVar<>();
+            FinalVar<Double> varME = new FinalVar<>();
+            FinalVar<Double> varC = new FinalVar<>();
 
+            @Override
+            public void run() {
+                CalendarHelper calHelper = calendarHelper();
 
-        double b;
-        Date now = new Date();
-        Date start = calHelper.weekStartDate(now);
-        Date end = calHelper.weekEndDate(now);
-        AccountType type = AccountType.EXPENSE;
+                Date now = new Date();
+                Date start = calHelper.weekStartDate(now);
+                Date end = calHelper.weekEndDate(now);
 
-        b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(b)));
+                double weeklyExpense = BalanceHelper.calculateBalance(AccountType.EXPENSE, start, end).getMoney();
 
-        start = calHelper.monthStartDate(now);
-        end = calHelper.monthEndDate(now);
-        b = BalanceHelper.calculateBalance(type, start, end).getMoney();
-        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(b)));
-        vInfoMonthlyExpense.setVisibility(View.VISIBLE);
+                start = calHelper.monthStartDate(now);
+                end = calHelper.monthEndDate(now);
+                double monthlyExpense = BalanceHelper.calculateBalance(AccountType.EXPENSE, start, end).getMoney();
 
-        IDataProvider idp = Contexts.instance().getDataProvider();
-        List<Account> acl = idp.listAccount(AccountType.ASSET);
-        b = 0;
-        for (Account ac : acl) {
-            if (ac.isCashAccount()) {
-                b += BalanceHelper.calculateBalance(ac, null, calHelper.toDayEnd(now)).getMoney();
+                IDataProvider idp = Contexts.instance().getDataProvider();
+                List<Account> acl = idp.listAccount(AccountType.ASSET);
+                double cash = 0;
+                for (Account ac : acl) {
+                    if (ac.isCashAccount()) {
+                        cash += BalanceHelper.calculateBalance(ac, null, calHelper.toDayEnd(now)).getMoney();
+                    }
+                }
+
+                varWE.value = weeklyExpense;
+                varME.value = monthlyExpense;
+                varC.value = cash;
             }
-        }
-        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(b)));
 
+            @Override
+            public void onAsyncFinish() {
+                vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varWE.value)));
+                vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varME.value)));
+                vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(varC.value)));
+            }
+        });
 
     }
 

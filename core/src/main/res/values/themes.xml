@@ -130,7 +130,7 @@
 
         <item name="appbarTheme">@style/darkAppbarTheme</item>
         <item name="appPopupTheme">@style/darkAppPopupTheme</item>
-        <item name="appCardStyle">@style/CardView.Dark</item>
+        <item name="appCardStyle">@style/cardDark</item>
 
         <item name="defaultSelector">@drawable/selector_dark</item>
 
@@ -192,7 +192,7 @@
 
         <item name="appbarTheme">@style/lightAppbarTheme</item>
         <item name="appPopupTheme">@style/lightAppPopupTheme</item>
-        <item name="appCardStyle">@style/CardView.Light</item>
+        <item name="appCardStyle">@style/cardLight</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 
@@ -268,7 +268,7 @@
 
         <item name="appbarTheme">@style/lightAppbarTheme</item>
         <item name="appPopupTheme">@style/lightAppPopupTheme</item>
-        <item name="appCardStyle">@style/CardView.Light</item>
+        <item name="appCardStyle">@style/cardLight</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 
@@ -327,7 +327,7 @@
         <item name="appbarTheme">@style/lightAppbarTheme</item>
         <item name="appPopupTheme">@style/lightAppPopupTheme</item>
 
-        <item name="appCardStyle">@style/CardView.Light</item>
+        <item name="appCardStyle">@style/cardLight</item>
 
         <item name="defaultSelector">@drawable/selector_light</item>
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -149,7 +150,50 @@ public class GUIs {
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();
     private static ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
+    private static ExecutorService multipleExecutor = Executors.newFixedThreadPool(4);
 
+    static public void doAsync(Context context, final IAsyncRunnable r) {
+        final Activity activity = context instanceof Activity ? (Activity)context : null;
+        multipleExecutor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                final FinalVar<Exception> var = new FinalVar<>();
+                try {
+                    r.run();
+                } catch (Exception x) {
+                    var.value = x;
+                }
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (var.value != null) {
+                            r.onAsyncError(var.value);
+                        }else{
+                            r.onAsyncFinish();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public interface IAsyncRunnable extends Runnable {
+        void onAsyncFinish();
+
+        void onAsyncError(Throwable t);
+    }
+
+    public static abstract class AsyncAdapter implements IAsyncRunnable {
+        @Override
+        public void onAsyncFinish() {
+        }
+
+        @Override
+        public void onAsyncError(Throwable t) {
+            Logger.e(t.getMessage(), t);
+        }
+    }
 
     static public void delayPost(final Runnable r) {
         delayPost(r, 50);

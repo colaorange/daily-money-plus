@@ -28,19 +28,23 @@ public class CardFacade {
         throw new IllegalStateException("no such card fragment "+card.getType());
     }
 
-    private Fragment newInfoExpenseFragment(int cardsPos, int pos, Card card) {
-        InfoExpenseFragment f = new InfoExpenseFragment();
+    private Bundle newBaseBundle(int cardsPos, int pos){
         Bundle b = new Bundle();
         b.putSerializable(InfoExpenseFragment.ARG_CARDS_POS, cardsPos);
         b.putSerializable(InfoExpenseFragment.ARG_POS, pos);
+        return b;
+    }
+
+    private Fragment newInfoExpenseFragment(int cardsPos, int pos, Card card) {
+        InfoExpenseFragment f = new InfoExpenseFragment();
+        Bundle b = newBaseBundle(cardsPos, pos);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newNavPagesFragment(int cardsPos, int pos, Card card) {
         CardNavPagesFragment f = new CardNavPagesFragment();
-        Bundle b = new Bundle();
-        b.putSerializable(CardNavPagesFragment.ARG_CARD, card);
+        Bundle b = newBaseBundle(cardsPos, pos);
         f.setArguments(b);
         return f;
     }
