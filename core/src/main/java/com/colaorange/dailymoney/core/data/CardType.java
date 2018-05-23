@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.context;
+package com.colaorange.dailymoney.core.data;
 
 /**
  * Created by Dennis

@@ -6,25 +6,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.Card;
-import com.colaorange.dailymoney.core.context.CardCollection;
+import com.colaorange.dailymoney.core.data.Card;
+import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
-import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
-import com.colaorange.dailymoney.core.ui.legacy.RecordListFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +31,9 @@ import java.util.List;
  */
 public class CardsFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final String ARG_CARDS_INDEX = "cardsIndex";
+    public static final String ARG_CARDS_POS = "cardsPos";
 
-    private int cardsIndex;
+    private int cardsPos;
 
     private CardCollection cards = null;
 
@@ -70,7 +67,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private void initArgs() {
         Bundle args = getArguments();
-        cardsIndex = args.getInt(ARG_CARDS_INDEX, 0);
+        cardsPos = args.getInt(ARG_CARDS_POS, 0);
     }
 
     private void initMembers() {
@@ -82,34 +79,16 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new CardRecyclerAdapter(activity, recyclerDataList);
-        vRecycler = rootView.findViewById(R.id.desktop_mgnt_recycler);
-        GridLayoutManager glm = new GridLayoutManager(activity, calColumn());
-        vRecycler.setLayoutManager(glm);
+        vRecycler = rootView.findViewById(R.id.cards_recycler);
+//        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+        vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
     }
 
-    private int calColumn() {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 84);//72+6+6, read desktop_mgnt_item.xml
-
-        switch (preference().getTextSize()) {
-            case Preference.TEXT_SIZE_LARGE:
-                noOfColumns--;
-            case Preference.TEXT_SIZE_MEDIUM:
-                noOfColumns--;
-        }
-
-
-        if (noOfColumns < 2) {
-            noOfColumns = 2;
-        }
-        return noOfColumns;
-    }
 
     private void reloadData() {
-        cards = preference().getCards(cardsIndex);
+        cards = preference().getCards(cardsPos);
 
         List<Card> data = new LinkedList<>();
         for (int i = 0; i < cards.size(); i++) {
@@ -160,40 +139,55 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             return position;
         }
 
+
+        private String getFragTag(int pos) {
+            return getClass().getName() + ":" + cardsPos + ":" + pos;
+        }
+
         @Override
         public void onViewAttachedToWindow(@NonNull SimpleViewHolder holder) {
             super.onViewAttachedToWindow(holder);
+
 
             //inflate fragment when attached, add to anchor
             int pos = holder.getAdapterPosition();
             Card card = get(pos);
             FragmentManager fragmentManager = getChildFragmentManager();
-            String fragTag = getClass().getName() + ":" + cardsIndex+":"+pos;
+            String fragTag = getFragTag(pos);
+
             Fragment f;
-            if ((f = fragmentManager.findFragmentByTag(fragTag)) != null) {
-                //very strange, why a fragment is here already in create/or create again?
-                //I need to read more document
-            } else {
 
-                f = new CardFacade(getContextsActivity()).newFragement(card);
-                //frag_container in card_anchor
-                fragmentManager.beginTransaction()
-                        .add(R.id.frag_container, f, fragTag)
-                        .disallowAddToBackStack()
-                        .commit();
-            }
-
+            f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
+            fragmentManager.beginTransaction()
+                    .add(holder.itemView.getId(), f, fragTag)
+                    .disallowAddToBackStack()
+                    .commit();
         }
 
         @Override
         public void onViewDetachedFromWindow(@NonNull SimpleViewHolder holder) {
             super.onViewDetachedFromWindow(holder);
+
+            int pos = holder.getAdapterPosition();
+            FragmentManager fragmentManager = getChildFragmentManager();
+            String fragTag = getFragTag(pos);
+            //we have to clear it, a fragment is possible different in every reload (for the case moved card)
+            Fragment f = fragmentManager.findFragmentByTag(fragTag);
+            if (f != null) {
+                fragmentManager.beginTransaction()
+                        .remove(f)
+                        .commit();
+            }
+            ((ViewGroup) holder.itemView).removeAllViews();
         }
 
         @NonNull
         @Override
         public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View viewItem = inflater.inflate(R.layout.card_anchor, parent, false);
+            //use dynamic id , so we can add fragment to it later.
+            viewItem.setId(activity.generateViewId());
+
             return new CardViewHolder(this, viewItem);
         }
     }
@@ -204,17 +198,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             super(adapter, itemView);
         }
 
-
-
-
         @Override
         public void bindViewValue(Card card) {
             super.bindViewValue(card);
-
-            int pos = getAdapterPosition();
-
-
-
 
         }
     }

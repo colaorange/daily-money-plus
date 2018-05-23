@@ -38,7 +38,7 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
-import com.colaorange.dailymoney.core.ui.cards.DefaultCardsCreator;
+import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -537,7 +537,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         } else if (fvt) {
 
             if (Contexts.instance().getPreference().getCards(0).size() == 0) {
-                new DefaultCardsCreator(this).create();
+                new DefaultCardsCreator().create();
             }
 
 

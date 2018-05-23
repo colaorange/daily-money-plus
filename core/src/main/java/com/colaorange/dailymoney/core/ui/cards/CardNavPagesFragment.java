@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class CardNavPagesFragment extends CardFragment {
+public class CardNavPagesFragment extends ContextsFragment implements EventQueue.EventListener {
 
     public static final String ARG_POS = "pos";
     public static final String ARG_CARD = "card";
@@ -97,12 +97,8 @@ public class CardNavPagesFragment extends CardFragment {
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.CardsFrag.ON_RELOAD_CARD_VIEW:
-//                Integer pos = event.getArg(ARG_POS);
-//                if (pos != null && pos.intValue() == this.pos) {
-//                    reloadData((List<Record>) event.getData());
-//                    return;
-//                }
+            case QEvents.CardFrag.ON_RELOAD_VIEW:
+
                 break;
         }
     }

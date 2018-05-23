@@ -138,7 +138,6 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             recyclerDataList.clear();
             vRecycler.setVisibility(View.GONE);
             vNoData.setVisibility(View.VISIBLE);
-            vNoDataText.setText(R.string.msg_no_data);
         } else {
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);

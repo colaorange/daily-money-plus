@@ -1,10 +1,9 @@
-package com.colaorange.dailymoney.core.context;
+package com.colaorange.dailymoney.core.data;
 
 import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by Dennis
@@ -42,6 +41,10 @@ public class Card extends JsonBase {
     public <T> T getArg(String key) {
         return args == null ? null : (T) args.get(key);
     }
+    public <T> T getArg(String key, T defval) {
+        T val = getArg(key);
+        return val==null?defval:val;
+    }
 
     public String getTitle() {
         return title;
@@ -51,6 +54,9 @@ public class Card extends JsonBase {
         this.title = title;
     }
 
+    public CardType getType() {
+        return type;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.context;
+package com.colaorange.dailymoney.core.data;
 
 import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;

@@ -1,12 +1,9 @@
-package com.colaorange.dailymoney.core.ui.cards;
+package com.colaorange.dailymoney.core.data;
 
 import com.colaorange.commons.util.Collections;
-import com.colaorange.dailymoney.core.context.Card;
-import com.colaorange.dailymoney.core.context.CardCollection;
-import com.colaorange.dailymoney.core.context.CardType;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -14,10 +11,8 @@ import com.colaorange.dailymoney.core.util.Logger;
  * Created by Dennis
  */
 public class DefaultCardsCreator {
-    ContextsActivity activity;
 
-    public DefaultCardsCreator(ContextsActivity activity) {
-        this.activity = activity;
+    public DefaultCardsCreator() {
     }
 
     public void create() {
@@ -36,11 +31,22 @@ public class DefaultCardsCreator {
         cards.add(card);
 
         card = new Card(CardType.INFO_EXPENSE, "card 2");
-        card.withArg(CardFacade.ARG_INFO_EXPENSE_CASH, true);
-        card.withArg(CardFacade.ARG_INFO_EXPENSE_WEEKLY_EXPENSE, true);
-        card.withArg(CardFacade.ARG_INFO_EXPENSE_MONTHLY_EXPENSE, true);
         cards.add(card);
 
         preference.updateCards(0, cards);
+
+        cards = preference.getCards(1);
+
+        cards.setTitle("Test 2");
+        card = new Card(CardType.INFO_EXPENSE, "card 4");
+        cards.add(card);
+
+        card = new Card(CardType.NAV_PAGES, "card 3");
+        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(NavPage.MONTHLY_BALANCE, NavPage.CUMULATIVE_BALANCE));
+        cards.add(card);
+
+
+        preference.updateCards(1, cards);
+
     }
 }

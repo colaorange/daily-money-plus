@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.modern;
+package com.colaorange.dailymoney.core.ui.cards;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,9 +23,10 @@ import android.widget.TextView;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.CardCollection;
+import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.context.Preference;
@@ -35,9 +36,6 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
-import com.colaorange.dailymoney.core.ui.cards.CardsFragment;
-import com.colaorange.dailymoney.core.ui.cards.DefaultCardsCreator;
-import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntFragment;
 import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
@@ -51,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author dennis
  */
-public class DesktopCardsActivity extends ContextsActivity implements EventQueue.EventListener {
+public class CardsActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
     private TabLayout vAppTabs;
@@ -73,14 +71,14 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
 
 
-    public DesktopCardsActivity() {
+    public CardsActivity() {
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.desktop_mgnt_drawer);
+        setContentView(R.layout.cards_drawer);
 
         initArgs();
         initMembers();
@@ -118,8 +116,6 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
                 currentCardsIndex = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.DesktopMgntFrag.ON_CLEAR_SELECTION).build());
-
             }
 
             @Override
@@ -184,9 +180,8 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
     private void refreshTab() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Preference preference = preference();
-        int s = preference.getCardsSize();
-        for (int i = 0; i < s; i++) {
-            CardCollection cards = preference.getCards(i);
+        int i = 0;
+        for (CardCollection cards:cardsList) {
 
             View tab = vAppTabs.getTabAt(i).getCustomView();
             if (tab == null) {
@@ -194,8 +189,9 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
                 vAppTabs.getTabAt(i).setCustomView(tab);
             }
             TextView vtext = tab.findViewById(R.id.tab_text);
-            //follow original tab design
-            vtext.setText(Strings.isBlank(cards.getTitle()) ? "" + (i + 1) : cards.getTitle());
+            String title = cards.getTitle();
+            title = Strings.isBlank(title) ? "" + (i + 1) : title;
+            vtext.setText(title);
             i++;
         }
 
@@ -234,14 +230,22 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
         Preference preference = preference();
         int s = preference.getCardsSize();
         for (int i = 0; i < s; i++) {
+            if(!preference.isCardsEnabled(i)){
+                continue;
+            }
             CardCollection cards = preference.getCards(i);
             temp.add(cards);
         }
 
+
         if (temp.equals(cardsList)) {
-            lookupQueue().publish(QEvents.DesktopMgntFrag.ON_RELOAD_FRAGMENT, null);
+            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
         } else {
             cardsList = temp;
+
+            if(currentCardsIndex==null){
+                currentCardsIndex = 0;
+            }
 
             if (currentCardsIndex >= cardsList.size()) {
                 currentCardsIndex = cardsList.size() - 1;
@@ -253,8 +257,9 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
             vAppTabs.setupWithViewPager(vPager);
             if (currentCardsIndex >= 0) {
                 vAppTabs.getTabAt(currentCardsIndex).select();
+            }else {
+                refreshTab();
             }
-            refreshTab();
         }
 
         CalendarHelper calHelper = calendarHelper();
@@ -278,7 +283,8 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.desktop_cards_menu, menu);
+        getMenuInflater().inflate(R.menu.cards_menu, menu);
+        menu.findItem(R.id.menu_edit_mode).setChecked(preference().isCardsEditMode());
         return true;
     }
 
@@ -287,9 +293,15 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
         if (item.getItemId() == R.id.menu_new) {
             doNewRecord();
             return true;
+        }else if (item.getItemId() == R.id.menu_edit_mode) {
+            item.setChecked(!item.isChecked());
+            preference().setCardsEditMode(item.isChecked());
+            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void doNewRecord() {
         Intent intent = null;
@@ -320,9 +332,9 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
 
         @Override
         public Fragment getItem(int position) {
-            Fragment f = new DesktopMgntFragment();
+            Fragment f = new CardsFragment();
             Bundle b = new Bundle();
-            b.putInt(CardsFragment.ARG_CARDS_INDEX, position);
+            b.putInt(CardsFragment.ARG_CARDS_POS, position);
             f.setArguments(b);
             return f;
         }
@@ -343,7 +355,7 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(DesktopCardsActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardsActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
@@ -353,14 +365,14 @@ public class DesktopCardsActivity extends ContextsActivity implements EventQueue
         } else if (fvt) {
 
             if (Contexts.instance().getPreference().getCards(0).size() == 0) {
-                new DefaultCardsCreator(this).create();
+                new DefaultCardsCreator().create();
             }
 
 
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(DesktopCardsActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardsActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);

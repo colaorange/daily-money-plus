@@ -8,6 +8,7 @@ import com.colaorange.commons.util.Jsons;
 import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
+import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.R;
@@ -33,13 +34,14 @@ public class Preference {
     private static final String THEME_LIGHT_PREFIX = "light-";
 
     public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
-    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX+ "orange";
+    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX + "orange";
     public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
-    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX+ "sakura";
+    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX + "sakura";
 
 
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
-    static{
+
+    static {
         themeSet.add(THEME_COLA);
         themeSet.add(THEME_ORANGE);
         themeSet.add(THEME_SAKURA);
@@ -50,7 +52,8 @@ public class Preference {
     public static final String TEXT_SIZE_MEDIUM = "medium";
     public static final String TEXT_SIZE_LARGE = "large";
     private static final LinkedHashSet<String> textSizeSet = new LinkedHashSet<>();
-    static{
+
+    static {
         textSizeSet.add(TEXT_SIZE_NOMRAL);
         textSizeSet.add(TEXT_SIZE_MEDIUM);
         textSizeSet.add(TEXT_SIZE_LARGE);
@@ -586,7 +589,7 @@ public class Preference {
         return new SimpleDateFormat(dateFormat);
     }
 
-    public DateFormat getWeekDayFormat(){
+    public DateFormat getWeekDayFormat() {
         //TODO config? do we need to ?
         return new SimpleDateFormat("EEE");
     }
@@ -602,6 +605,7 @@ public class Preference {
     public DateFormat getMonthFormat() {
         return new SimpleDateFormat(monthFormat);
     }
+
     public DateFormat getNonDigitalMonthFormat() {
         return new SimpleDateFormat(nonDigitalMonthFormat);
     }
@@ -667,7 +671,7 @@ public class Preference {
         return getTheme().startsWith(THEME_LIGHT_PREFIX);
     }
 
-    public String getTextSize(){
+    public String getTextSize() {
         return textSize;
     }
 
@@ -689,75 +693,117 @@ public class Preference {
         return lastToAccount;
     }
 
-    public RecordTemplateCollection getRecordTemplates(){
+    public RecordTemplateCollection getRecordTemplates() {
         int bookid = getWorkingBookId();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        String json = prefs.getString("templates-"+bookid, null);
+        String json = prefs.getString("templates-" + bookid, null);
 
         RecordTemplateCollection templates = null;
-        if(json!=null){
+        if (json != null) {
             try {
-                templates =  Jsons.fromJson(json, RecordTemplateCollection.class);
+                templates = Jsons.fromJson(json, RecordTemplateCollection.class);
                 templates.book = bookid;
-            }catch(Exception x){
-                Logger.w(x.getMessage(),x );
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
         }
-        if(templates==null){
+        if (templates == null) {
             templates = new RecordTemplateCollection(bookid);
         }
         return templates;
     }
 
-    public void updateRecordTemplates(RecordTemplateCollection templates){
+    public void updateRecordTemplates(RecordTemplateCollection templates) {
         int bookid = getWorkingBookId();
         templates.book = bookid;
         String json = templates.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("templates-"+bookid, json);
+        editor.putString("templates-" + bookid, json);
         editor.commit();
     }
-    public void clearRecordTemplates(int bookid){
+
+    public void clearRecordTemplates(int bookid) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove("templates-"+bookid);
+        editor.remove("templates-" + bookid);
         editor.commit();
     }
 
-    public int getCardsSize(){
-        //todo, handling disabled cards
-        return 1;
+    public int getCardsSize() {
+        return 4;
     }
-    public CardCollection getCards(int index){
+
+    public boolean isCardsEnabled(int index) {
+        if (index >= getCardsSize()) {
+            return false;
+        }
+
+        //0 is always enabled
+        if (index == 0) {
+            return true;
+        }
+
+        //todo for test
+        if (index <= 1) {
+            return true;
+        }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        String json = prefs.getString("cards-"+index, null);
+        return prefs.getBoolean("cards-enable-" + index, false);
+    }
+
+    public CardCollection getCards(int index) {
+        if (index >= getCardsSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        String json = prefs.getString("cards-" + index, null);
 
         CardCollection cards = null;
-        if(json!=null){
+        if (json != null) {
             try {
-                cards =  Jsons.fromJson(json, CardCollection.class);
-            }catch(Exception x){
-                Logger.w(x.getMessage(),x );
+                cards = Jsons.fromJson(json, CardCollection.class);
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
         }
-        if(cards==null){
+        if (cards == null) {
             cards = new CardCollection();
         }
         return cards;
     }
 
-    public void updateCards(int index, CardCollection cards){
+    public void updateCards(int index, CardCollection cards) {
+        if (index >= getCardsSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+        }
         String json = cards.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("cards-"+index, json);
+        editor.putString("cards-" + index, json);
         editor.commit();
     }
-    public void removeCards(int index){
+
+    public void removeCards(int index) {
+        if (index >= getCardsSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove("cards-"+index);
+        editor.remove("cards-" + index);
+        editor.commit();
+    }
+
+    public boolean isCardsEditMode() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        return prefs.getBoolean("cards-edit-mode", Boolean.FALSE);
+    }
+
+    public void setCardsEditMode(boolean m) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("cards-edit-mode", m);
         editor.commit();
     }
 }

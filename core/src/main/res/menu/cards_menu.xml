@@ -6,4 +6,10 @@
         android:icon="@drawable/icon_add_record"
         android:title="@string/act_new"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_edit_mode"
+        android:icon="?ic_edit"
+        android:title="@string/act_edit_mode"
+        android:checkable="true"
+        app:showAsAction="never" />
 </menu>

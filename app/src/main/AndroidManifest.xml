@@ -38,7 +38,7 @@
             android:name=".core.ui.legacy.DesktopMgntActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".core.ui.modern.DesktopCardsActivity"
+            android:name=".core.ui.cards.CardsActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".core.ui.legacy.BookMgntActivity"

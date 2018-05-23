@@ -44,11 +44,16 @@ public interface EventQueue {
         }
 
         public <D> D getData() {
-            return (D)data;
+            return (D) data;
         }
 
-        public <D> D getArg(String arg) {
-            return args == null ? null : (D) args.get(arg);
+        public <D> D getArg(String key) {
+            return args == null ? null : (D) args.get(key);
+        }
+
+        public <D> D getArg(String key, D defVal) {
+            D val = getArg(key);
+            return val == null ? defVal : val;
         }
 
         void setArgs(Map<String, Object> args) {
