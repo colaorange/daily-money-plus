@@ -6,13 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DividerItemDecoration;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.Card;
@@ -24,8 +23,10 @@ import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.Logger;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dennis
@@ -48,6 +49,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     private LayoutInflater inflater;
 
     private View rootView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,8 +88,15 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        reloadData();
+    }
 
     private void reloadData() {
+
         cards = preference().getCards(cardsPos);
 
         List<Card> data = new LinkedList<>();
@@ -96,6 +105,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         }
 
         recyclerDataList.clear();
+        recyclerAdapter.clearCreatedFragments();
 
         if (data.size() == 0) {
             vRecycler.setVisibility(View.GONE);
@@ -130,6 +140,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     }
 
     public class CardRecyclerAdapter extends RecyclerViewAdaptor<Card, RecyclerViewAdaptor.SimpleViewHolder> {
+
+        Map<String, Fragment> createdFragments = new LinkedHashMap<>();
+
         public CardRecyclerAdapter(ContextsActivity activity, List<Card> data) {
             super(activity, data);
         }
@@ -141,52 +154,48 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
 
         private String getFragTag(int pos) {
-            return getClass().getName() + ":" + cardsPos + ":" + pos;
+            return "cards:" + cardsPos + ":" + pos;
         }
 
         @Override
-        public void onViewAttachedToWindow(@NonNull SimpleViewHolder holder) {
-            super.onViewAttachedToWindow(holder);
+        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
+            super.onBindViewHolder(holder, position, payloads);
 
+            /**
+             * create fragment when viewholder is binding to a position.
+             * I don't check frag for existing here is because we always clear whole adapter when reload
+             */
 
-            //inflate fragment when attached, add to anchor
-            int pos = holder.getAdapterPosition();
+            int pos = position;
+
             Card card = get(pos);
             FragmentManager fragmentManager = getChildFragmentManager();
             String fragTag = getFragTag(pos);
+            Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
 
-            Fragment f;
-
-            f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
-
-            Logger.d(">>> attach {}:{}:{} ", cardsPos, pos, f);
+            Logger.d(">>> new fragment {}:{} ", fragTag, f);
 
             fragmentManager.beginTransaction()
                     .add(holder.itemView.getId(), f, fragTag)
-                    .disallowAddToBackStack()
                     .commit();
+            createdFragments.put(fragTag, f);
+
         }
 
-        @Override
-        public void onViewDetachedFromWindow(@NonNull SimpleViewHolder holder) {
-            super.onViewDetachedFromWindow(holder);
 
-            int pos = holder.getAdapterPosition();
-            FragmentManager fragmentManager = getChildFragmentManager();
-            String fragTag = getFragTag(pos);
-
-            Logger.d(">>> detach {}:{} ", cardsPos, pos);
-
-            //we have to clear it, a fragment is possible different in every reload (for the case moved card)
-            Fragment f = fragmentManager.findFragmentByTag(fragTag);
-            if (f != null) {
-                fragmentManager.beginTransaction()
-                        .remove(f)
-                        .commit();
-                Logger.d(">>> remove fragment {}:{}:{} ", cardsPos, pos, f);
+        private void clearCreatedFragments() {
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            for (String k : createdFragments.keySet()) {
+                Fragment f = createdFragments.get(k);
+                ft.detach(f);
+                ft.remove(f);
+                Logger.d(">>> remove fragment {}:{} ", k, f);
             }
-            ((ViewGroup) holder.itemView).removeAllViews();
+            //very important to call commitNow, or will get error for immedidatelly adapter binding
+            ft.commitNowAllowingStateLoss();
+            createdFragments.clear();
         }
+
 
         @NonNull
         @Override

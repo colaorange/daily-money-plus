@@ -1,9 +1,11 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
+import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -37,6 +40,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     View vNoData;
     private View vContent;
 
+    private boolean showTitle;
+
     protected I18N i18n;
 
     protected boolean lightTheme;
@@ -56,7 +61,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     @Override
-    public void onCreate(Bundle b){
+    public void onCreate(Bundle b) {
         super.onCreate(b);
     }
 
@@ -69,13 +74,14 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         reloadView();
     }
 
-
+    @CallSuper
     protected void initArgs() {
         Bundle args = getArguments();
         cardsPos = args.getInt(ARG_CARDS_POS, 0);
         pos = args.getInt(ARG_POS, 0);
     }
 
+    @CallSuper
     protected void initMembers() {
         i18n = Contexts.instance().getI18n();
         ContextsActivity activity = getContextsActivity();
@@ -89,14 +95,16 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     protected void reloadView() {
+        ContextsActivity activity = getContextsActivity();
         Preference preference = preference();
-        card = preference.getCards(cardsPos).get(pos);
+        CardCollection cards = preference.getCards(cardsPos);
+        card = cards.get(pos);
 
         if (vToolbar != null) {
             vToolbar.setTitle(card.getTitle());
 
             vToolbar.getMenu().clear();
-            if (CardsActivity.isCardsEditMode()) {
+            if (CardsActivity.isModeEdit()) {
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryColor));
                 final int menuId = getMenuResId();
                 if (menuId > 0) {
@@ -109,21 +117,40 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
 
                     vToolbar.inflateMenu(menuId);
                     vToolbar.setOnMenuItemClickListener(l);
+                    Menu mMenu = vToolbar.getMenu();
+
+                    MenuItem mi = mMenu.findItem(R.id.menu_move_up);
+                    mi.setEnabled(pos > 0);
+                    mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_up), mi.isEnabled()));
+
+                    mi = mMenu.findItem(R.id.menu_move_down);
+                    mi.setEnabled(pos < cards.size() - 1);
+                    mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_down), mi.isEnabled()));
+
+                    mi = mMenu.findItem(R.id.menu_mode_show_title);
+                    mi.setChecked(showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle));
                 }
             } else {
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));
             }
-            doAfterReloadToolbar(vToolbar, CardsActivity.isCardsEditMode());
+
+            if (!CardsActivity.isModeEdit()) {
+                vToolbar.setVisibility(showTitle ? View.VISIBLE : View.GONE);
+            } else {
+                vToolbar.setVisibility(View.VISIBLE);
+            }
+
+            doAfterReloadToolbar(vToolbar, CardsActivity.isModeEdit());
         }
 
         //don't show content to highlight user , it is edit now
-        if (!doReloadContent(CardsActivity.isCardsEditMode())) {
+        if (!doReloadContent(CardsActivity.isModeEdit())) {
             vContent.setVisibility(View.GONE);
         } else {
             vContent.setVisibility(View.VISIBLE);
         }
         if (vNoData != null) {
-            vNoData.setVisibility(CardsActivity.isCardsEditMode() ? View.GONE : vNoData.getVisibility());
+            vNoData.setVisibility(CardsActivity.isModeEdit() ? View.GONE : vNoData.getVisibility());
         }
     }
 
@@ -156,17 +183,34 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         if (item.getItemId() == R.id.menu_edit_title) {
             doEditTitle();
             return true;
-        } else if (item.getItemId() == R.id.menu_up) {
+        } else if (item.getItemId() == R.id.menu_move_up) {
             doMoveUp();
             return true;
-        } else if (item.getItemId() == R.id.menu_down) {
+        } else if (item.getItemId() == R.id.menu_move_down) {
             doMoveDown();
             return true;
         } else if (item.getItemId() == R.id.menu_delete) {
             doDelete();
             return true;
+        } else if (item.getItemId() == R.id.menu_mode_show_title) {
+            item.setChecked(!item.isChecked());
+            doModeShowTitle(item.isChecked());
+            return true;
         }
         return false;
+    }
+
+    private void doModeShowTitle(boolean showTitle) {
+        card.withArg(CardFacade.ARG_SHOW_TITLE, this.showTitle = showTitle);
+
+        Preference preference = Contexts.instance().getPreference();
+
+        CardCollection cards = preference.getCards(cardsPos);
+        cards.set(pos, card);
+
+        preference.updateCards(cardsPos, cards);
+
+        //title only effect in display mode, currently is in edit mode, no need to update
     }
 
     private void doDelete() {
@@ -174,11 +218,30 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     private void doMoveDown() {
-        //todo
+        Preference preference = Contexts.instance().getPreference();
+
+        CardCollection cards = preference.getCards(cardsPos);
+        if (pos >= cards.size()) {
+            return;
+        }
+        cards.move(pos + 1, pos);
+        preference.updateCards(cardsPos, cards);
+        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
     }
 
     private void doMoveUp() {
-        //todo
+        if (pos <= 0) {
+            return;
+        }
+        Preference preference = Contexts.instance().getPreference();
+        CardCollection cards = preference.getCards(cardsPos);
+        cards.move(pos - 1, pos);
+        preference.updateCards(cardsPos, cards);
+        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+    }
+
+    protected void publishReloadFragment() {
+        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
     }
 
     private void doEditTitle() {
@@ -200,7 +263,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         Logger.d(">>> onDestroy fragment {}:{}:{} ", cardsPos, pos, this);
     }

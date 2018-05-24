@@ -43,7 +43,7 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
     }
     @Override
     protected int getMenuResId() {
-        return R.menu.card_info_expense_menu;
+        return R.menu.card_common_menu;
     }
 
     @Override

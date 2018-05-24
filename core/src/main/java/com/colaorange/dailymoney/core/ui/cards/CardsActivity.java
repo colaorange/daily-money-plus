@@ -3,9 +3,7 @@ package com.colaorange.dailymoney.core.ui.cards;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,14 +23,14 @@ import android.widget.TextView;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Book;
+import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
@@ -61,6 +59,8 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     private ListView vNavMenuList;
     private NavMenuAdapter navMenuAdapter;
     private List<NavMenuAdapter.NavMenuObj> navMenuList;
+
+    private MenuItem mModeEdit;
 
     private List<CardCollection> cardsList;
 
@@ -166,7 +166,21 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
 
             }
         });
+    }
 
+    protected void stopModeEdit(){
+        if(isModeEdit()){
+            setModeEdit(false);
+            mModeEdit.setChecked(false);
+            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+        }
+    }
+    protected void startModeEdit(){
+        if(!isModeEdit()){
+            setModeEdit(true);
+            mModeEdit.setChecked(true);
+            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+        }
     }
 
     @Override
@@ -174,7 +188,10 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         if (vDrawer.isDrawerOpen(GravityCompat.START)) {
             vDrawer.closeDrawer(GravityCompat.START);
             return;
-        } else if (vPager.getCurrentItem() > 0) {
+        } else if (isModeEdit()) {
+            stopModeEdit();
+            return;
+        }else if (vPager.getCurrentItem() > 0) {
             vPager.setCurrentItem(0);
             return;
         }
@@ -256,7 +273,6 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
                 currentCardsIndex = cardsList.size() - 1;
             }
 
-
             vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager(), cardsList));
 
             vAppTabs.setupWithViewPager(vPager);
@@ -289,7 +305,8 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cards_menu, menu);
-        menu.findItem(R.id.menu_edit_mode).setChecked(isCardsEditMode());
+        mModeEdit = menu.findItem(R.id.menu_mode_edit);
+        mModeEdit.setChecked(isModeEdit());
         return true;
     }
 
@@ -298,10 +315,12 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         if (item.getItemId() == R.id.menu_new) {
             doNewRecord();
             return true;
-        } else if (item.getItemId() == R.id.menu_edit_mode) {
-            item.setChecked(!item.isChecked());
-            setCardsEditMode(item.isChecked());
-            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+        } else if (item.getItemId() == R.id.menu_mode_edit) {
+            if(item.isChecked()){
+                stopModeEdit();
+            }else{
+                startModeEdit();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -322,7 +341,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     }
 
 
-    public static class CardsPagerAdapter extends FragmentPagerAdapter {
+    public class CardsPagerAdapter extends FragmentPagerAdapter {
         List<CardCollection> cards;
 
         public CardsPagerAdapter(FragmentManager fm, List<CardCollection> cards) {
@@ -403,11 +422,11 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         super.onActionBarHomeAsUp(resId);
     }
 
-    public static boolean isCardsEditMode() {
+    public static boolean isModeEdit() {
         return editMode.get();
     }
 
-    public static void setCardsEditMode(boolean m) {
+    public static void setModeEdit(boolean m) {
         editMode.set(m);
     }
 

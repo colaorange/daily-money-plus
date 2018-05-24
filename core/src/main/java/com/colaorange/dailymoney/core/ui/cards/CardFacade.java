@@ -11,6 +11,7 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
  */
 public class CardFacade {
     public static final String ARG_NAV_PAGES_LIST = "list";
+    public static final String ARG_SHOW_TITLE = "show_title";
 
     ContextsActivity activity;
 

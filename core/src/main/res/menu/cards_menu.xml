@@ -7,9 +7,9 @@
         android:title="@string/act_new"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_edit_mode"
+        android:id="@+id/menu_mode_edit"
         android:icon="?ic_edit"
-        android:title="@string/act_edit_mode"
+        android:title="@string/label_mode_edit"
         android:checkable="true"
         app:showAsAction="never" />
 </menu>
