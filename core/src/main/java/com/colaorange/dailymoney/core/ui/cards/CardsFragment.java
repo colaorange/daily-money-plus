@@ -104,8 +104,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             data.add(cards.get(i));
         }
 
-        recyclerDataList.clear();
         recyclerAdapter.clearCreatedFragments();
+        recyclerDataList.clear();
 
         if (data.size() == 0) {
             vRecycler.setVisibility(View.GONE);
@@ -135,6 +135,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         switch (event.getName()) {
             case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
                 reloadData();
+                break;
+            case QEvents.CardsFrag.ON_CLEAR_FRAGMENT:
+                recyclerAdapter.clearCreatedFragments();
                 break;
         }
     }
@@ -175,6 +178,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
             Logger.d(">>> new fragment {}:{} ", fragTag, f);
 
+            //itemView id is dynamic, use replace or add?
             fragmentManager.beginTransaction()
                     .add(holder.itemView.getId(), f, fragTag)
                     .commit();

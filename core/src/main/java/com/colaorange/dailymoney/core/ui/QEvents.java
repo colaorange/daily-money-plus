@@ -18,10 +18,11 @@ public class QEvents {
     public interface CardsFrag {
         //activity -> fragment
         public String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
+        String ON_CLEAR_FRAGMENT =  "CardsFrag:onClearFragment";
     }
     public interface CardFrag {
         //activity -> fragment
-        public String ON_RELOAD_VIEW = "CardFrag:onReloadCardView";
+        public String ON_RELOAD_VIEW = "CardFrag:onReloadView";
     }
 
 

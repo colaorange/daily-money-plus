@@ -101,8 +101,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         card = cards.get(pos);
 
         if (vToolbar != null) {
+            showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
             vToolbar.setTitle(card.getTitle());
-
             vToolbar.getMenu().clear();
             if (CardsActivity.isModeEdit()) {
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryColor));
@@ -128,7 +128,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
                     mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_down), mi.isEnabled()));
 
                     mi = mMenu.findItem(R.id.menu_mode_show_title);
-                    mi.setChecked(showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle));
+                    mi.setChecked(showTitle);
                 }
             } else {
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));

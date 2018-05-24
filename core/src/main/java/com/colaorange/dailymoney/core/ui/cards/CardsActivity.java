@@ -263,6 +263,14 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         if (temp.equals(cardsList)) {
             lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
         } else {
+            /*
+              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cards:0:0}
+        at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1422)
+        at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1759)
+        at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1827)
+             */
+            lookupQueue().publish(QEvents.CardsFrag.ON_CLEAR_FRAGMENT, null);
+
             cardsList = temp;
 
             if (currentCardsIndex == null) {
