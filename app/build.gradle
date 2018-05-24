@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 180524001
+        versionCode 180524004
         versionName "0.10.2-freshly-20180524"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

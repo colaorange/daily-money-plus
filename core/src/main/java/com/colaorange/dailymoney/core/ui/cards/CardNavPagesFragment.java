@@ -54,6 +54,9 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new NavPageRecyclerAdapter(activity, recyclerDataList);
         vRecycler = rootView.findViewById(R.id.card_content);
+        //to prevent bad performance in nested scrolling of recycle layout
+        vRecycler.setNestedScrollingEnabled(false);
+
         GridLayoutManager glm = new GridLayoutManager(activity, calColumn());
         vRecycler.setLayoutManager(glm);
         vRecycler.setAdapter(recyclerAdapter);

@@ -23,7 +23,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_mode_show_title"
-        android:title="@string/label_mode_show_title"
+        android:title="@string/label_mode_display_title"
         android:checkable="true"
         app:showAsAction="never" />
     <item

@@ -173,6 +173,8 @@
 
         <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
 
+        <item name="actionButtonStyle">@style/darkActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/cardDark.ActionOverflow</item>
         <!--
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
         -->
@@ -235,22 +237,9 @@
 
         <item name="colorSwitchThumbNormal">@color/themeLemonSecondary</item>
 
-        <!--
-        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        -->
-        <!--
+        <item name="actionButtonStyle">@style/lightActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/cardLight.ActionOverflow</item>
 
-        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
-
-        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
-        <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
-        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
-
-        <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
-        <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
-        <item name="ratingBarStyleSmall">@style/Widget.AppCompat.RatingBar.Small</item>
-        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar</item>
-        -->
     </style>
 
 
@@ -310,6 +299,8 @@
 
         <item name="colorSwitchThumbNormal">@color/themeOrangeSecondary</item>
 
+        <item name="actionButtonStyle">@style/lightActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/cardLight.ActionOverflow</item>
     </style>
 
     <style name="themeSakura">
@@ -369,6 +360,8 @@
 
         <item name="colorSwitchThumbNormal">@color/themeSakuraSecondary</item>
 
+        <item name="actionButtonStyle">@style/lightActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/cardLight.ActionOverflow</item>
     </style>
 
     <style name="textSizeNormal">

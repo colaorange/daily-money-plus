@@ -88,7 +88,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
 
         lightTheme = activity.isLightTheme();
 
-        vToolbar = rootView.findViewById(R.id.card_toolbar);
+        vToolbar = rootView.findViewById(R.id.cardToolbar);
         vNoData = rootView.findViewById(R.id.no_data);
         vContent = rootView.findViewById(R.id.card_content);
 

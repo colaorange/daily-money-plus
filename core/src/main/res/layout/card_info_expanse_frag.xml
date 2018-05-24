@@ -9,13 +9,7 @@
         style="@style/rowItem"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/card_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?appCardbarSize"
-            app:popupTheme="?appPopupTheme"
-            app:titleTextAppearance="@style/appbarTextAppearance" >
-        </android.support.v7.widget.Toolbar>
+        <include layout="@layout/card_tool_bar"/>
 
         <include layout="@layout/no_data" />
 
