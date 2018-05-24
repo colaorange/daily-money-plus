@@ -5,6 +5,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
+import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 /**
@@ -17,6 +18,7 @@ public class DefaultCardsCreator {
 
     public void create() {
         Contexts ctx = Contexts.instance();
+        I18N i18n = ctx.getI18n();
         Preference preference = ctx.getPreference();
         CardCollection cards = preference.getCards(0);
         if (cards.size() != 0) {

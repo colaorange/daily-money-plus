@@ -795,15 +795,15 @@ public class Preference {
         editor.commit();
     }
 
-    public boolean isCardsEditMode() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        return prefs.getBoolean("cards-edit-mode", Boolean.FALSE);
-    }
-
-    public void setCardsEditMode(boolean m) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("cards-edit-mode", m);
-        editor.commit();
-    }
+//    public boolean isCardsEditMode() {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+//        return prefs.getBoolean("cards-edit-mode", Boolean.FALSE);
+//    }
+//
+//    public void setCardsEditMode(boolean m) {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putBoolean("cards-edit-mode", m);
+//        editor.commit();
+//    }
 }

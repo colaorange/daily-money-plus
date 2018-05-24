@@ -38,16 +38,18 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
-    <style name="cardLight" parent="CardView.Dark">
+    <style name="cardLight" parent="CardView.Light">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_margin">2dp</item>
+        <item name="cardBackgroundColor">?appPrimaryLightColor</item>
     </style>
     <style name="cardDark" parent="CardView.Dark">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_margin">2dp</item>
+        <item name="cardBackgroundColor">?appPrimaryLightColor</item>
     </style>
 </resources>

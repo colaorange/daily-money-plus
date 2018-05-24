@@ -17,6 +17,8 @@
             app:titleTextAppearance="@style/appbarTextAppearance" >
         </android.support.v7.widget.Toolbar>
 
+        <include layout="@layout/no_data" />
+
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/card_content"
             android:layout_width="fill_parent"

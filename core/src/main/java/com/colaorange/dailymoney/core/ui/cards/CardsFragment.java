@@ -22,6 +22,7 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +81,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new CardRecyclerAdapter(activity, recyclerDataList);
         vRecycler = rootView.findViewById(R.id.cards_recycler);
-//        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
@@ -158,6 +158,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             Fragment f;
 
             f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
+
+            Logger.d(">>> attach {}:{}:{} ", cardsPos, pos, f);
+
             fragmentManager.beginTransaction()
                     .add(holder.itemView.getId(), f, fragTag)
                     .disallowAddToBackStack()
@@ -171,12 +174,16 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             int pos = holder.getAdapterPosition();
             FragmentManager fragmentManager = getChildFragmentManager();
             String fragTag = getFragTag(pos);
+
+            Logger.d(">>> detach {}:{} ", cardsPos, pos);
+
             //we have to clear it, a fragment is possible different in every reload (for the case moved card)
             Fragment f = fragmentManager.findFragmentByTag(fragTag);
             if (f != null) {
                 fragmentManager.beginTransaction()
                         .remove(f)
                         .commit();
+                Logger.d(">>> remove fragment {}:{}:{} ", cardsPos, pos, f);
             }
             ((ViewGroup) holder.itemView).removeAllViews();
         }

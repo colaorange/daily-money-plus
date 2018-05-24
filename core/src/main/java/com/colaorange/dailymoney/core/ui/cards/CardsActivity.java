@@ -3,7 +3,9 @@ package com.colaorange.dailymoney.core.ui.cards;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -69,7 +71,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     private Boolean firstTime;
 
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
-
+    private static AtomicBoolean editMode = new AtomicBoolean(false);
 
     public CardsActivity() {
     }
@@ -104,6 +106,9 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     private void initMembers() {
         vAppTabs = findViewById(R.id.appTabs);
         vPager = findViewById(R.id.viewpager);
+        //don't preload other page, only load current
+        //damn, it can't allow 0, it has to >= 1
+//        vPager.setOffscreenPageLimit(0);
 
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -181,7 +186,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Preference preference = preference();
         int i = 0;
-        for (CardCollection cards:cardsList) {
+        for (CardCollection cards : cardsList) {
 
             View tab = vAppTabs.getTabAt(i).getCustomView();
             if (tab == null) {
@@ -230,7 +235,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         Preference preference = preference();
         int s = preference.getCardsSize();
         for (int i = 0; i < s; i++) {
-            if(!preference.isCardsEnabled(i)){
+            if (!preference.isCardsEnabled(i)) {
                 continue;
             }
             CardCollection cards = preference.getCards(i);
@@ -243,7 +248,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         } else {
             cardsList = temp;
 
-            if(currentCardsIndex==null){
+            if (currentCardsIndex == null) {
                 currentCardsIndex = 0;
             }
 
@@ -257,7 +262,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             vAppTabs.setupWithViewPager(vPager);
             if (currentCardsIndex >= 0) {
                 vAppTabs.getTabAt(currentCardsIndex).select();
-            }else {
+            } else {
                 refreshTab();
             }
         }
@@ -284,7 +289,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cards_menu, menu);
-        menu.findItem(R.id.menu_edit_mode).setChecked(preference().isCardsEditMode());
+        menu.findItem(R.id.menu_edit_mode).setChecked(isCardsEditMode());
         return true;
     }
 
@@ -293,9 +298,9 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         if (item.getItemId() == R.id.menu_new) {
             doNewRecord();
             return true;
-        }else if (item.getItemId() == R.id.menu_edit_mode) {
+        } else if (item.getItemId() == R.id.menu_edit_mode) {
             item.setChecked(!item.isChecked());
-            preference().setCardsEditMode(item.isChecked());
+            setCardsEditMode(item.isChecked());
             lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
             return true;
         }
@@ -398,5 +403,12 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         super.onActionBarHomeAsUp(resId);
     }
 
+    public static boolean isCardsEditMode() {
+        return editMode.get();
+    }
+
+    public static void setCardsEditMode(boolean m) {
+        editMode.set(m);
+    }
 
 }

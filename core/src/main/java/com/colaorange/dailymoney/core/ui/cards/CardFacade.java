@@ -30,13 +30,13 @@ public class CardFacade {
 
     private Bundle newBaseBundle(int cardsPos, int pos){
         Bundle b = new Bundle();
-        b.putSerializable(InfoExpenseFragment.ARG_CARDS_POS, cardsPos);
-        b.putSerializable(InfoExpenseFragment.ARG_POS, pos);
+        b.putSerializable(CardInfoExpenseFragment.ARG_CARDS_POS, cardsPos);
+        b.putSerializable(CardInfoExpenseFragment.ARG_POS, pos);
         return b;
     }
 
     private Fragment newInfoExpenseFragment(int cardsPos, int pos, Card card) {
-        InfoExpenseFragment f = new InfoExpenseFragment();
+        CardInfoExpenseFragment f = new CardInfoExpenseFragment();
         Bundle b = newBaseBundle(cardsPos, pos);
         f.setArguments(b);
         return f;
