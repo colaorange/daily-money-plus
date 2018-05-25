@@ -45,8 +45,8 @@ public class NavMenuHelper {
         navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_record)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.DAILY_LIST), new DoPageListener(NavPage.DAILY_LIST), facade.getPageIcon(NavPage.DAILY_LIST)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.WEEKLY_LIST), new DoPageListener(NavPage.WEEKLY_LIST), facade.getPageIcon(NavPage.WEEKLY_LIST)));
-        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.MONTHLY_BALANCE), new DoPageListener(NavPage.MONTHLY_BALANCE), facade.getPageIcon(NavPage.MONTHLY_BALANCE)));
-        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.YEARLY_BALANCE), new DoPageListener(NavPage.YEARLY_BALANCE), facade.getPageIcon(NavPage.YEARLY_BALANCE)));
+        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.MONTHLY_LIST), new DoPageListener(NavPage.MONTHLY_LIST), facade.getPageIcon(NavPage.MONTHLY_LIST)));
+        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.YEARLY_LIST), new DoPageListener(NavPage.YEARLY_LIST), facade.getPageIcon(NavPage.YEARLY_LIST)));
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.ACCOUNT_MGNT), new DoPageListener(NavPage.ACCOUNT_MGNT), facade.getPageIcon(NavPage.ACCOUNT_MGNT)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.BOOK_MGNT), new DoPageListener(NavPage.BOOK_MGNT), facade.getPageIcon(NavPage.BOOK_MGNT)));
