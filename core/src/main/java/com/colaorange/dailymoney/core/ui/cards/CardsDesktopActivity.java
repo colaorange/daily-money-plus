@@ -2,7 +2,6 @@ package com.colaorange.dailymoney.core.ui.cards;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,14 +12,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -222,7 +219,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             title = Strings.isBlank(title) ? "" + (i + 1) : title;
 
             if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
-                title = i18n().string(R.string.dt_tests);
+                title = i18n().string(R.string.desktop_tests);
             }
 
             vtext.setText(title);

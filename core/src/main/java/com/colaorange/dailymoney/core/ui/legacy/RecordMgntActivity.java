@@ -146,17 +146,17 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                 setTitle(R.string.label_all);
                 break;
             case MODE_WEEK:
-                setTitle(R.string.label_weekly_list);
+                setTitle(R.string.nav_pg_weekly_list);
                 break;
             case MODE_DAY:
-                setTitle(R.string.label_daily_list);
+                setTitle(R.string.nav_pg_daily_list);
                 break;
             case MODE_YEAR:
-                setTitle(R.string.label_yearly_list);
+                setTitle(R.string.nav_pg_yearly_list);
                 break;
             case MODE_MONTH:
             default:
-                setTitle(R.string.label_monthly_list);
+                setTitle(R.string.nav_pg_monthly_list);
                 break;
         }
     }

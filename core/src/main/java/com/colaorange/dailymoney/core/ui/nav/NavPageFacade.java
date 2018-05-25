@@ -153,31 +153,31 @@ public class NavPageFacade {
         I18N i18n = Contexts.instance().getI18n();
         switch (page) {
             case RECORD_EDITOR:
-                return i18n.string(R.string.dtitem_addrec);
+                return i18n.string(R.string.nav_pg_add_record);
             case DAILY_LIST:
-                return i18n.string(R.string.label_daily_list);
+                return i18n.string(R.string.nav_pg_daily_list);
             case WEEKLY_LIST:
-                return i18n.string(R.string.label_weekly_list);
+                return i18n.string(R.string.nav_pg_weekly_list);
             case MONTHLY_LIST:
-                return i18n.string(R.string.label_monthly_list);
+                return i18n.string(R.string.nav_pg_monthly_list);
             case YEARLY_LIST:
-                return i18n.string(R.string.label_yearly_list);
+                return i18n.string(R.string.nav_pg_yearly_list);
             case ACCOUNT_MGNT:
-                return i18n.string(R.string.dtitem_accmgnt);
+                return i18n.string(R.string.nav_pg_account);
             case BOOK_MGNT:
-                return i18n.string(R.string.dtitem_books);
+                return i18n.string(R.string.nav_pg_book);
             case DATA_MAIN:
-                return i18n.string(R.string.dtitem_datamain);
+                return i18n.string(R.string.nav_pg_data_main);
             case PREFS:
-                return i18n.string(R.string.dtitem_prefs);
+                return i18n.string(R.string.nav_pg_prefs);
             case HOW2USE:
                 return i18n.string(R.string.label_how2use);
             case MONTHLY_BALANCE:
-                return i18n.string(R.string.dtitem_report_monthly_balance);
+                return i18n.string(R.string.nav_pg_report_monthly_balance);
             case YEARLY_BALANCE:
-                return i18n.string(R.string.dtitem_report_yearly_balance);
+                return i18n.string(R.string.nav_pg_report_yearly_balance);
             case CUMULATIVE_BALANCE:
-                return i18n.string(R.string.dtitem_report_cumulative_balance);
+                return i18n.string(R.string.nav_pg_report_cumulative_balance);
             case ABOUT:
                 return i18n.string(R.string.label_about);
             case CONTRIBUTOR:

@@ -39,7 +39,7 @@ public class TestsDesktop extends AbstractDesktop {
     protected void init() {
         I18N i18n = Contexts.instance().getI18n();
 
-        label = i18n.string(R.string.dt_tests);
+        label = i18n.string(R.string.desktop_tests);
 
         DesktopItem dt = null;
         dt = new DesktopItem(new Runnable() {

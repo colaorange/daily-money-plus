@@ -388,7 +388,7 @@ public class Contexts {
 
         Book book = masterDataProvider.findBook(bookid);
         if (book == null) {
-            String name = i18n.string(R.string.title_book) + bookid;
+            String name = i18n.string(R.string.label_book) + bookid;
             book = new Book(name, i18n.string(R.string.label_default_book_symbol), SymbolPosition.FRONT, "");
             masterDataProvider.newBookNoCheck(bookid, book);
         }

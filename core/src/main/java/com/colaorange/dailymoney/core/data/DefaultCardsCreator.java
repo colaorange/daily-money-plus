@@ -30,7 +30,7 @@ public class DefaultCardsCreator {
                 return;
             }
         }
-        cards0.setTitle(i18n.string(R.string.dt_main));
+        cards0.setTitle(i18n.string(R.string.desktop_main));
         Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
         card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
                 NavPage.HOW2USE,
@@ -52,7 +52,7 @@ public class DefaultCardsCreator {
                 return;
             }
         }
-        cards1.setTitle(i18n.string(R.string.dt_reports));
+        cards1.setTitle(i18n.string(R.string.desktop_reports));
 
         //TODO chart
         card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_pie));
@@ -82,7 +82,7 @@ public class DefaultCardsCreator {
                 return;
             }
         }
-        cards0.setTitle(i18n.string(R.string.dt_main));
+        cards0.setTitle(i18n.string(R.string.desktop_main));
         Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
         card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
                 NavPage.RECORD_EDITOR,
@@ -110,7 +110,7 @@ public class DefaultCardsCreator {
                 return;
             }
         }
-        cards1.setTitle(i18n.string(R.string.dt_reports));
+        cards1.setTitle(i18n.string(R.string.desktop_reports));
 
 
         card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));

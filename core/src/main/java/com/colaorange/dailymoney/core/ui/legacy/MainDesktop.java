@@ -23,7 +23,7 @@ public class MainDesktop extends AbstractDesktop {
     @Override
     protected void init() {
         I18N i18n = Contexts.instance().getI18n();
-        label = i18n.string(R.string.dt_main);
+        label = i18n.string(R.string.desktop_main);
 
         DesktopItem addrec = new DesktopItem(new Runnable() {
             public void run() {
@@ -32,39 +32,39 @@ public class MainDesktop extends AbstractDesktop {
                 intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
                 activity.startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
             }
-        }, i18n.string(R.string.dtitem_addrec), R.drawable.dtitem_add_record, true, false, 999);
+        }, i18n.string(R.string.nav_pg_add_record), R.drawable.dtitem_add_record, true, false, 999);
 
         Intent intent = new Intent(activity, RecordMgntActivity.class);
         intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_DAY);
         DesktopItem daylist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_daily_list), R.drawable.dtitem_detail_day);
+                i18n.string(R.string.nav_pg_daily_list), R.drawable.dtitem_detail_day);
 
         intent = new Intent(activity, RecordMgntActivity.class);
         intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_WEEK);
         DesktopItem weeklist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_weekly_list), R.drawable.dtitem_detail_week);
+                i18n.string(R.string.nav_pg_weekly_list), R.drawable.dtitem_detail_week);
 
         intent = new Intent(activity, RecordMgntActivity.class);
         intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_MONTH);
         DesktopItem monthlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_monthly_list), R.drawable.dtitem_detail_month);
+                i18n.string(R.string.nav_pg_monthly_list), R.drawable.dtitem_detail_month);
 
         intent = new Intent(activity, RecordMgntActivity.class);
         intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_YEAR);
         DesktopItem yearlist = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.label_yearly_list), R.drawable.dtitem_detail_year);
+                i18n.string(R.string.nav_pg_yearly_list), R.drawable.dtitem_detail_year);
 
         DesktopItem accmgntdt = new DesktopItem(new ActivityRun(activity, AccountMgntActivity.class),
-                i18n.string(R.string.dtitem_accmgnt), R.drawable.dtitem_account);
+                i18n.string(R.string.nav_pg_account), R.drawable.dtitem_account);
 
         DesktopItem bookmgntdt = new DesktopItem(new ActivityRun(activity, BookMgntActivity.class),
-                i18n.string(R.string.dtitem_books), R.drawable.dtitem_books);
+                i18n.string(R.string.nav_pg_book), R.drawable.dtitem_books);
 
         DesktopItem datamaindt = new DesktopItem(new ActivityRun(activity, DataMaintenanceActivity.class),
-                i18n.string(R.string.dtitem_datamain), R.drawable.dtitem_datamain);
+                i18n.string(R.string.nav_pg_data_main), R.drawable.dtitem_datamain);
 
         DesktopItem prefdt = new DesktopItem(new ActivityRun(activity, PrefsActivity.class),
-                i18n.string(R.string.dtitem_prefs), R.drawable.dtitem_prefs);
+                i18n.string(R.string.nav_pg_prefs), R.drawable.dtitem_prefs);
 
 
         addItem(addrec);

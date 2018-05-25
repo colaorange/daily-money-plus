@@ -22,7 +22,7 @@ public class ReportsDesktop extends AbstractDesktop {
     protected void init() {
         I18N i18n = Contexts.instance().getI18n();
 
-        label = i18n.string(R.string.dt_reports);
+        label = i18n.string(R.string.desktop_reports);
 
         Intent intent = null;
 
@@ -30,21 +30,21 @@ public class ReportsDesktop extends AbstractDesktop {
         intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, false);
         intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
         DesktopItem monthBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_monthly_balance), R.drawable.dtitem_balance_month, true, false, 199);
+                i18n.string(R.string.nav_pg_report_monthly_balance), R.drawable.dtitem_balance_month, true, false, 199);
         addItem(monthBalance);
 
         intent = new Intent(activity, BalanceMgntActivity.class);
         intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, false);
         intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_YEAR);
         DesktopItem yearBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_yearly_balance), R.drawable.dtitem_balance_year, true, false, 199);
+                i18n.string(R.string.nav_pg_report_yearly_balance), R.drawable.dtitem_balance_year, true, false, 199);
         addItem(yearBalance);
 
         intent = new Intent(activity, BalanceMgntActivity.class);
         intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, true);
         intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
         DesktopItem totalBalance = new DesktopItem(new IntentRun(activity, intent),
-                i18n.string(R.string.dtitem_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month, true,false, 197);
+                i18n.string(R.string.nav_pg_report_cumulative_balance), R.drawable.dtitem_balance_cumulative_month, true,false, 197);
         addItem(totalBalance);
     }
 
