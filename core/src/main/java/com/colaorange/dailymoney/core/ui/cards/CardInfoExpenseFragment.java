@@ -60,6 +60,7 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
 
             @Override
             public void run() {
+
                 CalendarHelper calHelper = calendarHelper();
 
                 Date now = new Date();
@@ -88,6 +89,7 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
 
             @Override
             public void onAsyncFinish() {
+                setNoData(false, null);
                 vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varWE.value)));
                 vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varME.value)));
                 vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(varC.value)));

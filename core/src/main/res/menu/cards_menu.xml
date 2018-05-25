@@ -17,4 +17,8 @@
         android:icon="?ic_title"
         android:title="@string/act_edit_title"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_add_card"
+        android:title="@string/act_add_card"
+        app:showAsAction="never" />
 </menu>

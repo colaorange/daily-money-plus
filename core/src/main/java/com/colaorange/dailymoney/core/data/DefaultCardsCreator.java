@@ -17,7 +17,7 @@ public class DefaultCardsCreator {
     public DefaultCardsCreator() {
     }
 
-    public void createForWholeNew(boolean existIgnore) {
+    public void createForWholeNew(boolean ignoreExist) {
         Logger.i(">>createForWholeNew");
         Contexts ctx = Contexts.instance();
         I18N i18n = ctx.getI18n();
@@ -26,7 +26,7 @@ public class DefaultCardsCreator {
         if (cards0.size() != 0) {
             //ignore it
             Logger.w("cards 0 is not empty");
-            if (existIgnore) {
+            if (!ignoreExist) {
                 return;
             }
         }
@@ -48,19 +48,19 @@ public class DefaultCardsCreator {
         CardCollection cards1 = preference.getCards(1);
         if (cards1.size() != 0) {
             Logger.w("cards 1 is not empty");
-            if (existIgnore) {
+            if (!ignoreExist) {
                 return;
             }
         }
         cards1.setTitle(i18n.string(R.string.desktop_reports));
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_pie));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         cards1.add(card);
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_bar));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
 
         cards1.add(card);
@@ -78,7 +78,7 @@ public class DefaultCardsCreator {
         CardCollection cards0 = preference.getCards(0);
         if (cards0.size() != 0) {
             Logger.w("cards 0 is not empty");
-            if (existIgnore) {
+            if (!existIgnore) {
                 return;
             }
         }
@@ -106,7 +106,7 @@ public class DefaultCardsCreator {
 
         if (cards1.size() != 0) {
             Logger.w("cards 1 is not empty");
-            if (existIgnore) {
+            if (!existIgnore) {
                 return;
             }
         }
@@ -122,13 +122,12 @@ public class DefaultCardsCreator {
 
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_pie));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         cards1.add(card);
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_bar));
-        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
         cards1.add(card);
 
         preference.updateCards(1, cards1, true);

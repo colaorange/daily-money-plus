@@ -113,7 +113,7 @@ public class StartupActivity extends ContextsActivity {
     private void doFirstTime() {
 
         if (!Contexts.instance().getPreference().isAnyCards()) {
-            new DefaultCardsCreator().createForWholeNew(true);
+            new DefaultCardsCreator().createForWholeNew(false);
         }
 
 

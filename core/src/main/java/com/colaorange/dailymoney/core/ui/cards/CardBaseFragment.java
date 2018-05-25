@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -19,6 +22,7 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.ui.QEvents;
+import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -33,11 +37,10 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected int pos;
     protected int cardsPos;
 
-    protected Card card;
-
     protected View rootView;
     private Toolbar vToolbar;
-    View vNoData;
+    private View vNoData;
+    private TextView vNoDataText;
     private View vContent;
 
     private boolean showTitle;
@@ -65,6 +68,12 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         super.onCreate(b);
     }
 
+    public Card getCard() {
+        CardCollection cards = preference().getCards(cardsPos);
+        Card card = cards.get(pos);
+        return card;
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -90,6 +99,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
 
         vToolbar = rootView.findViewById(R.id.cardToolbar);
         vNoData = rootView.findViewById(R.id.no_data);
+        vNoDataText = rootView.findViewById(R.id.no_data_text);
         vContent = rootView.findViewById(R.id.card_content);
 
     }
@@ -98,7 +108,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         ContextsActivity activity = getContextsActivity();
         Preference preference = preference();
         CardCollection cards = preference.getCards(cardsPos);
-        card = cards.get(pos);
+        Card card = cards.get(pos);
         boolean modeEdit = CardsDesktopActivity.isModeEdit();
         if (vToolbar != null) {
             showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
@@ -146,20 +156,25 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         //don't show content to highlight user , it is edit now
         if (!doReloadContent(modeEdit)) {
             vContent.setVisibility(View.GONE);
+
+            setNoData(true, CardFacade.getTypeText(card.getType()));
+
         } else {
             vContent.setVisibility(View.VISIBLE);
-        }
-        if (vNoData != null) {
-            vNoData.setVisibility(modeEdit ? View.GONE : vNoData.getVisibility());
         }
     }
 
     /**
-     * help sub-class to show noData info
+     * help to show infor for card type and sub-class to show noData info
      */
-    protected void setNoData(boolean noData) {
+    protected void setNoData(boolean noData, String text) {
         if (vNoData != null) {
             vNoData.setVisibility(noData ? View.VISIBLE : View.GONE);
+            if (Strings.isBlank(text)) {
+                vNoDataText.setText(i18n.string(R.string.msg_no_data));
+            } else {
+                vNoDataText.setText(text);
+            }
         }
         vContent.setVisibility(!noData ? View.VISIBLE : View.GONE);
     }
@@ -201,20 +216,42 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     private void doModeShowTitle(boolean showTitle) {
-        card.withArg(CardFacade.ARG_SHOW_TITLE, this.showTitle = showTitle);
-
         Preference preference = Contexts.instance().getPreference();
 
         CardCollection cards = preference.getCards(cardsPos);
-        cards.set(pos, card);
+        Card card = cards.get(pos);
+        card.withArg(CardFacade.ARG_SHOW_TITLE, this.showTitle = showTitle);
 
+        cards.set(pos, card);
         preference.updateCards(cardsPos, cards);
 
         //title only effect in display mode, currently is in edit mode, no need to update
     }
 
     private void doDelete() {
-        //todo
+
+        GUIs.confirm(getContextsActivity(), i18n.string(R.string.qmsg_common_confirm, i18n.string(R.string.act_delete)),
+                new GUIs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        if (GUIs.OK_BUTTON == which) {
+                            Preference preference = Contexts.instance().getPreference();
+
+                            CardCollection cards = preference.getCards(cardsPos);
+                            if (pos >= cards.size()) {
+                                return true;
+                            }
+
+                            cards.remove(pos);
+
+                            preference.updateCards(cardsPos, cards);
+
+                            publishReloadFragment();
+                        }
+                        return true;
+                    }
+                });
+
     }
 
     private void doMoveDown() {
@@ -226,7 +263,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         }
         cards.move(pos, pos + 1);
         preference.updateCards(cardsPos, cards);
-        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+        publishReloadFragment();
     }
 
     private void doMoveUp() {
@@ -237,15 +274,37 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         CardCollection cards = preference.getCards(cardsPos);
         cards.move(pos, pos - 1);
         preference.updateCards(cardsPos, cards);
-        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+        publishReloadFragment();
     }
 
     protected void publishReloadFragment() {
-        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, cardsPos);
     }
 
     private void doEditTitle() {
-        //todo
+        I18N i18n = i18n();
+
+        CardCollection cards = preference().getCards(cardsPos);
+        Card card = cards.get(pos);
+
+        GUIs.inputText(getContextsActivity(), i18n.string(R.string.act_edit_title),
+                i18n.string(R.string.msg_edit_card_title),
+                i18n.string(R.string.act_ok), i18n().string(R.string.act_cancel),
+                InputType.TYPE_CLASS_TEXT, card.getTitle(), new GUIs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        if (which == GUIs.OK_BUTTON) {
+                            CardCollection cards = preference().getCards(cardsPos);
+                            Card card = cards.get(pos);
+                            card.setTitle((String) data);
+
+                            preference().updateCards(cardsPos, cards);
+
+                            reloadView();
+                        }
+                        return true;
+                    }
+                });
     }
 
     @Override

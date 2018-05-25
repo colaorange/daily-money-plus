@@ -131,4 +131,10 @@ public class CardCollection extends JsonBase {
 
         cards.set(i, card);
     }
+
+    public void remove(int pos) {
+        if (cards != null) {
+            cards.remove(pos);
+        }
+    }
 }

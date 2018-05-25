@@ -532,6 +532,12 @@ public class ContextsActivity extends AppCompatActivity {
                 q.publish(name, data);
             }
         }
+
+        @Override
+        public void publish(String name) {
+            publish(name, null);
+        }
+
     }
 
     private class EventQueueImpl implements EventQueue {
@@ -605,6 +611,11 @@ public class ContextsActivity extends AppCompatActivity {
         @Override
         public void publish(String name, Object data) {
             publish(new Event(name, data));
+        }
+
+        @Override
+        public void publish(String name) {
+            publish(name, null);
         }
     }
 

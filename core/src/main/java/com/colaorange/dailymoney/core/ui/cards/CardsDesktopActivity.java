@@ -278,7 +278,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
 
         if (temp.equals(cardsList)) {
-            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT);
         } else {
             /*
               Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cards:0:0}
@@ -362,7 +362,9 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
         I18N i18n = i18n();
 
-        GUIs.inputText(this, i18n.string(R.string.act_edit_title) , i18n.string(R.string.msg_edit_desktop_title), i18n().string(R.string.act_ok), i18n().string(R.string.act_cancel),
+        GUIs.inputText(this, i18n.string(R.string.act_edit_title),
+                i18n.string(R.string.msg_edit_desktop_title),
+                i18n().string(R.string.act_ok), i18n().string(R.string.act_cancel),
                 InputType.TYPE_CLASS_TEXT, cards.getTitle(), new GUIs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
@@ -458,7 +460,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         } else if (fvt) {
 
             if (!Contexts.instance().getPreference().isAnyCards()) {
-                new DefaultCardsCreator().createForUpgrade(true);
+                new DefaultCardsCreator().createForUpgrade(false);
             }
 
 

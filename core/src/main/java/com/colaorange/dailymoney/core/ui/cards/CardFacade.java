@@ -3,8 +3,12 @@ package com.colaorange.dailymoney.core.ui.cards;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.CardType;
+import com.colaorange.dailymoney.core.util.I18N;
 
 /**
  * @author dennis
@@ -48,5 +52,16 @@ public class CardFacade {
         Bundle b = newBaseBundle(cardsPos, pos);
         f.setArguments(b);
         return f;
+    }
+
+    public static String getTypeText(CardType type) {
+        I18N i18n = Contexts.instance().getI18n();
+        switch (type) {
+            case NAV_PAGES:
+                return i18n.string(R.string.card_nav_page);
+            case INFO_EXPENSE:
+                return i18n.string(R.string.card_info_expense);
+        }
+        throw new IllegalStateException("no such card type "+type);
     }
 }

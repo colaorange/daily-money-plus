@@ -64,7 +64,7 @@ public class TestsDesktop extends AbstractDesktop {
 
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                new DefaultCardsCreator().createForWholeNew(false);
+                new DefaultCardsCreator().createForWholeNew(true);
             }
         }, "Create Cards for whole new ", R.drawable.dtitem_test);
 
@@ -72,7 +72,7 @@ public class TestsDesktop extends AbstractDesktop {
 
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                new DefaultCardsCreator().createForUpgrade(false);
+                new DefaultCardsCreator().createForUpgrade(true);
             }
         }, "Create Cards for upgrade ", R.drawable.dtitem_test);
 

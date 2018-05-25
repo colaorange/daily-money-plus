@@ -17,6 +17,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
@@ -114,11 +115,11 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
             return false;
         }
 
-
+        Card card = getCard();
         List<String> data = card.getArg(CardFacade.ARG_NAV_PAGES_LIST, null);
 
         if (data == null) {
-            setNoData(true);
+            setNoData(true, null);
             return true;
         }
 
@@ -132,21 +133,15 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
         }
 
         if (npgdata.size() == 0) {
-            setNoData(true);
+            setNoData(true, null);
             return true;
         }
 
+        setNoData(false, null);
+
 
         recyclerDataList.clear();
-
-        if (data.size() == 0) {
-            vRecycler.setVisibility(View.GONE);
-            vNoData.setVisibility(View.VISIBLE);
-        } else {
-            vRecycler.setVisibility(View.VISIBLE);
-            vNoData.setVisibility(View.GONE);
-            recyclerDataList.addAll(npgdata);
-        }
+        recyclerDataList.addAll(npgdata);
         recyclerAdapter.notifyDataSetChanged();
 
         return true;

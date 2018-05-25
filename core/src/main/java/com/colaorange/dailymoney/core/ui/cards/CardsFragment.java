@@ -38,8 +38,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private int cardsPos;
 
-    private CardCollection cards = null;
-
     private List<Card> recyclerDataList;
 
     View vNoData;
@@ -97,7 +95,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         //prevent tab switch back
         recyclerAdapter.clearCreatedFragments();
@@ -105,7 +103,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private void reloadData() {
 
-        cards = preference().getCards(cardsPos);
+        CardCollection cards = preference().getCards(cardsPos);
 
         List<Card> data = new LinkedList<>();
         for (int i = 0; i < cards.size(); i++) {
@@ -140,9 +138,16 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     @Override
     public void onEvent(EventQueue.Event event) {
+        Object data;
         switch (event.getName()) {
             case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
-                reloadData();
+                data = event.getData();
+                /**
+                 * if no data, or data is my pos, reload my data.
+                 */
+                if (data == null || (data instanceof Integer && ((Integer) data).intValue() == cardsPos)) {
+                    reloadData();
+                }
                 break;
             case QEvents.CardsFrag.ON_CLEAR_FRAGMENT:
                 recyclerAdapter.clearCreatedFragments();
@@ -162,7 +167,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         public int getItemViewType(int position) {
             return position;
         }
-
 
 
         @Override

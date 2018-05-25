@@ -16,6 +16,8 @@ public interface EventQueue {
 
     public void publish(String name, Object data);
 
+    public void publish(String name);
+
 
     public class Event {
 
