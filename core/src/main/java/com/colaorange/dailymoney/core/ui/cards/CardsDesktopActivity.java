@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author dennis
  */
-public class CardsActivity extends ContextsActivity implements EventQueue.EventListener {
+public class CardsDesktopActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
     private TabLayout vAppTabs;
@@ -76,7 +76,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
     private static AtomicBoolean editMode = new AtomicBoolean(false);
 
-    public CardsActivity() {
+    public CardsDesktopActivity() {
     }
 
 
@@ -420,7 +420,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(CardsActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardsDesktopActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
@@ -437,7 +437,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(CardsActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardsDesktopActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);

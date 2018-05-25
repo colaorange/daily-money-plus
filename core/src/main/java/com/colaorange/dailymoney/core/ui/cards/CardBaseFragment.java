@@ -99,12 +99,12 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         Preference preference = preference();
         CardCollection cards = preference.getCards(cardsPos);
         card = cards.get(pos);
-
+        boolean modeEdit = CardsDesktopActivity.isModeEdit();
         if (vToolbar != null) {
             showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
             vToolbar.setTitle(card.getTitle());
             vToolbar.getMenu().clear();
-            if (CardsActivity.isModeEdit()) {
+            if (modeEdit) {
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryColor));
                 final int menuId = getMenuResId();
                 if (menuId > 0) {
@@ -134,23 +134,23 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
                 vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));
             }
 
-            if (!CardsActivity.isModeEdit()) {
+            if (!modeEdit) {
                 vToolbar.setVisibility(showTitle ? View.VISIBLE : View.GONE);
             } else {
                 vToolbar.setVisibility(View.VISIBLE);
             }
 
-            doAfterReloadToolbar(vToolbar, CardsActivity.isModeEdit());
+            doAfterReloadToolbar(vToolbar, modeEdit);
         }
 
         //don't show content to highlight user , it is edit now
-        if (!doReloadContent(CardsActivity.isModeEdit())) {
+        if (!doReloadContent(modeEdit)) {
             vContent.setVisibility(View.GONE);
         } else {
             vContent.setVisibility(View.VISIBLE);
         }
         if (vNoData != null) {
-            vNoData.setVisibility(CardsActivity.isModeEdit() ? View.GONE : vNoData.getVisibility());
+            vNoData.setVisibility(modeEdit ? View.GONE : vNoData.getVisibility());
         }
     }
 
