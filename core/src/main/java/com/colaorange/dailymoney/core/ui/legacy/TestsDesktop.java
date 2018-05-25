@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -17,19 +19,19 @@ import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
 
 /**
- * 
  * @author dennis
- *
  */
 public class TestsDesktop extends AbstractDesktop {
-    
+
+    public static final String NAME = "tests";
+
     public TestsDesktop(Activity activity) {
-        super("tests", activity);
-        
+        super(NAME, activity);
+
     }
-    
+
     @Override
-    public boolean isAvailable(){
+    public boolean isAvailable() {
         return Contexts.instance().getPreference().isTestsDesktop();
     }
 
@@ -38,124 +40,151 @@ public class TestsDesktop extends AbstractDesktop {
         I18N i18n = Contexts.instance().getI18n();
 
         label = i18n.string(R.string.dt_tests);
-        
+
         DesktopItem dt = null;
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Contexts ctx = Contexts.instance(); 
+                Contexts ctx = Contexts.instance();
                 ctx.getMasterDataProvider().reset();
             }
         }, "Reset Master Dataprovider", R.drawable.dtitem_test);
-        
+
         addItem(dt);
-        
+
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Contexts ctx = Contexts.instance(); 
-                Intent intent = null;
-                intent = new Intent(activity,BookMgntActivity.class);
-                activity.startActivityForResult(intent,0);
+                Preference preference = Contexts.instance().getPreference();
+                for (int i = 0; i < preference.getCardsSize(); i++) {
+                    preference.removeCards(i);
+                }
             }
-        }, "Book Management", R.drawable.dtitem_test);
-        
+        }, "Remove all cards", R.drawable.dtitem_test);
+
         addItem(dt);
-        
-        
+
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Contexts ctx = Contexts.instance(); 
+                new DefaultCardsCreator().createForWholeNew(false);
+            }
+        }, "Create Cards for whole new ", R.drawable.dtitem_test);
+
+        addItem(dt);
+
+        dt = new DesktopItem(new Runnable() {
+            public void run() {
+                new DefaultCardsCreator().createForUpgrade(false);
+            }
+        }, "Create Cards for upgrade ", R.drawable.dtitem_test);
+
+        addItem(dt);
+
+        dt = new DesktopItem(new Runnable() {
+            public void run() {
+                Contexts ctx = Contexts.instance();
                 Book book = ctx.getMasterDataProvider().findBook(ctx.getWorkingBookId());
-                
+
                 Intent intent = null;
-                intent = new Intent(activity,BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE,false);
-                intent.putExtra(BookEditorActivity.ARG_BOOK,book);
+                intent = new Intent(activity, BookEditorActivity.class);
+                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, false);
+                intent.putExtra(BookEditorActivity.ARG_BOOK, book);
                 activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
         }, "Edit selected book", R.drawable.dtitem_test);
-        
+
         addItem(dt);
-        
+
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Book book = new Book("test","$",SymbolPosition.AFTER,"");
+                Book book = new Book("test", "$", SymbolPosition.AFTER, "");
                 Intent intent = null;
-                intent = new Intent(activity,BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE,true);
-                intent.putExtra(BookEditorActivity.ARG_BOOK,book);
-                activity.startActivityForResult(intent,Constants.REQUEST_BOOK_EDITOR_CODE);
+                intent = new Intent(activity, BookEditorActivity.class);
+                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, true);
+                intent.putExtra(BookEditorActivity.ARG_BOOK, book);
+                activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
         }, "Add book", R.drawable.dtitem_test);
-        
+
         addItem(dt);
-        
-        
-        addItem(new DesktopItem(new Runnable(){
+
+
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 Contexts.instance().getDataProvider().reset();
-                GUIs.shortToast(activity,"reset data provider");
-            }}, "rest data provider",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+                GUIs.shortToast(activity, "reset data provider");
+            }
+        }, "rest data provider", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testFirstDayOfWeek();
-            }}, "first day of week",R.drawable.dtitem_test){
+            }
+        }, "first day of week", R.drawable.dtitem_test) {
         });
-        addItem(new DesktopItem(new Runnable(){
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
-                testBusy(200,null);
-            }}, "Busy 200ms",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+                testBusy(200, null);
+            }
+        }, "Busy 200ms", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(200, "error short");
-            }}, "Busy 200ms Error",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "Busy 200ms Error", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
-                testBusy(5000,null);
-            }}, "Busy 5s",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+                testBusy(5000, null);
+            }
+        }, "Busy 5s", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(5000, "error long");
-            }}, "Busy 5s Error",R.drawable.dtitem_test));
-        
-        
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "Busy 5s Error", R.drawable.dtitem_test));
+
+
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(25);
-            }}, "test data25",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "test data25", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(50);
-            }}, "test data50",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "test data50", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(100);
-            }}, "test data100",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "test data100", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(200);
-            }}, "test data200",R.drawable.dtitem_test));
-        addItem(new DesktopItem(new Runnable(){
+            }
+        }, "test data200", R.drawable.dtitem_test));
+        addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testJust();
-            }}, "just test",R.drawable.dtitem_test));
-        
-        DesktopItem padding = new DesktopItem(new Runnable(){
+            }
+        }, "just test", R.drawable.dtitem_test));
+
+        DesktopItem padding = new DesktopItem(new Runnable() {
             @Override
             public void run() {
-                
-            }}, "padding",R.drawable.dtitem_test);
-        
+
+            }
+        }, "padding", R.drawable.dtitem_test);
+
         addItem(padding);
         addItem(padding);
         addItem(padding);
@@ -166,16 +195,18 @@ public class TestsDesktop extends AbstractDesktop {
         addItem(padding);
         addItem(padding);
     }
-    
+
     protected void testBusy(final long i, final String error) {
-        GUIs.doBusy(activity,new GUIs.BusyAdapter(){
+        GUIs.doBusy(activity, new GUIs.BusyAdapter() {
             @Override
             public void onBusyFinish() {
-                GUIs.shortToast(activity,"task finished");
+                GUIs.shortToast(activity, "task finished");
             }
+
             public void onBusyError(Throwable x) {
-                GUIs.shortToast(activity,"Error "+x.getMessage());
+                GUIs.shortToast(activity, "Error " + x.getMessage());
             }
+
             @Override
             public void run() {
                 try {
@@ -183,21 +214,22 @@ public class TestsDesktop extends AbstractDesktop {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(error!=null){
+                if (error != null) {
                     throw new RuntimeException(error);
                 }
-            }});
+            }
+        });
     }
 
     protected void testFirstDayOfWeek() {
         CalendarHelper calHelper = Contexts.instance().getCalendarHelper();
-        for(int i=0;i<100;i++){
+        for (int i = 0; i < 100; i++) {
             Date now = new Date();
             Date start = calHelper.weekStartDate(now);
             Date end = calHelper.weekEndDate(now);
 //            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
 //            System.out.println("1>>>>>>>>>>> "+now);
-            System.out.println("2>>>>>>>>>>> "+start);
+            System.out.println("2>>>>>>>>>>> " + start);
 //            System.out.println("3>>>>>>>>>>> "+end);
 //            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
             try {
@@ -210,18 +242,20 @@ public class TestsDesktop extends AbstractDesktop {
     }
 
     private void testCreateTestdata(final int loop) {
-        GUIs.doBusy(activity,new GUIs.BusyAdapter(){
+        GUIs.doBusy(activity, new GUIs.BusyAdapter() {
             @Override
             public void onBusyFinish() {
-                GUIs.shortToast(activity,"create test data");
+                GUIs.shortToast(activity, "create test data");
             }
+
             @Override
             public void run() {
                 I18N i18n = Contexts.instance().getI18n();
                 IDataProvider idp = Contexts.instance().getDataProvider();
-                new DataCreator(idp,i18n).createTestData(loop);
-            }});
-        
+                new DataCreator(idp, i18n).createTestData(loop);
+            }
+        });
+
     }
 
 
@@ -230,12 +264,12 @@ public class TestsDesktop extends AbstractDesktop {
         Date now = new Date();
         Date start = calHelper.weekStartDate(now);
         Date end = calHelper.weekEndDate(now);
-        System.out.println(">>>>>>>>>>>>>>> "+now);
-        System.out.println("1>>>>>>>>>>> "+now);
-        System.out.println("2>>>>>>>>>>> "+start);
-        System.out.println("3>>>>>>>>>>> "+end);
-        System.out.println(">>>>>>>>>>>>>> "+now);
-        
+        System.out.println(">>>>>>>>>>>>>>> " + now);
+        System.out.println("1>>>>>>>>>>> " + now);
+        System.out.println("2>>>>>>>>>>> " + start);
+        System.out.println("3>>>>>>>>>>> " + end);
+        System.out.println(">>>>>>>>>>>>>> " + now);
+
     }
 
 }

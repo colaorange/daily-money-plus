@@ -12,8 +12,10 @@ import com.colaorange.dailymoney.core.context.Contexts;
  */
 public class ReportsDesktop extends AbstractDesktop {
 
+    public static final String NAME = "report";
+
     public ReportsDesktop(Activity activity) {
-        super("report", activity);
+        super(NAME, activity);
     }
 
     @Override

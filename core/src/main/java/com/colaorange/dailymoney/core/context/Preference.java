@@ -734,23 +734,34 @@ public class Preference {
         return 4;
     }
 
+    public boolean isAnyCards() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        for (int i = 0; i < getCardsSize(); i++) {
+            String json = prefs.getString("cards-" + i, null);
+            if (!Strings.isBlank(json)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isCardsEnabled(int index) {
         if (index >= getCardsSize()) {
             return false;
         }
 
-        //0 is always enabled
-        if (index == 0) {
-            return true;
-        }
-
-        //todo for test
-        if (index <= 1) {
-            return true;
-        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         return prefs.getBoolean("cards-enable-" + index, false);
+    }
+
+    public void updateCardsEnable(int index, boolean enabled) {
+        if (index >= getCardsSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("cards-enable-" + index, enabled);
+        editor.commit();
     }
 
     public CardCollection getCards(int index) {
@@ -775,6 +786,10 @@ public class Preference {
     }
 
     public void updateCards(int index, CardCollection cards) {
+        updateCards(index, cards, null);
+    }
+
+    public void updateCards(int index, CardCollection cards, Boolean enabled) {
         if (index >= getCardsSize()) {
             throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
         }
@@ -782,6 +797,9 @@ public class Preference {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("cards-" + index, json);
+        if (enabled != null) {
+            editor.putBoolean("cards-enable-" + index, enabled);
+        }
         editor.commit();
     }
 
@@ -792,6 +810,7 @@ public class Preference {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("cards-" + index);
+        editor.remove("cards-enable-" + index);
         editor.commit();
     }
 

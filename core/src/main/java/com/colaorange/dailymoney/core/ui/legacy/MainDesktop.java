@@ -14,9 +14,10 @@ import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
  * @author dennis
  */
 public class MainDesktop extends AbstractDesktop {
+    public static final String NAME = "primary";
 
     public MainDesktop(Activity activity) {
-        super("primary", activity);
+        super(NAME, activity);
     }
 
     @Override

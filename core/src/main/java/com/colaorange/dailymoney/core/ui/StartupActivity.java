@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
@@ -112,7 +113,9 @@ public class StartupActivity extends ContextsActivity {
 
     private void doFirstTime() {
 
-        new DefaultCardsCreator().create();
+        if (!Contexts.instance().getPreference().isAnyCards()) {
+            new DefaultCardsCreator().createForWholeNew(true);
+        }
 
 
         IDataProvider idp = contexts().getDataProvider();

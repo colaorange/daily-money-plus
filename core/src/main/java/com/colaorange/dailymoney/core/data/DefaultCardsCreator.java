@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.data;
 
 import com.colaorange.commons.util.Collections;
+import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.ui.cards.CardFacade;
@@ -16,39 +17,120 @@ public class DefaultCardsCreator {
     public DefaultCardsCreator() {
     }
 
-    public void create() {
+    public void createForWholeNew(boolean existIgnore) {
+        Logger.i(">>createForWholeNew");
         Contexts ctx = Contexts.instance();
         I18N i18n = ctx.getI18n();
         Preference preference = ctx.getPreference();
-        CardCollection cards = preference.getCards(0);
-        if (cards.size() != 0) {
+        CardCollection cards0 = preference.getCards(0);
+        if (cards0.size() != 0) {
             //ignore it
-            Logger.w("cards is not empty, ignore it");
-            return;
+            Logger.w("cards 0 is not empty");
+            if (existIgnore) {
+                return;
+            }
         }
-        cards.setTitle("Test 1");
-        Card card = new Card(CardType.NAV_PAGES, "card 1");
-        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(NavPage.RECORD_EDITOR,
-                NavPage.DAILY_LIST, NavPage.MONTHLY_LIST, NavPage.MONTHLY_BALANCE, NavPage.CUMULATIVE_BALANCE));
-        cards.add(card);
+        cards0.setTitle(i18n.string(R.string.dt_main));
+        Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
+        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
+                NavPage.HOW2USE,
+                NavPage.RECORD_EDITOR,
+                NavPage.DAILY_LIST,
+                NavPage.MONTHLY_LIST,
+                NavPage.MONTHLY_BALANCE,
+                NavPage.CUMULATIVE_BALANCE));
+        cards0.add(card);
 
-        card = new Card(CardType.INFO_EXPENSE, "card 2");
-        cards.add(card);
+        card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
+        cards0.add(card);
+        preference.updateCards(0, cards0, true);
 
-        preference.updateCards(0, cards);
+        CardCollection cards1 = preference.getCards(1);
+        if (cards1.size() != 0) {
+            Logger.w("cards 1 is not empty");
+            if (existIgnore) {
+                return;
+            }
+        }
+        cards1.setTitle(i18n.string(R.string.dt_reports));
 
-        cards = preference.getCards(1);
+        //TODO chart
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_pie));
+        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
+        cards1.add(card);
 
-        cards.setTitle("Test 2");
-        card = new Card(CardType.INFO_EXPENSE, "card 4");
-        cards.add(card);
+        //TODO chart
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_bar));
+        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
 
-        card = new Card(CardType.NAV_PAGES, "card 3");
-        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(NavPage.MONTHLY_BALANCE, NavPage.CUMULATIVE_BALANCE));
-        cards.add(card);
+        cards1.add(card);
 
 
-        preference.updateCards(1, cards);
+        preference.updateCards(1, cards1, true);
 
+    }
+
+    public void createForUpgrade(boolean existIgnore) {
+        Logger.i(">>createForUpgarde");
+        Contexts ctx = Contexts.instance();
+        I18N i18n = ctx.getI18n();
+        Preference preference = ctx.getPreference();
+        CardCollection cards0 = preference.getCards(0);
+        if (cards0.size() != 0) {
+            Logger.w("cards 0 is not empty");
+            if (existIgnore) {
+                return;
+            }
+        }
+        cards0.setTitle(i18n.string(R.string.dt_main));
+        Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
+        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
+                NavPage.RECORD_EDITOR,
+                NavPage.DAILY_LIST,
+                NavPage.WEEKLY_LIST,
+                NavPage.MONTHLY_LIST,
+                NavPage.YEARLY_LIST,
+                NavPage.ACCOUNT_MGNT,
+                NavPage.BOOK_MGNT,
+                NavPage.DATA_MAIN,
+                NavPage.PREFS,
+                NavPage.HOW2USE));
+        cards0.add(card);
+
+        card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
+        cards0.add(card);
+
+        preference.updateCards(0, cards0, true);
+
+        CardCollection cards1 = preference.getCards(1);
+
+        if (cards1.size() != 0) {
+            Logger.w("cards 1 is not empty");
+            if (existIgnore) {
+                return;
+            }
+        }
+        cards1.setTitle(i18n.string(R.string.dt_reports));
+
+
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
+        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
+                NavPage.MONTHLY_BALANCE,
+                NavPage.YEARLY_BALANCE,
+                NavPage.CUMULATIVE_BALANCE));
+        cards1.add(card);
+
+
+        //TODO chart
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_pie));
+        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
+        cards1.add(card);
+
+        //TODO chart
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expanse_bar));
+        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
+        cards1.add(card);
+
+        preference.updateCards(1, cards1, true);
     }
 }

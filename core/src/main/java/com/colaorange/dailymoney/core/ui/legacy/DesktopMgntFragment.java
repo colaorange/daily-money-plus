@@ -121,9 +121,9 @@ public class DesktopMgntFragment extends ContextsFragment implements EventQueue.
 
     private void reloadData() {
 
-        Map<String,Desktop> supportedDesktosp = ((DesktopMgntActivity)getContextsActivity()).getSupportedDesktops();
+        Map<String,Desktop> supportedDesktops = Desktop.getSupportedDesktops(getContextsActivity());
 
-        Desktop desktop = supportedDesktosp.get(desktopName);
+        Desktop desktop = supportedDesktops.get(desktopName);
 
         List<DesktopItem> data = desktop.getDesktopItems();
 

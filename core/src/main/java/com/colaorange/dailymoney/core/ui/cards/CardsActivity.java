@@ -36,7 +36,10 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
+import com.colaorange.dailymoney.core.ui.legacy.DesktopItem;
+import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntFragment;
 import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
+import com.colaorange.dailymoney.core.ui.legacy.TestsDesktop;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -94,6 +97,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             Bundle bundle = getIntentExtras();
             firstTime = bundle.getBoolean(StartupActivity.ARG_FIRST_TIME, false);
         }
+
     }
 
     @Override
@@ -168,15 +172,16 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         });
     }
 
-    protected void stopModeEdit(){
-        if(isModeEdit()){
+    protected void stopModeEdit() {
+        if (isModeEdit()) {
             setModeEdit(false);
             mModeEdit.setChecked(false);
             lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
         }
     }
-    protected void startModeEdit(){
-        if(!isModeEdit()){
+
+    protected void startModeEdit() {
+        if (!isModeEdit()) {
             setModeEdit(true);
             mModeEdit.setChecked(true);
             lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
@@ -191,7 +196,7 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
         } else if (isModeEdit()) {
             stopModeEdit();
             return;
-        }else if (vPager.getCurrentItem() > 0) {
+        } else if (vPager.getCurrentItem() > 0) {
             vPager.setCurrentItem(0);
             return;
         }
@@ -213,6 +218,11 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             TextView vtext = tab.findViewById(R.id.tab_text);
             String title = cards.getTitle();
             title = Strings.isBlank(title) ? "" + (i + 1) : title;
+
+            if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+                title = i18n().string(R.string.dt_tests);
+            }
+
             vtext.setText(title);
             i++;
         }
@@ -257,6 +267,14 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             }
             CardCollection cards = preference.getCards(i);
             temp.add(cards);
+        }
+
+        //append if test desktop
+        if (preference.isTestsDesktop()) {
+            CardCollection cards = new CardCollection();
+            cards.withArg(TestsDesktop.NAME, true);
+            temp.add(cards);
+
         }
 
 
@@ -324,9 +342,9 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             doNewRecord();
             return true;
         } else if (item.getItemId() == R.id.menu_mode_edit) {
-            if(item.isChecked()){
+            if (item.isChecked()) {
                 stopModeEdit();
-            }else{
+            } else {
                 startModeEdit();
             }
             return true;
@@ -345,6 +363,11 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
+            case QEvents.DesktopMgntFrag.ON_SELECT_DESKTOP_TEIM:
+            case QEvents.DesktopMgntFrag.ON_RESELECT_DESKTOP_TEIM:
+                //test desktop
+                ((DesktopItem) event.getData()).run();
+                break;
         }
     }
 
@@ -364,6 +387,16 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
 
         @Override
         public Fragment getItem(int position) {
+
+            CardCollection col = cards.get(position);
+            if (col.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+                DesktopMgntFragment f = new DesktopMgntFragment();
+                Bundle b = new Bundle();
+                b.putString(DesktopMgntFragment.ARG_DESKTOP_NAME, TestsDesktop.NAME);
+                f.setArguments(b);
+                return f;
+            }
+
             Fragment f = new CardsFragment();
             Bundle b = new Bundle();
             b.putInt(CardsFragment.ARG_CARDS_POS, position);
@@ -396,8 +429,8 @@ public class CardsActivity extends ContextsActivity implements EventQueue.EventL
             return true;
         } else if (fvt) {
 
-            if (Contexts.instance().getPreference().getCards(0).size() == 0) {
-                new DefaultCardsCreator().create();
+            if (!Contexts.instance().getPreference().isAnyCards()) {
+                new DefaultCardsCreator().createForUpgrade(true);
             }
 
 

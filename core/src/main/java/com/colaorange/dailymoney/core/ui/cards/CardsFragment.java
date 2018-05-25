@@ -21,6 +21,7 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.ui.legacy.DesktopItem;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.LinkedHashMap;
@@ -93,6 +94,13 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         super.onResume();
 
         reloadData();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        //prevent tab switch back
+        recyclerAdapter.clearCreatedFragments();
     }
 
     private void reloadData() {

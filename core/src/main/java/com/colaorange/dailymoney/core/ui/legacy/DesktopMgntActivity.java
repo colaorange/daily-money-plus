@@ -38,7 +38,6 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
-import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -49,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -97,11 +95,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     public DesktopMgntActivity() {
     }
 
-
-    public Map<String, Desktop> getSupportedDesktops() {
-        return java.util.Collections.unmodifiableMap(supportedDesktops);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,11 +126,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
 
                 }
             });
-        }
-
-        supportedDesktops = new LinkedHashMap<>();
-        for (Desktop dt : new Desktop[]{new MainDesktop(this), new ReportsDesktop(this), new TestsDesktop(this)}) {
-            supportedDesktops.put(dt.getName(), dt);
         }
     }
 
@@ -535,11 +523,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
             });
             return true;
         } else if (fvt) {
-
-            if (Contexts.instance().getPreference().getCards(0).size() == 0) {
-                new DefaultCardsCreator().create();
-            }
-
 
             GUIs.post(new Runnable() {
                 @Override

@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.data;
 import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 /**
@@ -14,6 +15,8 @@ public class CardCollection extends JsonBase {
     String title;
     @Expose
     LinkedList<Card> cards;
+    @Expose
+    LinkedHashMap<String, Object> args;
 
     public CardCollection(String title) {
         this.title = title;
@@ -78,6 +81,22 @@ public class CardCollection extends JsonBase {
         this.title = title;
     }
 
+    public CardCollection withArg(String key, Object value) {
+        if (args == null) {
+            args = new LinkedHashMap<>();
+        }
+        args.put(key, value);
+        return this;
+    }
+
+    public <T> T getArg(String key) {
+        return args == null ? null : (T) args.get(key);
+    }
+    public <T> T getArg(String key, T defval) {
+        T val = getArg(key);
+        return val==null?defval:val;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -87,13 +106,15 @@ public class CardCollection extends JsonBase {
         CardCollection that = (CardCollection) o;
 
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        return cards != null ? cards.equals(that.cards) : that.cards == null;
+        if (cards != null ? !cards.equals(that.cards) : that.cards != null) return false;
+        return args != null ? args.equals(that.args) : that.args == null;
     }
 
     @Override
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (cards != null ? cards.hashCode() : 0);
+        result = 31 * result + (args != null ? args.hashCode() : 0);
         return result;
     }
 
