@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.data;
 
 import com.colaorange.commons.util.JsonBase;
+import com.colaorange.commons.util.Strings;
 import com.google.gson.annotations.Expose;
 
 import java.util.LinkedHashMap;
@@ -12,6 +13,8 @@ import java.util.LinkedList;
 public class CardCollection extends JsonBase {
 
     @Expose
+    String id;
+    @Expose
     String title;
     @Expose
     LinkedList<Card> cards;
@@ -19,11 +22,19 @@ public class CardCollection extends JsonBase {
     LinkedHashMap<String, Object> args;
 
     public CardCollection(String title) {
+        this();
         this.title = title;
     }
 
     public CardCollection() {
+        getId();
+    }
 
+    public String getId(){
+        if(id==null){
+            id = Strings.randomUUID();
+        }
+        return id;
     }
 
     public int size() {
@@ -43,17 +54,17 @@ public class CardCollection extends JsonBase {
         }
     }
 
-    public void move(int i, int cardIdx) {
+    public void move(int cardIdx, int toIndex) {
         if (cards == null) {
-            throw new IllegalArgumentException(i + ">=-1");
+            throw new IllegalArgumentException(toIndex + ">=-1");
         }
 
         Card card = cards.get(cardIdx);
-        if (cardIdx == i) {
+        if (cardIdx == toIndex) {
             return;
         } else {
             cards.remove(cardIdx);
-            cards.add(i, card);
+            cards.add(toIndex, card);
         }
     }
 
@@ -103,19 +114,14 @@ public class CardCollection extends JsonBase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CardCollection that = (CardCollection) o;
+        CardCollection card = (CardCollection) o;
 
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (cards != null ? !cards.equals(that.cards) : that.cards != null) return false;
-        return args != null ? args.equals(that.args) : that.args == null;
+        return getId().equals(card.getId());
     }
 
     @Override
     public int hashCode() {
-        int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (cards != null ? cards.hashCode() : 0);
-        result = 31 * result + (args != null ? args.hashCode() : 0);
-        return result;
+        return getId().hashCode();
     }
 
     public void set(int i, Card card) {

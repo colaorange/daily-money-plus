@@ -224,7 +224,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         if (pos >= cards.size()) {
             return;
         }
-        cards.move(pos + 1, pos);
+        cards.move(pos, pos + 1);
         preference.updateCards(cardsPos, cards);
         lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
     }
@@ -235,7 +235,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         }
         Preference preference = Contexts.instance().getPreference();
         CardCollection cards = preference.getCards(cardsPos);
-        cards.move(pos - 1, pos);
+        cards.move(pos, pos - 1);
         preference.updateCards(cardsPos, cards);
         lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
     }

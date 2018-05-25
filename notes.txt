@@ -65,3 +65,6 @@
 
 * supports
     https://developer.android.com/topic/libraries/support-library/packages
+* D&D
+    https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
+    https://developer.android.com/guide/topics/ui/drag-drop

@@ -164,9 +164,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         }
 
 
-        private String getFragTag(int pos) {
-            return "cards:" + cardsPos + ":" + pos;
-        }
 
         @Override
         public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
@@ -181,7 +178,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
             Card card = get(pos);
             FragmentManager fragmentManager = getChildFragmentManager();
-            String fragTag = getFragTag(pos);
+            String fragTag = card.getId();
             Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
 
             Logger.d(">>> new fragment {}:{} ", fragTag, f);
