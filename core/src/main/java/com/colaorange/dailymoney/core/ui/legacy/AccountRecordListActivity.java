@@ -269,8 +269,8 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     public void doDeleteRecord(final Record record) {
         GUIs.confirm(this, i18n.string(R.string.qmsg_delete_record, Contexts.instance().toFormattedMoneyString(record.getMoney())), new GUIs.OnFinishListener() {
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     boolean r = Contexts.instance().getDataProvider().deleteRecord(record.getId());
                     if (r) {
                         if (record.equals(actionObj)) {

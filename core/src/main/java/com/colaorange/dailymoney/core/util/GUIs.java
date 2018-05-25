@@ -7,15 +7,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.colaorange.commons.util.FinalVar;
@@ -53,7 +55,7 @@ public class GUIs {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if (listener != null) {
-                    listener.onFinish(which);
+                    listener.onFinish(which, null);
                 }
             }
         });
@@ -98,7 +100,7 @@ public class GUIs {
         DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                listener.onFinish(which);
+                listener.onFinish(which, null);
             }
         };
 
@@ -109,6 +111,47 @@ public class GUIs {
         }
         alertDialog.setCancelable(true);
         alertDialog.show();
+    }
+
+    static public void inputText(Context context, String title, String msg, String oktext, String canceltext, int inputtype, String text, final OnFinishListener listener){
+
+        AlertDialog.Builder b = new AlertDialog.Builder(context);
+        b.setTitle(title);
+        b.setMessage(msg);
+
+        // Set up the input
+
+        View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.guis_text_input, null, false);
+
+//        final EditText input = new EditText(context);
+//        ViewGroup.LayoutParams p = new ViewGroup.LayoutParams();
+//        input.setLayoutParams(p);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+        final AppCompatEditText input = view.findViewById(R.id.guis_input);
+
+        input.setInputType(inputtype);
+
+        input.setText(text);
+
+        b.setView(view);
+
+        // Set up the buttons
+        b.setPositiveButton(oktext, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String title = input.getText().toString();
+                listener.onFinish(which, title);
+            }
+        });
+        b.setNegativeButton(canceltext, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        b.show();
     }
 
     static public void shortToast(Context context, String msg) {
@@ -409,7 +452,7 @@ public class GUIs {
                 c.set(Calendar.YEAR, year);
                 c.set(Calendar.MONTH, monthOfYear);
                 c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                listener.onFinish(c.getTime());
+                listener.onFinish(OK_BUTTON, c.getTime());
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         s[0] = picker;
@@ -417,7 +460,7 @@ public class GUIs {
     }
 
     public interface OnFinishListener {
-        boolean onFinish(Object data);
+        boolean onFinish(int which, Object data);
     }
 
     public static int converDP2Pixel(Context context, float dp) {

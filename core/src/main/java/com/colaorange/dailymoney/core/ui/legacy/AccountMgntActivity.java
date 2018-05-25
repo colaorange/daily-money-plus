@@ -222,8 +222,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         final String name = account.getName();
 
         GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, account.getName()), new GUIs.OnFinishListener() {
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     boolean r = contexts().getDataProvider().deleteAccount(account.getId());
                     if (r) {
                         if (account.equals(actionObj)) {

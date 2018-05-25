@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.core.ui.cards;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,11 +13,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -173,16 +177,14 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
     protected void stopModeEdit() {
-        if (isModeEdit()) {
-            setModeEdit(false);
+        if (editMode.compareAndSet(true, false)) {
             mModeEdit.setChecked(false);
             lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
         }
     }
 
     protected void startModeEdit() {
-        if (!isModeEdit()) {
-            setModeEdit(true);
+        if (editMode.compareAndSet(false, true)) {
             mModeEdit.setChecked(true);
             lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
         }
@@ -348,8 +350,37 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                 startModeEdit();
             }
             return true;
+        } else if (item.getItemId() == R.id.menu_edit_title) {
+            doEditTitle();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doEditTitle() {
+
+        CardCollection cards = cardsList.get(vPager.getCurrentItem());
+        if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+            return;
+        }
+
+        I18N i18n = i18n();
+
+        GUIs.inputText(this, i18n.string(R.string.act_edit_title) , i18n.string(R.string.msg_edit_desktop_title), i18n().string(R.string.act_ok), i18n().string(R.string.act_cancel),
+                InputType.TYPE_CLASS_TEXT, cards.getTitle(), new GUIs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        if (which == GUIs.OK_BUTTON) {
+                            int pos = vPager.getCurrentItem();
+                            CardCollection cards = preference().getCards(pos);
+                            cards.setTitle((String) data);
+                            preference().updateCards(pos, cards);
+
+                            cardsList.set(pos, cards);
+                            refreshTab();
+                        }
+                        return true;
+                    }
+                });
     }
 
 
@@ -465,10 +496,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
     public static boolean isModeEdit() {
         return editMode.get();
-    }
-
-    public static void setModeEdit(boolean m) {
-        editMode.set(m);
     }
 
 }

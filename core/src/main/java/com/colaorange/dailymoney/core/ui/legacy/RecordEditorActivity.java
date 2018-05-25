@@ -513,8 +513,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 Date d = dateFormat.parse(vDate.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
-                    public boolean onFinish(Object data) {
-                        updateDateEditor((Date) data);
+                    public boolean onFinish(int which, Object data) {
+                        if(which == GUIs.OK_BUTTON) {
+                            updateDateEditor((Date) data);
+                        }
                         return true;
                     }
                 });
