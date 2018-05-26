@@ -3,7 +3,7 @@ package com.colaorange.dailymoney.core.ui.cards;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.FinalVar;
+import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.EventQueue;
@@ -41,22 +41,18 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
     protected int getLayoutResId() {
         return R.layout.card_info_expanse_frag;
     }
-    @Override
-    protected int getMenuResId() {
-        return R.menu.card_common_menu;
-    }
 
     @Override
-    protected boolean doReloadContent(boolean editMode) {
-        if(editMode){
-            return false;
-        }
+    protected boolean doReloadContent() {
+        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, "--"));
+        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, "--"));
+        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, "--"));
 
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-            FinalVar<Double> varWE = new FinalVar<>();
-            FinalVar<Double> varME = new FinalVar<>();
-            FinalVar<Double> varC = new FinalVar<>();
+            Var<Double> varWE = new Var<>();
+            Var<Double> varME = new Var<>();
+            Var<Double> varC = new Var<>();
 
             @Override
             public void run() {
@@ -89,7 +85,7 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
 
             @Override
             public void onAsyncFinish() {
-                setNoData(false, null);
+                setNoData(false);
                 vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varWE.value)));
                 vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varME.value)));
                 vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(varC.value)));

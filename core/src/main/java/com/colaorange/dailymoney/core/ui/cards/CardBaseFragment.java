@@ -6,13 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -40,21 +38,13 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected View rootView;
     private Toolbar vToolbar;
     private View vNoData;
-    private TextView vNoDataText;
     private View vContent;
 
     private boolean showTitle;
 
     protected I18N i18n;
 
-    protected boolean lightTheme;
-
     protected abstract int getLayoutResId();
-
-    /**
-     * id of editMode menu, return -1 if you don't hava
-     */
-    protected abstract int getMenuResId();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,11 +85,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         i18n = Contexts.instance().getI18n();
         ContextsActivity activity = getContextsActivity();
 
-        lightTheme = activity.isLightTheme();
-
-        vToolbar = rootView.findViewById(R.id.cardToolbar);
+        vToolbar = rootView.findViewById(R.id.card_toolbar);
         vNoData = rootView.findViewById(R.id.no_data);
-        vNoDataText = rootView.findViewById(R.id.no_data_text);
         vContent = rootView.findViewById(R.id.card_content);
 
     }
@@ -109,72 +96,32 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         Preference preference = preference();
         CardCollection cards = preference.getCards(cardsPos);
         Card card = cards.get(pos);
-        boolean modeEdit = CardsDesktopActivity.isModeEdit();
         if (vToolbar != null) {
             showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
             vToolbar.setTitle(card.getTitle());
-            vToolbar.getMenu().clear();
-            if (modeEdit) {
-                vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryColor));
-                final int menuId = getMenuResId();
-                if (menuId > 0) {
-                    final Toolbar.OnMenuItemClickListener l = new Toolbar.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            return CardBaseFragment.this.onMenuItemClick(item);
-                        }
-                    };
 
-                    vToolbar.inflateMenu(menuId);
-                    vToolbar.setOnMenuItemClickListener(l);
-                    Menu mMenu = vToolbar.getMenu();
+            vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));
+            vToolbar.setVisibility(showTitle ? View.VISIBLE : View.GONE);
 
-                    MenuItem mi = mMenu.findItem(R.id.menu_move_up);
-                    mi.setEnabled(pos > 0);
-                    mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_up), mi.isEnabled()));
-
-                    mi = mMenu.findItem(R.id.menu_move_down);
-                    mi.setEnabled(pos < cards.size() - 1);
-                    mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_down), mi.isEnabled()));
-
-                    mi = mMenu.findItem(R.id.menu_mode_show_title);
-                    mi.setChecked(showTitle);
-                }
-            } else {
-                vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));
-            }
-
-            if (!modeEdit) {
-                vToolbar.setVisibility(showTitle ? View.VISIBLE : View.GONE);
-            } else {
-                vToolbar.setVisibility(View.VISIBLE);
-            }
-
-            doAfterReloadToolbar(vToolbar, modeEdit);
+            doAfterReloadToolbar(vToolbar);
         }
 
         //don't show content to highlight user , it is edit now
-        if (!doReloadContent(modeEdit)) {
+        if (!doReloadContent()) {
             vContent.setVisibility(View.GONE);
-
-            setNoData(true, CardFacade.getTypeText(card.getType()));
-
+            setNoData(true);
         } else {
             vContent.setVisibility(View.VISIBLE);
+            setNoData(false);
         }
     }
 
     /**
      * help to show infor for card type and sub-class to show noData info
      */
-    protected void setNoData(boolean noData, String text) {
+    protected void setNoData(boolean noData) {
         if (vNoData != null) {
             vNoData.setVisibility(noData ? View.VISIBLE : View.GONE);
-            if (Strings.isBlank(text)) {
-                vNoDataText.setText(i18n.string(R.string.msg_no_data));
-            } else {
-                vNoDataText.setText(text);
-            }
         }
         vContent.setVisibility(!noData ? View.VISIBLE : View.GONE);
     }
@@ -182,129 +129,18 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     /**
      * called in {@link #reloadView()},
      *
-     * @return true if content should be show
+     * @return true if has data to show
      */
-    protected boolean doReloadContent(boolean cardsEditMode) {
-        return !cardsEditMode;
-    }
+    abstract protected boolean doReloadContent();
 
     /**
      * call after a toolbar was handled in {@link #reloadView()}
      */
-    protected void doAfterReloadToolbar(Toolbar vToolbar, boolean editMode) {
-    }
-
-    protected boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_title) {
-            doEditTitle();
-            return true;
-        } else if (item.getItemId() == R.id.menu_move_up) {
-            doMoveUp();
-            return true;
-        } else if (item.getItemId() == R.id.menu_move_down) {
-            doMoveDown();
-            return true;
-        } else if (item.getItemId() == R.id.menu_delete) {
-            doDelete();
-            return true;
-        } else if (item.getItemId() == R.id.menu_mode_show_title) {
-            item.setChecked(!item.isChecked());
-            doModeShowTitle(item.isChecked());
-            return true;
-        }
-        return false;
-    }
-
-    private void doModeShowTitle(boolean showTitle) {
-        Preference preference = Contexts.instance().getPreference();
-
-        CardCollection cards = preference.getCards(cardsPos);
-        Card card = cards.get(pos);
-        card.withArg(CardFacade.ARG_SHOW_TITLE, this.showTitle = showTitle);
-
-        cards.set(pos, card);
-        preference.updateCards(cardsPos, cards);
-
-        //title only effect in display mode, currently is in edit mode, no need to update
-    }
-
-    private void doDelete() {
-
-        GUIs.confirm(getContextsActivity(), i18n.string(R.string.qmsg_common_confirm, i18n.string(R.string.act_delete)),
-                new GUIs.OnFinishListener() {
-                    @Override
-                    public boolean onFinish(int which, Object data) {
-                        if (GUIs.OK_BUTTON == which) {
-                            Preference preference = Contexts.instance().getPreference();
-
-                            CardCollection cards = preference.getCards(cardsPos);
-                            if (pos >= cards.size()) {
-                                return true;
-                            }
-
-                            cards.remove(pos);
-
-                            preference.updateCards(cardsPos, cards);
-
-                            publishReloadFragment();
-                        }
-                        return true;
-                    }
-                });
-
-    }
-
-    private void doMoveDown() {
-        Preference preference = Contexts.instance().getPreference();
-
-        CardCollection cards = preference.getCards(cardsPos);
-        if (pos >= cards.size()) {
-            return;
-        }
-        cards.move(pos, pos + 1);
-        preference.updateCards(cardsPos, cards);
-        publishReloadFragment();
-    }
-
-    private void doMoveUp() {
-        if (pos <= 0) {
-            return;
-        }
-        Preference preference = Contexts.instance().getPreference();
-        CardCollection cards = preference.getCards(cardsPos);
-        cards.move(pos, pos - 1);
-        preference.updateCards(cardsPos, cards);
-        publishReloadFragment();
+    protected void doAfterReloadToolbar(Toolbar vToolbar) {
     }
 
     protected void publishReloadFragment() {
         lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, cardsPos);
-    }
-
-    private void doEditTitle() {
-        I18N i18n = i18n();
-
-        CardCollection cards = preference().getCards(cardsPos);
-        Card card = cards.get(pos);
-
-        GUIs.inputText(getContextsActivity(), i18n.string(R.string.act_edit_title),
-                i18n.string(R.string.msg_edit_card_title),
-                i18n.string(R.string.act_ok), i18n().string(R.string.act_cancel),
-                InputType.TYPE_CLASS_TEXT, card.getTitle(), new GUIs.OnFinishListener() {
-                    @Override
-                    public boolean onFinish(int which, Object data) {
-                        if (which == GUIs.OK_BUTTON) {
-                            CardCollection cards = preference().getCards(cardsPos);
-                            Card card = cards.get(pos);
-                            card.setTitle((String) data);
-
-                            preference().updateCards(cardsPos, cards);
-
-                            reloadView();
-                        }
-                        return true;
-                    }
-                });
     }
 
     @Override

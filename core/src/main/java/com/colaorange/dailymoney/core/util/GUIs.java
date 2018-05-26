@@ -11,16 +11,14 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.colaorange.commons.util.FinalVar;
+import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 
 import java.util.Calendar;
@@ -201,7 +199,7 @@ public class GUIs {
 
             @Override
             public void run() {
-                final FinalVar<Exception> var = new FinalVar<>();
+                final Var<Exception> var = new Var<>();
                 try {
                     r.run();
                 } catch (Exception x) {
@@ -365,7 +363,7 @@ public class GUIs {
 
         @Override
         public void run() {
-            final FinalVar<Throwable> x = new FinalVar<Throwable>();
+            final Var<Throwable> x = new Var<Throwable>();
             try {
                 run.run();
             } catch (final Throwable x0) {

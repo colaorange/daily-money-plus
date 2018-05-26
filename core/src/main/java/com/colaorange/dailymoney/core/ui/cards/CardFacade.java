@@ -54,13 +54,23 @@ public class CardFacade {
         return f;
     }
 
-    public static String getTypeText(CardType type) {
+    public String getTypeText(CardType type) {
         I18N i18n = Contexts.instance().getI18n();
         switch (type) {
             case NAV_PAGES:
                 return i18n.string(R.string.card_nav_page);
             case INFO_EXPENSE:
                 return i18n.string(R.string.card_info_expense);
+        }
+        throw new IllegalStateException("no such card type "+type);
+    }
+
+    public boolean isTypeEditable(CardType type) {
+        switch (type) {
+            case NAV_PAGES:
+                return true;
+            case INFO_EXPENSE:
+                return false;
         }
         throw new IllegalStateException("no such card type "+type);
     }

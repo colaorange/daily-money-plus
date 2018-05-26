@@ -105,22 +105,13 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
     }
 
     @Override
-    protected int getMenuResId() {
-        return R.menu.card_editable_menu;
-    }
-
-    @Override
-    protected boolean doReloadContent(boolean editMode) {
-        if (editMode) {
-            return false;
-        }
+    protected boolean doReloadContent() {
 
         Card card = getCard();
         List<String> data = card.getArg(CardFacade.ARG_NAV_PAGES_LIST, null);
 
         if (data == null) {
-            setNoData(true, null);
-            return true;
+            return false;
         }
 
         List<NavPage> npgdata = new LinkedList<>();
@@ -133,12 +124,8 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
         }
 
         if (npgdata.size() == 0) {
-            setNoData(true, null);
-            return true;
+            return false;
         }
-
-        setNoData(false, null);
-
 
         recyclerDataList.clear();
         recyclerDataList.addAll(npgdata);

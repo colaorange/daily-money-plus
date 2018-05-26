@@ -176,14 +176,14 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     protected void stopModeEdit() {
         if (editMode.compareAndSet(true, false)) {
             mModeEdit.setChecked(false);
-            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
         }
     }
 
     protected void startModeEdit() {
         if (editMode.compareAndSet(false, true)) {
             mModeEdit.setChecked(true);
-            lookupQueue().publish(QEvents.CardFrag.ON_RELOAD_VIEW, null);
+            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
         }
     }
 
