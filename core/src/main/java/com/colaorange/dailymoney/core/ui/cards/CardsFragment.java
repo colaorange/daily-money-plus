@@ -436,7 +436,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
         Dialogs.showTextEditor(getContextsActivity(), i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_card_title),
-                null, null,
                 InputType.TYPE_CLASS_TEXT, card.getTitle(), new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {

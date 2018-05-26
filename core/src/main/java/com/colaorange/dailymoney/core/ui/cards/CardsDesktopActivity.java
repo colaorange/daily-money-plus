@@ -365,7 +365,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
         Dialogs.showTextEditor(this, i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_desktop_title),
-                null, null,
                 InputType.TYPE_CLASS_TEXT, cards.getTitle(), new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
