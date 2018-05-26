@@ -15,7 +15,7 @@
     <color name="themeLemonSecondaryLight">#90dd8e</color>
     <color name="themeLemonSecondaryText">#e0e0e0</color>
 
-    <color name="themeLemonCardColor">#ffffeb</color>
+    <color name="themeLemonCardColor">#ffffec</color>
 
     <color name="themeLemonBalanceHeadBg">#855e42</color>
     <color name="themeLemonBalanceItemBg">#f0eee1</color>
@@ -31,7 +31,7 @@
     <color name="themeOrangeSecondaryLight">#90dd8e</color>
     <color name="themeOrangeSecondaryText">#e0e0e0</color>
 
-    <color name="themeOrangeCardColor">#ffeadb</color>
+    <color name="themeOrangeCardColor">#ffeee2</color>
 
     <color name="themeOrangeBalanceHeadBg">#836107</color>
     <color name="themeOrangeBalanceItemBg">#fff0e4</color>
@@ -47,7 +47,7 @@
     <color name="themeSakuraSecondaryLight">#f0bdcd</color>
     <color name="themeSakuraSecondaryText">#e0e0e0</color>
 
-    <color name="themeSakuraCardColor">#ffeaf0</color>
+    <color name="themeSakuraCardColor">#ffe9ee</color>
 
     <color name="themeSakuraBalanceHeadBg">#9e6d7d</color>
     <color name="themeSakuraBalanceItemBg">#ffecf3</color>
