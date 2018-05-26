@@ -26,20 +26,27 @@ public class ThemeApplier {
             } else {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Light, true);
             }
-            theme.applyStyle(R.style.darkIconSet, true);
+
         } else {
             if (activity.isDialogTheme()) {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat_Dialog, true);
             } else {
                 theme.applyStyle(android.support.v7.appcompat.R.style.Theme_AppCompat, true);
             }
-            theme.applyStyle(R.style.lightIconSet, true);
         }
 
         if (activity.isNoActionBarTheme()) {
             theme.applyStyle(R.style.noActionBar, true);
         }
 
+
+        if (light) {
+            theme.applyStyle(R.style.lightCommon, true);
+            theme.applyStyle(R.style.darkIconSet, true);
+        }else{
+            theme.applyStyle(R.style.darkCommon, true);
+            theme.applyStyle(R.style.lightIconSet, true);
+        }
 
         Preference preference = activity.preference();
         String userTheme = preference.getTheme();

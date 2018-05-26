@@ -5,10 +5,21 @@ import android.support.v4.app.Fragment;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.data.CardType;
+import com.colaorange.dailymoney.core.ui.nav.NavPage;
+import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
+import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author dennis
@@ -18,9 +29,10 @@ public class CardFacade {
     public static final String ARG_SHOW_TITLE = "show_title";
 
     ContextsActivity activity;
-
+    I18N i18n;
     public CardFacade(ContextsActivity activity) {
         this.activity = activity;
+        i18n = Contexts.instance().getI18n();
     }
 
     public Fragment newFragement(int cardsPos, int pos, Card card) {
@@ -30,7 +42,7 @@ public class CardFacade {
             case INFO_EXPENSE:
                 return newInfoExpenseFragment(cardsPos, pos, card);
         }
-        throw new IllegalStateException("no such card fragment "+card.getType());
+        throw new IllegalStateException("unknown card fragment "+card.getType());
     }
 
     private Bundle newBaseBundle(int cardsPos, int pos){
@@ -55,14 +67,13 @@ public class CardFacade {
     }
 
     public String getTypeText(CardType type) {
-        I18N i18n = Contexts.instance().getI18n();
         switch (type) {
             case NAV_PAGES:
                 return i18n.string(R.string.card_nav_page);
             case INFO_EXPENSE:
                 return i18n.string(R.string.card_info_expense);
         }
-        throw new IllegalStateException("no such card type "+type);
+        return i18n.string(R.string.label_unknown);
     }
 
     public boolean isTypeEditable(CardType type) {
@@ -72,6 +83,61 @@ public class CardFacade {
             case INFO_EXPENSE:
                 return false;
         }
-        throw new IllegalStateException("no such card type "+type);
+        return false;
+    }
+
+    public void doEditArgs(int cardsPos, int pos, Card card) {
+        switch (card.getType()) {
+            case NAV_PAGES:
+                doEditNavPagesArgs(cardsPos, pos, card);
+                return;
+            case INFO_EXPENSE:
+            default:
+                return;
+        }
+    }
+
+    private void doEditNavPagesArgs(final int cardsPos, final int pos, Card card) {
+        List<NavPage> values = new LinkedList<>();
+        List<String> labels = new LinkedList<>();
+        Set<NavPage> selection = new LinkedHashSet<>();
+
+        NavPageFacade pgFacade = new NavPageFacade(activity);
+
+        for(NavPage pg: pgFacade.listPrimary()){
+            values.add(pg);
+        }
+        for(NavPage pg:values){
+            labels.add(pgFacade.getPageText(pg));
+        }
+        try {
+            List<String> sl = card.getArg(ARG_NAV_PAGES_LIST);
+            if (sl != null) {
+                for (String s : sl) {
+                    selection.add(NavPage.valueOf(s));
+                }
+            }
+        }catch(Exception x){
+            Logger.e(x.getMessage(), x);
+        }
+        Logger.d(">>> old nav_page selection {}", selection);
+
+        Dialogs.showSelectionList(activity, i18n.string(R.string.act_edit_args),
+                i18n.string(R.string.msg_edit_nav_pages_args), (List)values, labels, true,
+                (Set)selection, new Dialogs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        Preference preference = Contexts.instance().getPreference();
+
+                        Set<String> selection = (Set<String>)data;
+                        CardCollection cards = preference.getCards(cardsPos);
+                        Card card = cards.get(pos);
+                        card.getArg(ARG_NAV_PAGES_LIST, selection);
+                        Logger.d(">>> new nav_page selection {}", selection);
+                        preference.updateCards(cardsPos, cards);
+
+                        return true;
+                    }
+                });
     }
 }

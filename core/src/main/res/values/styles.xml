@@ -37,39 +37,4 @@
         <item name="android:paddingRight">14dp</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
-
-    <style name="cardLight" parent="CardView.Light">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="cardBackgroundColor">?appPrimaryLightColor</item>
-    </style>
-    <style name="cardDark" parent="CardView.Dark">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="cardBackgroundColor">?appPrimaryLightColor</item>
-    </style>
-    <style name="cardLight.ActionOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
-        <item name="android:src">?ic_more_vert</item>
-    </style>
-    <style name="cardDark.ActionOverflow" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">?ic_more_vert</item>
-    </style>
-    <style name="lightActionButtonStyle" parent="Widget.AppCompat.Light.ActionButton">
-        <!--default is better-->
-        <!--<item name="android:paddingLeft">12dp</item>-->
-        <!--<item name="android:paddingRight">12dp</item>-->
-        <!--<item name="android:minWidth">0dp</item>-->
-        <!--<item name="android:minHeight">0dp</item>-->
-    </style>
-    <style name="darkActionButtonStyle" parent="Widget.AppCompat.ActionButton">
-        <!--default is better-->
-        <!--<item name="android:paddingLeft">12dp</item>-->
-        <!--<item name="android:paddingRight">12dp</item>-->
-        <!--<item name="android:minWidth">0dp</item>-->
-        <!--<item name="android:minHeight">0dp</item>-->
-    </style>
 </resources>

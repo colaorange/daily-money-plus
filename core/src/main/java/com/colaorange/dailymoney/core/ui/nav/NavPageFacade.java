@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.core.ui.nav;
 
 import android.content.Intent;
 
+import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -15,6 +16,9 @@ import com.colaorange.dailymoney.core.ui.legacy.RecordMgntActivity;
 import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Dennis
@@ -189,5 +193,15 @@ public class NavPageFacade {
             default:
                 return i18n.string(R.string.label_unknown);
         }
+    }
+
+    public List<NavPage> listPrimary() {
+        List<NavPage> l = new LinkedList<>();
+        for(NavPage p:NavPage.values()){
+            if(getPageIcon(p)>0){
+                l.add(p);
+            }
+        }
+        return l;
     }
 }

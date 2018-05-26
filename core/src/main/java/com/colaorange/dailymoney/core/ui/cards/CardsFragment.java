@@ -215,7 +215,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
 
         private void clearCreatedFragments() {
-            if(createdFragments.size()>0) {
+            if (createdFragments.size() > 0) {
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 for (String k : createdFragments.keySet()) {
                     Fragment f = createdFragments.get(k);
@@ -255,9 +255,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             FragmentManager fragmentManager = getChildFragmentManager();
             String fragTag = card.getId();
 
-            if(fragmentManager.findFragmentByTag(fragTag)!=null){
+            if (fragmentManager.findFragmentByTag(fragTag) != null) {
                 //bound, ignore it
-            }else {
+            } else {
                 int pos = getAdapterPosition();
 
                 Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
@@ -282,7 +282,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         @NonNull
         @Override
         public CardEditorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            System.out.println(">>>>>>onCreateViewHolder> " + viewType );
             View itemView = inflater.inflate(R.layout.card_editor, parent, false);
 
             Toolbar vtoolbar = itemView.findViewById(R.id.card_toolbar);
@@ -306,7 +305,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             TextView vtext = itemView.findViewById(R.id.card_content);
 
             int pos = getAdapterPosition();
-            System.out.println(">>>>>>bindViewValue" + pos );
 
             Preference preference = preference();
             CardCollection cards = preference.getCards(cardsPos);
@@ -316,7 +314,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             vtext.setText(cardFacade.getTypeText(card.getType()));
 
             Menu mMenu = vtoolbar.getMenu();
-            vtoolbar.setOnMenuItemClickListener(new CardOnMenuItemClickListener(this){
+            vtoolbar.setOnMenuItemClickListener(new CardOnMenuItemClickListener(this) {
                 @Override
                 int getPosition() {
                     return getAdapterPosition();
@@ -343,6 +341,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private abstract class CardOnMenuItemClickListener implements Toolbar.OnMenuItemClickListener {
         RecyclerView.ViewHolder viewHolder;
+
         public CardOnMenuItemClickListener(RecyclerView.ViewHolder viewHolder) {
             this.viewHolder = viewHolder;
         }
@@ -362,8 +361,11 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                 item.setChecked(!item.isChecked());
                 doModeShowTitle(pos, item.isChecked());
                 return true;
-            }else if(item.getItemId() == R.id.menu_move){
+            } else if (item.getItemId() == R.id.menu_move) {
                 GUIs.shortToast(getContextsActivity(), R.string.msg_press_long_move);
+                return true;
+            } else if (item.getItemId() == R.id.menu_edit) {
+                doEditArg(pos);
                 return true;
             }
             return false;
@@ -411,7 +413,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     }
 
     private void doMove(int pos, int posTo) {
-        System.out.println(">>>>>>" + pos + " > " + posTo);
         Preference preference = Contexts.instance().getPreference();
 
         CardCollection cards = preference.getCards(cardsPos);
@@ -456,10 +457,18 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                 });
     }
 
+    private void doEditArg(final int pos) {
+        CardCollection cards = preference().getCards(cardsPos);
+        Card card = cards.get(pos);
+
+        cardFacade.doEditArgs(cardsPos, pos, card);
+    }
+
     public class CardDragCallback extends ItemTouchHelper.Callback {
 
         public CardDragCallback() {
         }
+
         @Override
         public boolean isLongPressDragEnabled() {
             return CardsDesktopActivity.isModeEdit();
@@ -488,8 +497,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 //            mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
         }
-
-
 
 
     }

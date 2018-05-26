@@ -397,6 +397,9 @@ public class ContextsActivity extends AppCompatActivity {
         return selectableBackgroundId;
     }
 
+    /**
+     * @return a state drawable which focus on selected state
+     */
     public Drawable getSelectedBackground() {
         StateListDrawable drawable = new StateListDrawable();
         //transparent mask for selecting ripple effect
