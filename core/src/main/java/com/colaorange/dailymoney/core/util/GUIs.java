@@ -111,47 +111,6 @@ public class GUIs {
         alertDialog.show();
     }
 
-    static public void inputText(Context context, String title, String msg, String oktext, String canceltext, int inputtype, String text, final OnFinishListener listener){
-
-        AlertDialog.Builder b = new AlertDialog.Builder(context);
-        b.setTitle(title);
-        b.setMessage(msg);
-
-        // Set up the input
-
-        View view = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.guis_text_input, null, false);
-
-//        final EditText input = new EditText(context);
-//        ViewGroup.LayoutParams p = new ViewGroup.LayoutParams();
-//        input.setLayoutParams(p);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-
-        final AppCompatEditText input = view.findViewById(R.id.guis_input);
-
-        input.setInputType(inputtype);
-
-        input.setText(text);
-
-        b.setView(view);
-
-        // Set up the buttons
-        b.setPositiveButton(oktext, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String title = input.getText().toString();
-                listener.onFinish(which, title);
-            }
-        });
-        b.setNegativeButton(canceltext, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        b.show();
-    }
-
     static public void shortToast(Context context, String msg) {
         toast(context, msg, Toast.LENGTH_SHORT);
     }
@@ -184,10 +143,6 @@ public class GUIs {
         alert(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
-    static public View inflateView(Context context, ViewGroup parent, int resId) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(resId, parent);
-    }
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();
     private static ExecutorService singleExecutor = Executors.newSingleThreadExecutor();

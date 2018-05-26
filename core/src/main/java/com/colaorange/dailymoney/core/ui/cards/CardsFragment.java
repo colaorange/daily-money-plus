@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -62,6 +64,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     private CardFacade cardFacade;
 
     protected boolean lightTheme;
+
+    private ItemTouchHelper cardDragHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +107,12 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
         vRecycler = rootView.findViewById(R.id.cards_recycler);
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
+
+        ItemTouchHelper.Callback callback =
+                new CardDragCallback();
+
+        cardDragHelper = new ItemTouchHelper(callback);
+        cardDragHelper.attachToRecyclerView(vRecycler);
     }
 
     @Override
@@ -115,7 +125,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     @Override
     public void onPause() {
         super.onPause();
-        //prevent tab switch back
+        //clear all on pause to prevent error when xxback try to reload fragment but view is not here already
         cardFragmentAdapter.clearCreatedFragments();
     }
 
@@ -128,8 +138,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             data.add(cards.get(i));
         }
 
+        //clear again.
         cardFragmentAdapter.clearCreatedFragments();
-
         recyclerDataList.clear();
 
         if (data.size() == 0) {
@@ -204,44 +214,19 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         }
 
 
-        @Override
-        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
-            super.onBindViewHolder(holder, position, payloads);
-
-            /**
-             * create fragment when viewholder is binding to a position.
-             * I don't check frag for existing here is because we always clear whole adapter when reload
-             */
-
-            int pos = position;
-
-            Card card = get(pos);
-            FragmentManager fragmentManager = getChildFragmentManager();
-            String fragTag = card.getId();
-            Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
-
-            Logger.d(">>> new fragment {}:{} ", fragTag, f);
-
-            //itemView id is dynamic, use replace or add?
-            fragmentManager.beginTransaction()
-                    .add(holder.itemView.getId(), f, fragTag)
-                    .commit();
-            createdFragments.put(fragTag, f);
-
-        }
-
-
         private void clearCreatedFragments() {
-            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-            for (String k : createdFragments.keySet()) {
-                Fragment f = createdFragments.get(k);
-                ft.detach(f);
-                ft.remove(f);
-                Logger.d(">>> remove fragment {}:{} ", k, f);
+            if(createdFragments.size()>0) {
+                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                for (String k : createdFragments.keySet()) {
+                    Fragment f = createdFragments.get(k);
+                    ft.detach(f);
+                    ft.remove(f);
+                    Logger.d(">>> remove fragment {}:{} ", k, f);
+                }
+                //very important to call commitNow, or will get error for immedidatelly adapter binding
+                ft.commitNowAllowingStateLoss();
+                createdFragments.clear();
             }
-            //very important to call commitNow, or will get error for immedidatelly adapter binding
-            ft.commitNowAllowingStateLoss();
-            createdFragments.clear();
         }
 
 
@@ -266,6 +251,25 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         public void bindViewValue(Card card) {
             super.bindViewValue(card);
 
+
+            FragmentManager fragmentManager = getChildFragmentManager();
+            String fragTag = card.getId();
+
+            if(fragmentManager.findFragmentByTag(fragTag)!=null){
+                //bound, ignore it
+            }else {
+                int pos = getAdapterPosition();
+
+                Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
+
+                Logger.d(">>> new fragment {}:{}:{} ", fragTag, "0x" + Integer.toHexString(itemView.getId()), f);
+
+                //itemView id is dynamic, use replace or add?
+                fragmentManager.beginTransaction()
+                        .add(itemView.getId(), f, fragTag)
+                        .commit();
+                adaptor.createdFragments.put(fragTag, f);
+            }
         }
     }
 
@@ -275,33 +279,22 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             super(activity, data);
         }
 
-        @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-
-        @Override
-        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
-            super.onBindViewHolder(holder, position, payloads);
-        }
-
-
         @NonNull
         @Override
-        public CardEditorHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public CardEditorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            System.out.println(">>>>>>onCreateViewHolder> " + viewType );
             View itemView = inflater.inflate(R.layout.card_editor, parent, false);
 
             Toolbar vtoolbar = itemView.findViewById(R.id.card_toolbar);
             vtoolbar.inflateMenu(R.menu.card_editable_menu);
 
-            return new CardEditorHolder(this, itemView);
+            return new CardEditorViewHolder(this, itemView);
         }
     }
 
-    public class CardEditorHolder extends RecyclerViewAdaptor.SimpleViewHolder<CardEditorAdapter, Card> {
+    public class CardEditorViewHolder extends RecyclerViewAdaptor.SimpleViewHolder<CardEditorAdapter, Card> {
 
-        public CardEditorHolder(CardEditorAdapter adapter, View itemView) {
+        public CardEditorViewHolder(CardEditorAdapter adapter, View itemView) {
             super(adapter, itemView);
         }
 
@@ -313,6 +306,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             TextView vtext = itemView.findViewById(R.id.card_content);
 
             int pos = getAdapterPosition();
+            System.out.println(">>>>>>bindViewValue" + pos );
 
             Preference preference = preference();
             CardCollection cards = preference.getCards(cardsPos);
@@ -322,17 +316,14 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             vtext.setText(cardFacade.getTypeText(card.getType()));
 
             Menu mMenu = vtoolbar.getMenu();
-            vtoolbar.setOnMenuItemClickListener(new CardOnMenuItemClickListener(pos));
+            vtoolbar.setOnMenuItemClickListener(new CardOnMenuItemClickListener(this){
+                @Override
+                int getPosition() {
+                    return getAdapterPosition();
+                }
+            });
             MenuItem mi = mMenu.findItem(R.id.menu_edit);
             mi.setVisible(cardFacade.isTypeEditable(card.getType()));
-
-            mi = mMenu.findItem(R.id.menu_move_up);
-            mi.setEnabled(pos > 0);
-            mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_up), mi.isEnabled()));
-
-            mi = mMenu.findItem(R.id.menu_move_down);
-            mi.setEnabled(pos < cards.size() - 1);
-            mi.setIcon(activity.buildDisabledIcon(activity.resolveThemeAttrResId(R.attr.ic_arrow_down), mi.isEnabled()));
 
             mi = mMenu.findItem(R.id.menu_mode_show_title);
             boolean showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, false);
@@ -340,9 +331,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
             int color = activity.resolveThemeAttrResData(R.attr.appPrimaryTextColor);
             if (!showTitle) {
-                if(lightTheme) {
+                if (lightTheme) {
                     color = Colors.lighten(color, 0.3f);
-                }else{
+                } else {
                     color = Colors.darken(color, 0.3f);
                 }
             }
@@ -350,24 +341,19 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         }
     }
 
-    private class CardOnMenuItemClickListener implements Toolbar.OnMenuItemClickListener {
-
-        int pos;
-
-        public CardOnMenuItemClickListener(int pos) {
-            this.pos = pos;
+    private abstract class CardOnMenuItemClickListener implements Toolbar.OnMenuItemClickListener {
+        RecyclerView.ViewHolder viewHolder;
+        public CardOnMenuItemClickListener(RecyclerView.ViewHolder viewHolder) {
+            this.viewHolder = viewHolder;
         }
+
+        abstract int getPosition();
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+            int pos = getPosition();
             if (item.getItemId() == R.id.menu_edit_title) {
                 doEditTitle(pos);
-                return true;
-            } else if (item.getItemId() == R.id.menu_move_up) {
-                doMoveUp(pos);
-                return true;
-            } else if (item.getItemId() == R.id.menu_move_down) {
-                doMoveDown(pos);
                 return true;
             } else if (item.getItemId() == R.id.menu_delete) {
                 doDelete(pos);
@@ -375,6 +361,9 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             } else if (item.getItemId() == R.id.menu_mode_show_title) {
                 item.setChecked(!item.isChecked());
                 doModeShowTitle(pos, item.isChecked());
+                return true;
+            }else if(item.getItemId() == R.id.menu_move){
+                GUIs.shortToast(getContextsActivity(), R.string.msg_press_long_move);
                 return true;
             }
             return false;
@@ -421,37 +410,23 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     }
 
-    private void doMoveDown(int pos) {
+    private void doMove(int pos, int posTo) {
+        System.out.println(">>>>>>" + pos + " > " + posTo);
         Preference preference = Contexts.instance().getPreference();
 
         CardCollection cards = preference.getCards(cardsPos);
         if (pos >= cards.size()) {
             return;
         }
-        cards.move(pos, pos + 1);
+        cards.move(pos, posTo);
         preference.updateCards(cardsPos, cards);
 
         recyclerDataList.set(pos, cards.get(pos));
-        recyclerDataList.set(pos + 1, cards.get(pos + 1));
+        recyclerDataList.set(posTo, cards.get(posTo));
 
-        cardEditorAdapter.notifyItemMoved(pos, pos + 1);
+        cardEditorAdapter.notifyItemMoved(pos, posTo);
     }
 
-    private void doMoveUp(int pos) {
-        if (pos <= 0) {
-            return;
-        }
-        Preference preference = Contexts.instance().getPreference();
-        CardCollection cards = preference.getCards(cardsPos);
-        cards.move(pos, pos - 1);
-        preference.updateCards(cardsPos, cards);
-
-        recyclerDataList.set(pos, cards.get(pos));
-        recyclerDataList.set(pos - 1, cards.get(pos - 1));
-
-        cardEditorAdapter.notifyItemMoved(pos, pos - 1);
-
-    }
 
     private void doEditTitle(final int pos) {
         I18N i18n = i18n();
@@ -459,13 +434,13 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         CardCollection cards = preference().getCards(cardsPos);
         Card card = cards.get(pos);
 
-        GUIs.inputText(getContextsActivity(), i18n.string(R.string.act_edit_title),
+        Dialogs.showTextEditor(getContextsActivity(), i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_card_title),
-                i18n.string(R.string.act_ok), i18n().string(R.string.act_cancel),
-                InputType.TYPE_CLASS_TEXT, card.getTitle(), new GUIs.OnFinishListener() {
+                null, null,
+                InputType.TYPE_CLASS_TEXT, card.getTitle(), new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
-                        if (which == GUIs.OK_BUTTON) {
+                        if (which == Dialogs.OK_BUTTON) {
                             CardCollection cards = preference().getCards(cardsPos);
                             Card card = cards.get(pos);
                             card.setTitle((String) data);
@@ -480,6 +455,44 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                         return true;
                     }
                 });
+    }
+
+    public class CardDragCallback extends ItemTouchHelper.Callback {
+
+        public CardDragCallback() {
+        }
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return CardsDesktopActivity.isModeEdit();
+        }
+
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return false;
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                              RecyclerView.ViewHolder target) {
+            doMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//            mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        }
+
+
+
+
     }
 
 }

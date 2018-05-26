@@ -43,6 +43,7 @@ import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.TestsDesktop;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
+import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
@@ -362,13 +363,13 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
         I18N i18n = i18n();
 
-        GUIs.inputText(this, i18n.string(R.string.act_edit_title),
+        Dialogs.showTextEditor(this, i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_desktop_title),
-                i18n().string(R.string.act_ok), i18n().string(R.string.act_cancel),
-                InputType.TYPE_CLASS_TEXT, cards.getTitle(), new GUIs.OnFinishListener() {
+                null, null,
+                InputType.TYPE_CLASS_TEXT, cards.getTitle(), new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
-                        if (which == GUIs.OK_BUTTON) {
+                        if (which == Dialogs.OK_BUTTON) {
                             int pos = vPager.getCurrentItem();
                             CardCollection cards = preference().getCards(pos);
                             cards.setTitle((String) data);

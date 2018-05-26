@@ -7,14 +7,9 @@
         android:title="@string/act_edit"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_move_up"
-        android:icon="?ic_arrow_up"
-        android:title="@string/act_move_up"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_move_down"
-        android:icon="?ic_arrow_down"
-        android:title="@string/act_move_down"
+        android:id="@+id/menu_move"
+        android:icon="?ic_swap_vert"
+        android:title="@string/act_move"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_mode_show_title"
@@ -25,7 +20,7 @@
         android:id="@+id/menu_edit_title"
         android:icon="?ic_title"
         android:title="@string/act_edit_title"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/menu_delete"
         android:title="@string/act_delete"

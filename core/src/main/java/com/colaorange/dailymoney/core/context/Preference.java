@@ -730,8 +730,11 @@ public class Preference {
         editor.commit();
     }
 
+    private final int alwaysEnabledCardsSize = 1;
+    private final int maxCardsSize = 3;
+
     public int getCardsSize() {
-        return 4;
+        return maxCardsSize;
     }
 
     public boolean isAnyCards() {
@@ -746,6 +749,11 @@ public class Preference {
     }
 
     public boolean isCardsEnabled(int index) {
+
+        if (index < alwaysEnabledCardsSize) {
+            return true;
+        }
+
         if (index >= getCardsSize()) {
             return false;
         }

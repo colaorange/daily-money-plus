@@ -8,7 +8,7 @@
         android:title="@string/act_apply"/>
     <item
         android:id="@+id/menu_swap"
-        android:icon="?ic_from_to_swap"
+        android:icon="?ic_swap_vert"
         app:showAsAction="ifRoom"
         android:title="@string/act_swap"/>
     <item

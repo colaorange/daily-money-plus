@@ -61,7 +61,7 @@
     <attr name="ic_share" format="reference" />
     <attr name="ic_today" format="reference" />
     <attr name="ic_from_to_apply" format="reference" />
-    <attr name="ic_from_to_swap" format="reference" />
+    <attr name="ic_swap_vert" format="reference" />
     <attr name="ic_template" format="reference" />
     <attr name="ic_check" format="reference" />
     <attr name="ic_set_working" format="reference" />
@@ -408,7 +408,7 @@
         <item name="ic_share">@drawable/ic_share_light_24dp</item>
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
         <item name="ic_from_to_apply">@drawable/ic_layers_light_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_vert_light_24dp</item>
+        <item name="ic_swap_vert">@drawable/ic_swap_vert_light_24dp</item>
         <item name="ic_check">@drawable/ic_check_light_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_light_24dp</item>
         <item name="ic_operations">@drawable/ic_lightbulb_light_24dp</item>
@@ -449,7 +449,7 @@
         <item name="ic_share">@drawable/ic_share_dark_24dp</item>
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
         <item name="ic_from_to_apply">@drawable/ic_layers_dark_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_vert_dark_24dp</item>
+        <item name="ic_swap_vert">@drawable/ic_swap_vert_dark_24dp</item>
         <item name="ic_check">@drawable/ic_check_dark_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_dark_24dp</item>
         <item name="ic_operations">@drawable/ic_lightbulb_dark_24dp</item>
