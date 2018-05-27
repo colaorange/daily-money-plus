@@ -7,10 +7,12 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,7 +84,6 @@ public class Dialogs {
             throw new IllegalArgumentException("values, labels size not equals " + values.size() + "!=" + labels.size());
         }
 
-
         I18N i18n = Contexts.instance().getI18n();
         String okText = i18n.string(R.string.act_ok);
         String cancelText = Contexts.instance().getI18n().string(R.string.act_cancel);
@@ -102,9 +103,19 @@ public class Dialogs {
             }
         }
 
+        float dpHeight = GUIs.getDPHeight(activity);
+        float dpWidth = GUIs.getDPWidth(activity);
+
         final LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.guis_selection_list, null, false);
         ListView listView = view.findViewById(R.id.guis_list);
+
+        //to prevent list is too height, that cause button disappear, we limit it height;
+        ViewGroup.LayoutParams lp = listView.getLayoutParams();
+        lp = new LinearLayout.LayoutParams(lp.width, GUIs.dp2Pixel(activity, dpHeight * 0.6f));
+        listView.setLayoutParams(lp);//need to set it back
+
+
         SelectionListAdapter adapter = new SelectionListAdapter(activity, values, labels, multiple, newSelection);
         listView.setAdapter(adapter);
         adapter.bind(listView);
@@ -125,7 +136,11 @@ public class Dialogs {
             }
         });
 
-        b.show();
+        AlertDialog dialog = b.create();
+
+        dialog.show();
+//        Window w = dialog.getWindow();
+//        w.setLayout(GUIs.dp2Pixel(activity, dpWidth * 0.9f), GUIs.dp2Pixel(activity, dpHeight * 0.75f));
     }
 
     private static class SelectionListAdapter extends BaseAdapter {
