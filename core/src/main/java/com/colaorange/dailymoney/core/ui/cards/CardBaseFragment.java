@@ -100,7 +100,6 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
             showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
             vToolbar.setTitle(card.getTitle());
 
-            vToolbar.setBackgroundColor(getContextsActivity().resolveThemeAttrResData(R.attr.appPrimaryLightColor));
             vToolbar.setVisibility(showTitle ? View.VISIBLE : View.GONE);
 
             doAfterReloadToolbar(vToolbar);

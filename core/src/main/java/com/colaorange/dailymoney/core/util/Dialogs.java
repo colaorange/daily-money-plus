@@ -70,6 +70,7 @@ public class Dialogs {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                listener.onFinish(which, null);
             }
         });
 
@@ -133,6 +134,7 @@ public class Dialogs {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                listener.onFinish(which, null);
             }
         });
 

@@ -311,7 +311,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             card = cards.get(pos);
 
             vtoolbar.setTitle(card.getTitle());
-            vtext.setText(cardFacade.getTypeText(card.getType()));
+            vtext.setText(cardFacade.getCardInfo(card));
 
             Menu mMenu = vtoolbar.getMenu();
             vtoolbar.setOnMenuItemClickListener(new CardOnMenuItemClickListener(this) {
@@ -461,7 +461,12 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         CardCollection cards = preference().getCards(cardsPos);
         Card card = cards.get(pos);
 
-        cardFacade.doEditArgs(cardsPos, pos, card);
+        cardFacade.doEditArgs(cardsPos, pos, card, new CardFacade.OnOKListener() {
+            @Override
+            public void onOK(Card card) {
+                cardEditorAdapter.notifyItemChanged(pos);
+            }
+        });
     }
 
     public class CardDragCallback extends ItemTouchHelper.Callback {

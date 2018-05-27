@@ -30,6 +30,7 @@ public class CardFacade {
 
     ContextsActivity activity;
     I18N i18n;
+
     public CardFacade(ContextsActivity activity) {
         this.activity = activity;
         i18n = Contexts.instance().getI18n();
@@ -42,10 +43,10 @@ public class CardFacade {
             case INFO_EXPENSE:
                 return newInfoExpenseFragment(cardsPos, pos, card);
         }
-        throw new IllegalStateException("unknown card fragment "+card.getType());
+        throw new IllegalStateException("unknown card fragment " + card.getType());
     }
 
-    private Bundle newBaseBundle(int cardsPos, int pos){
+    private Bundle newBaseBundle(int cardsPos, int pos) {
         Bundle b = new Bundle();
         b.putSerializable(CardInfoExpenseFragment.ARG_CARDS_POS, cardsPos);
         b.putSerializable(CardInfoExpenseFragment.ARG_POS, pos);
@@ -86,10 +87,10 @@ public class CardFacade {
         return false;
     }
 
-    public void doEditArgs(int cardsPos, int pos, Card card) {
+    public void doEditArgs(int cardsPos, int pos, Card card, OnOKListener listener) {
         switch (card.getType()) {
             case NAV_PAGES:
-                doEditNavPagesArgs(cardsPos, pos, card);
+                doEditNavPagesArgs(cardsPos, pos, card, listener);
                 return;
             case INFO_EXPENSE:
             default:
@@ -97,17 +98,17 @@ public class CardFacade {
         }
     }
 
-    private void doEditNavPagesArgs(final int cardsPos, final int pos, Card card) {
+    private void doEditNavPagesArgs(final int cardsPos, final int pos, Card card, final OnOKListener listener) {
         List<NavPage> values = new LinkedList<>();
         List<String> labels = new LinkedList<>();
         Set<NavPage> selection = new LinkedHashSet<>();
 
         NavPageFacade pgFacade = new NavPageFacade(activity);
 
-        for(NavPage pg: pgFacade.listPrimary()){
+        for (NavPage pg : pgFacade.listPrimary()) {
             values.add(pg);
         }
-        for(NavPage pg:values){
+        for (NavPage pg : values) {
             labels.add(pgFacade.getPageText(pg));
         }
         try {
@@ -117,27 +118,56 @@ public class CardFacade {
                     selection.add(NavPage.valueOf(s));
                 }
             }
-        }catch(Exception x){
+        } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         Logger.d(">>> old nav_page selection {}", selection);
 
         Dialogs.showSelectionList(activity, i18n.string(R.string.act_edit_args),
-                i18n.string(R.string.msg_edit_nav_pages_args), (List)values, labels, true,
-                (Set)selection, new Dialogs.OnFinishListener() {
+                i18n.string(R.string.msg_edit_nav_pages_args), (List) values, labels, true,
+                (Set) selection, new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
-                        Preference preference = Contexts.instance().getPreference();
+                        if (Dialogs.OK_BUTTON == which) {
+                            Preference preference = Contexts.instance().getPreference();
 
-                        Set<String> selection = (Set<String>)data;
-                        CardCollection cards = preference.getCards(cardsPos);
-                        Card card = cards.get(pos);
-                        card.getArg(ARG_NAV_PAGES_LIST, selection);
-                        Logger.d(">>> new nav_page selection {}", selection);
-                        preference.updateCards(cardsPos, cards);
+                            Set<String> selection = (Set<String>) data;
+                            CardCollection cards = preference.getCards(cardsPos);
+                            Card card = cards.get(pos);
+                            card.withArg(ARG_NAV_PAGES_LIST, selection);
+                            Logger.d(">>> new nav_page selection {}", selection);
+                            preference.updateCards(cardsPos, cards);
 
+                            listener.onOK(card);
+                        }
                         return true;
                     }
                 });
+    }
+
+    public String getCardInfo(Card card) {
+        StringBuilder sb = new StringBuilder(getTypeText(card.getType()));
+
+        List list;
+        switch (card.getType()) {
+            case NAV_PAGES:
+                sb.append(" : ");
+                list = card.getArg(ARG_NAV_PAGES_LIST);
+                if (list != null && list.size() > 0) {
+                    sb.append(i18n.string(R.string.msg_n_items, list.size()));
+                }else{
+                    sb.append(i18n.string(R.string.msg_no_data));
+                }
+                break;
+            case INFO_EXPENSE:
+            default:
+                break;
+        }
+
+        return sb.toString();
+    }
+
+    public interface OnOKListener{
+        void onOK(Card card);
     }
 }

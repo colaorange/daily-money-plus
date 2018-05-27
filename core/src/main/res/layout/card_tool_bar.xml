@@ -4,6 +4,7 @@
     android:id="@+id/card_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?appCardbarSize"
+    android:background="?appCardColor"
     app:contentInsetStartWithNavigation="0dp"
     app:popupTheme="?appPopupTheme"
     app:titleTextAppearance="@style/appbarTextAppearance"/>
