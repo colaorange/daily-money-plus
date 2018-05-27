@@ -116,6 +116,12 @@ public class ContextsActivity extends AppCompatActivity {
         instanceStateHelper.onBackup(savedInstanceState);
     }
 
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        instanceStateHelper.onRestore(savedInstanceState);
+    }
+
     public void markWholeRecreate() {
         globalRecreateTimeMark = System.currentTimeMillis();
     }

@@ -36,6 +36,7 @@ import java.util.Map;
  * @author dennis
  * @see {@link AccountType}
  */
+@InstanceState
 public class AccountMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
 

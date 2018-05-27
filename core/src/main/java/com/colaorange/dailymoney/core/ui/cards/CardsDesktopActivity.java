@@ -54,6 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author dennis
  */
+@InstanceState
 public class CardsDesktopActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
@@ -277,11 +278,11 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
         }
 
-
         if (temp.equals(cardsList)) {
             lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT);
         } else {
             /*
+            I don't know the reason yet, so just clear all when reloading
               Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cards:0:0}
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1422)
         at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1759)
@@ -299,13 +300,17 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                 currentCardsIndex = cardsList.size() - 1;
             }
 
-            vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager(), cardsList));
+            //setupWithViewPager will cause current index reset, need to keep it.
+            int tp = currentCardsIndex;
 
+            vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager(), cardsList));
             vAppTabs.setupWithViewPager(vPager);
-            if (currentCardsIndex >= 0) {
-                vAppTabs.getTabAt(currentCardsIndex).select();
-            } else {
-                refreshTab();
+            refreshTab();
+
+            currentCardsIndex = tp;
+
+            if (currentCardsIndex > 0) {
+                vPager.setCurrentItem(currentCardsIndex, false);
             }
         }
 

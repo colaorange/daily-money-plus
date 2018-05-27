@@ -56,6 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author dennis
  */
+@InstanceState
 public class DesktopMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
