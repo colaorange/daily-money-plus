@@ -23,6 +23,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -329,6 +330,15 @@ public class ContextsActivity extends AppCompatActivity {
             dpRatio = GUIs.getDPRatio(this);
         }
         return dpRatio.floatValue();
+    }
+
+    public float getDpWidth(){
+        //don't catch this, orientation imght change
+        return GUIs.getDPWidth(this);
+    }
+    public float getDpHeight(){
+        //don't catch this, orientation might change
+        return GUIs.getDPHeight(this);
     }
 
     public boolean isLightTheme() {

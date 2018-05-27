@@ -81,9 +81,7 @@ public class CardNavPagesFragment extends CardBaseFragment implements EventQueue
     }
 
     private int calColumn() {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 84);//72+6+6, read desktop_mgnt_item.xml
+        int noOfColumns = (int) (getContextsActivity().getDpWidth() / 84);//72+6+6, read desktop_mgnt_item.xml
 
         switch (preference().getTextSize()) {
             case Preference.TEXT_SIZE_LARGE:

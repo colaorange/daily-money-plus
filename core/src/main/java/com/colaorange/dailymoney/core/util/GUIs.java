@@ -10,12 +10,14 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -412,12 +414,22 @@ public class GUIs {
         boolean onFinish(int which, Object data);
     }
 
-    public static int converDP2Pixel(Context context, float dp) {
+    public static int dp2Pixel(Context context, float dp) {
         return (int) (dp * getDPRatio(context) + 0.5F);
     }
 
     public static float getDPRatio(Context context) {
         return context.getResources().getDisplayMetrics().density;
+    }
+
+    public static float getDPWidth(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels / displayMetrics.density;
+    }
+
+    public static float getDPHeight(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels / displayMetrics.density;
     }
 
     public static int getOrientation(Activity activity) {
