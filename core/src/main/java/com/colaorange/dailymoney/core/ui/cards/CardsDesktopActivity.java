@@ -308,10 +308,10 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             refreshTab();
 
             currentCardsIndex = tp;
+        }
 
-            if (currentCardsIndex > 0) {
-                vPager.setCurrentItem(currentCardsIndex, false);
-            }
+        if (currentCardsIndex > 0) {
+            vPager.setCurrentItem(currentCardsIndex, false);
         }
 
         CalendarHelper calHelper = calendarHelper();
