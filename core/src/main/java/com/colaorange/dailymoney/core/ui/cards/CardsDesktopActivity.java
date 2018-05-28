@@ -1,6 +1,5 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.view.ActionMode;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,7 +35,6 @@ import com.colaorange.dailymoney.core.data.CardCollection;
 import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
-import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.StartupActivity;
@@ -45,8 +44,6 @@ import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.TestsDesktop;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
-import com.colaorange.dailymoney.core.ui.nav.NavPage;
-import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
 import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -73,7 +70,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private NavMenuAdapter navMenuAdapter;
     private List<NavMenuAdapter.NavMenuObj> navMenuList;
 
-    private MenuItem mModeEdit;
+//    private MenuItem mModeEdit;
 
     private List<CardCollection> cardsList;
 
@@ -84,7 +81,9 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private Boolean firstTime;
 
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
-    private static AtomicBoolean editMode = new AtomicBoolean(false);
+//    private static AtomicBoolean editMode = new AtomicBoolean(false);
+
+    private ActionMode actionMode;
 
     private CardFacade cardFacade;
 
@@ -186,24 +185,33 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
     protected void stopModeEdit() {
-        if (editMode.compareAndSet(true, false)) {
-            mModeEdit.setChecked(false);
-            publishReloadFragment(null);
+        if (actionMode != null) {
+            actionMode.finish();
+            actionMode = null;
+            //finish will publish it
+//            publishReloadFragment(null);
         }
     }
 
     protected void startModeEdit() {
-        if (editMode.compareAndSet(false, true)) {
-            mModeEdit.setChecked(true);
-            publishReloadFragment(null);
+
+        if (actionMode == null) {
+            actionMode = this.startSupportActionMode(new EditDesktopActionModeCallback());
+        } else {
+            actionMode.invalidate();
         }
+        actionMode.setTitle(i18n().string(R.string.act_arrange_desktop));
+        publishReloadFragment(null);
     }
 
-    private void publishReloadFragment(Integer pos){
-        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, pos);
+    private void publishReloadFragment(Integer pos) {
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.CardsFrag.ON_RELOAD_FRAGMENT)
+                .withData(pos)
+                .withArg(QEvents.CardsFrag.ARG_MODE_EDIT, actionMode != null)
+                .build());
     }
 
-    private void publishClearFragment(Integer pos){
+    private void publishClearFragment(Integer pos) {
         lookupQueue().publish(QEvents.CardsFrag.ON_CLEAR_FRAGMENT, pos);
     }
 
@@ -212,7 +220,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         if (vDrawer.isDrawerOpen(GravityCompat.START)) {
             vDrawer.closeDrawer(GravityCompat.START);
             return;
-        } else if (isModeEdit()) {
+        } else if (actionMode != null) {
             stopModeEdit();
             return;
         } else if (vPager.getCurrentItem() > 0) {
@@ -237,10 +245,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             TextView vtext = tab.findViewById(R.id.tab_text);
             String title = cards.getTitle();
             title = Strings.isBlank(title) ? "" + (i + 1) : title;
-
-            if (isTestDesktop(cards)) {
-                title = i18n().string(R.string.desktop_tests);
-            }
 
             vtext.setText(title);
             i++;
@@ -277,6 +281,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         if (preference.isTestsDesktop()) {
             CardCollection cards = new CardCollection();
             cards.withArg(TestsDesktop.NAME, true);
+            cards.setTitle(i18n().string(R.string.desktop_tests));
             temp.add(cards);
 
         }
@@ -339,8 +344,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cards_menu, menu);
-        mModeEdit = menu.findItem(R.id.menu_mode_edit);
-        mModeEdit.setChecked(isModeEdit());
         return true;
     }
 
@@ -422,7 +425,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         }
 
         Dialogs.showSelectionList(this, i18n.string(R.string.act_add_card),
-                i18n.string(R.string.msg_select_card_type), (List) values, labels, false,
+                i18n.string(R.string.msg_select_cards), (List) values, labels, true,
                 (Set) selection, new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
@@ -433,18 +436,17 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
                             if (selection.isEmpty()) {
                                 GUIs.shortToast(CardsDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
-                            }else{
+                            } else {
                                 int cardsPos = vPager.getCurrentItem();
                                 CardCollection cards = preference().getCards(cardsPos);
 
-                                CardType type = selection.iterator().next();
-                                Card card = new Card(type, cardFacade.getTypeText(type));
+                                for (CardType type : selection) {
+                                    Card card = new Card(type, cardFacade.getTypeText(type));
+                                    cards.add(card);
+                                    Logger.d(">>> new card {} has added to cards {}/{}", card.getTitle(), cards.getTitle(), cards.size());
+                                }
 
-                                cards.add(card);
-
-                                Logger.d(">>> new card {} has added to cards {}/{}", card.getTitle(), cards.getTitle(),cards.size());
                                 preference.updateCards(cardsPos, cards);
-
                                 publishReloadFragment(cardsPos);
                             }
 
@@ -566,8 +568,42 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         super.onActionBarHomeAsUp(resId);
     }
 
-    public static boolean isModeEdit() {
-        return editMode.get();
+    private class EditDesktopActionModeCallback implements android.support.v7.view.ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.cards_edit_menu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.menu_edit_title) {
+                doEditTitle();
+                return true;
+            } else if (item.getItemId() == R.id.menu_add_card) {
+                doAddCard();
+                return true;
+            }
+            return false;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            publishReloadFragment(null);
+        }
     }
 
 }

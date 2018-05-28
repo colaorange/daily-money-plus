@@ -67,6 +67,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private ItemTouchHelper cardDragHelper;
 
+    private Boolean modeEdit = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -151,7 +153,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             recyclerDataList.addAll(data);
         }
 
-        if (!CardsDesktopActivity.isModeEdit()) {
+        if (!modeEdit) {
             if (vRecycler.getAdapter() == cardFragmentAdapter) {
                 cardFragmentAdapter.notifyDataSetChanged();
             } else {
@@ -186,6 +188,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         Object data;
         switch (event.getName()) {
             case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
+                modeEdit = event.getArg( QEvents.CardsFrag.ARG_MODE_EDIT, modeEdit);
+
                 data = event.getData();
                 /**
                  * if no data, or data is my pos, reload my data.
@@ -476,7 +480,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
         @Override
         public boolean isLongPressDragEnabled() {
-            return CardsDesktopActivity.isModeEdit();
+            return modeEdit;
         }
 
         @Override

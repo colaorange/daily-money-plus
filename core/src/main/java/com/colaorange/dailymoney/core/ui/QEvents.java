@@ -7,68 +7,71 @@ public class QEvents {
 
     public interface DesktopMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "DesktopMgntFrag:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "DesktopMgntFrag:onReloadFragment";
+        String ON_CLEAR_SELECTION = "DesktopMgntFrag:onClearSelection";
+        String ON_RELOAD_FRAGMENT = "DesktopMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_DESKTOP_TEIM = "DesktopMgntFrag:onSelectDesktopItem";
-        public String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
+        String ON_SELECT_DESKTOP_TEIM = "DesktopMgntFrag:onSelectDesktopItem";
+        String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
     }
 
     public interface CardsFrag {
         //activity -> fragment
-        public String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
+        String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
         String ON_CLEAR_FRAGMENT =  "CardsFrag:onClearFragment";
+
+        String ARG_MODE_EDIT = "modeEdit";
+        
     }
     public interface CardFrag {
         //activity -> fragment
-        public String ON_RELOAD_VIEW = "CardFrag:onReloadView";
+        String ON_RELOAD_VIEW = "CardFrag:onReloadView";
     }
 
 
     public interface AccountMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "AccountMgntFrag:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "AccountMgntFrag:onReloadFragment";
+        String ON_CLEAR_SELECTION = "AccountMgntFrag:onClearSelection";
+        String ON_RELOAD_FRAGMENT = "AccountMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_ACCOUNT = "AccountMgntFrag:onSelectAccount";
-        public String ON_RESELECT_ACCOUNT = "AccountMgntFrag:onReselectAccount";
+        String ON_SELECT_ACCOUNT = "AccountMgntFrag:onSelectAccount";
+        String ON_RESELECT_ACCOUNT = "AccountMgntFrag:onReselectAccount";
     }
 
 
     public interface BalanceMgntFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "BalanceMgntFrag:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "BalanceMgntFrag:onReloadFragment";
+        String ON_CLEAR_SELECTION = "BalanceMgntFrag:onClearSelection";
+        String ON_RELOAD_FRAGMENT = "BalanceMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_BALANCE = "balanceMgnt:onSelectBalance";
-        public String ON_RESELECT_BALANCE = "balanceMgnt:onReselectBalance";
-        public String ON_FRAGMENT_START = "balanceMgnt:onFragmentStart";
-        public String ON_FRAGMENT_STOP = "balanceMgnt:onFragmentStop";
+        String ON_SELECT_BALANCE = "balanceMgnt:onSelectBalance";
+        String ON_RESELECT_BALANCE = "balanceMgnt:onReselectBalance";
+        String ON_FRAGMENT_START = "balanceMgnt:onFragmentStart";
+        String ON_FRAGMENT_STOP = "balanceMgnt:onFragmentStop";
 
     }
 
 
     public interface RecordMgntFrag {
         //activity -> fragment
-        public String ON_RELOAD_FRAGMENT = "RecordMgntFrag:onReloadFragment";
+        String ON_RELOAD_FRAGMENT = "RecordMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_FRAGMENT_START = "RecordMgntFrag:onFragmentStart";
-        public String ON_FRAGMENT_STOP = "RecordMgntFrag:onFragmentStop";
+        String ON_FRAGMENT_START = "RecordMgntFrag:onFragmentStart";
+        String ON_FRAGMENT_STOP = "RecordMgntFrag:onFragmentStop";
 
     }
 
     public interface RecordListFrag {
         //activity -> fragment
-        public String ON_CLEAR_SELECTION = "RecordListFrag:onClearSelection";
-        public String ON_RELOAD_FRAGMENT = "RecordListFrag:onReloadFragment";
+        String ON_CLEAR_SELECTION = "RecordListFrag:onClearSelection";
+        String ON_RELOAD_FRAGMENT = "RecordListFrag:onReloadFragment";
 
         //fragment -> activity
-        public String ON_SELECT_RECORD = "RecordListFrag:onSelectRecord";
-        public String ON_RESELECT_RECORD = "RecordListFrag:onReselectRecord";
+        String ON_SELECT_RECORD = "RecordListFrag:onSelectRecord";
+        String ON_RESELECT_RECORD = "RecordListFrag:onReselectRecord";
 
     }
 
