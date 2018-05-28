@@ -73,9 +73,10 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 //    private MenuItem mModeEdit;
 
     private List<CardCollection> cardsList;
+    private List<Integer> cardsIndex;
 
     @InstanceState
-    private Integer currentCardsIndex = null;
+    private Integer currentTabIndex = null;
 
     @InstanceState
     private Boolean firstTime;
@@ -114,8 +115,13 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     @Override
     protected void onResume() {
         super.onResume();
-
-        reloadData();
+        if(!isFinishing()) {
+            //possible been recreated by preference, prevent reload data that cause fragment state exception
+            reloadData();
+        }else{
+            //wft android's terrible fragment bug..i have to cear event this activity is finishing
+            publishClearFragment(null);
+        }
     }
 
     private void initMembers() {
@@ -129,19 +135,19 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         vAppTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                currentCardsIndex = tab.getPosition();
+                currentTabIndex = tab.getPosition();
                 refreshTab();
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
-                currentCardsIndex = null;
+                currentTabIndex = null;
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                currentCardsIndex = tab.getPosition();
+                currentTabIndex = tab.getPosition();
             }
         });
     }
@@ -244,7 +250,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             }
             TextView vtext = tab.findViewById(R.id.tab_text);
             String title = cards.getTitle();
-            title = Strings.isBlank(title) ? "" + (i + 1) : title;
+            title = Strings.isBlank(title) ? "" + (cardsIndex.get(i) + 1) : title;
 
             vtext.setText(title);
             i++;
@@ -267,6 +273,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private void reloadData() {
 
         List<CardCollection> temp = new LinkedList<>();
+        List<Integer> indexs = new LinkedList<>();
         Preference preference = preference();
         int s = preference.getCardsSize();
         for (int i = 0; i < s; i++) {
@@ -275,6 +282,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             }
             CardCollection cards = preference.getCards(i);
             temp.add(cards);
+            indexs.add(i);
         }
 
         //append if test desktop
@@ -299,27 +307,28 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             publishClearFragment(null);
 
             cardsList = temp;
+            cardsIndex = indexs;
 
-            if (currentCardsIndex == null) {
-                currentCardsIndex = 0;
+            if (currentTabIndex == null) {
+                currentTabIndex = 0;
             }
 
-            if (currentCardsIndex >= cardsList.size()) {
-                currentCardsIndex = cardsList.size() - 1;
+            if (currentTabIndex >= cardsList.size()) {
+                currentTabIndex = cardsList.size() - 1;
             }
 
             //setupWithViewPager will cause current index reset, need to keep it.
-            int tp = currentCardsIndex;
+            int tp = currentTabIndex;
 
-            vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager(), cardsList));
+            vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager()));
             vAppTabs.setupWithViewPager(vPager);
             refreshTab();
 
-            currentCardsIndex = tp;
+            currentTabIndex = tp;
         }
 
-        if (currentCardsIndex > 0) {
-            vPager.setCurrentItem(currentCardsIndex, false);
+        if (currentTabIndex > 0) {
+            vPager.setCurrentItem(currentTabIndex, false);
         }
 
         CalendarHelper calHelper = calendarHelper();
@@ -390,12 +399,13 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                     @Override
                     public boolean onFinish(int which, Object data) {
                         if (which == Dialogs.OK_BUTTON) {
-                            int cardsPos = vPager.getCurrentItem();
+                            int tabPos = vPager.getCurrentItem();
+                            int cardsPos = cardsIndex.get(tabPos);
                             CardCollection cards = preference().getCards(cardsPos);
                             cards.setTitle((String) data);
                             preference().updateCards(cardsPos, cards);
 
-                            cardsList.set(cardsPos, cards);
+                            cardsList.set(vPager.getCurrentItem(), cards);
                             refreshTab();
                         }
                         return true;
@@ -437,7 +447,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                             if (selection.isEmpty()) {
                                 GUIs.shortToast(CardsDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
                             } else {
-                                int cardsPos = vPager.getCurrentItem();
+                                int tabPos = vPager.getCurrentItem();
+                                int cardsPos = cardsIndex.get(tabPos);
                                 CardCollection cards = preference().getCards(cardsPos);
 
                                 for (Dialogs.SupportIconObject<CardType> type : selection) {
@@ -477,12 +488,9 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
 
-    public static class CardsPagerAdapter extends FragmentPagerAdapter {
-        List<CardCollection> cardsList;
-
-        public CardsPagerAdapter(FragmentManager fm, List<CardCollection> cardsList) {
+    public class CardsPagerAdapter extends FragmentPagerAdapter {
+        public CardsPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.cardsList = cardsList;
         }
 
         @Override
@@ -490,10 +498,12 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             return cardsList.size();
         }
 
+
+
         @Override
         public Fragment getItem(int position) {
 
-            CardCollection cards = this.cardsList.get(position);
+            CardCollection cards = cardsList.get(position);
             if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
                 DesktopMgntFragment f = new DesktopMgntFragment();
                 Bundle b = new Bundle();
@@ -503,7 +513,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             } else {
                 Fragment f = new CardsFragment();
                 Bundle b = new Bundle();
-                b.putInt(CardsFragment.ARG_CARDS_POS, position);
+                b.putInt(CardsFragment.ARG_CARDS_POS, cardsIndex.get(position));
                 f.setArguments(b);
                 return f;
             }

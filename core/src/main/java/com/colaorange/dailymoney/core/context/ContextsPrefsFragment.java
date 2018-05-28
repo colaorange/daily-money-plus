@@ -12,6 +12,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -97,6 +98,8 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         if (recreateKeys.contains(key)) {
             ((ContextsActivity) getActivity()).markWholeRecreate();
             getActivity().recreate();
+        }else if(!Strings.isBlank(key) && key.startsWith(com.colaorange.dailymoney.core.context.Preference.DESKTOP_ENABLE_PREFIX)){
+            ((ContextsActivity) getActivity()).markWholeRecreate();
         }
 
         adjustSummaryValue(findPreference(key));

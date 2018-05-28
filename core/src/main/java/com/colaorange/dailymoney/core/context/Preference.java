@@ -29,6 +29,8 @@ public class Preference {
      **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
+    public static final String DESKTOP_ENABLE_PREFIX = "desktop-enable-";
+    public static final String DESKTOP_CARDS_PREFIX = "desktop-cards-";
 
     private static final String THEME_DARK_PREFIX = "dark-";
     private static final String THEME_LIGHT_PREFIX = "light-";
@@ -191,7 +193,7 @@ public class Preference {
 
     private void reloadContributionPref(SharedPreferences prefs, I18N i18n) {
         try {
-            allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_allow_analytics), allowAnalytics);
+            allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_pref_allow_analytics), allowAnalytics);
             allowAnalytics = prefs.getBoolean(i18n.string(R.string.pref_allow_analytics), allowAnalytics);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -201,14 +203,14 @@ public class Preference {
     private void reloadOtherPref(SharedPreferences prefs, I18N i18n) {
 
         try {
-            csvEncoding = i18n.string(R.string.default_csv_encoding, csvEncoding);
+            csvEncoding = i18n.string(R.string.default_pref_csv_encoding, csvEncoding);
             csvEncoding = prefs.getString(i18n.string(R.string.pref_csv_encoding), csvEncoding);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_testsdekstop), testsDesktop);
+            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_pref_testsdekstop), testsDesktop);
             testsDesktop = prefs.getBoolean(i18n.string(R.string.pref_testsdekstop), testsDesktop);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -220,21 +222,21 @@ public class Preference {
 
     private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
         try {
-            backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_backup_with_timestamp), backupWithTimestamp);
+            backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_pref_backup_with_timestamp), backupWithTimestamp);
             backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp), backupWithTimestamp);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_auto_backup), autoBackup);
+            autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_pref_auto_backup), autoBackup);
             autoBackup = prefs.getBoolean(i18n.string(R.string.pref_auto_backup), autoBackup);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_weekdays);
+            String str = i18n.string(R.string.default_pref_auto_backup_weekdays);
             Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 strs.add(a);
@@ -251,7 +253,7 @@ public class Preference {
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_at_hours);
+            String str = i18n.string(R.string.default_pref_auto_backup_at_hours);
             Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 strs.add(a);
@@ -315,25 +317,25 @@ public class Preference {
     private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {
         String str;
         try {
-            str = i18n.string(R.string.default_firstday_week);
+            str = i18n.string(R.string.default_pref_firstday_week);
             firstdayWeek = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_firstday_week), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_month);
+            str = i18n.string(R.string.default_pref_startday_month);
             startdayMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_year_month);
+            str = i18n.string(R.string.default_pref_startday_year_month);
             startdayYearMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_year_month_day);
+            str = i18n.string(R.string.default_pref_startday_year_month_day);
             startdayYearMonthDay = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month_day), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -349,13 +351,13 @@ public class Preference {
         String str;
 
         try {
-            str = i18n.string(R.string.default_record_list_layout);
+            str = i18n.string(R.string.default_pref_record_list_layout);
             recordListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_max_records);
+            str = i18n.string(R.string.default_pref_max_records);
             maxRecords = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_max_records), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -450,7 +452,7 @@ public class Preference {
         dateTimeFormat = dateFormat + " " + timeFormat;
 
         try {
-            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_theme));
+            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_pref_theme));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -459,7 +461,7 @@ public class Preference {
         }
 
         try {
-            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_text_size));
+            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_pref_text_size));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -740,7 +742,7 @@ public class Preference {
     public boolean isAnyCards() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         for (int i = 0; i < getCardsSize(); i++) {
-            String json = prefs.getString("cards-" + i, null);
+            String json = prefs.getString(DESKTOP_CARDS_PREFIX + i, null);
             if (!Strings.isBlank(json)) {
                 return true;
             }
@@ -759,7 +761,7 @@ public class Preference {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        return prefs.getBoolean("cards-enable-" + index, false);
+        return prefs.getBoolean(DESKTOP_ENABLE_PREFIX + index, false);
     }
 
     public void updateCardsEnable(int index, boolean enabled) {
@@ -768,7 +770,7 @@ public class Preference {
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("cards-enable-" + index, enabled);
+        editor.putBoolean(DESKTOP_ENABLE_PREFIX + index, enabled);
         editor.commit();
     }
 
@@ -777,7 +779,7 @@ public class Preference {
             throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        String json = prefs.getString("cards-" + index, null);
+        String json = prefs.getString(DESKTOP_CARDS_PREFIX + index, null);
 
         CardCollection cards = null;
         if (json != null) {
@@ -804,9 +806,9 @@ public class Preference {
         String json = cards.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("cards-" + index, json);
+        editor.putString(DESKTOP_CARDS_PREFIX + index, json);
         if (enabled != null) {
-            editor.putBoolean("cards-enable-" + index, enabled);
+            editor.putBoolean(DESKTOP_ENABLE_PREFIX + index, enabled);
         }
         editor.commit();
     }
@@ -817,8 +819,8 @@ public class Preference {
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove("cards-" + index);
-        editor.remove("cards-enable-" + index);
+        editor.remove(DESKTOP_CARDS_PREFIX + index);
+        editor.remove(DESKTOP_ENABLE_PREFIX + index);
         editor.commit();
     }
 

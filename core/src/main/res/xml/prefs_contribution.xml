@@ -17,7 +17,7 @@
         android:summary="@string/label_prefs_like_sum"
         android:title="@string/label_prefs_like" />
     <SwitchPreference
-        android:defaultValue="@string/default_allow_analytics"
+        android:defaultValue="@string/default_pref_allow_analytics"
         android:key="@string/pref_allow_analytics"
         android:summary="@string/label_prefs_allow_analytics_sum"
         android:title="@string/label_prefs_allow_analytics" />
