@@ -57,7 +57,6 @@ public class DesktopItem {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
     }
 
     public void setIcon(int icon) {

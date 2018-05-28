@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.cards;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
@@ -131,7 +132,7 @@ public class CardFacade {
                         if (Dialogs.OK_BUTTON == which) {
                             Preference preference = Contexts.instance().getPreference();
 
-                            Set<String> selection = (Set<String>) data;
+                            Set<NavPage> selection = (Set<NavPage>) data;
                             CardCollection cards = preference.getCards(cardsPos);
                             Card card = cards.get(pos);
                             card.withArg(ARG_NAV_PAGES_LIST, selection);
@@ -155,7 +156,7 @@ public class CardFacade {
                 list = card.getArg(ARG_NAV_PAGES_LIST);
                 if (list != null && list.size() > 0) {
                     sb.append(i18n.string(R.string.msg_n_items, list.size()));
-                }else{
+                } else {
                     sb.append(i18n.string(R.string.msg_no_data));
                 }
                 break;
@@ -167,7 +168,12 @@ public class CardFacade {
         return sb.toString();
     }
 
-    public interface OnOKListener{
+    public List<CardType> listAvailableType() {
+        return Collections.asList(CardType.NAV_PAGES,
+                CardType.INFO_EXPENSE);
+    }
+
+    public interface OnOKListener {
         void onOK(Card card);
     }
 }

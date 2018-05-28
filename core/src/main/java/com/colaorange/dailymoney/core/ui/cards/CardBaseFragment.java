@@ -138,10 +138,6 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected void doAfterReloadToolbar(Toolbar vToolbar) {
     }
 
-    protected void publishReloadFragment() {
-        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, cardsPos);
-    }
-
     @Override
     public void onStart() {
         lookupQueue().subscribe(this);

@@ -30,6 +30,7 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.DuplicateKeyException;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.Logger;
 
 /**
  * Edit or create a account
@@ -196,15 +197,18 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
                 double d = Formats.string2Double(result);
                 vInitval.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void doOk() {

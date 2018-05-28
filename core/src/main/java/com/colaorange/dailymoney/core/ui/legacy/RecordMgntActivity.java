@@ -314,7 +314,6 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_RECORD_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -333,7 +332,9 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                     }
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void publishReloadFragment() {

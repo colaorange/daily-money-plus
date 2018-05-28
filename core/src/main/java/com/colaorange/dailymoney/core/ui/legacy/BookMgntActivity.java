@@ -101,7 +101,6 @@ public class BookMgntActivity extends ContextsActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_BOOK_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -109,7 +108,9 @@ public class BookMgntActivity extends ContextsActivity {
                     reloadData();
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

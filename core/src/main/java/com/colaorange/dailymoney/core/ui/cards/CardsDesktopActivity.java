@@ -30,7 +30,9 @@ import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Book;
+import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
@@ -43,12 +45,17 @@ import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.TestsDesktop;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
+import com.colaorange.dailymoney.core.ui.nav.NavPage;
+import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
 import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -78,6 +85,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
     private static AtomicBoolean editMode = new AtomicBoolean(false);
+
+    private CardFacade cardFacade;
 
     public CardsDesktopActivity() {
     }
@@ -111,6 +120,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
     private void initMembers() {
+        cardFacade = new CardFacade(this);
         vAppTabs = findViewById(R.id.appTabs);
         vPager = findViewById(R.id.viewpager);
         //don't preload other page, only load current
@@ -178,15 +188,23 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     protected void stopModeEdit() {
         if (editMode.compareAndSet(true, false)) {
             mModeEdit.setChecked(false);
-            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+            publishReloadFragment(null);
         }
     }
 
     protected void startModeEdit() {
         if (editMode.compareAndSet(false, true)) {
             mModeEdit.setChecked(true);
-            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, null);
+            publishReloadFragment(null);
         }
+    }
+
+    private void publishReloadFragment(Integer pos){
+        lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT, pos);
+    }
+
+    private void publishClearFragment(Integer pos){
+        lookupQueue().publish(QEvents.CardsFrag.ON_CLEAR_FRAGMENT, pos);
     }
 
     @Override
@@ -220,7 +238,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             String title = cards.getTitle();
             title = Strings.isBlank(title) ? "" + (i + 1) : title;
 
-            if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+            if (isTestDesktop(cards)) {
                 title = i18n().string(R.string.desktop_tests);
             }
 
@@ -240,21 +258,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     public void onStop() {
         super.onStop();
         lookupQueue().unsubscribe(this);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
-            GUIs.delayPost(new Runnable() {
-                @Override
-                public void run() {
-                    reloadData();
-                }
-            });
-
-        }
     }
 
     private void reloadData() {
@@ -279,16 +282,16 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         }
 
         if (temp.equals(cardsList)) {
-            lookupQueue().publish(QEvents.CardsFrag.ON_RELOAD_FRAGMENT);
+            publishReloadFragment(null);
         } else {
             /*
             I don't know the reason yet, so just clear all when reloading
-              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cards:0:0}
+              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cardsList:0:0}
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1422)
         at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1759)
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1827)
              */
-            lookupQueue().publish(QEvents.CardsFrag.ON_CLEAR_FRAGMENT, null);
+            publishClearFragment(null);
 
             cardsList = temp;
 
@@ -355,18 +358,28 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             return true;
         } else if (item.getItemId() == R.id.menu_edit_title) {
             doEditTitle();
+        } else if (item.getItemId() == R.id.menu_add_card) {
+            doAddCard();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean isTestDesktop(CardCollection cards) {
+        if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+            return true;
+        }
+        return false;
+    }
+
     private void doEditTitle() {
+        I18N i18n = i18n();
 
         CardCollection cards = cardsList.get(vPager.getCurrentItem());
-        if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+        if (isTestDesktop(cards)) {
+            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, cards.getTitle()));
             return;
         }
 
-        I18N i18n = i18n();
 
         Dialogs.showTextEditor(this, i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_desktop_title),
@@ -374,13 +387,68 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                     @Override
                     public boolean onFinish(int which, Object data) {
                         if (which == Dialogs.OK_BUTTON) {
-                            int pos = vPager.getCurrentItem();
-                            CardCollection cards = preference().getCards(pos);
+                            int cardsPos = vPager.getCurrentItem();
+                            CardCollection cards = preference().getCards(cardsPos);
                             cards.setTitle((String) data);
-                            preference().updateCards(pos, cards);
+                            preference().updateCards(cardsPos, cards);
 
-                            cardsList.set(pos, cards);
+                            cardsList.set(cardsPos, cards);
                             refreshTab();
+                        }
+                        return true;
+                    }
+                });
+    }
+
+    private void doAddCard() {
+        final I18N i18n = i18n();
+
+        CardCollection cards = cardsList.get(vPager.getCurrentItem());
+        if (isTestDesktop(cards)) {
+            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, cards.getTitle()));
+            return;
+        }
+
+
+        List<CardType> values = new LinkedList<>();
+        List<String> labels = new LinkedList<>();
+        Set<CardType> selection = new LinkedHashSet<>();
+
+        for (CardType type : cardFacade.listAvailableType()) {
+            values.add(type);
+        }
+        for (CardType type : values) {
+            labels.add(cardFacade.getTypeText(type));
+        }
+
+        Dialogs.showSelectionList(this, i18n.string(R.string.act_add_card),
+                i18n.string(R.string.msg_select_card_type), (List) values, labels, false,
+                (Set) selection, new Dialogs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        if (Dialogs.OK_BUTTON == which) {
+                            Preference preference = Contexts.instance().getPreference();
+
+                            Set<CardType> selection = (Set<CardType>) data;
+
+                            if (selection.isEmpty()) {
+                                GUIs.shortToast(CardsDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
+                            }else{
+                                int cardsPos = vPager.getCurrentItem();
+                                CardCollection cards = preference().getCards(cardsPos);
+
+                                CardType type = selection.iterator().next();
+                                Card card = new Card(type, cardFacade.getTypeText(type));
+
+                                cards.add(card);
+
+                                Logger.d(">>> new card {} has added to cards {}/{}", card.getTitle(), cards.getTitle(),cards.size());
+                                preference.updateCards(cardsPos, cards);
+
+                                publishReloadFragment(cardsPos);
+                            }
+
+
                         }
                         return true;
                     }
@@ -392,7 +460,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         Intent intent = null;
         intent = new Intent(this, RecordEditorActivity.class);
         intent.putExtra(RecordEditorActivity.ARG_MODE_CREATE, true);
-        startActivityForResult(intent, Constants.REQUEST_RECORD_EDITOR_CODE);
+        startActivity(intent);
     }
 
     @Override
@@ -407,36 +475,36 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
 
-    public class CardsPagerAdapter extends FragmentPagerAdapter {
-        List<CardCollection> cards;
+    public static class CardsPagerAdapter extends FragmentPagerAdapter {
+        List<CardCollection> cardsList;
 
-        public CardsPagerAdapter(FragmentManager fm, List<CardCollection> cards) {
+        public CardsPagerAdapter(FragmentManager fm, List<CardCollection> cardsList) {
             super(fm);
-            this.cards = cards;
+            this.cardsList = cardsList;
         }
 
         @Override
         public int getCount() {
-            return cards.size();
+            return cardsList.size();
         }
 
         @Override
         public Fragment getItem(int position) {
 
-            CardCollection col = cards.get(position);
-            if (col.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+            CardCollection cards = this.cardsList.get(position);
+            if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
                 DesktopMgntFragment f = new DesktopMgntFragment();
                 Bundle b = new Bundle();
                 b.putString(DesktopMgntFragment.ARG_DESKTOP_NAME, TestsDesktop.NAME);
                 f.setArguments(b);
                 return f;
+            } else {
+                Fragment f = new CardsFragment();
+                Bundle b = new Bundle();
+                b.putInt(CardsFragment.ARG_CARDS_POS, position);
+                f.setArguments(b);
+                return f;
             }
-
-            Fragment f = new CardsFragment();
-            Bundle b = new Bundle();
-            b.putInt(CardsFragment.ARG_CARDS_POS, position);
-            f.setArguments(b);
-            return f;
         }
     }
 

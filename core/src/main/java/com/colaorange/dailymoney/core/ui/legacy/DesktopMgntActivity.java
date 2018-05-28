@@ -259,21 +259,6 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
         lookupQueue().unsubscribe(this);
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
-            GUIs.delayPost(new Runnable() {
-                @Override
-                public void run() {
-                    reloadData();
-                }
-            });
-
-        }
-    }
-
     private void reloadData() {
 
         List<Desktop> temp = new LinkedList<>();

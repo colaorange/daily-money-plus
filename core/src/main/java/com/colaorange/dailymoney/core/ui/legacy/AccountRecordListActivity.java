@@ -176,7 +176,6 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_RECORD_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -198,7 +197,9 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
                     setResult(RESULT_OK);
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void reloadData() {

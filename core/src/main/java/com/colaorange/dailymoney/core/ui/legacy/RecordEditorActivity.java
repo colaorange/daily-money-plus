@@ -546,14 +546,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
                 vMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void doOk() {
