@@ -14,13 +14,21 @@
             android:id="@+id/guis_layout"
             style="@style/rowItem"
             android:padding="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center|left">
 
             <CheckBox
                 android:id="@+id/guis_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp" />
+                android:layout_marginRight="16dp" />
+
+            <ImageView
+                android:id="@+id/guis_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="4dp"
+                />
 
             <TextView
                 android:id="@+id/guis_text"

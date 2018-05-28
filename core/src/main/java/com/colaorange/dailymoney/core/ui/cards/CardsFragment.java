@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Colors;
@@ -188,7 +189,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         Object data;
         switch (event.getName()) {
             case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
-                modeEdit = event.getArg( QEvents.CardsFrag.ARG_MODE_EDIT, modeEdit);
+                modeEdit = event.getArg(QEvents.CardsFrag.ARG_MODE_EDIT, modeEdit);
 
                 data = event.getData();
                 /**
@@ -306,6 +307,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             ContextsActivity activity = getContextsActivity();
 
             Toolbar vtoolbar = itemView.findViewById(R.id.card_toolbar);
+            ImageView vicon = itemView.findViewById(R.id.card_icon);
             TextView vtext = itemView.findViewById(R.id.card_content);
 
             int pos = getAdapterPosition();
@@ -313,6 +315,14 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             Preference preference = preference();
             CardCollection cards = preference.getCards(cardsPos);
             card = cards.get(pos);
+
+            int icon = cardFacade.getTypeIcon(card.getType());
+            if (icon >= 0) {
+                vicon.setImageDrawable(activity.buildDisabledIcon(icon, false));
+            } else {
+                vicon.setImageDrawable(null);
+            }
+
 
             vtoolbar.setTitle(card.getTitle());
             vtext.setText(cardFacade.getCardInfo(card));

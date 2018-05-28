@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -145,6 +146,40 @@ public class Dialogs {
 //        w.setLayout(GUIs.dp2Pixel(activity, dpWidth * 0.9f), GUIs.dp2Pixel(activity, dpHeight * 0.75f));
     }
 
+    public interface SupportIcon {
+        int getIcon();
+    }
+
+    public static class SupportIconObject<T> implements SupportIcon {
+        public final T obj;
+        public final int icon;
+
+        public SupportIconObject(T obj, int icon) {
+            this.obj = obj;
+            this.icon = icon;
+        }
+
+        @Override
+        public int getIcon() {
+            return icon;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SupportIconObject that = (SupportIconObject) o;
+
+            return obj != null ? obj.equals(that.obj) : that.obj == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return obj != null ? obj.hashCode() : 0;
+        }
+    }
+
     private static class SelectionListAdapter extends BaseAdapter {
 
         final private List<?> values;
@@ -237,6 +272,20 @@ public class Dialogs {
 
                 View select = itemView.findViewById(R.id.guis_layout_select);
                 TextView vtext = (TextView) itemView.findViewById(R.id.guis_text);
+                ImageView vicon = (ImageView) itemView.findViewById(R.id.guis_icon);
+
+                if (obj instanceof SupportIcon) {
+                    vicon.setVisibility(View.VISIBLE);
+                    int icon = ((SupportIcon) obj).getIcon();
+                    if (icon > 0) {
+                        vicon.setImageResource(icon);
+                    } else {
+                        vicon.setImageDrawable(null);
+                    }
+                } else {
+                    vicon.setVisibility(View.GONE);
+                }
+
                 String label = labels.get(position);
                 vtext.setText(label);
 

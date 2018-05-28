@@ -413,15 +413,15 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         }
 
 
-        List<CardType> values = new LinkedList<>();
+        List<Dialogs.SupportIconObject<CardType>> values = new LinkedList<>();
         List<String> labels = new LinkedList<>();
-        Set<CardType> selection = new LinkedHashSet<>();
+        Set<Dialogs.SupportIconObject> selection = new LinkedHashSet<>();
 
         for (CardType type : cardFacade.listAvailableType()) {
-            values.add(type);
+            values.add(new Dialogs.SupportIconObject(type, cardFacade.getTypeIcon(type)));
         }
-        for (CardType type : values) {
-            labels.add(cardFacade.getTypeText(type));
+        for (Dialogs.SupportIconObject<CardType> type : values) {
+            labels.add(cardFacade.getTypeText(type.obj));
         }
 
         Dialogs.showSelectionList(this, i18n.string(R.string.act_add_card),
@@ -432,7 +432,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                         if (Dialogs.OK_BUTTON == which) {
                             Preference preference = Contexts.instance().getPreference();
 
-                            Set<CardType> selection = (Set<CardType>) data;
+                            Set<Dialogs.SupportIconObject<CardType>> selection = (Set<Dialogs.SupportIconObject<CardType>>) data;
 
                             if (selection.isEmpty()) {
                                 GUIs.shortToast(CardsDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
@@ -440,8 +440,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                                 int cardsPos = vPager.getCurrentItem();
                                 CardCollection cards = preference().getCards(cardsPos);
 
-                                for (CardType type : selection) {
-                                    Card card = new Card(type, cardFacade.getTypeText(type));
+                                for (Dialogs.SupportIconObject<CardType> type : selection) {
+                                    Card card = new Card(type.obj, cardFacade.getTypeText(type.obj));
                                     cards.add(card);
                                     Logger.d(">>> new card {} has added to cards {}/{}", card.getTitle(), cards.getTitle(), cards.size());
                                 }

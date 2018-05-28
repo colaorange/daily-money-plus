@@ -83,6 +83,7 @@
 
     <attr name="ic_view_compact" format="reference"/>
     <attr name="ic_add_card" format="reference"/>
+    <attr name="ic_nav_page" format="reference"/>
 
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
@@ -428,6 +429,7 @@
 
         <item name="ic_view_compact">@drawable/ic_view_compact_light_24dp</item>
         <item name="ic_add_card">@drawable/ic_add_card_light_24dp</item>
+        <item name="ic_nav_page">@drawable/ic_nav_page_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -472,6 +474,7 @@
 
         <item name="ic_view_compact">@drawable/ic_view_compact_dark_24dp</item>
         <item name="ic_add_card">@drawable/ic_add_card_dark_24dp</item>
+        <item name="ic_nav_page">@drawable/ic_nav_page_dark_24dp</item>
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

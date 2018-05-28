@@ -78,6 +78,16 @@ public class CardFacade {
         return i18n.string(R.string.label_unknown);
     }
 
+    public int getTypeIcon(CardType type){
+        switch (type) {
+            case NAV_PAGES:
+                return activity.resolveThemeAttrResId(R.attr.ic_nav_page);
+            case INFO_EXPENSE:
+                return activity.resolveThemeAttrResId(R.attr.ic_info);
+        }
+        return -1;
+    }
+
     public boolean isTypeEditable(CardType type) {
         switch (type) {
             case NAV_PAGES:
