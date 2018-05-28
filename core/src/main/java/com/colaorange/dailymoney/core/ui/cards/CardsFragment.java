@@ -68,7 +68,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private ItemTouchHelper cardDragHelper;
 
-    private Boolean modeEdit = false;
+    Map<String, Fragment> createdFragments = new LinkedHashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,15 +121,26 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     @Override
     public void onResume() {
         super.onResume();
-
         reloadData();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //clear all on pause to prevent error when xxback try to reload fragment but view is not here already
-        cardFragmentAdapter.clearCreatedFragments();
+    }
+
+    private void clearCreatedFragments() {
+        if (createdFragments.size() > 0) {
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            for (String k : createdFragments.keySet()) {
+                Fragment f = createdFragments.get(k);
+                ft.remove(f);
+//                Logger.d(">>> remove fragment {}:{} ", k, f);
+            }
+            //very important to call commitNow, or will get error for immedidatelly adapter binding
+            ft.commitNowAllowingStateLoss();
+            createdFragments.clear();
+        }
     }
 
     private void reloadData() {
@@ -142,7 +153,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         }
 
         //clear again.
-        cardFragmentAdapter.clearCreatedFragments();
         recyclerDataList.clear();
 
         if (data.size() == 0) {
@@ -154,22 +164,21 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             recyclerDataList.addAll(data);
         }
 
-        if (!modeEdit) {
+        if (!isModeEdit()) {
             if (vRecycler.getAdapter() == cardFragmentAdapter) {
                 cardFragmentAdapter.notifyDataSetChanged();
             } else {
+                clearCreatedFragments();
                 vRecycler.setAdapter(cardFragmentAdapter);
             }
         } else {
             if (vRecycler.getAdapter() == cardEditorAdapter) {
                 cardEditorAdapter.notifyDataSetChanged();
             } else {
+                clearCreatedFragments();
                 vRecycler.setAdapter(cardEditorAdapter);
             }
         }
-
-
-        cardFragmentAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -180,8 +189,12 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     @Override
     public void onStop() {
+        //it is ok to clear here, fragment will build back in onResume by reloadData
+        clearCreatedFragments();
+
         super.onStop();
         lookupQueue().unsubscribe(this);
+
     }
 
     @Override
@@ -189,7 +202,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         Object data;
         switch (event.getName()) {
             case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
-                modeEdit = event.getArg(QEvents.CardsFrag.ARG_MODE_EDIT, modeEdit);
 
                 data = event.getData();
                 /**
@@ -200,37 +212,53 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                 }
                 break;
             case QEvents.CardsFrag.ON_CLEAR_FRAGMENT:
-                cardFragmentAdapter.clearCreatedFragments();
+                clearCreatedFragments();
                 break;
         }
     }
 
     public class CardFragmentAdapter extends RecyclerViewAdaptor<Card, RecyclerViewAdaptor.SimpleViewHolder> {
 
-        Map<String, Fragment> createdFragments = new LinkedHashMap<>();
 
         public CardFragmentAdapter(ContextsActivity activity, List<Card> data) {
             super(activity, data);
         }
 
+
         @Override
-        public int getItemViewType(int position) {
-            return position;
+        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position) {
+            //have to overird both onBindViewHolder, it depends on implementation.
+            clearBoundFragment(holder);
+            super.onBindViewHolder(holder, position);
         }
 
 
-        private void clearCreatedFragments() {
-            if (createdFragments.size() > 0) {
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                for (String k : createdFragments.keySet()) {
-                    Fragment f = createdFragments.get(k);
-                    ft.detach(f);
-                    ft.remove(f);
-                    Logger.d(">>> remove fragment {}:{} ", k, f);
+        @Override
+        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
+            clearBoundFragment(holder);
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        private void clearBoundFragment(SimpleViewHolder holder) {
+            //remove fragment that is going to unbind
+            CardFragmentViewHolder vh = (CardFragmentViewHolder) holder;
+
+
+            //remove old fragment
+            if (vh.boundFragTag != null) {
+                FragmentManager fm = getChildFragmentManager();
+                Fragment f = fm.findFragmentByTag(vh.boundFragTag);
+                if (f != null) {
+                    try {
+                        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                        ft.remove(f);
+                        ft.commitNowAllowingStateLoss();
+                    } catch (Exception x) {
+                        Logger.w(x.getMessage(), x);
+                    }
+                    createdFragments.remove(vh.boundFragTag);
                 }
-                //very important to call commitNow, or will get error for immedidatelly adapter binding
-                ft.commitNowAllowingStateLoss();
-                createdFragments.clear();
+                vh.boundFragTag = null;
             }
         }
 
@@ -248,6 +276,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     public class CardFragmentViewHolder extends RecyclerViewAdaptor.SimpleViewHolder<CardFragmentAdapter, Card> {
 
+        String boundFragTag;
+
         public CardFragmentViewHolder(CardFragmentAdapter adapter, View itemView) {
             super(adapter, itemView);
         }
@@ -258,22 +288,25 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
 
             FragmentManager fragmentManager = getChildFragmentManager();
-            String fragTag = card.getId();
+            // I Finally get the root cause of fking java.lang.IllegalArgumentException: No view found for id issue
+            // with itemView id, to prevent remove wrong fragment in new cards at recrate case
+            String fragTag = itemView.getId() + ":" + card.getId();
 
             if (fragmentManager.findFragmentByTag(fragTag) != null) {
-                //bound, ignore it
+                //ignore it, don't attach again
             } else {
                 int pos = getAdapterPosition();
 
                 Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
 
-                Logger.d(">>> new fragment {}:{}:{} ", fragTag, "0x" + Integer.toHexString(itemView.getId()), f);
+//                Logger.d(">>> new fragment {}:{}:{} ", fragTag, "0x" + Integer.toHexString(itemView.getId()), f);
 
                 //itemView id is dynamic, use replace or add?
                 fragmentManager.beginTransaction()
                         .add(itemView.getId(), f, fragTag)
                         .commit();
-                adaptor.createdFragments.put(fragTag, f);
+                boundFragTag = fragTag;
+                createdFragments.put(fragTag, f);
             }
         }
     }
@@ -490,7 +523,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
         @Override
         public boolean isLongPressDragEnabled() {
-            return modeEdit;
+            return isModeEdit();
         }
 
         @Override
@@ -520,4 +553,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     }
 
+    protected boolean isModeEdit() {
+        return ((CardsDesktopActivity) getContextsActivity()).isModeEdit();
+    }
 }

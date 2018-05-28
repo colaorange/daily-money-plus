@@ -23,7 +23,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,7 +76,9 @@ public class ContextsActivity extends AppCompatActivity {
     protected int selectableBackgroundId;
     protected int selectedBackgroundColor;
 
-    Map<String, EventQueue> eventQueueMap;
+    private Map<String, EventQueue> eventQueueMap;
+
+    private boolean recreating;
 
     public ContextsActivity() {
         instanceStateHelper = new InstanceStateHelper(this);
@@ -228,7 +229,7 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkRecreate();
+        checkGlobalRecreate();
     }
 
 
@@ -262,19 +263,27 @@ public class ContextsActivity extends AppCompatActivity {
             setTitle(t);
         }
 
-        checkRecreate();
+        checkGlobalRecreate();
     }
 
-    private void checkRecreate() {
+    private void checkGlobalRecreate() {
         if (globalRecreateTimeMark > onCreateTime) {
             recreate();
         }
     }
+    public void recreate() {
+        super.recreate();
+        recreating = true;
+    }
+
 
     protected void makeGlobalRecreate() {
         globalRecreateTimeMark = System.currentTimeMillis();
     }
 
+    protected boolean isRecreating(){
+        return recreating;
+    }
 
     Bundle fakeExtra;
 

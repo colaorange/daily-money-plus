@@ -51,15 +51,6 @@
             android:numeric="signed"
             android:summary="@string/label_prefs_maxrecords_sum"
             android:title="@string/label_prefs_maxrecords" />
-        <!--becareful the key, the key is zero-base, but description is one-base-->
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="desktop-enable-1"
-            android:title="@string/label_enable_desktop2" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="desktop-enable-2"
-            android:title="@string/label_enable_desktop3" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_prefcat_security">
@@ -124,6 +115,21 @@
             android:key="@string/pref_startday_year_month_day"
             android:summary="@string/label_prefs_startday_year_month_day_sum"
             android:title="@string/label_prefs_startday_year_month_day" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/label_desktop">
+        <!--becareful the key, the key is zero-base, but description is one-base-->
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="desktop-enable-1"
+            android:title="@string/label_enable_desktop2" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="desktop-enable-2"
+            android:title="@string/label_enable_desktop3" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="desktop-enable-3"
+            android:title="@string/label_enable_desktop4" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_working_book">

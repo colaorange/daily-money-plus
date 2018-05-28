@@ -732,8 +732,9 @@ public class Preference {
         editor.commit();
     }
 
+    //TODO rename cards to desktops
     private final int alwaysEnabledCardsSize = 1;
-    private final int maxCardsSize = 3;
+    private final int maxCardsSize = 4;
 
     public int getCardsSize() {
         return maxCardsSize;

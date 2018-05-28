@@ -19,8 +19,6 @@ public class QEvents {
         //activity -> fragment
         String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
         String ON_CLEAR_FRAGMENT =  "CardsFrag:onClearFragment";
-
-        String ARG_MODE_EDIT = "modeEdit";
         
     }
     public interface CardFrag {

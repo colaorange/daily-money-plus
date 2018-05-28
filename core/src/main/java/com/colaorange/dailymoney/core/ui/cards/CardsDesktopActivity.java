@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -70,8 +71,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private NavMenuAdapter navMenuAdapter;
     private List<NavMenuAdapter.NavMenuObj> navMenuList;
 
-//    private MenuItem mModeEdit;
-
     private List<CardCollection> cardsList;
     private List<Integer> cardsIndex;
 
@@ -82,11 +81,11 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private Boolean firstTime;
 
     private static AtomicBoolean globalHandleFirstTime = new AtomicBoolean(false);
-//    private static AtomicBoolean editMode = new AtomicBoolean(false);
 
     private ActionMode actionMode;
 
     private CardFacade cardFacade;
+
 
     public CardsDesktopActivity() {
     }
@@ -96,7 +95,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cards_drawer);
-
         initArgs();
         initMembers();
         initMemberDrawer();
@@ -115,12 +113,9 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isFinishing()) {
+        if (!isFinishing() && !isRecreating()) {
             //possible been recreated by preference, prevent reload data that cause fragment state exception
             reloadData();
-        }else{
-            //wft android's terrible fragment bug..i have to cear event this activity is finishing
-            publishClearFragment(null);
         }
     }
 
@@ -213,7 +208,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private void publishReloadFragment(Integer pos) {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.CardsFrag.ON_RELOAD_FRAGMENT)
                 .withData(pos)
-                .withArg(QEvents.CardsFrag.ARG_MODE_EDIT, actionMode != null)
                 .build());
     }
 
@@ -487,6 +481,10 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         }
     }
 
+    public boolean isModeEdit() {
+        return actionMode != null;
+    }
+
 
     public class CardsPagerAdapter extends FragmentPagerAdapter {
         public CardsPagerAdapter(FragmentManager fm) {
@@ -497,7 +495,6 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         public int getCount() {
             return cardsList.size();
         }
-
 
 
         @Override
@@ -515,6 +512,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                 Bundle b = new Bundle();
                 b.putInt(CardsFragment.ARG_CARDS_POS, cardsIndex.get(position));
                 f.setArguments(b);
+
                 return f;
             }
         }

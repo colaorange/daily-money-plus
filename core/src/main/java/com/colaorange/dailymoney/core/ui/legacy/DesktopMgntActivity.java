@@ -140,7 +140,7 @@ public class DesktopMgntActivity extends ContextsActivity implements EventQueue.
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isFinishing()) {
+        if(!isFinishing() && !isRecreating()) {
             reloadData();
         }
     }

@@ -6,8 +6,14 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.Card;
+import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
+import com.colaorange.dailymoney.core.ui.cards.CardFacade;
+import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -17,6 +23,7 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.Logger;
 
 /**
  * @author dennis
@@ -59,6 +66,30 @@ public class TestsDesktop extends AbstractDesktop {
                 }
             }
         }, "Remove all cards", R.drawable.dtitem_test);
+
+        addItem(dt);
+
+        dt = new DesktopItem(new Runnable() {
+            public void run() {
+                Contexts ctx = Contexts.instance();
+                I18N i18n = ctx.getI18n();
+                Preference preference = ctx.getPreference();
+                for (int i = 0; i < 10; i++) {
+                    CardCollection cards0 = preference.getCards(i);
+                    if (cards0.size() == 0) {
+                        cards0.setTitle("T" + i);
+                        Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
+                        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
+                                NavPage.HOW2USE));
+                        cards0.add(card);
+
+                        card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
+                        cards0.add(card);
+                        preference.updateCards(i, cards0, true);
+                    }
+                }
+            }
+        }, "Create 10 cards ", R.drawable.dtitem_test);
 
         addItem(dt);
 
