@@ -7,6 +7,7 @@ import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.CardDesktop;
@@ -17,6 +18,7 @@ import com.colaorange.dailymoney.core.util.Dialogs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,26 +58,30 @@ public class CardFacade {
     }
 
     private Fragment newChartMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        ExpensePieFragment f = new ExpensePieFragment();
+        AccountTypePieFragment f = new AccountTypePieFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.MONTHLY);
+        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.MONTHLY);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newChartWeeklyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        ExpensePieFragment f = new ExpensePieFragment();
+        AccountTypePieFragment f = new AccountTypePieFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.WEEKLY);
+        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.WEEKLY);
+        b.putSerializable(AccountTypePieFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(AccountTypePieFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newChearMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        ExpensePieFragment f = new ExpensePieFragment();
+        AccountTypePieFragment f = new AccountTypePieFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
-        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.MONTHLY);
+        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.MONTHLY);
+        b.putSerializable(AccountTypePieFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(AccountTypePieFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         return f;
     }
 

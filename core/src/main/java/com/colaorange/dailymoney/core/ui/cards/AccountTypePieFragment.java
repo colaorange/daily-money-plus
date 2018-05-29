@@ -1,7 +1,7 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Numbers;
@@ -22,10 +22,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
@@ -39,9 +36,11 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class ExpensePieFragment extends CardBaseFragment implements EventQueue.EventListener {
+public class AccountTypePieFragment extends CardBaseFragment implements EventQueue.EventListener {
 
     public static final String ARG_MODE = "mode";
+    public static final String ARG_ACCOUNT_TYPE = "accountType";
+    public static final String ARG_BASE_DATE = "baseDate";
 
     public enum Mode {
         WEEKLY, MONTHLY
@@ -49,6 +48,8 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
 
 
     Mode mode;
+    AccountType accountType;
+    Date baseDate;
 
     PieChart chart;
 
@@ -65,6 +66,17 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
         if (mode == null) {
             mode = Mode.WEEKLY;
         }
+
+        accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
+        if (accountType == null) {
+            accountType = AccountType.EXPENSE;
+        }
+
+        baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
+        if (baseDate == null) {
+            baseDate = new Date();
+        }
+
     }
 
     @Override
@@ -79,9 +91,10 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
         cardColor = activity.resolveThemeAttrResData(R.attr.appCardColor);
 
         chart = rootView.findViewById(R.id.card_chart);
-        chart.getLegend().setEnabled(false);
+        chart.getLegend().setWordWrapEnabled(true);
+        chart.getLegend().setTextSize(entryLabelTextSize - 1);
         chart.setEntryLabelColor(entryLabelTextColor);
-        chart.setEntryLabelTextSize(entryLabelTextSize);
+        chart.setEntryLabelTextSize(entryLabelTextSize - 2);
         chart.getDescription().setEnabled(false);
         chart.setCenterTextSize(entryLabelTextSize);
         chart.setCenterTextColor(entryLabelTextColor);
@@ -90,6 +103,17 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
         chart.setTransparentCircleRadius(55);
 
         colorTemplate = activity.getChartColorTemplate();
+
+        float rate = GUIs.getDPRatio(activity);
+        float size = Math.max(GUIs.getDPHeight(activity), GUIs.getDPWidth(activity));
+        size = size / 2.5f;
+
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) chart.getLayoutParams();
+        lp.height = (int) (size * rate);
+        chart.setLayoutParams(lp);
+
+        //i can't slide over char in my real phone if I enable the the highlight feature
+//        chart.setTouchEnabled(false);
     }
 
     @Override
@@ -110,29 +134,28 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
 
                 CalendarHelper calHelper = calendarHelper();
 
-                Date now = new Date();
                 Date start;
                 Date end;
 
                 switch (mode) {
                     case MONTHLY:
-                        start = calHelper.monthStartDate(now);
-                        end = calHelper.monthEndDate(now);
+                        start = calHelper.monthStartDate(baseDate);
+                        end = calHelper.monthEndDate(baseDate);
                         break;
                     case WEEKLY:
                     default:
-                        start = calHelper.weekStartDate(now);
-                        end = calHelper.weekEndDate(now);
+                        start = calHelper.weekStartDate(baseDate);
+                        end = calHelper.weekEndDate(baseDate);
                         break;
                 }
-                varExp.value = BalanceHelper.calculateBalance(AccountType.EXPENSE, start, end).getMoney();
+                varExp.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
 
 
                 List<Balance> list = new ArrayList<>();
 
                 IDataProvider idp = Contexts.instance().getDataProvider();
 
-                for (Account acc : idp.listAccount(AccountType.EXPENSE)) {
+                for (Account acc : idp.listAccount(accountType)) {
                     Balance balance = BalanceHelper.calculateBalance(acc, start, end);
                     list.add(balance);
                 }
@@ -179,14 +202,12 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
                     }
                     set = new PieDataSet(entries, "");
                 }
-
-//                set.setColors(ColorTemplate.VORDIPLOM_COLORS);
                 set.setColors(colorTemplate);
 
                 set.setSliceSpace(1f);//space between entry
-                set.setValueTextSize(entryLabelTextSize - 2);
+                set.setValueTextSize(entryLabelTextSize - 4);
                 set.setValueTextColor(entryLabelTextColor);
-                set.setSelectionShift(24f);//size shift after selection
+                set.setSelectionShift(10f);//size shift after highlight
 //                set.setValueLinePart1OffsetPercentage(90.f);//begin position of value line
 //                set.setValueLinePart1Length(1f);//length of value line
 //                set.setValueLinePart2Length(2f);//length of value line
@@ -202,7 +223,7 @@ public class ExpensePieFragment extends CardBaseFragment implements EventQueue.E
                         if (varExp.value > 0) {
                             v = (float) (v * 100 / varExp.value);
                             if (v >= 10) {//only show that > 10
-                                sb.append("(").append(Numbers.format(v, "#0.##")).append("%)");
+                                sb.append("(").append(Numbers.format(v, "#0.#")).append("%)");
                             }
                         }
                         return sb.toString();
