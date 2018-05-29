@@ -29,6 +29,7 @@ import java.util.Set;
 /**
  * @author dennis
  */
+@Deprecated
 public class DesktopMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
     public static final String ARG_DESKTOP_NAME = "desktopName";

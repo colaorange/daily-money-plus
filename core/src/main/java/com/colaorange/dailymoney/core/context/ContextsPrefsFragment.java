@@ -98,7 +98,7 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         if (recreateKeys.contains(key)) {
             ((ContextsActivity) getActivity()).markWholeRecreate();
             getActivity().recreate();
-        }else if(!Strings.isBlank(key) && key.startsWith(com.colaorange.dailymoney.core.context.Preference.DESKTOP_ENABLE_PREFIX)){
+        }else if(!Strings.isBlank(key) && key.startsWith(com.colaorange.dailymoney.core.context.Preference.CARD_DESKTOP_ENABLE_PREFIX)){
             ((ContextsActivity) getActivity()).markWholeRecreate();
         }
 

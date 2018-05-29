@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -18,9 +15,8 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.ui.QEvents;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -29,11 +25,11 @@ import com.colaorange.dailymoney.core.util.Logger;
  */
 public abstract class CardBaseFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final String ARG_CARDS_POS = "cardsPos";
-    public static final String ARG_POS = "pos";
+    public static final String ARG_DESKTOP_INDEX = "desktopIndex";
+    public static final String ARG_INDEX = "index";
 
-    protected int pos;
-    protected int cardsPos;
+    protected int index;
+    protected int desktopIndex;
 
     protected View rootView;
     private Toolbar vToolbar;
@@ -59,8 +55,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     }
 
     public Card getCard() {
-        CardCollection cards = preference().getCards(cardsPos);
-        Card card = cards.get(pos);
+        CardDesktop desktop = preference().getDesktop(desktopIndex);
+        Card card = desktop.get(index);
         return card;
     }
 
@@ -76,8 +72,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     @CallSuper
     protected void initArgs() {
         Bundle args = getArguments();
-        cardsPos = args.getInt(ARG_CARDS_POS, 0);
-        pos = args.getInt(ARG_POS, 0);
+        desktopIndex = args.getInt(ARG_DESKTOP_INDEX, 0);
+        index = args.getInt(ARG_INDEX, 0);
     }
 
     @CallSuper
@@ -94,8 +90,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected void reloadView() {
         ContextsActivity activity = getContextsActivity();
         Preference preference = preference();
-        CardCollection cards = preference.getCards(cardsPos);
-        Card card = cards.get(pos);
+        CardDesktop desktop = preference.getDesktop(desktopIndex);
+        Card card = desktop.get(index);
         if (vToolbar != null) {
             showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, showTitle);
             vToolbar.setTitle(card.getTitle());
@@ -142,20 +138,20 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     public void onStart() {
         lookupQueue().subscribe(this);
         super.onStart();
-        Logger.d(">>> onStart fragment {}:{}:{} ", cardsPos, pos, this);
+        Logger.d(">>> onStart fragment {}:{}:{} ", desktopIndex, index, this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         lookupQueue().unsubscribe(this);
-        Logger.d(">>> onStop fragment {}:{}:{} ", cardsPos, pos, this);
+        Logger.d(">>> onStop fragment {}:{}:{} ", desktopIndex, index, this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Logger.d(">>> onDestroy fragment {}:{}:{} ", cardsPos, pos, this);
+        Logger.d(">>> onDestroy fragment {}:{}:{} ", desktopIndex, index, this);
     }
 
     @Override

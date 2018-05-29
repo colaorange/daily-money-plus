@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/label_prefcat_display">
+    <PreferenceCategory android:title="@string/label_display">
         <ListPreference
             android:defaultValue="@string/default_pref_theme"
             android:entries="@array/prefs_theme_labels"
@@ -53,7 +53,7 @@
             android:title="@string/label_prefs_maxrecords" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_security">
+    <PreferenceCategory android:title="@string/label_security">
         <com.colaorange.dailymoney.core.ui.pref.PasswordPreference
             android:key="@string/pref_password_hash"
             android:summary="@string/label_prefs_password_sum"
@@ -61,7 +61,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="@string/label_prefcat_data">
+    <PreferenceCategory android:title="@string/label_data">
         <SwitchPreference
             android:defaultValue="@string/default_pref_backup_with_timestamp"
             android:key="@string/pref_backup_with_timestamp"
@@ -86,7 +86,7 @@
             android:title="@string/label_prefs_auto_backup_at_hours" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_accounting">
+    <PreferenceCategory android:title="@string/label_accounting">
         <ListPreference
             android:defaultValue="@string/default_pref_firstday_week"
             android:entries="@array/prefs_firstday_week_labels"
@@ -120,16 +120,16 @@
         <!--becareful the key, the key is zero-base, but description is one-base-->
         <SwitchPreference
             android:defaultValue="false"
-            android:key="desktop-enable-1"
-            android:title="@string/label_enable_desktop2" />
+            android:key="card-desktop-enable-1"
+            android:title="@string/label_prefs_enable_desktop2" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="desktop-enable-2"
-            android:title="@string/label_enable_desktop3" />
+            android:key="card-desktop-enable-2"
+            android:title="@string/label_prefs_enable_desktop3" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="desktop-enable-3"
-            android:title="@string/label_enable_desktop4" />
+            android:key="card-desktop-enable-3"
+            android:title="@string/label_prefs_enable_desktop4" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_working_book">
@@ -140,14 +140,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_others">
-        <Preference android:title="@string/label_prefcat_contribution">
+    <PreferenceCategory android:title="@string/label_others">
+        <Preference android:title="@string/label_contribution">
             <intent
                 android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsContributionActivity"
                 android:targetPackage="com.colaorange.dailymoney" />
         </Preference>
 
-        <Preference android:title="@string/label_prefcat_developer">
+        <Preference android:title="@string/label_developer">
             <intent
                 android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsDeveloperActivity"
                 android:targetPackage="com.colaorange.dailymoney" />

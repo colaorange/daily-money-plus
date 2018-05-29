@@ -10,7 +10,7 @@ import java.util.LinkedList;
 /**
  * Created by Dennis
  */
-public class CardCollection extends JsonBase {
+public class CardDesktop extends JsonBase {
 
     @Expose
     String id;
@@ -21,12 +21,12 @@ public class CardCollection extends JsonBase {
     @Expose
     LinkedHashMap<String, Object> args;
 
-    public CardCollection(String title) {
+    public CardDesktop(String title) {
         this();
         this.title = title;
     }
 
-    public CardCollection() {
+    public CardDesktop() {
         getId();
     }
 
@@ -74,12 +74,12 @@ public class CardCollection extends JsonBase {
         }
         int idx = cards.indexOf(card);
         if (idx != -1) {
-            throw new IllegalArgumentException("already in cards");
+            throw new IllegalArgumentException("already in card_desktop");
         }
         cards.add(card);
     }
 
-    public CardCollection withAdd(Card card) {
+    public CardDesktop withAdd(Card card) {
         add(card);
         return this;
     }
@@ -92,7 +92,7 @@ public class CardCollection extends JsonBase {
         this.title = title;
     }
 
-    public CardCollection withArg(String key, Object value) {
+    public CardDesktop withArg(String key, Object value) {
         if (args == null) {
             args = new LinkedHashMap<>();
         }
@@ -114,7 +114,7 @@ public class CardCollection extends JsonBase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CardCollection card = (CardCollection) o;
+        CardDesktop card = (CardDesktop) o;
 
         return getId().equals(card.getId());
     }

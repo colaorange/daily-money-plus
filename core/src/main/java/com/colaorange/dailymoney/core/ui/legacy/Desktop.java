@@ -15,6 +15,7 @@ import android.content.Intent;
 /**
  * @author dennis
  */
+@Deprecated
 public class Desktop {
 
 
@@ -147,7 +148,7 @@ public class Desktop {
 
     public static Map<String, Desktop> getSupportedDesktops(Activity activity) {
         Map<String, Desktop> supportedDesktops = new LinkedHashMap<>();
-        for (Desktop dt : new Desktop[]{new MainDesktop(activity), new ReportsDesktop(activity), new TestsDesktop(activity)}) {
+        for (Desktop dt : new Desktop[]{new TestsDesktop(activity)}) {
             supportedDesktops.put(dt.getName(), dt);
         }
 

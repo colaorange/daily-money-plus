@@ -9,7 +9,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
@@ -37,33 +37,33 @@ public class CardFacade {
         i18n = Contexts.instance().getI18n();
     }
 
-    public Fragment newFragement(int cardsPos, int pos, Card card) {
+    public Fragment newFragement(int desktopIndex, int pos, Card card) {
         switch (card.getType()) {
             case NAV_PAGES:
-                return newNavPagesFragment(cardsPos, pos, card);
+                return newNavPagesFragment(desktopIndex, pos, card);
             case INFO_EXPENSE:
-                return newInfoExpenseFragment(cardsPos, pos, card);
+                return newInfoExpenseFragment(desktopIndex, pos, card);
         }
         throw new IllegalStateException("unknown card fragment " + card.getType());
     }
 
-    private Bundle newBaseBundle(int cardsPos, int pos) {
+    private Bundle newBaseBundle(int desktopIndex, int pos) {
         Bundle b = new Bundle();
-        b.putSerializable(CardInfoExpenseFragment.ARG_CARDS_POS, cardsPos);
-        b.putSerializable(CardInfoExpenseFragment.ARG_POS, pos);
+        b.putSerializable(CardInfoExpenseFragment.ARG_DESKTOP_INDEX, desktopIndex);
+        b.putSerializable(CardInfoExpenseFragment.ARG_INDEX, pos);
         return b;
     }
 
-    private Fragment newInfoExpenseFragment(int cardsPos, int pos, Card card) {
+    private Fragment newInfoExpenseFragment(int desktopIndex, int pos, Card card) {
         CardInfoExpenseFragment f = new CardInfoExpenseFragment();
-        Bundle b = newBaseBundle(cardsPos, pos);
+        Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;
     }
 
-    private Fragment newNavPagesFragment(int cardsPos, int pos, Card card) {
+    private Fragment newNavPagesFragment(int desktopIndex, int pos, Card card) {
         CardNavPagesFragment f = new CardNavPagesFragment();
-        Bundle b = newBaseBundle(cardsPos, pos);
+        Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;
     }
@@ -98,10 +98,10 @@ public class CardFacade {
         return false;
     }
 
-    public void doEditArgs(int cardsPos, int pos, Card card, OnOKListener listener) {
+    public void doEditArgs(int desktopIndex, int pos, Card card, OnOKListener listener) {
         switch (card.getType()) {
             case NAV_PAGES:
-                doEditNavPagesArgs(cardsPos, pos, card, listener);
+                doEditNavPagesArgs(desktopIndex, pos, card, listener);
                 return;
             case INFO_EXPENSE:
             default:
@@ -109,7 +109,7 @@ public class CardFacade {
         }
     }
 
-    private void doEditNavPagesArgs(final int cardsPos, final int pos, Card card, final OnOKListener listener) {
+    private void doEditNavPagesArgs(final int desktopIndex, final int pos, Card card, final OnOKListener listener) {
         List<NavPage> values = new LinkedList<>();
         List<String> labels = new LinkedList<>();
         Set<NavPage> selection = new LinkedHashSet<>();
@@ -143,11 +143,11 @@ public class CardFacade {
                             Preference preference = Contexts.instance().getPreference();
 
                             Set<NavPage> selection = (Set<NavPage>) data;
-                            CardCollection cards = preference.getCards(cardsPos);
-                            Card card = cards.get(pos);
+                            CardDesktop desktop = preference.getDesktop(desktopIndex);
+                            Card card = desktop.get(pos);
                             card.withArg(ARG_NAV_PAGES_LIST, selection);
                             Logger.d(">>> new nav_page selection {}", selection);
-                            preference.updateCards(cardsPos, cards);
+                            preference.updateDesktop(desktopIndex, desktop);
 
                             listener.onOK(card);
                         }

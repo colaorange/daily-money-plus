@@ -5,13 +5,13 @@
     android:id="@+id/app_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.legacy.DesktopMgntActivity">
+    tools:context=".ui.cards.CardDesktopActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/desktop_mgnt" />
+        <include layout="@layout/card_desktop" />
     </FrameLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/app_drawer_nav"

@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -32,9 +31,9 @@ import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.Card;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.data.CardType;
-import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
+import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.QEvents;
@@ -60,7 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author dennis
  */
 @InstanceState
-public class CardsDesktopActivity extends ContextsActivity implements EventQueue.EventListener {
+public class CardDesktopActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
     private TabLayout vAppTabs;
@@ -71,8 +70,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private NavMenuAdapter navMenuAdapter;
     private List<NavMenuAdapter.NavMenuObj> navMenuList;
 
-    private List<CardCollection> cardsList;
-    private List<Integer> cardsIndex;
+    private List<CardDesktop> desktopList;
+    private List<Integer> desktopIndex;
 
     @InstanceState
     private Integer currentTabIndex = null;
@@ -87,14 +86,14 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private CardFacade cardFacade;
 
 
-    public CardsDesktopActivity() {
+    public CardDesktopActivity() {
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cards_drawer);
+        setContentView(R.layout.card_desktop_drawer);
         initArgs();
         initMembers();
         initMemberDrawer();
@@ -206,13 +205,13 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
     private void publishReloadFragment(Integer pos) {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.CardsFrag.ON_RELOAD_FRAGMENT)
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.CardDesktopFrag.ON_RELOAD_FRAGMENT)
                 .withData(pos)
                 .build());
     }
 
     private void publishClearFragment(Integer pos) {
-        lookupQueue().publish(QEvents.CardsFrag.ON_CLEAR_FRAGMENT, pos);
+        lookupQueue().publish(QEvents.CardDesktopFrag.ON_CLEAR_FRAGMENT, pos);
     }
 
     @Override
@@ -235,7 +234,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Preference preference = preference();
         int i = 0;
-        for (CardCollection cards : cardsList) {
+        for (CardDesktop desktop : desktopList) {
 
             View tab = vAppTabs.getTabAt(i).getCustomView();
             if (tab == null) {
@@ -243,8 +242,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                 vAppTabs.getTabAt(i).setCustomView(tab);
             }
             TextView vtext = tab.findViewById(R.id.tab_text);
-            String title = cards.getTitle();
-            title = Strings.isBlank(title) ? "" + (cardsIndex.get(i) + 1) : title;
+            String title = desktop.getTitle();
+            title = Strings.isBlank(title) ? "" + (desktopIndex.get(i) + 1) : title;
 
             vtext.setText(title);
             i++;
@@ -266,55 +265,55 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
 
     private void reloadData() {
 
-        List<CardCollection> temp = new LinkedList<>();
+        List<CardDesktop> temp = new LinkedList<>();
         List<Integer> indexs = new LinkedList<>();
         Preference preference = preference();
-        int s = preference.getCardsSize();
+        int s = preference.getDesktopSize();
         for (int i = 0; i < s; i++) {
-            if (!preference.isCardsEnabled(i)) {
+            if (!preference.isDesktopEnabled(i)) {
                 continue;
             }
-            CardCollection cards = preference.getCards(i);
-            temp.add(cards);
+            CardDesktop desktop = preference.getDesktop(i);
+            temp.add(desktop);
             indexs.add(i);
         }
 
         //append if test desktop
         if (preference.isTestsDesktop()) {
-            CardCollection cards = new CardCollection();
-            cards.withArg(TestsDesktop.NAME, true);
-            cards.setTitle(i18n().string(R.string.desktop_tests));
-            temp.add(cards);
+            CardDesktop desktop = new CardDesktop();
+            desktop.withArg(TestsDesktop.NAME, true);
+            desktop.setTitle(i18n().string(R.string.desktop_tests));
+            temp.add(desktop);
 
         }
 
-        if (temp.equals(cardsList)) {
+        if (temp.equals(desktopList)) {
             publishReloadFragment(null);
         } else {
             /*
             I don't know the reason yet, so just clear all when reloading
-              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 cardsList:0:0}
+              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 desktopList:0:0}
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1422)
         at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1759)
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1827)
              */
             publishClearFragment(null);
 
-            cardsList = temp;
-            cardsIndex = indexs;
+            desktopList = temp;
+            desktopIndex = indexs;
 
             if (currentTabIndex == null) {
                 currentTabIndex = 0;
             }
 
-            if (currentTabIndex >= cardsList.size()) {
-                currentTabIndex = cardsList.size() - 1;
+            if (currentTabIndex >= desktopList.size()) {
+                currentTabIndex = desktopList.size() - 1;
             }
 
             //setupWithViewPager will cause current index reset, need to keep it.
             int tp = currentTabIndex;
 
-            vPager.setAdapter(new CardsPagerAdapter(getSupportFragmentManager()));
+            vPager.setAdapter(new DesktopPagerAdapter(getSupportFragmentManager()));
             vAppTabs.setupWithViewPager(vPager);
             refreshTab();
 
@@ -346,7 +345,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.cards_menu, menu);
+        getMenuInflater().inflate(R.menu.card_desktop_menu, menu);
         return true;
     }
 
@@ -370,8 +369,8 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isTestDesktop(CardCollection cards) {
-        if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+    private boolean isTestDesktop(CardDesktop desktop) {
+        if (desktop.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
             return true;
         }
         return false;
@@ -380,26 +379,26 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private void doEditTitle() {
         I18N i18n = i18n();
 
-        CardCollection cards = cardsList.get(vPager.getCurrentItem());
-        if (isTestDesktop(cards)) {
-            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, cards.getTitle()));
+        CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
+        if (isTestDesktop(desktop)) {
+            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, desktop.getTitle()));
             return;
         }
 
 
         Dialogs.showTextEditor(this, i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_desktop_title),
-                InputType.TYPE_CLASS_TEXT, cards.getTitle(), new Dialogs.OnFinishListener() {
+                InputType.TYPE_CLASS_TEXT, desktop.getTitle(), new Dialogs.OnFinishListener() {
                     @Override
                     public boolean onFinish(int which, Object data) {
                         if (which == Dialogs.OK_BUTTON) {
                             int tabPos = vPager.getCurrentItem();
-                            int cardsPos = cardsIndex.get(tabPos);
-                            CardCollection cards = preference().getCards(cardsPos);
-                            cards.setTitle((String) data);
-                            preference().updateCards(cardsPos, cards);
+                            int desktopPos = desktopIndex.get(tabPos);
+                            CardDesktop desktop = preference().getDesktop(desktopPos);
+                            desktop.setTitle((String) data);
+                            preference().updateDesktop(desktopPos, desktop);
 
-                            cardsList.set(vPager.getCurrentItem(), cards);
+                            desktopList.set(tabPos, desktop);
                             refreshTab();
                         }
                         return true;
@@ -410,9 +409,9 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     private void doAddCard() {
         final I18N i18n = i18n();
 
-        CardCollection cards = cardsList.get(vPager.getCurrentItem());
-        if (isTestDesktop(cards)) {
-            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, cards.getTitle()));
+        CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
+        if (isTestDesktop(desktop)) {
+            GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, desktop.getTitle()));
             return;
         }
 
@@ -439,20 +438,20 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
                             Set<Dialogs.SupportIconObject<CardType>> selection = (Set<Dialogs.SupportIconObject<CardType>>) data;
 
                             if (selection.isEmpty()) {
-                                GUIs.shortToast(CardsDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
+                                GUIs.shortToast(CardDesktopActivity.this, i18n.string(R.string.msg_field_empty_selection, R.string.label_card_type));
                             } else {
                                 int tabPos = vPager.getCurrentItem();
-                                int cardsPos = cardsIndex.get(tabPos);
-                                CardCollection cards = preference().getCards(cardsPos);
+                                int desktopPos = desktopIndex.get(tabPos);
+                                CardDesktop desktop = preference().getDesktop(desktopPos);
 
                                 for (Dialogs.SupportIconObject<CardType> type : selection) {
                                     Card card = new Card(type.obj, cardFacade.getTypeText(type.obj));
-                                    cards.add(card);
-                                    Logger.d(">>> new card {} has added to cards {}/{}", card.getTitle(), cards.getTitle(), cards.size());
+                                    desktop.add(card);
+                                    Logger.d(">>> new card {} has added to card_desktop {}/{}", card.getTitle(), desktop.getTitle(), desktop.size());
                                 }
 
-                                preference.updateCards(cardsPos, cards);
-                                publishReloadFragment(cardsPos);
+                                preference.updateDesktop(desktopPos, desktop);
+                                publishReloadFragment(desktopPos);
                             }
 
 
@@ -486,31 +485,31 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
     }
 
 
-    public class CardsPagerAdapter extends FragmentPagerAdapter {
-        public CardsPagerAdapter(FragmentManager fm) {
+    public class DesktopPagerAdapter extends FragmentPagerAdapter {
+        public DesktopPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public int getCount() {
-            return cardsList.size();
+            return desktopList.size();
         }
 
 
         @Override
         public Fragment getItem(int position) {
 
-            CardCollection cards = cardsList.get(position);
-            if (cards.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
+            CardDesktop desktop = desktopList.get(position);
+            if (desktop.getArg(TestsDesktop.NAME, Boolean.FALSE)) {
                 DesktopMgntFragment f = new DesktopMgntFragment();
                 Bundle b = new Bundle();
                 b.putString(DesktopMgntFragment.ARG_DESKTOP_NAME, TestsDesktop.NAME);
                 f.setArguments(b);
                 return f;
             } else {
-                Fragment f = new CardsFragment();
+                Fragment f = new CardDesktopFragment();
                 Bundle b = new Bundle();
-                b.putInt(CardsFragment.ARG_CARDS_POS, cardsIndex.get(position));
+                b.putInt(CardDesktopFragment.ARG_DESKTOP_INDEX, desktopIndex.get(position));
                 f.setArguments(b);
 
                 return f;
@@ -527,13 +526,17 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             return false;
         }
 
+        if (!Contexts.instance().getPreference().isAnyDesktop()) {
+            new DefaultCardDesktopCreator().createForUpgrade(false);
+        }
+
         boolean fvt = contexts().getAndSetFirstVersionTime();
         if (firstTime) {
             firstTime = false;
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(CardsDesktopActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardDesktopActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_about);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, i18n().string(R.string.app_name));
                     startActivity(intent);
@@ -542,15 +545,10 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
             return true;
         } else if (fvt) {
 
-            if (!Contexts.instance().getPreference().isAnyCards()) {
-                new DefaultCardsCreator().createForUpgrade(false);
-            }
-
-
             GUIs.post(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(CardsDesktopActivity.this, LocalWebViewActivity.class);
+                    Intent intent = new Intent(CardDesktopActivity.this, LocalWebViewActivity.class);
                     intent.putExtra(LocalWebViewActivity.ARG_URI_RES_ID, R.string.path_what_is_new);
                     intent.putExtra(LocalWebViewActivity.ARG_TITLE, Contexts.instance().getAppVerName());
                     startActivity(intent);
@@ -581,7 +579,7 @@ public class CardsDesktopActivity extends ContextsActivity implements EventQueue
         //onCreateActionMode(ActionMode, Menu) once on initial creation.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.cards_edit_menu, menu);//Inflate the menu over action mode
+            mode.getMenuInflater().inflate(R.menu.card_desktop_edit_menu, menu);//Inflate the menu over action mode
             return true;
         }
 

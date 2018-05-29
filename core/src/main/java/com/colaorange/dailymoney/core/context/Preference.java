@@ -8,7 +8,7 @@ import com.colaorange.commons.util.Jsons;
 import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.R;
@@ -29,8 +29,11 @@ public class Preference {
      **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
-    public static final String DESKTOP_ENABLE_PREFIX = "desktop-enable-";
-    public static final String DESKTOP_CARDS_PREFIX = "desktop-cards-";
+    /**
+     * WARN, if you change this value, you have to check prefs.xml too
+     */
+    public static final String CARD_DESKTOP_ENABLE_PREFIX = "card-desktop-enable-";
+    public static final String CARD_DESKTOP_PREFIX = "card-desktop-";
 
     private static final String THEME_DARK_PREFIX = "dark-";
     private static final String THEME_LIGHT_PREFIX = "light-";
@@ -732,18 +735,17 @@ public class Preference {
         editor.commit();
     }
 
-    //TODO rename cards to desktops
-    private final int alwaysEnabledCardsSize = 1;
-    private final int maxCardsSize = 4;
+    private final int alwaysEnabledDesktopSize = 1;
+    private final int maxDesktopSize = 4;
 
-    public int getCardsSize() {
-        return maxCardsSize;
+    public int getDesktopSize() {
+        return maxDesktopSize;
     }
 
-    public boolean isAnyCards() {
+    public boolean isAnyDesktop() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        for (int i = 0; i < getCardsSize(); i++) {
-            String json = prefs.getString(DESKTOP_CARDS_PREFIX + i, null);
+        for (int i = 0; i < getDesktopSize(); i++) {
+            String json = prefs.getString(CARD_DESKTOP_PREFIX + i, null);
             if (!Strings.isBlank(json)) {
                 return true;
             }
@@ -751,77 +753,77 @@ public class Preference {
         return false;
     }
 
-    public boolean isCardsEnabled(int index) {
+    public boolean isDesktopEnabled(int index) {
 
-        if (index < alwaysEnabledCardsSize) {
+        if (index < alwaysEnabledDesktopSize) {
             return true;
         }
 
-        if (index >= getCardsSize()) {
+        if (index >= getDesktopSize()) {
             return false;
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        return prefs.getBoolean(DESKTOP_ENABLE_PREFIX + index, false);
+        return prefs.getBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, false);
     }
 
-    public void updateCardsEnable(int index, boolean enabled) {
-        if (index >= getCardsSize()) {
-            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+    public void updateDesktopEnable(int index, boolean enabled) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(DESKTOP_ENABLE_PREFIX + index, enabled);
+        editor.putBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, enabled);
         editor.commit();
     }
 
-    public CardCollection getCards(int index) {
-        if (index >= getCardsSize()) {
-            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+    public CardDesktop getDesktop(int index) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        String json = prefs.getString(DESKTOP_CARDS_PREFIX + index, null);
+        String json = prefs.getString(CARD_DESKTOP_PREFIX + index, null);
 
-        CardCollection cards = null;
+        CardDesktop cards = null;
         if (json != null) {
             try {
-                cards = Jsons.fromJson(json, CardCollection.class);
+                cards = Jsons.fromJson(json, CardDesktop.class);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
         }
         if (cards == null) {
-            cards = new CardCollection();
+            cards = new CardDesktop();
         }
         return cards;
     }
 
-    public void updateCards(int index, CardCollection cards) {
-        updateCards(index, cards, null);
+    public void updateDesktop(int index, CardDesktop cards) {
+        updateDesktop(index, cards, null);
     }
 
-    public void updateCards(int index, CardCollection cards, Boolean enabled) {
-        if (index >= getCardsSize()) {
-            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+    public void updateDesktop(int index, CardDesktop desktop, Boolean enabled) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
         }
-        String json = cards.toJson();
+        String json = desktop.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(DESKTOP_CARDS_PREFIX + index, json);
+        editor.putString(CARD_DESKTOP_PREFIX + index, json);
         if (enabled != null) {
-            editor.putBoolean(DESKTOP_ENABLE_PREFIX + index, enabled);
+            editor.putBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, enabled);
         }
         editor.commit();
     }
 
-    public void removeCards(int index) {
-        if (index >= getCardsSize()) {
-            throw new ArrayIndexOutOfBoundsException(index + ">=" + getCardsSize());
+    public void removeDesktop(int index) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(DESKTOP_CARDS_PREFIX + index);
-        editor.remove(DESKTOP_ENABLE_PREFIX + index);
+        editor.remove(CARD_DESKTOP_PREFIX + index);
+        editor.remove(CARD_DESKTOP_ENABLE_PREFIX + index);
         editor.commit();
     }
 

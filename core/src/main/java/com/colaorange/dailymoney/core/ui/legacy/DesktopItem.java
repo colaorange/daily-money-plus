@@ -5,6 +5,7 @@ import android.content.Intent;
 /**
  * @author dennis
  */
+@Deprecated
 public class DesktopItem {
 
     private int icon;

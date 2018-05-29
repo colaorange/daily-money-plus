@@ -11,8 +11,8 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
-import com.colaorange.dailymoney.core.ui.cards.CardsDesktopActivity;
+import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
+import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
@@ -102,7 +102,7 @@ public class StartupActivity extends ContextsActivity {
 
     private void doNextActivity() {
 //        Intent intent = new Intent(StartupActivity.this, DesktopMgntActivity.class);
-        Intent intent = new Intent(StartupActivity.this, CardsDesktopActivity.class);
+        Intent intent = new Intent(StartupActivity.this, CardDesktopActivity.class);
         intent.putExtra(ARG_FIRST_TIME, firstTime);
         startActivity(intent);
         started = true;
@@ -112,8 +112,8 @@ public class StartupActivity extends ContextsActivity {
 
     private void doFirstTime() {
 
-        if (!Contexts.instance().getPreference().isAnyCards()) {
-            new DefaultCardsCreator().createForWholeNew(false);
+        if (!Contexts.instance().getPreference().isAnyDesktop()) {
+            new DefaultCardDesktopCreator().createForWholeNew(false);
         }
 
 

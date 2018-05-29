@@ -25,7 +25,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
@@ -44,11 +44,11 @@ import java.util.Map;
 /**
  * @author dennis
  */
-public class CardsFragment extends ContextsFragment implements EventQueue.EventListener {
+public class CardDesktopFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final String ARG_CARDS_POS = "cardsPos";
+    public static final String ARG_DESKTOP_INDEX = "desktopIndex";
 
-    private int cardsPos;
+    private int desktopIndex;
 
     private List<Card> recyclerDataList;
 
@@ -73,7 +73,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.cards_frag, container, false);
+        rootView = inflater.inflate(R.layout.card_desktop_frag, container, false);
         return rootView;
     }
 
@@ -89,7 +89,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private void initArgs() {
         Bundle args = getArguments();
-        cardsPos = args.getInt(ARG_CARDS_POS, 0);
+        desktopIndex = args.getInt(ARG_DESKTOP_INDEX, 0);
     }
 
     private void initMembers() {
@@ -108,7 +108,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         cardEditorAdapter = new CardEditorAdapter(activity, recyclerDataList);
 
 
-        vRecycler = rootView.findViewById(R.id.cards_recycler);
+        vRecycler = rootView.findViewById(R.id.desktop_recycler);
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
 
         ItemTouchHelper.Callback callback =
@@ -145,11 +145,11 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
     private void reloadData() {
 
-        CardCollection cards = preference().getCards(cardsPos);
+        CardDesktop desktop = preference().getDesktop(desktopIndex);
 
         List<Card> data = new LinkedList<>();
-        for (int i = 0; i < cards.size(); i++) {
-            data.add(cards.get(i));
+        for (int i = 0; i < desktop.size(); i++) {
+            data.add(desktop.get(i));
         }
 
         //clear again.
@@ -201,17 +201,17 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     public void onEvent(EventQueue.Event event) {
         Object data;
         switch (event.getName()) {
-            case QEvents.CardsFrag.ON_RELOAD_FRAGMENT:
+            case QEvents.CardDesktopFrag.ON_RELOAD_FRAGMENT:
 
                 data = event.getData();
                 /**
-                 * if no data, or data is my pos, reload my data.
+                 * if no data, or data is my index, reload my data.
                  */
-                if (data == null || (data instanceof Integer && ((Integer) data).intValue() == cardsPos)) {
+                if (data == null || (data instanceof Integer && ((Integer) data).intValue() == desktopIndex)) {
                     reloadData();
                 }
                 break;
-            case QEvents.CardsFrag.ON_CLEAR_FRAGMENT:
+            case QEvents.CardDesktopFrag.ON_CLEAR_FRAGMENT:
                 clearCreatedFragments();
                 break;
         }
@@ -289,7 +289,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
 
             FragmentManager fragmentManager = getChildFragmentManager();
             // I Finally get the root cause of fking java.lang.IllegalArgumentException: No view found for id issue
-            // with itemView id, to prevent remove wrong fragment in new cards at recrate case
+            // with itemView id, to prevent remove wrong fragment in new card_desktop at recrate case
             String fragTag = itemView.getId() + ":" + card.getId();
 
             if (fragmentManager.findFragmentByTag(fragTag) != null) {
@@ -297,7 +297,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             } else {
                 int pos = getAdapterPosition();
 
-                Fragment f = new CardFacade(getContextsActivity()).newFragement(cardsPos, pos, card);
+                Fragment f = new CardFacade(getContextsActivity()).newFragement(desktopIndex, pos, card);
 
 //                Logger.d(">>> new fragment {}:{}:{} ", fragTag, "0x" + Integer.toHexString(itemView.getId()), f);
 
@@ -320,7 +320,7 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
         @NonNull
         @Override
         public CardEditorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.card_editor, parent, false);
+            View itemView = inflater.inflate(R.layout.card_edit_item, parent, false);
 
             Toolbar vtoolbar = itemView.findViewById(R.id.card_toolbar);
             vtoolbar.inflateMenu(R.menu.card_editable_menu);
@@ -346,8 +346,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
             int pos = getAdapterPosition();
 
             Preference preference = preference();
-            CardCollection cards = preference.getCards(cardsPos);
-            card = cards.get(pos);
+            CardDesktop desktop = preference.getDesktop(desktopIndex);
+            card = desktop.get(pos);
 
             int icon = cardFacade.getTypeIcon(card.getType());
             if (icon >= 0) {
@@ -422,12 +422,12 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     private void doModeShowTitle(int pos, boolean showTitle) {
         Preference preference = Contexts.instance().getPreference();
 
-        CardCollection cards = preference.getCards(cardsPos);
-        Card card = cards.get(pos);
+        CardDesktop desktop = preference.getDesktop(desktopIndex);
+        Card card = desktop.get(pos);
         card.withArg(CardFacade.ARG_SHOW_TITLE, showTitle);
 
-        cards.set(pos, card);
-        preference.updateCards(cardsPos, cards);
+        desktop.set(pos, card);
+        preference.updateDesktop(desktopIndex, desktop);
 
         cardEditorAdapter.notifyItemChanged(pos);
     }
@@ -441,14 +441,14 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                         if (GUIs.OK_BUTTON == which) {
                             Preference preference = Contexts.instance().getPreference();
 
-                            CardCollection cards = preference.getCards(cardsPos);
-                            if (pos >= cards.size()) {
+                            CardDesktop desktop = preference.getDesktop(desktopIndex);
+                            if (pos >= desktop.size()) {
                                 return true;
                             }
 
-                            cards.remove(pos);
+                            desktop.remove(pos);
 
-                            preference.updateCards(cardsPos, cards);
+                            preference.updateDesktop(desktopIndex, desktop);
 
                             recyclerDataList.remove(pos);
                             cardEditorAdapter.notifyItemRemoved(pos);
@@ -462,15 +462,15 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     private void doMove(int pos, int posTo) {
         Preference preference = Contexts.instance().getPreference();
 
-        CardCollection cards = preference.getCards(cardsPos);
-        if (pos >= cards.size()) {
+        CardDesktop desktop = preference.getDesktop(desktopIndex);
+        if (pos >= desktop.size()) {
             return;
         }
-        cards.move(pos, posTo);
-        preference.updateCards(cardsPos, cards);
+        desktop.move(pos, posTo);
+        preference.updateDesktop(desktopIndex, desktop);
 
-        recyclerDataList.set(pos, cards.get(pos));
-        recyclerDataList.set(posTo, cards.get(posTo));
+        recyclerDataList.set(pos, desktop.get(pos));
+        recyclerDataList.set(posTo, desktop.get(posTo));
 
         cardEditorAdapter.notifyItemMoved(pos, posTo);
     }
@@ -479,8 +479,8 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     private void doEditTitle(final int pos) {
         I18N i18n = i18n();
 
-        CardCollection cards = preference().getCards(cardsPos);
-        Card card = cards.get(pos);
+        CardDesktop desktop = preference().getDesktop(desktopIndex);
+        Card card = desktop.get(pos);
 
         Dialogs.showTextEditor(getContextsActivity(), i18n.string(R.string.act_edit_title),
                 i18n.string(R.string.msg_edit_card_title),
@@ -488,11 +488,11 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
                     @Override
                     public boolean onFinish(int which, Object data) {
                         if (which == Dialogs.OK_BUTTON) {
-                            CardCollection cards = preference().getCards(cardsPos);
-                            Card card = cards.get(pos);
+                            CardDesktop desktop = preference().getDesktop(desktopIndex);
+                            Card card = desktop.get(pos);
                             card.setTitle((String) data);
 
-                            preference().updateCards(cardsPos, cards);
+                            preference().updateDesktop(desktopIndex, desktop);
 
 
                             recyclerDataList.set(pos, card);
@@ -505,10 +505,10 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     }
 
     private void doEditArg(final int pos) {
-        CardCollection cards = preference().getCards(cardsPos);
-        Card card = cards.get(pos);
+        CardDesktop desktop = preference().getDesktop(desktopIndex);
+        Card card = desktop.get(pos);
 
-        cardFacade.doEditArgs(cardsPos, pos, card, new CardFacade.OnOKListener() {
+        cardFacade.doEditArgs(desktopIndex, pos, card, new CardFacade.OnOKListener() {
             @Override
             public void onOK(Card card) {
                 cardEditorAdapter.notifyItemChanged(pos);
@@ -554,6 +554,6 @@ public class CardsFragment extends ContextsFragment implements EventQueue.EventL
     }
 
     protected boolean isModeEdit() {
-        return ((CardsDesktopActivity) getContextsActivity()).isModeEdit();
+        return ((CardDesktopActivity) getContextsActivity()).isModeEdit();
     }
 }

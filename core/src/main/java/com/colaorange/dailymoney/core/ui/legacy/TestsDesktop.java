@@ -9,9 +9,9 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Card;
-import com.colaorange.dailymoney.core.data.CardCollection;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.data.CardType;
-import com.colaorange.dailymoney.core.data.DefaultCardsCreator;
+import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
 import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -23,7 +23,6 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
-import com.colaorange.dailymoney.core.util.Logger;
 
 /**
  * @author dennis
@@ -61,11 +60,11 @@ public class TestsDesktop extends AbstractDesktop {
         dt = new DesktopItem(new Runnable() {
             public void run() {
                 Preference preference = Contexts.instance().getPreference();
-                for (int i = 0; i < preference.getCardsSize(); i++) {
-                    preference.removeCards(i);
+                for (int i = 0; i < preference.getDesktopSize(); i++) {
+                    preference.removeDesktop(i);
                 }
             }
-        }, "Remove all cards", R.drawable.dtitem_test);
+        }, "Remove all card_desktop", R.drawable.dtitem_test);
 
         addItem(dt);
 
@@ -75,27 +74,27 @@ public class TestsDesktop extends AbstractDesktop {
                 I18N i18n = ctx.getI18n();
                 Preference preference = ctx.getPreference();
                 for (int i = 0; i < 10; i++) {
-                    CardCollection cards0 = preference.getCards(i);
-                    if (cards0.size() == 0) {
-                        cards0.setTitle("T" + i);
+                    CardDesktop desktop = preference.getDesktop(i);
+                    if (desktop.size() == 0) {
+                        desktop.setTitle("T" + i);
                         Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
                         card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
                                 NavPage.HOW2USE));
-                        cards0.add(card);
+                        desktop.add(card);
 
                         card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
-                        cards0.add(card);
-                        preference.updateCards(i, cards0, true);
+                        desktop.add(card);
+                        preference.updateDesktop(i, desktop, true);
                     }
                 }
             }
-        }, "Create 10 cards ", R.drawable.dtitem_test);
+        }, "Create 10 card_desktop ", R.drawable.dtitem_test);
 
         addItem(dt);
 
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                new DefaultCardsCreator().createForWholeNew(true);
+                new DefaultCardDesktopCreator().createForWholeNew(true);
             }
         }, "Create Cards for whole new ", R.drawable.dtitem_test);
 
@@ -103,7 +102,7 @@ public class TestsDesktop extends AbstractDesktop {
 
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                new DefaultCardsCreator().createForUpgrade(true);
+                new DefaultCardDesktopCreator().createForUpgrade(true);
             }
         }, "Create Cards for upgrade ", R.drawable.dtitem_test);
 

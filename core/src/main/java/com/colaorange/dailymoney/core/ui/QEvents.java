@@ -15,10 +15,10 @@ public class QEvents {
         String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
     }
 
-    public interface CardsFrag {
+    public interface CardDesktopFrag {
         //activity -> fragment
-        String ON_RELOAD_FRAGMENT = "CardsFrag:onReloadFragment";
-        String ON_CLEAR_FRAGMENT =  "CardsFrag:onClearFragment";
+        String ON_RELOAD_FRAGMENT = "CardDesktopFrag:onReloadFragment";
+        String ON_CLEAR_FRAGMENT =  "CardDesktopFrag:onClearFragment";
         
     }
     public interface CardFrag {
