@@ -43,8 +43,40 @@ public class CardFacade {
                 return newNavPagesFragment(desktopIndex, pos, card);
             case INFO_EXPENSE:
                 return newInfoExpenseFragment(desktopIndex, pos, card);
+            case CHART_WEEKLY_EXPENSE_PIE:
+                return newChartWeeklyExpensePieFragment(desktopIndex, pos, card);
+            case CHART_MONTHLY_EXPENSE_PIE:
+                return newChartMonthlyExpensePieFragment(desktopIndex, pos, card);
+            case CHART_MONTHLY_EXPENSE_LINE:
+                break;
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                break;
         }
         throw new IllegalStateException("unknown card fragment " + card.getType());
+    }
+
+    private Fragment newChartMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
+        ExpensePieFragment f = new ExpensePieFragment();
+        Bundle b = newBaseBundle(desktopIndex, pos);
+        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.MONTHLY);
+        f.setArguments(b);
+        return f;
+    }
+
+    private Fragment newChartWeeklyExpensePieFragment(int desktopIndex, int pos, Card card) {
+        ExpensePieFragment f = new ExpensePieFragment();
+        Bundle b = newBaseBundle(desktopIndex, pos);
+        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.WEEKLY);
+        f.setArguments(b);
+        return f;
+    }
+
+    private Fragment newChearMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
+        ExpensePieFragment f = new ExpensePieFragment();
+        Bundle b = newBaseBundle(desktopIndex, pos);
+        f.setArguments(b);
+        b.putSerializable(ExpensePieFragment.ARG_MODE, ExpensePieFragment.Mode.MONTHLY);
+        return f;
     }
 
     private Bundle newBaseBundle(int desktopIndex, int pos) {
@@ -74,6 +106,14 @@ public class CardFacade {
                 return i18n.string(R.string.card_nav_page);
             case INFO_EXPENSE:
                 return i18n.string(R.string.card_info_expense);
+            case CHART_WEEKLY_EXPENSE_PIE:
+                return i18n.string(R.string.card_chart_weekly_expense_pie);
+            case CHART_MONTHLY_EXPENSE_PIE:
+                return i18n.string(R.string.card_chart_monthly_expense_pie);
+            case CHART_MONTHLY_EXPENSE_LINE:
+                return i18n.string(R.string.card_chart_monthly_expense_line);
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                return i18n.string(R.string.card_chart_yearly_income_expense_line);
         }
         return i18n.string(R.string.label_unknown);
     }
@@ -84,6 +124,14 @@ public class CardFacade {
                 return activity.resolveThemeAttrResId(R.attr.ic_nav_page);
             case INFO_EXPENSE:
                 return activity.resolveThemeAttrResId(R.attr.ic_info);
+            case CHART_WEEKLY_EXPENSE_PIE:
+                return activity.resolveThemeAttrResId(R.attr.ic_pie_chart);
+            case CHART_MONTHLY_EXPENSE_PIE:
+                return activity.resolveThemeAttrResId(R.attr.ic_pie_chart);
+            case CHART_MONTHLY_EXPENSE_LINE:
+                return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
         }
         return -1;
     }
@@ -94,6 +142,14 @@ public class CardFacade {
                 return true;
             case INFO_EXPENSE:
                 return false;
+            case CHART_WEEKLY_EXPENSE_PIE:
+                return false;
+            case CHART_MONTHLY_EXPENSE_PIE:
+                return false;
+            case CHART_MONTHLY_EXPENSE_LINE:
+                return true;
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                return true;
         }
         return false;
     }
@@ -103,6 +159,14 @@ public class CardFacade {
             case NAV_PAGES:
                 doEditNavPagesArgs(desktopIndex, pos, card, listener);
                 return;
+            case CHART_WEEKLY_EXPENSE_PIE:
+                break;
+            case CHART_MONTHLY_EXPENSE_PIE:
+                break;
+            case CHART_MONTHLY_EXPENSE_LINE:
+                break;
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                break;
             case INFO_EXPENSE:
             default:
                 return;
@@ -170,6 +234,14 @@ public class CardFacade {
                     sb.append(i18n.string(R.string.msg_no_data));
                 }
                 break;
+            case CHART_WEEKLY_EXPENSE_PIE:
+                break;
+            case CHART_MONTHLY_EXPENSE_PIE:
+                break;
+            case CHART_MONTHLY_EXPENSE_LINE:
+                break;
+            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                break;
             case INFO_EXPENSE:
             default:
                 break;
@@ -180,7 +252,9 @@ public class CardFacade {
 
     public List<CardType> listAvailableType() {
         return Collections.asList(CardType.NAV_PAGES,
-                CardType.INFO_EXPENSE);
+                CardType.INFO_EXPENSE,
+                CardType.CHART_WEEKLY_EXPENSE_PIE,
+                CardType.CHART_MONTHLY_EXPENSE_PIE);
     }
 
     public interface OnOKListener {

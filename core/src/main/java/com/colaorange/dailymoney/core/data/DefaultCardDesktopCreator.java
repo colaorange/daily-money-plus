@@ -55,12 +55,12 @@ public class DefaultCardDesktopCreator {
         desktop1.setTitle(i18n.string(R.string.desktop_reports));
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense_pie));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         desktop1.add(card);
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense_pie));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
 
         desktop1.add(card);
@@ -122,12 +122,12 @@ public class DefaultCardDesktopCreator {
 
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense_pie));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         desktop1.add(card);
 
         //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense));
+        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_chart_monthly_expense_pie));
         desktop1.add(card);
 
         preference.updateDesktop(1, desktop1, true);

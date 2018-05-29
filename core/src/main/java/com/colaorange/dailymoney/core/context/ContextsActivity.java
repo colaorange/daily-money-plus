@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -60,6 +61,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     private Map<AccountType, Integer> accountTextColorMap;
     private Map<AccountType, Integer> accountBgColorMap;
+    private int[] chartColorTemplate;
 
     private InstanceStateHelper instanceStateHelper;
 
@@ -79,6 +81,7 @@ public class ContextsActivity extends AppCompatActivity {
     private Map<String, EventQueue> eventQueueMap;
 
     private boolean recreating;
+
 
     public ContextsActivity() {
         instanceStateHelper = new InstanceStateHelper(this);
@@ -119,7 +122,7 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState){
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         instanceStateHelper.onRestore(savedInstanceState);
     }
@@ -165,8 +168,8 @@ public class ContextsActivity extends AppCompatActivity {
 //            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
 //            finishAndRemoveTask();
 //        } else {
-            globalColdRestartMark = true;
-            finish();
+        globalColdRestartMark = true;
+        finish();
 //        }
     }
 
@@ -271,6 +274,7 @@ public class ContextsActivity extends AppCompatActivity {
             recreate();
         }
     }
+
     public void recreate() {
         super.recreate();
         recreating = true;
@@ -281,7 +285,7 @@ public class ContextsActivity extends AppCompatActivity {
         globalRecreateTimeMark = System.currentTimeMillis();
     }
 
-    protected boolean isRecreating(){
+    protected boolean isRecreating() {
         return recreating;
     }
 
@@ -341,11 +345,12 @@ public class ContextsActivity extends AppCompatActivity {
         return dpRatio.floatValue();
     }
 
-    public float getDpWidth(){
+    public float getDpWidth() {
         //don't catch this, orientation imght change
         return GUIs.getDPWidth(this);
     }
-    public float getDpHeight(){
+
+    public float getDpHeight() {
         //don't catch this, orientation might change
         return GUIs.getDPHeight(this);
     }
@@ -407,6 +412,59 @@ public class ContextsActivity extends AppCompatActivity {
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
             params.setScrollFlags(flag);
         }
+    }
+
+    public int[] getChartColorTemplate() {
+        if (chartColorTemplate == null) {
+
+            //https://material.io/tools/color/
+            String red, pink, purple, deeppurple, indigo, blue, lightblue, cyan, teal, green, lightgreen, lime;
+            if (isLightTheme()) {
+                //300
+                red = "#E57373";
+                pink = "#F06292";
+                purple = "#BA68C8";
+                deeppurple = "#9575CD";
+                indigo = "#7986CB";
+                blue = "#64B5F6";
+                lightblue = "#4FC3F7";
+                cyan = "#4DD0E1";
+                teal = "#4DB6AC";
+                green = "#81C784";
+                lightgreen = "#AED581";
+                lime = "#DCE775";
+            } else {
+                //700
+                red = "#D32F2F";
+                pink = "#C2185B";
+                purple = "#7B1FA2";
+                deeppurple = "#512DA8";
+                indigo = "#303F9F";
+                blue = "#1976D2";
+                lightblue = "#0288D1";
+                cyan = "#0097A7";
+                teal = "#00796B";
+                green = "#388E3C";
+                lightgreen = "#689F38";
+                lime = "#AFB42B";
+            }
+
+            chartColorTemplate = new int[]{
+                    Color.parseColor(blue),
+                    Color.parseColor(green),
+                    Color.parseColor(purple),
+                    Color.parseColor(lime),
+                    Color.parseColor(red),
+                    Color.parseColor(lightblue),
+                    Color.parseColor(pink),
+                    Color.parseColor(teal),
+                    Color.parseColor(deeppurple),
+                    Color.parseColor(cyan),
+                    Color.parseColor(indigo),
+                    Color.parseColor(lightgreen)
+            };
+        }
+        return chartColorTemplate;
     }
 
     //shortcut
@@ -648,7 +706,6 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
 
-
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
     /**
@@ -662,7 +719,7 @@ public class ContextsActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return View.generateViewId();
         }
-        for (;;) {
+        for (; ; ) {
             final int result = sNextGeneratedId.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;

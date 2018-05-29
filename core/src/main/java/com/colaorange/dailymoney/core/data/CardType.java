@@ -5,7 +5,9 @@ package com.colaorange.dailymoney.core.data;
  */
 public enum CardType {
     NAV_PAGES,
-    INFO_EXPENSE/*,
-    CHART_WEEK_EXPENSE,
-    CHART_MONTH_EXPENSE*/
+    INFO_EXPENSE,
+    CHART_WEEKLY_EXPENSE_PIE,
+    CHART_MONTHLY_EXPENSE_PIE,
+    CHART_MONTHLY_EXPENSE_LINE,
+    CHART_YEARLY_INCOME_EXPENSE_LINE,
 }
