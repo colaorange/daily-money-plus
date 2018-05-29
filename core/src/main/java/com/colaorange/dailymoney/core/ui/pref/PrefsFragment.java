@@ -49,8 +49,8 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
 
                         GUIs.OnFinishListener l = new GUIs.OnFinishListener() {
                             @Override
-                            public boolean onFinish(Object data) {
-                                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+                            public boolean onFinish(int which, Object data) {
+                                if (which == GUIs.OK_BUTTON) {
                                     try {
                                         trackEvent(preference.getKey());
                                         Contexts.instance().getPreference().clearRecordTemplates(Contexts.instance().getWorkingBookId());
@@ -103,7 +103,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 ((MultiSelectListPreference) pref).setEntries(weekdays);
 
                 //selected value with default
-                String str = i18n.string(R.string.default_auto_backup_weekdays);
+                String str = i18n.string(R.string.default_pref_auto_backup_weekdays);
                 Set<String> strs = new LinkedHashSet<>();
                 for (String a : str.split(",")) {
                     strs.add(a);
@@ -131,7 +131,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
                 ((MultiSelectListPreference) pref).setEntries(weekdays);
 
                 //selected value with default
-                String str = i18n.string(R.string.default_auto_backup_at_hours);
+                String str = i18n.string(R.string.default_pref_auto_backup_at_hours);
                 Set<String> strs = new LinkedHashSet<>();
                 for (String a : str.split(",")) {
                     strs.add(a);

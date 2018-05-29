@@ -140,15 +140,15 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
     private void refreshToolbar() {
         if (totalMode) {
-            setTitle(R.string.dtitem_report_cumulative_balance);
+            setTitle(R.string.nav_pg_report_cumulative_balance);
         } else {
             switch (mode) {
                 case MODE_YEAR:
-                    setTitle(R.string.dtitem_report_yearly_balance);
+                    setTitle(R.string.nav_pg_report_yearly_balance);
                     break;
                 case MODE_MONTH:
                 default:
-                    setTitle(R.string.dtitem_report_monthly_balance);
+                    setTitle(R.string.nav_pg_report_monthly_balance);
                     break;
             }
         }

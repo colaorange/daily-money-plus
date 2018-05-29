@@ -36,6 +36,7 @@ import java.util.Map;
  * @author dennis
  * @see {@link AccountType}
  */
+@InstanceState
 public class AccountMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
 
@@ -173,7 +174,6 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_ACCOUNT_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -181,8 +181,9 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
                     reloadData();
                 }
             });
-
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void reloadData() {
@@ -222,8 +223,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         final String name = account.getName();
 
         GUIs.confirm(this, i18n().string(R.string.qmsg_delete_account, account.getName()), new GUIs.OnFinishListener() {
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     boolean r = contexts().getDataProvider().deleteAccount(account.getId());
                     if (r) {
                         if (account.equals(actionObj)) {

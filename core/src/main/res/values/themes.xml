@@ -9,9 +9,13 @@
     <attr name="appSecondaryLightColor" format="color" />
     <attr name="appSecondaryTextColor" format="color" />
 
+    <attr name="appCardColor" format="color" />
+
     <attr name="appbarTheme" format="reference" />
     <attr name="appbarSize" fromat="reference"/>
     <attr name="appPopupTheme" format="reference" />
+    <attr name="appCardbarSize" format="reference"/>
+    <attr name="appCardStyle" fromat="reference"/>
 
     <attr name="defaultSelector" format="reference" />
 
@@ -59,7 +63,7 @@
     <attr name="ic_share" format="reference" />
     <attr name="ic_today" format="reference" />
     <attr name="ic_from_to_apply" format="reference" />
-    <attr name="ic_from_to_swap" format="reference" />
+    <attr name="ic_swap_vert" format="reference" />
     <attr name="ic_template" format="reference" />
     <attr name="ic_check" format="reference" />
     <attr name="ic_set_working" format="reference" />
@@ -72,8 +76,18 @@
     <attr name="ic_info" format="reference" />
     <attr name="ic_warning" format="reference" />
 
+    <attr name="ic_title" format="reference" />
+    <attr name="ic_more_vert" format="reference" />
+    <attr name="ic_arrow_down" format="reference" />
+    <attr name="ic_arrow_up" format="reference" />
+
+    <attr name="ic_view_compact" format="reference"/>
+    <attr name="ic_add_card" format="reference"/>
+    <attr name="ic_nav_page" format="reference"/>
+
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
+        <item name="appCardbarSize">@dimen/appCardbarSize</item>
         <!--we implement dynamically in code-->
     </style>
 
@@ -86,6 +100,27 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="darkCommon">
+        <item name="appbarTheme">@style/darkAppbarTheme</item>
+        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
+
+        <item name="appCardStyle">@style/darkCard</item>
+        <item name="defaultSelector">@drawable/selector_dark</item>
+
+        <item name="actionButtonStyle">@style/darkActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/darkCard.ActionOverflow</item>
+    </style>
+    <style name="lightCommon">
+        <item name="appbarTheme">@style/lightAppbarTheme</item>
+        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
+
+        <item name="appCardStyle">@style/lightCard</item>
+        <item name="defaultSelector">@drawable/selector_light</item>
+
+        <item name="actionButtonStyle">@style/lightActionButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/lightCard.ActionOverflow</item>
     </style>
 
     <style name="lightAppbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
@@ -120,10 +155,7 @@
         <item name="appSecondaryLightColor">@color/themeColaSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
 
-        <item name="appbarTheme">@style/darkAppbarTheme</item>
-        <item name="appPopupTheme">@style/darkAppPopupTheme</item>
-
-        <item name="defaultSelector">@drawable/selector_dark</item>
+        <item name="appCardColor">@color/themeColaCardColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextLight</item>
         <item name="accountIncomeTextColor">@color/incomeTextLight</item>
@@ -164,9 +196,6 @@
 
         <item name="colorSwitchThumbNormal">@color/themeColaSecondary</item>
 
-        <!--
-        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        -->
     </style>
 
     <style name="themeLemon">
@@ -181,10 +210,7 @@
         <item name="appSecondaryLightColor">@color/themeLemonSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeLemonSecondaryText</item>
 
-        <item name="appbarTheme">@style/lightAppbarTheme</item>
-        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
-
-        <item name="defaultSelector">@drawable/selector_light</item>
+        <item name="appCardColor">@color/themeLemonCardColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
@@ -225,22 +251,7 @@
 
         <item name="colorSwitchThumbNormal">@color/themeLemonSecondary</item>
 
-        <!--
-        <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        -->
-        <!--
 
-        <item name="drawerArrowStyle">@style/Widget.AppCompat.DrawerArrowToggle</item>
-
-        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
-        <item name="radioButtonStyle">@style/Widget.AppCompat.CompoundButton.RadioButton</item>
-        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
-
-        <item name="ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
-        <item name="ratingBarStyleIndicator">@style/Widget.AppCompat.RatingBar.Indicator</item>
-        <item name="ratingBarStyleSmall">@style/Widget.AppCompat.RatingBar.Small</item>
-        <item name="seekBarStyle">@style/Widget.AppCompat.SeekBar</item>
-        -->
     </style>
 
 
@@ -256,10 +267,7 @@
         <item name="appSecondaryLightColor">@color/themeOrangeSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeOrangeSecondaryText</item>
 
-        <item name="appbarTheme">@style/lightAppbarTheme</item>
-        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
-
-        <item name="defaultSelector">@drawable/selector_light</item>
+        <item name="appCardColor">@color/themeOrangeCardColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
@@ -313,10 +321,7 @@
         <item name="appSecondaryLightColor">@color/themeSakuraSecondaryLight</item>
         <item name="appSecondaryTextColor">@color/themeSakuraSecondaryText</item>
 
-        <item name="appbarTheme">@style/lightAppbarTheme</item>
-        <item name="appPopupTheme">@style/lightAppPopupTheme</item>
-
-        <item name="defaultSelector">@drawable/selector_light</item>
+        <item name="appCardColor">@color/themeSakuraCardColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
@@ -355,6 +360,7 @@
         <item name="colorButtonNormal">@color/themeSakuraPrimary</item>
 
         <item name="colorSwitchThumbNormal">@color/themeSakuraSecondary</item>
+
     </style>
 
     <style name="textSizeNormal">
@@ -401,7 +407,7 @@
         <item name="ic_share">@drawable/ic_share_light_24dp</item>
         <item name="ic_today">@drawable/ic_today_light_24dp</item>
         <item name="ic_from_to_apply">@drawable/ic_layers_light_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_vert_light_24dp</item>
+        <item name="ic_swap_vert">@drawable/ic_swap_vert_light_24dp</item>
         <item name="ic_check">@drawable/ic_check_light_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_light_24dp</item>
         <item name="ic_operations">@drawable/ic_lightbulb_light_24dp</item>
@@ -415,6 +421,15 @@
         <item name="ic_template">@drawable/ic_label_outline_light_24dp</item>
         <item name="ic_info">@drawable/ic_info_light_24dp</item>
         <item name="ic_warning">@drawable/ic_warning_light_24dp</item>
+
+        <item name="ic_title">@drawable/ic_title_light_24dp</item>
+        <item name="ic_arrow_down">@drawable/ic_arrow_down_light_24dp</item>
+        <item name="ic_arrow_up">@drawable/ic_arrow_up_light_24dp</item>
+        <item name="ic_more_vert">@drawable/ic_more_vert_light_24dp</item>
+
+        <item name="ic_view_compact">@drawable/ic_view_compact_light_24dp</item>
+        <item name="ic_add_card">@drawable/ic_add_card_light_24dp</item>
+        <item name="ic_nav_page">@drawable/ic_nav_page_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -437,7 +452,7 @@
         <item name="ic_share">@drawable/ic_share_dark_24dp</item>
         <item name="ic_today">@drawable/ic_today_dark_24dp</item>
         <item name="ic_from_to_apply">@drawable/ic_layers_dark_24dp</item>
-        <item name="ic_from_to_swap">@drawable/ic_swap_vert_dark_24dp</item>
+        <item name="ic_swap_vert">@drawable/ic_swap_vert_dark_24dp</item>
         <item name="ic_check">@drawable/ic_check_dark_24dp</item>
         <item name="ic_set_working">@drawable/ic_set_working_dark_24dp</item>
         <item name="ic_operations">@drawable/ic_lightbulb_dark_24dp</item>
@@ -452,6 +467,14 @@
         <item name="ic_info">@drawable/ic_info_dark_24dp</item>
         <item name="ic_warning">@drawable/ic_warning_dark_24dp</item>
 
+        <item name="ic_title">@drawable/ic_title_dark_24dp</item>
+        <item name="ic_arrow_down">@drawable/ic_arrow_down_dark_24dp</item>
+        <item name="ic_arrow_up">@drawable/ic_arrow_up_dark_24dp</item>
+        <item name="ic_more_vert">@drawable/ic_more_vert_dark_24dp</item>
+
+        <item name="ic_view_compact">@drawable/ic_view_compact_dark_24dp</item>
+        <item name="ic_add_card">@drawable/ic_add_card_dark_24dp</item>
+        <item name="ic_nav_page">@drawable/ic_nav_page_dark_24dp</item>
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -459,4 +482,39 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="lightCard" parent="CardView.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cardBackgroundColor">?appCardColor</item>
+    </style>
+    <style name="darkCard" parent="CardView.Dark">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cardBackgroundColor">?appCardColor</item>
+    </style>
+    <style name="lightCard.ActionOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:src">?ic_more_vert</item>
+    </style>
+    <style name="darkCard.ActionOverflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">?ic_more_vert</item>
+    </style>
+    <style name="lightActionButtonStyle" parent="Widget.AppCompat.Light.ActionButton">
+        <!--default is better-->
+        <!--<item name="android:paddingLeft">12dp</item>-->
+        <!--<item name="android:paddingRight">12dp</item>-->
+        <!--<item name="android:minWidth">0dp</item>-->
+        <!--<item name="android:minHeight">0dp</item>-->
+    </style>
+    <style name="darkActionButtonStyle" parent="Widget.AppCompat.ActionButton">
+        <!--default is better-->
+        <!--<item name="android:paddingLeft">12dp</item>-->
+        <!--<item name="android:paddingRight">12dp</item>-->
+        <!--<item name="android:minWidth">0dp</item>-->
+        <!--<item name="android:minHeight">0dp</item>-->
+    </style>
 </resources>

@@ -146,17 +146,17 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                 setTitle(R.string.label_all);
                 break;
             case MODE_WEEK:
-                setTitle(R.string.label_weekly_list);
+                setTitle(R.string.nav_pg_weekly_list);
                 break;
             case MODE_DAY:
-                setTitle(R.string.label_daily_list);
+                setTitle(R.string.nav_pg_daily_list);
                 break;
             case MODE_YEAR:
-                setTitle(R.string.label_yearly_list);
+                setTitle(R.string.nav_pg_yearly_list);
                 break;
             case MODE_MONTH:
             default:
-                setTitle(R.string.label_monthly_list);
+                setTitle(R.string.nav_pg_monthly_list);
                 break;
         }
     }
@@ -281,8 +281,8 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
     public void doDeleteRecord(final Record record) {
         GUIs.confirm(this, i18n().string(R.string.qmsg_delete_record, Contexts.instance().toFormattedMoneyString(record.getMoney())), new GUIs.OnFinishListener() {
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     boolean r = Contexts.instance().getDataProvider().deleteRecord(record.getId());
                     if (r) {
                         if (record.equals(actionObj)) {
@@ -314,7 +314,6 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_RECORD_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -333,7 +332,9 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                     }
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void publishReloadFragment() {

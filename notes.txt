@@ -45,10 +45,11 @@
     workaround of drawable reference ?attr/
     https://stackoverflow.com/questions/8041537/how-to-reference-style-attributes-from-a-drawable
     http://jgilfelt.github.io/android-actionbarstylegenerator/
-    color
+* color
     http://paletton.com/#uid=1000u0kllllaFw0g0qFqFg0w0aF
     http://colorschemedesigner.com/csd-3.5/
     https://material.io/color/#!/?view.left=0&view.right=0
+    https://material.io/tools/color/#!/?view.left=0&view.right=0
     http://colorizer.org/
 
 * appbar scrolling with
@@ -65,3 +66,8 @@
 
 * supports
     https://developer.android.com/topic/libraries/support-library/packages
+* D&D
+    https://medium.com/@ipaulpro/drag-and-swipe-with-recyclerview-b9456d2b1aaf
+    https://developer.android.com/guide/topics/ui/drag-drop
+* Chart
+    https://blog.csdn.net/u014136472/article/details/50333829

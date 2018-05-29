@@ -1,6 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
-import com.colaorange.commons.util.JsonObject;
+import com.colaorange.commons.util.JsonBase;
 import com.google.gson.annotations.Expose;
 
 import java.util.LinkedHashMap;
@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 /**
  * @author Dennis
  */
-public class RecordTemplateCollection extends JsonObject {
+public class RecordTemplateCollection extends JsonBase {
 
 
     public static final int MAX_SIZE = 10;

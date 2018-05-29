@@ -6,11 +6,13 @@ import android.os.Bundle;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.InstanceState;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.ui.legacy.DesktopMgntActivity;
+import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
+import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 
 /**
@@ -99,7 +101,8 @@ public class StartupActivity extends ContextsActivity {
     }
 
     private void doNextActivity() {
-        Intent intent = new Intent(StartupActivity.this, DesktopMgntActivity.class);
+//        Intent intent = new Intent(StartupActivity.this, DesktopMgntActivity.class);
+        Intent intent = new Intent(StartupActivity.this, CardDesktopActivity.class);
         intent.putExtra(ARG_FIRST_TIME, firstTime);
         startActivity(intent);
         started = true;
@@ -108,6 +111,12 @@ public class StartupActivity extends ContextsActivity {
 
 
     private void doFirstTime() {
+
+        if (!Contexts.instance().getPreference().isAnyDesktop()) {
+            new DefaultCardDesktopCreator().createForWholeNew(false);
+        }
+
+
         IDataProvider idp = contexts().getDataProvider();
         if (idp.listAccount(null).size() == 0) {//just in case
             new DataCreator(idp, i18n()).createDefaultAccount();

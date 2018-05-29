@@ -182,8 +182,10 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     //theme, templates is possible changed
                     GUIs.alert(DataMaintenanceActivity.this, msg, new GUIs.OnFinishListener() {
                         @Override
-                        public boolean onFinish(Object data) {
-                            restartAppCold();
+                        public boolean onFinish(int which, Object data) {
+                            if(which == GUIs.OK_BUTTON) {
+                                restartAppCold();
+                            }
                             return true;
                         }
                     });
@@ -203,8 +205,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         GUIs.confirm(this, i18n().string(R.string.qmsg_restore_data), new GUIs.OnFinishListener() {
             @Override
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     GUIs.doBusy(DataMaintenanceActivity.this, job);
                 }
                 return true;
@@ -215,8 +217,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     private void doReset() {
         GUIs.confirm(this, i18n().string(R.string.qmsg_reset_working_book), new GUIs.OnFinishListener() {
             @Override
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
 
                     final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
                         public void onBusyError(Throwable t) {
@@ -264,8 +266,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         GUIs.confirm(this, i18n().string(R.string.qmsg_clear_folder, workingFolder), new GUIs.OnFinishListener() {
             @Override
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     GUIs.doBusy(DataMaintenanceActivity.this, job);
                 }
                 return true;
@@ -291,8 +293,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         GUIs.confirm(this, i18n().string(R.string.qmsg_create_default), new GUIs.OnFinishListener() {
             @Override
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     GUIs.doBusy(DataMaintenanceActivity.this, job);
                 }
                 return true;

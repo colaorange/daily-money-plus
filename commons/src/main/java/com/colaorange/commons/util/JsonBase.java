@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * @author Dennis
  */
-public class JsonObject implements Serializable, Cloneable {
+public class JsonBase implements Serializable, Cloneable {
 
 
     public String toJson() {

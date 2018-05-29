@@ -5,6 +5,7 @@ import android.content.Intent;
 /**
  * @author dennis
  */
+@Deprecated
 public class DesktopItem {
 
     private int icon;
@@ -57,7 +58,6 @@ public class DesktopItem {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
     }
 
     public void setIcon(int icon) {

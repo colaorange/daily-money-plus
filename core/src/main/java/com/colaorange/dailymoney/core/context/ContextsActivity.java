@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -25,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
@@ -40,6 +42,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * provide life cycle and easy access to contexts
@@ -58,6 +61,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     private Map<AccountType, Integer> accountTextColorMap;
     private Map<AccountType, Integer> accountBgColorMap;
+    private int[] chartColorTemplate;
 
     private InstanceStateHelper instanceStateHelper;
 
@@ -74,7 +78,10 @@ public class ContextsActivity extends AppCompatActivity {
     protected int selectableBackgroundId;
     protected int selectedBackgroundColor;
 
-    Map<String, EventQueue> eventQueueMap;
+    private Map<String, EventQueue> eventQueueMap;
+
+    private boolean recreating;
+
 
     public ContextsActivity() {
         instanceStateHelper = new InstanceStateHelper(this);
@@ -112,6 +119,12 @@ public class ContextsActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         instanceStateHelper.onBackup(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        instanceStateHelper.onRestore(savedInstanceState);
     }
 
     public void markWholeRecreate() {
@@ -155,8 +168,8 @@ public class ContextsActivity extends AppCompatActivity {
 //            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
 //            finishAndRemoveTask();
 //        } else {
-            globalColdRestartMark = true;
-            finish();
+        globalColdRestartMark = true;
+        finish();
 //        }
     }
 
@@ -219,7 +232,7 @@ public class ContextsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkRecreate();
+        checkGlobalRecreate();
     }
 
 
@@ -253,19 +266,28 @@ public class ContextsActivity extends AppCompatActivity {
             setTitle(t);
         }
 
-        checkRecreate();
+        checkGlobalRecreate();
     }
 
-    private void checkRecreate() {
+    private void checkGlobalRecreate() {
         if (globalRecreateTimeMark > onCreateTime) {
             recreate();
         }
     }
 
+    public void recreate() {
+        super.recreate();
+        recreating = true;
+    }
+
+
     protected void makeGlobalRecreate() {
         globalRecreateTimeMark = System.currentTimeMillis();
     }
 
+    protected boolean isRecreating() {
+        return recreating;
+    }
 
     Bundle fakeExtra;
 
@@ -321,6 +343,16 @@ public class ContextsActivity extends AppCompatActivity {
             dpRatio = GUIs.getDPRatio(this);
         }
         return dpRatio.floatValue();
+    }
+
+    public float getDpWidth() {
+        //don't catch this, orientation imght change
+        return GUIs.getDPWidth(this);
+    }
+
+    public float getDpHeight() {
+        //don't catch this, orientation might change
+        return GUIs.getDPHeight(this);
     }
 
     public boolean isLightTheme() {
@@ -382,6 +414,59 @@ public class ContextsActivity extends AppCompatActivity {
         }
     }
 
+    public int[] getChartColorTemplate() {
+        if (chartColorTemplate == null) {
+
+            //https://material.io/tools/color/
+            String red, pink, purple, deeppurple, indigo, blue, lightblue, cyan, teal, green, lightgreen, lime;
+            if (isLightTheme()) {
+                //300
+                red = "#E57373";
+                pink = "#F06292";
+                purple = "#BA68C8";
+                deeppurple = "#9575CD";
+                indigo = "#7986CB";
+                blue = "#64B5F6";
+                lightblue = "#4FC3F7";
+                cyan = "#4DD0E1";
+                teal = "#4DB6AC";
+                green = "#81C784";
+                lightgreen = "#AED581";
+                lime = "#DCE775";
+            } else {
+                //700
+                red = "#D32F2F";
+                pink = "#C2185B";
+                purple = "#7B1FA2";
+                deeppurple = "#512DA8";
+                indigo = "#303F9F";
+                blue = "#1976D2";
+                lightblue = "#0288D1";
+                cyan = "#0097A7";
+                teal = "#00796B";
+                green = "#388E3C";
+                lightgreen = "#689F38";
+                lime = "#AFB42B";
+            }
+
+            chartColorTemplate = new int[]{
+                    Color.parseColor(blue),
+                    Color.parseColor(green),
+                    Color.parseColor(purple),
+                    Color.parseColor(lime),
+                    Color.parseColor(red),
+                    Color.parseColor(lightblue),
+                    Color.parseColor(pink),
+                    Color.parseColor(teal),
+                    Color.parseColor(deeppurple),
+                    Color.parseColor(cyan),
+                    Color.parseColor(indigo),
+                    Color.parseColor(lightgreen)
+            };
+        }
+        return chartColorTemplate;
+    }
+
     //shortcut
     public interface TE extends Contexts.TE {
     }
@@ -395,6 +480,9 @@ public class ContextsActivity extends AppCompatActivity {
         return selectableBackgroundId;
     }
 
+    /**
+     * @return a state drawable which focus on selected state
+     */
     public Drawable getSelectedBackground() {
         StateListDrawable drawable = new StateListDrawable();
         //transparent mask for selecting ripple effect
@@ -530,6 +618,12 @@ public class ContextsActivity extends AppCompatActivity {
                 q.publish(name, data);
             }
         }
+
+        @Override
+        public void publish(String name) {
+            publish(name, null);
+        }
+
     }
 
     private class EventQueueImpl implements EventQueue {
@@ -547,7 +641,7 @@ public class ContextsActivity extends AppCompatActivity {
         public void subscribe(EventListener listener) {
             synchronized (listeners) {
                 listeners.add(new WeakReference<EventListener>(listener));
-                Logger.d("Event queue '{}:{}', subscriber {}", getTitle(), queueName, listener);
+                Logger.d("Event queue '{}:{}', subscriber {}", getClass().getSimpleName(), queueName, listener);
             }
         }
 
@@ -563,20 +657,20 @@ public class ContextsActivity extends AppCompatActivity {
                 EventListener l = w.get();
                 if (l == null || l == listener) {
                     it.remove();
-                    Logger.d("Event queue '{}:{}', unsubscriber {}", getTitle(), queueName, l);
+                    Logger.d("Event queue '{}:{}', unsubscriber {}", getClass().getSimpleName(), queueName, l);
                 }
             }
             if (listeners.size() == 0) {
                 synchronized (this) {
                     getEventQueueMap().remove(queueName);
-                    Logger.d("Event queue '{}:{}' destroyed", getTitle(), queueName);
+                    Logger.d("Event queue '{}:{}' destroyed", getClass().getSimpleName(), queueName);
                 }
             }
         }
 
         @Override
         public void publish(Event event) {
-            Logger.d("Receive event {} to queue '{}:{}'", event.getName(), getTitle(), queueName);
+            Logger.d("Receive event {} to queue '{}:{}'", event.getName(), getClass().getSimpleName(), queueName);
 
             trimOrUnsubscribe(null);
             List<EventListener> ls = new LinkedList<>();
@@ -603,6 +697,36 @@ public class ContextsActivity extends AppCompatActivity {
         @Override
         public void publish(String name, Object data) {
             publish(new Event(name, data));
+        }
+
+        @Override
+        public void publish(String name) {
+            publish(name, null);
+        }
+    }
+
+
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
+    /**
+     * the method copy for @link {@link View#generateViewId()}, it is api > 17 only, but we use 15
+     * Generate a value suitable for use in {@link #setId(int)}.
+     * This value will not collide with ID values generated at build time by aapt for R.id.
+     *
+     * @return a generated ID value
+     */
+    public static int generateViewId() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return View.generateViewId();
+        }
+        for (; ; ) {
+            final int result = sNextGeneratedId.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
         }
     }
 }

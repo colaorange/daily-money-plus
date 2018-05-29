@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
 /**
- * 
  * @author dennis
- * 
  */
+@Deprecated
 public class Desktop {
 
 
@@ -27,15 +28,15 @@ public class Desktop {
 
     List<DesktopItem> items = new ArrayList<DesktopItem>();
 
-    public Desktop(String name, Activity activity){
-        this(name,activity,"",NO_ICON);
-    }
-    
-    public Desktop(String name, Activity activity,String label, int icon) {
-        this(name,activity,label, icon, null);
+    public Desktop(String name, Activity activity) {
+        this(name, activity, "", NO_ICON);
     }
 
-    public Desktop(String name, Activity activity,String label, int icon, List<DesktopItem> items) {
+    public Desktop(String name, Activity activity, String label, int icon) {
+        this(name, activity, label, icon, null);
+    }
+
+    public Desktop(String name, Activity activity, String label, int icon, List<DesktopItem> items) {
         this.name = name;
         this.activity = activity;
         this.label = label;
@@ -48,8 +49,7 @@ public class Desktop {
     public void addItem(DesktopItem item) {
         items.add(item);
     }
-    
-    
+
 
     public String getLabel() {
         return label;
@@ -60,7 +60,7 @@ public class Desktop {
     }
 
     public List<DesktopItem> getItems() {
-        ArrayList<DesktopItem> list  = new ArrayList<>(items);
+        ArrayList<DesktopItem> list = new ArrayList<>(items);
         Collections.sort(list, new Comparator<DesktopItem>() {
             public int compare(DesktopItem item1, DesktopItem item2) {
                 return Integer.valueOf(item2.getPriority()).compareTo(Integer.valueOf(item1.getPriority()));
@@ -72,8 +72,8 @@ public class Desktop {
     public List<DesktopItem> getMenuItems() {
         List<DesktopItem> list = getItems();
         Iterator<DesktopItem> i = list.iterator();
-        while(i.hasNext()){
-            if(!i.next().isInMenu()){
+        while (i.hasNext()) {
+            if (!i.next().isInMenu()) {
                 i.remove();
             }
         }
@@ -83,8 +83,8 @@ public class Desktop {
     public List<DesktopItem> getDesktopItems() {
         List<DesktopItem> list = getItems();
         Iterator<DesktopItem> i = list.iterator();
-        while(i.hasNext()){
-            if(!i.next().isInDesktop()){
+        while (i.hasNext()) {
+            if (!i.next().isInDesktop()) {
                 i.remove();
             }
         }
@@ -126,8 +126,8 @@ public class Desktop {
 
     public void refresh() {
     }
-    
-    public boolean isAvailable(){
+
+    public boolean isAvailable() {
         return true;
     }
 
@@ -138,16 +138,20 @@ public class Desktop {
 
         Desktop desktop = (Desktop) o;
 
-        if (icon != desktop.icon) return false;
-        if (label != null ? !label.equals(desktop.label) : desktop.label != null) return false;
-        return items != null ? items.equals(desktop.items) : desktop.items == null;
+        return name != null ? name.equals(desktop.name) : desktop.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = label != null ? label.hashCode() : 0;
-        result = 31 * result + icon;
-        result = 31 * result + (items != null ? items.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
+    }
+
+    public static Map<String, Desktop> getSupportedDesktops(Activity activity) {
+        Map<String, Desktop> supportedDesktops = new LinkedHashMap<>();
+        for (Desktop dt : new Desktop[]{new TestsDesktop(activity)}) {
+            supportedDesktops.put(dt.getName(), dt);
+        }
+
+        return java.util.Collections.unmodifiableMap(supportedDesktops);
     }
 }

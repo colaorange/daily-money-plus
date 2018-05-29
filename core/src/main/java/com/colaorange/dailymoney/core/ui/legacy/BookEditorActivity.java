@@ -140,11 +140,6 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void doOk() {
         I18N i18n = i18n();
 

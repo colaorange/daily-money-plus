@@ -1,7 +1,9 @@
 
 == 0.10.2 ==
 === Features ===
-
+ #25 Provide a drawer for function access
+ #26 Support customizable desktop
+ #28 Support weekly/monthly expense pie chart card
 === Bugs ===
  #24 always popped up about page
 

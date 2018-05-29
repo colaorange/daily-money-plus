@@ -38,6 +38,9 @@
             android:name=".core.ui.legacy.DesktopMgntActivity"
             android:label="@string/app_name" />
         <activity
+            android:name=".core.ui.cards.CardDesktopActivity"
+            android:label="@string/app_name" />
+        <activity
             android:name=".core.ui.legacy.BookMgntActivity"
             android:label="@string/title_bookmgnt" />
         <activity android:name=".core.ui.legacy.BookEditorActivity" />
@@ -56,11 +59,11 @@
             android:label="@string/title_prefs" />
         <activity
             android:name=".core.ui.pref.PrefsContributionActivity"
-            android:label="@string/label_prefcat_contribution"/>
+            android:label="@string/label_contribution"/>
 
         <activity
             android:name=".core.ui.pref.PrefsDeveloperActivity"
-            android:label="@string/label_prefcat_developer"/>
+            android:label="@string/label_developer"/>
 
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"

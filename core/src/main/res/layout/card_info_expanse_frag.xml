@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    style="?appCardStyle"
+    app:cardCornerRadius="2dp">
+
+    <LinearLayout
+        style="@style/rowItem"
+        android:orientation="vertical">
+
+        <include layout="@layout/card_tool_bar"/>
+
+        <include layout="@layout/no_data" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/card_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?appPrimaryColor"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            app:alignContent="flex_start"
+            app:alignItems="flex_start"
+            app:flexWrap="wrap"
+            app:justifyContent="center">
+
+            <TextView
+                android:id="@+id/desktop_weekly_expense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:textColor="?accountExpenseTextColor"
+                android:textSize="?textSize" />
+
+            <TextView
+                android:id="@+id/desktop_monthly_expense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:textColor="?accountExpenseTextColor"
+                android:textSize="?textSize" />
+
+            <TextView
+                android:id="@+id/desktop_cumulative_cash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:textColor="?accountAssetTextColor"
+                android:textSize="?textSize" />
+        </com.google.android.flexbox.FlexboxLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

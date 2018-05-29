@@ -10,15 +10,14 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import com.colaorange.commons.util.FinalVar;
+import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class GUIs {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if (listener != null) {
-                    listener.onFinish(which);
+                    listener.onFinish(which, null);
                 }
             }
         });
@@ -97,7 +96,7 @@ public class GUIs {
         DialogInterface.OnClickListener l = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                listener.onFinish(which);
+                listener.onFinish(which, null);
             }
         };
 
@@ -142,14 +141,53 @@ public class GUIs {
         alert(context, context.getString(R.string.msg_error, e.getMessage()));
     }
 
-    static public View inflateView(Context context, ViewGroup parent, int resId) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(resId, parent);
-    }
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();
     private static ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
+    private static ExecutorService multipleExecutor = Executors.newFixedThreadPool(4);
 
+    static public void doAsync(Context context, final IAsyncRunnable r) {
+        final Activity activity = context instanceof Activity ? (Activity)context : null;
+        multipleExecutor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                final Var<Exception> var = new Var<>();
+                try {
+                    r.run();
+                } catch (Exception x) {
+                    var.value = x;
+                }
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (var.value != null) {
+                            r.onAsyncError(var.value);
+                        }else{
+                            r.onAsyncFinish();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public interface IAsyncRunnable extends Runnable {
+        void onAsyncFinish();
+
+        void onAsyncError(Throwable t);
+    }
+
+    public static abstract class AsyncAdapter implements IAsyncRunnable {
+        @Override
+        public void onAsyncFinish() {
+        }
+
+        @Override
+        public void onAsyncError(Throwable t) {
+            Logger.e(t.getMessage(), t);
+        }
+    }
 
     static public void delayPost(final Runnable r) {
         delayPost(r, 50);
@@ -278,7 +316,7 @@ public class GUIs {
 
         @Override
         public void run() {
-            final FinalVar<Throwable> x = new FinalVar<Throwable>();
+            final Var<Throwable> x = new Var<Throwable>();
             try {
                 run.run();
             } catch (final Throwable x0) {
@@ -365,7 +403,7 @@ public class GUIs {
                 c.set(Calendar.YEAR, year);
                 c.set(Calendar.MONTH, monthOfYear);
                 c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                listener.onFinish(c.getTime());
+                listener.onFinish(OK_BUTTON, c.getTime());
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         s[0] = picker;
@@ -373,15 +411,25 @@ public class GUIs {
     }
 
     public interface OnFinishListener {
-        boolean onFinish(Object data);
+        boolean onFinish(int which, Object data);
     }
 
-    public static int converDP2Pixel(Context context, float dp) {
+    public static int dp2Pixel(Context context, float dp) {
         return (int) (dp * getDPRatio(context) + 0.5F);
     }
 
     public static float getDPRatio(Context context) {
         return context.getResources().getDisplayMetrics().density;
+    }
+
+    public static float getDPWidth(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels / displayMetrics.density;
+    }
+
+    public static float getDPHeight(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels / displayMetrics.density;
     }
 
     public static int getOrientation(Activity activity) {

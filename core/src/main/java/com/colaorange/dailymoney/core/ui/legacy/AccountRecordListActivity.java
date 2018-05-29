@@ -176,7 +176,6 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_RECORD_EDITOR_CODE && resultCode == Activity.RESULT_OK) {
             GUIs.delayPost(new Runnable() {
                 @Override
@@ -198,7 +197,9 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
                     setResult(RESULT_OK);
                 }
             });
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void reloadData() {
@@ -269,8 +270,8 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     public void doDeleteRecord(final Record record) {
         GUIs.confirm(this, i18n.string(R.string.qmsg_delete_record, Contexts.instance().toFormattedMoneyString(record.getMoney())), new GUIs.OnFinishListener() {
-            public boolean onFinish(Object data) {
-                if (((Integer) data).intValue() == GUIs.OK_BUTTON) {
+            public boolean onFinish(int which, Object data) {
+                if (which == GUIs.OK_BUTTON) {
                     boolean r = Contexts.instance().getDataProvider().deleteRecord(record.getId());
                     if (r) {
                         if (record.equals(actionObj)) {

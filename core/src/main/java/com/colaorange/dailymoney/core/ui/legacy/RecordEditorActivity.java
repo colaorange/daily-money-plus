@@ -513,8 +513,10 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
                 Date d = dateFormat.parse(vDate.getText().toString());
                 GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
                     @Override
-                    public boolean onFinish(Object data) {
-                        updateDateEditor((Date) data);
+                    public boolean onFinish(int which, Object data) {
+                        if(which == GUIs.OK_BUTTON) {
+                            updateDateEditor((Date) data);
+                        }
                         return true;
                     }
                 });
@@ -544,14 +546,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CALCULATOR_CODE && resultCode == Activity.RESULT_OK) {
             String result = data.getExtras().getString(Calculator.ARG_RESULT_VALUE);
             try {
                 vMoney.setText(Formats.cal2ToEditorTextNumberDecimal(result));
             } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void doOk() {

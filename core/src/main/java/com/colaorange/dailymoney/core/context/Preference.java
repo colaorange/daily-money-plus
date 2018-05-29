@@ -8,6 +8,7 @@ import com.colaorange.commons.util.Jsons;
 import com.colaorange.commons.util.Objects;
 import com.colaorange.commons.util.Security;
 import com.colaorange.commons.util.Strings;
+import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.R;
@@ -28,18 +29,24 @@ public class Preference {
      **/
     private static final String PASSWORD_SALT = "powerpuffgirls";
 
+    /**
+     * WARN, if you change this value, you have to check prefs.xml too
+     */
+    public static final String CARD_DESKTOP_ENABLE_PREFIX = "card-desktop-enable-";
+    public static final String CARD_DESKTOP_PREFIX = "card-desktop-";
 
     private static final String THEME_DARK_PREFIX = "dark-";
     private static final String THEME_LIGHT_PREFIX = "light-";
 
     public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
-    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX+ "orange";
+    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX + "orange";
     public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
-    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX+ "sakura";
+    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX + "sakura";
 
 
     private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
-    static{
+
+    static {
         themeSet.add(THEME_COLA);
         themeSet.add(THEME_ORANGE);
         themeSet.add(THEME_SAKURA);
@@ -50,7 +57,8 @@ public class Preference {
     public static final String TEXT_SIZE_MEDIUM = "medium";
     public static final String TEXT_SIZE_LARGE = "large";
     private static final LinkedHashSet<String> textSizeSet = new LinkedHashSet<>();
-    static{
+
+    static {
         textSizeSet.add(TEXT_SIZE_NOMRAL);
         textSizeSet.add(TEXT_SIZE_MEDIUM);
         textSizeSet.add(TEXT_SIZE_LARGE);
@@ -121,8 +129,6 @@ public class Preference {
     Set<Integer> autoBackupAtHours;
     Set<Integer> autoBackupWeekDays;
 
-    RecordTemplateCollection bookmarkCollections;
-
     ContextsApp contextsApp;
 
     public Preference(ContextsApp contextsApp) {
@@ -190,7 +196,7 @@ public class Preference {
 
     private void reloadContributionPref(SharedPreferences prefs, I18N i18n) {
         try {
-            allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_allow_analytics), allowAnalytics);
+            allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_pref_allow_analytics), allowAnalytics);
             allowAnalytics = prefs.getBoolean(i18n.string(R.string.pref_allow_analytics), allowAnalytics);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -200,14 +206,14 @@ public class Preference {
     private void reloadOtherPref(SharedPreferences prefs, I18N i18n) {
 
         try {
-            csvEncoding = i18n.string(R.string.default_csv_encoding, csvEncoding);
+            csvEncoding = i18n.string(R.string.default_pref_csv_encoding, csvEncoding);
             csvEncoding = prefs.getString(i18n.string(R.string.pref_csv_encoding), csvEncoding);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_testsdekstop), testsDesktop);
+            testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_pref_testsdekstop), testsDesktop);
             testsDesktop = prefs.getBoolean(i18n.string(R.string.pref_testsdekstop), testsDesktop);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -219,21 +225,21 @@ public class Preference {
 
     private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
         try {
-            backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_backup_with_timestamp), backupWithTimestamp);
+            backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_pref_backup_with_timestamp), backupWithTimestamp);
             backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp), backupWithTimestamp);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_auto_backup), autoBackup);
+            autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_pref_auto_backup), autoBackup);
             autoBackup = prefs.getBoolean(i18n.string(R.string.pref_auto_backup), autoBackup);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_weekdays);
+            String str = i18n.string(R.string.default_pref_auto_backup_weekdays);
             Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 strs.add(a);
@@ -250,7 +256,7 @@ public class Preference {
         }
 
         try {
-            String str = i18n.string(R.string.default_auto_backup_at_hours);
+            String str = i18n.string(R.string.default_pref_auto_backup_at_hours);
             Set<String> strs = new LinkedHashSet<>();
             for (String a : str.split(",")) {
                 strs.add(a);
@@ -314,25 +320,25 @@ public class Preference {
     private void reloadAccountingPref(SharedPreferences prefs, I18N i18n) {
         String str;
         try {
-            str = i18n.string(R.string.default_firstday_week);
+            str = i18n.string(R.string.default_pref_firstday_week);
             firstdayWeek = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_firstday_week), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_month);
+            str = i18n.string(R.string.default_pref_startday_month);
             startdayMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_year_month);
+            str = i18n.string(R.string.default_pref_startday_year_month);
             startdayYearMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_startday_year_month_day);
+            str = i18n.string(R.string.default_pref_startday_year_month_day);
             startdayYearMonthDay = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month_day), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -348,13 +354,13 @@ public class Preference {
         String str;
 
         try {
-            str = i18n.string(R.string.default_record_list_layout);
+            str = i18n.string(R.string.default_pref_record_list_layout);
             recordListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
         try {
-            str = i18n.string(R.string.default_max_records);
+            str = i18n.string(R.string.default_pref_max_records);
             maxRecords = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_max_records), str));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
@@ -449,7 +455,7 @@ public class Preference {
         dateTimeFormat = dateFormat + " " + timeFormat;
 
         try {
-            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_theme));
+            theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_pref_theme));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -458,7 +464,7 @@ public class Preference {
         }
 
         try {
-            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_text_size));
+            textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_pref_text_size));
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
@@ -588,7 +594,7 @@ public class Preference {
         return new SimpleDateFormat(dateFormat);
     }
 
-    public DateFormat getWeekDayFormat(){
+    public DateFormat getWeekDayFormat() {
         //TODO config? do we need to ?
         return new SimpleDateFormat("EEE");
     }
@@ -604,6 +610,7 @@ public class Preference {
     public DateFormat getMonthFormat() {
         return new SimpleDateFormat(monthFormat);
     }
+
     public DateFormat getNonDigitalMonthFormat() {
         return new SimpleDateFormat(nonDigitalMonthFormat);
     }
@@ -669,7 +676,7 @@ public class Preference {
         return getTheme().startsWith(THEME_LIGHT_PREFIX);
     }
 
-    public String getTextSize(){
+    public String getTextSize() {
         return textSize;
     }
 
@@ -691,39 +698,133 @@ public class Preference {
         return lastToAccount;
     }
 
-    public RecordTemplateCollection getRecordTemplates(){
+    public RecordTemplateCollection getRecordTemplates() {
         int bookid = getWorkingBookId();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
-        String json = prefs.getString("templates-"+bookid, null);
+        String json = prefs.getString("templates-" + bookid, null);
 
         RecordTemplateCollection templates = null;
-        if(json!=null){
+        if (json != null) {
             try {
-                templates =  Jsons.fromJson(json, RecordTemplateCollection.class);
+                templates = Jsons.fromJson(json, RecordTemplateCollection.class);
                 templates.book = bookid;
-            }catch(Exception x){
-                Logger.w(x.getMessage(),x );
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
             }
         }
-        if(templates==null){
+        if (templates == null) {
             templates = new RecordTemplateCollection(bookid);
         }
         return templates;
     }
 
-    public void updateRecordTemplates(RecordTemplateCollection templates){
+    public void updateRecordTemplates(RecordTemplateCollection templates) {
         int bookid = getWorkingBookId();
         templates.book = bookid;
         String json = templates.toJson();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("templates-"+bookid, json);
+        editor.putString("templates-" + bookid, json);
         editor.commit();
     }
-    public void clearRecordTemplates(int bookid){
+
+    public void clearRecordTemplates(int bookid) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.remove("templates-"+bookid);
+        editor.remove("templates-" + bookid);
         editor.commit();
     }
+
+    private final int alwaysEnabledDesktopSize = 1;
+    private final int maxDesktopSize = 4;
+
+    public int getDesktopSize() {
+        return maxDesktopSize;
+    }
+
+    public boolean isAnyDesktop() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        for (int i = 0; i < getDesktopSize(); i++) {
+            String json = prefs.getString(CARD_DESKTOP_PREFIX + i, null);
+            if (!Strings.isBlank(json)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isDesktopEnabled(int index) {
+
+        if (index < alwaysEnabledDesktopSize) {
+            return true;
+        }
+
+        if (index >= getDesktopSize()) {
+            return false;
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        return prefs.getBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, false);
+    }
+
+    public void updateDesktopEnable(int index, boolean enabled) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, enabled);
+        editor.commit();
+    }
+
+    public CardDesktop getDesktop(int index) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        String json = prefs.getString(CARD_DESKTOP_PREFIX + index, null);
+
+        CardDesktop cards = null;
+        if (json != null) {
+            try {
+                cards = Jsons.fromJson(json, CardDesktop.class);
+            } catch (Exception x) {
+                Logger.w(x.getMessage(), x);
+            }
+        }
+        if (cards == null) {
+            cards = new CardDesktop();
+        }
+        return cards;
+    }
+
+    public void updateDesktop(int index, CardDesktop cards) {
+        updateDesktop(index, cards, null);
+    }
+
+    public void updateDesktop(int index, CardDesktop desktop, Boolean enabled) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
+        }
+        String json = desktop.toJson();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(CARD_DESKTOP_PREFIX + index, json);
+        if (enabled != null) {
+            editor.putBoolean(CARD_DESKTOP_ENABLE_PREFIX + index, enabled);
+        }
+        editor.commit();
+    }
+
+    public void removeDesktop(int index) {
+        if (index >= getDesktopSize()) {
+            throw new ArrayIndexOutOfBoundsException(index + ">=" + getDesktopSize());
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(CARD_DESKTOP_PREFIX + index);
+        editor.remove(CARD_DESKTOP_ENABLE_PREFIX + index);
+        editor.commit();
+    }
+
 }

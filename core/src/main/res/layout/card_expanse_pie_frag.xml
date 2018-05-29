@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    style="?appCardStyle"
+    app:cardCornerRadius="2dp">
+
+    <LinearLayout
+        style="@style/rowItem"
+        android:orientation="vertical">
+
+        <include layout="@layout/card_tool_bar" />
+
+        <include layout="@layout/no_data" />
+
+        <LinearLayout
+            android:id="@+id/card_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="24dp"
+            android:paddingBottom="6dp">
+            <!--paddingtop for touching drag, to avoid no space when interaction with chart drag-->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/card_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/label_prefcat_display">
+    <PreferenceCategory android:title="@string/label_display">
         <ListPreference
-            android:defaultValue="@string/default_theme"
+            android:defaultValue="@string/default_pref_theme"
             android:entries="@array/prefs_theme_labels"
             android:entryValues="@array/prefs_theme_values"
             android:key="@string/pref_theme"
             android:summary="@string/label_prefs_theme_sum"
             android:title="@string/label_prefs_theme" />
         <ListPreference
-            android:defaultValue="@string/default_text_size"
+            android:defaultValue="@string/default_pref_text_size"
             android:entries="@array/prefs_text_size_labels"
             android:entryValues="@array/prefs_text_size_values"
             android:key="@string/pref_text_size"
             android:summary="@string/label_prefs_text_size_sum"
             android:title="@string/label_prefs_text_size" />
         <ListPreference
-            android:defaultValue="@string/default_record_list_layout"
+            android:defaultValue="@string/default_pref_record_list_layout"
             android:entries="@array/prefs_detlayout_labels"
             android:entryValues="@array/prefs_detlayout_values"
             android:key="@string/pref_record_list_layout"
@@ -46,14 +46,14 @@
             android:summary="@string/label_prefs_format_month_sum"
             android:title="@string/label_prefs_format_month" />
         <EditTextPreference
-            android:defaultValue="@string/default_max_records"
+            android:defaultValue="@string/default_pref_max_records"
             android:key="@string/pref_max_records"
             android:numeric="signed"
             android:summary="@string/label_prefs_maxrecords_sum"
             android:title="@string/label_prefs_maxrecords" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_security">
+    <PreferenceCategory android:title="@string/label_security">
         <com.colaorange.dailymoney.core.ui.pref.PasswordPreference
             android:key="@string/pref_password_hash"
             android:summary="@string/label_prefs_password_sum"
@@ -61,14 +61,14 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="@string/label_prefcat_data">
+    <PreferenceCategory android:title="@string/label_data">
         <SwitchPreference
-            android:defaultValue="@string/default_backup_with_timestamp"
+            android:defaultValue="@string/default_pref_backup_with_timestamp"
             android:key="@string/pref_backup_with_timestamp"
             android:summary="@string/label_prefs_backup_with_timestamp_sum"
             android:title="@string/label_prefs_backup_with_timestamp" />
         <SwitchPreference
-            android:defaultValue="@string/default_auto_backup"
+            android:defaultValue="@string/default_pref_auto_backup"
             android:key="@string/pref_auto_backup"
             android:summary="@string/label_prefs_auto_backup_sum"
             android:title="@string/label_prefs_auto_backup" />
@@ -86,35 +86,50 @@
             android:title="@string/label_prefs_auto_backup_at_hours" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_accounting">
+    <PreferenceCategory android:title="@string/label_accounting">
         <ListPreference
-            android:defaultValue="@string/default_firstday_week"
+            android:defaultValue="@string/default_pref_firstday_week"
             android:entries="@array/prefs_firstday_week_labels"
             android:entryValues="@array/prefs_firstday_week_values"
             android:key="@string/pref_firstday_week"
             android:summary="@string/label_prefs_firstday_week_sum"
             android:title="@string/label_prefs_firstday_week" />
         <ListPreference
-            android:defaultValue="@string/default_startday_month"
+            android:defaultValue="@string/default_pref_startday_month"
             android:entries="@array/prefs_startday_month_values"
             android:entryValues="@array/prefs_startday_month_values"
             android:key="@string/pref_startday_month"
             android:summary="@string/label_prefs_startday_month_sum"
             android:title="@string/label_prefs_startday_month" />
         <ListPreference
-            android:defaultValue="@string/default_startday_year_month"
+            android:defaultValue="@string/default_pref_startday_year_month"
             android:entries="@array/prefs_startday_year_month_values"
             android:entryValues="@array/prefs_startday_year_month_values"
             android:key="@string/pref_startday_year_month"
             android:summary="@string/label_prefs_startday_year_month_sum"
             android:title="@string/label_prefs_startday_year_month" />
         <ListPreference
-            android:defaultValue="@string/default_startday_year_month_day"
+            android:defaultValue="@string/default_pref_startday_year_month_day"
             android:entries="@array/prefs_startday_year_month_day_values"
             android:entryValues="@array/prefs_startday_year_month_day_values"
             android:key="@string/pref_startday_year_month_day"
             android:summary="@string/label_prefs_startday_year_month_day_sum"
             android:title="@string/label_prefs_startday_year_month_day" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/label_desktop">
+        <!--becareful the key, the key is zero-base, but description is one-base-->
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="card-desktop-enable-1"
+            android:title="@string/label_prefs_enable_desktop2" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="card-desktop-enable-2"
+            android:title="@string/label_prefs_enable_desktop3" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="card-desktop-enable-3"
+            android:title="@string/label_prefs_enable_desktop4" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_working_book">
@@ -125,14 +140,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/label_prefcat_others">
-        <Preference android:title="@string/label_prefcat_contribution">
+    <PreferenceCategory android:title="@string/label_others">
+        <Preference android:title="@string/label_contribution">
             <intent
                 android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsContributionActivity"
                 android:targetPackage="com.colaorange.dailymoney" />
         </Preference>
 
-        <Preference android:title="@string/label_prefcat_developer">
+        <Preference android:title="@string/label_developer">
             <intent
                 android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsDeveloperActivity"
                 android:targetPackage="com.colaorange.dailymoney" />
