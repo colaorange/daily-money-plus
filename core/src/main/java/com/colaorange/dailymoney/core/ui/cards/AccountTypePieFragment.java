@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Numbers;
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
@@ -16,8 +17,8 @@ import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.util.GUIs;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -51,11 +52,11 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
     AccountType accountType;
     Date baseDate;
 
-    PieChart chart;
+    Chart vChart;
 
-    float entryLabelTextSize;
-    int entryLabelTextColor;
-    int cardColor;
+    float labelTextSize;
+    int labelTextColor;
+    int backgroupdColor;
     int[] colorTemplate;
 
     @Override
@@ -86,39 +87,73 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
 
         ContextsActivity activity = getContextsActivity();
 
-        entryLabelTextSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeSmall).data).value;//we always set it as dp
-        entryLabelTextColor = activity.resolveThemeAttrResData(R.attr.accountExpenseTextColor);
-        cardColor = activity.resolveThemeAttrResData(R.attr.appCardColor);
+        labelTextSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeSmall).data).value;//we always set it as dp
+        labelTextColor = activity.getAccountTextColorMap().get(accountType);
 
-        chart = rootView.findViewById(R.id.card_chart);
-        chart.getLegend().setWordWrapEnabled(true);
-        chart.getLegend().setTextSize(entryLabelTextSize - 1);
-        chart.setEntryLabelColor(entryLabelTextColor);
-        chart.setEntryLabelTextSize(entryLabelTextSize - 2);
-        chart.getDescription().setEnabled(false);
-        chart.setCenterTextSize(entryLabelTextSize);
-        chart.setCenterTextColor(entryLabelTextColor);
-        chart.setHoleColor(cardColor);
-        chart.setHoleRadius(45);
-        chart.setTransparentCircleRadius(55);
+        backgroupdColor = activity.resolveThemeAttrResData(R.attr.appCardColor);
+
+        if (activity.isLightTheme()) {
+            backgroupdColor = Colors.darken(backgroupdColor, 0.01f);
+        } else {
+            backgroupdColor = Colors.lighten(backgroupdColor, 0.01f);
+        }
 
         colorTemplate = activity.getChartColorTemplate();
 
-        float rate = GUIs.getDPRatio(activity);
-        float size = Math.max(GUIs.getDPHeight(activity), GUIs.getDPWidth(activity));
-        size = size / 2.5f;
+        //general vChart
+        vChart = rootView.findViewById(R.id.card_chart);
+        vChart.setBackgroundColor(backgroupdColor);
+        vChart.getLegend().setWordWrapEnabled(true);
+        vChart.getLegend().setTextColor(labelTextColor);
+        vChart.getLegend().setTextSize(labelTextSize - 1);
+        vChart.getDescription().setEnabled(false);
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) chart.getLayoutParams();
-        lp.height = (int) (size * rate);
-        chart.setLayoutParams(lp);
 
         //i can't slide over char in my real phone if I enable the the highlight feature
-//        chart.setTouchEnabled(false);
+//        vChart.setTouchEnabled(false);
+
+        //pie vChart
+        PieChart pieChart = ((PieChart) vChart);
+        pieChart.setEntryLabelColor(labelTextColor);
+        pieChart.setEntryLabelTextSize(labelTextSize - 2);
+        pieChart.setCenterTextSize(labelTextSize);
+        pieChart.setCenterTextColor(labelTextColor);
+        pieChart.setHoleColor(backgroupdColor);
+        pieChart.setHoleRadius(45);
+        pieChart.setTransparentCircleRadius(55);
     }
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_expanse_pie_frag;
+        return R.layout.card_account_type_pie_frag;
+    }
+
+    protected void reloadView() {
+        super.reloadView();
+
+        ContextsActivity activity = getContextsActivity();
+        //calculate better padding for slide over vChart(give more space for slide)
+        float dp = GUIs.getDPRatio(activity);
+        float w = GUIs.getDPWidth(activity);
+        float h = GUIs.getDPHeight(activity);
+
+        int pTop, pBottom, pLeft, pRight;
+
+        pBottom = (int) (10 * dp);
+        if (h >= w) {
+            pTop = (int) (showTitle ? 0 : 40 * dp);
+            pLeft = pRight = (int) (4 * dp);
+        } else {
+            pTop = (int) (showTitle ? 0 : 4 * dp);
+            pLeft = pRight = (int) (40 * dp);
+        }
+
+        vContent.setPadding(pLeft, pTop, pRight, pBottom);
+
+        float size = Math.max(w, h) / 2f;
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vChart.getLayoutParams();
+        lp.height = (int) (size * dp);
+        vChart.setLayoutParams(lp);
     }
 
     @Override
@@ -205,14 +240,14 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
                 set.setColors(colorTemplate);
 
                 set.setSliceSpace(1f);//space between entry
-                set.setValueTextSize(entryLabelTextSize - 4);
-                set.setValueTextColor(entryLabelTextColor);
+                set.setValueTextSize(labelTextSize - 4);
+                set.setValueTextColor(labelTextColor);
                 set.setSelectionShift(10f);//size shift after highlight
 //                set.setValueLinePart1OffsetPercentage(90.f);//begin position of value line
 //                set.setValueLinePart1Length(1f);//length of value line
 //                set.setValueLinePart2Length(2f);//length of value line
                 set.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-                set.setValueLineColor(entryLabelTextColor);
+                set.setValueLineColor(labelTextColor);
 
 
                 PieData data = new PieData(set);
@@ -230,9 +265,12 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
                     }
                 });
 
-                chart.setData(data);
-                chart.setCenterText(description);
-                chart.invalidate(); // refresh
+                vChart.setData(data);
+
+                PieChart pieChart = ((PieChart) vChart);
+
+                pieChart.setCenterText(description);
+                vChart.invalidate(); // refresh
             }
         });
 

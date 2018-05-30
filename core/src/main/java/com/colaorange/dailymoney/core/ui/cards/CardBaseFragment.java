@@ -34,9 +34,9 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected View rootView;
     private Toolbar vToolbar;
     private View vNoData;
-    private View vContent;
+    protected View vContent;
 
-    private boolean showTitle;
+    protected boolean showTitle;
 
     protected I18N i18n;
 

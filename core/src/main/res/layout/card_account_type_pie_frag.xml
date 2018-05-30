@@ -17,10 +17,8 @@
             android:id="@+id/card_content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="24dp"
-            android:paddingBottom="6dp">
-            <!--paddingtop for touching drag, to avoid no space when interaction with chart drag-->
+            android:gravity="center">
+            <!--padding and size are controlled by code-->
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/card_chart"
                 android:layout_width="match_parent"
