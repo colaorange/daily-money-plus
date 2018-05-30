@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.cards;
+package com.colaorange.dailymoney.core.ui.chart;
 
 import android.os.Bundle;
 
@@ -8,7 +8,6 @@ import com.colaorange.commons.util.Numbers;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
@@ -38,7 +37,7 @@ import java.util.Map;
 /**
  * @author dennis
  */
-public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> implements EventQueue.EventListener {
+public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_MODE = "mode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
@@ -128,12 +127,12 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> implem
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_line_account_type_frag;
+        return R.layout.chart_line_account_type_frag;
     }
 
     @Override
-    protected boolean doReloadContent() {
-
+    public void reloadChart() {
+        super.reloadChart();
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
             final Map<Account, List<Entry>> series = new LinkedHashMap<>();
@@ -278,8 +277,6 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> implem
                 vChart.invalidate(); // refresh
             }
         });
-
-        return true;
     }
 
 }

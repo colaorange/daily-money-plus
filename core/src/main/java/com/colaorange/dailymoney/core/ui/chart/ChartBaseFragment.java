@@ -1,32 +1,76 @@
-package com.colaorange.dailymoney.core.ui.cards;
+package com.colaorange.dailymoney.core.ui.chart;
 
+import android.os.Bundle;
+import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.colaorange.commons.util.Colors;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.data.Card;
+import com.colaorange.dailymoney.core.data.CardDesktop;
+import com.colaorange.dailymoney.core.ui.cards.CardBaseFragment;
+import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.I18N;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.Legend;
 
 /**
  * @author dennis
  */
-public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragment implements EventQueue.EventListener {
+public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragment {
 
+
+    public static final String ARG_TITLE_PADDING = "titlePadding";
+
+    protected View rootView;
+
+    protected View vContainer;
     protected C vChart;
 
+    protected I18N i18n;
     protected float labelTextSize;
     protected int labelTextColor;
     protected int backgroundColor;
     protected int[] colorTemplate;
+    protected boolean lightTheme;
+    protected boolean titlePadding;
+
+    protected abstract int getLayoutResId();
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(getLayoutResId(), container, false);
+        return rootView;
+    }
 
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initArgs();
+        initMembers();
+        reloadChart();
+    }
+
+    @CallSuper
+    protected void initArgs() {
+        Bundle args = getArguments();
+        titlePadding = args.getBoolean(ARG_TITLE_PADDING, true);
+    }
+
+    @CallSuper
     protected void initMembers() {
-        super.initMembers();
         i18n = Contexts.instance().getI18n();
 
         ContextsActivity activity = getContextsActivity();
@@ -44,8 +88,9 @@ public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragmen
 
         colorTemplate = activity.getChartColorTemplate();
 
+        vContainer = rootView.findViewById(R.id.chart_container);
         //general vChart
-        vChart = rootView.findViewById(R.id.card_chart);
+        vChart = rootView.findViewById(R.id.chart_chart);
         vChart.setBackgroundColor(backgroundColor);
         Legend legend = vChart.getLegend();
         legend.setWordWrapEnabled(true);
@@ -59,10 +104,8 @@ public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragmen
         vChart.getDescription().setEnabled(false);
     }
 
-    @Override
-    protected void reloadView() {
-        super.reloadView();
-
+    @CallSuper
+    public void reloadChart() {
         ContextsActivity activity = getContextsActivity();
         //calculate better padding for slide over vChart(give more space for sliding)
         float dp = GUIs.getDPRatio(activity);
@@ -73,14 +116,14 @@ public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragmen
 
         pBottom = (int) (10 * dp);
         if (h >= w) {
-            pTop = (int) (showTitle ? 0 : 40 * dp);
+            pTop = (int) (titlePadding ? 40 * dp : 0);
             pLeft = pRight = (int) (4 * dp);
         } else {
-            pTop = (int) (showTitle ? 0 : 4 * dp);
+            pTop = (int) (titlePadding ? 4 * dp : 0);
             pLeft = pRight = (int) (40 * dp);
         }
 
-        vContent.setPadding(pLeft, pTop, pRight, pBottom);
+        vContainer.setPadding(pLeft, pTop, pRight, pBottom);
 
         float size = Math.max(w, h) / 2f;
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vChart.getLayoutParams();

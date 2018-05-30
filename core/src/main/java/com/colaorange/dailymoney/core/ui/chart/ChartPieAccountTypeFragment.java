@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.cards;
+package com.colaorange.dailymoney.core.ui.chart;
 
 import android.os.Bundle;
 
@@ -8,7 +8,6 @@ import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implements EventQueue.EventListener {
+public class ChartPieAccountTypeFragment extends ChartBaseFragment<PieChart> {
 
     public static final String ARG_MODE = "mode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
@@ -92,11 +91,12 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_pie_account_type_frag;
+        return R.layout.chart_pie_account_type_frag;
     }
 
     @Override
-    protected boolean doReloadContent() {
+    public void reloadChart() {
+        super.reloadChart();
 
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
@@ -210,7 +210,6 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
             }
         });
 
-        return true;
     }
 
 }
