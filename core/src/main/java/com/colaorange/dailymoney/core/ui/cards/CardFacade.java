@@ -58,49 +58,49 @@ public class CardFacade {
     }
 
     private Fragment newChartMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        AccountTypePieFragment f = new AccountTypePieFragment();
+        PieAccountTypeFragment f = new PieAccountTypeFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.MONTHLY);
+        b.putSerializable(PieAccountTypeFragment.ARG_MODE, PieAccountTypeFragment.Mode.MONTHLY);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newChartWeeklyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        AccountTypePieFragment f = new AccountTypePieFragment();
+        PieAccountTypeFragment f = new PieAccountTypeFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.WEEKLY);
-        b.putSerializable(AccountTypePieFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(AccountTypePieFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(PieAccountTypeFragment.ARG_MODE, PieAccountTypeFragment.Mode.WEEKLY);
+        b.putSerializable(PieAccountTypeFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(PieAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newChearMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        AccountTypePieFragment f = new AccountTypePieFragment();
+        PieAccountTypeFragment f = new PieAccountTypeFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
-        b.putSerializable(AccountTypePieFragment.ARG_MODE, AccountTypePieFragment.Mode.MONTHLY);
-        b.putSerializable(AccountTypePieFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(AccountTypePieFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(PieAccountTypeFragment.ARG_MODE, PieAccountTypeFragment.Mode.MONTHLY);
+        b.putSerializable(PieAccountTypeFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(PieAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         return f;
     }
 
     private Bundle newBaseBundle(int desktopIndex, int pos) {
         Bundle b = new Bundle();
-        b.putSerializable(CardInfoExpenseFragment.ARG_DESKTOP_INDEX, desktopIndex);
-        b.putSerializable(CardInfoExpenseFragment.ARG_INDEX, pos);
+        b.putSerializable(InfoExpenseFragment.ARG_DESKTOP_INDEX, desktopIndex);
+        b.putSerializable(InfoExpenseFragment.ARG_INDEX, pos);
         return b;
     }
 
     private Fragment newInfoExpenseFragment(int desktopIndex, int pos, Card card) {
-        CardInfoExpenseFragment f = new CardInfoExpenseFragment();
+        InfoExpenseFragment f = new InfoExpenseFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newNavPagesFragment(int desktopIndex, int pos, Card card) {
-        CardNavPagesFragment f = new CardNavPagesFragment();
+        NavPagesFragment f = new NavPagesFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;

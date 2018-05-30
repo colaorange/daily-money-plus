@@ -1,15 +1,12 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
 import android.os.Bundle;
-import android.widget.LinearLayout;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Numbers;
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -17,7 +14,6 @@ import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.util.GUIs;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -37,7 +33,7 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class AccountTypePieFragment extends CardBaseFragment implements EventQueue.EventListener {
+public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implements EventQueue.EventListener {
 
     public static final String ARG_MODE = "mode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
@@ -52,12 +48,6 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
     AccountType accountType;
     Date baseDate;
 
-    Chart vChart;
-
-    float labelTextSize;
-    int labelTextColor;
-    int backgroupdColor;
-    int[] colorTemplate;
 
     @Override
     protected void initArgs() {
@@ -83,77 +73,19 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
     @Override
     protected void initMembers() {
         super.initMembers();
-        i18n = Contexts.instance().getI18n();
 
-        ContextsActivity activity = getContextsActivity();
-
-        labelTextSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeSmall).data).value;//we always set it as dp
-        labelTextColor = activity.getAccountTextColorMap().get(accountType);
-
-        backgroupdColor = activity.resolveThemeAttrResData(R.attr.appCardColor);
-
-        if (activity.isLightTheme()) {
-            backgroupdColor = Colors.darken(backgroupdColor, 0.01f);
-        } else {
-            backgroupdColor = Colors.lighten(backgroupdColor, 0.01f);
-        }
-
-        colorTemplate = activity.getChartColorTemplate();
-
-        //general vChart
-        vChart = rootView.findViewById(R.id.card_chart);
-        vChart.setBackgroundColor(backgroupdColor);
-        vChart.getLegend().setWordWrapEnabled(true);
-        vChart.getLegend().setTextColor(labelTextColor);
-        vChart.getLegend().setTextSize(labelTextSize - 1);
-        vChart.getDescription().setEnabled(false);
-
-
-        //i can't slide over char in my real phone if I enable the the highlight feature
-//        vChart.setTouchEnabled(false);
-
-        //pie vChart
-        PieChart pieChart = ((PieChart) vChart);
-        pieChart.setEntryLabelColor(labelTextColor);
-        pieChart.setEntryLabelTextSize(labelTextSize - 2);
-        pieChart.setCenterTextSize(labelTextSize);
-        pieChart.setCenterTextColor(labelTextColor);
-        pieChart.setHoleColor(backgroupdColor);
-        pieChart.setHoleRadius(45);
-        pieChart.setTransparentCircleRadius(55);
+        vChart.setEntryLabelColor(labelTextColor);
+        vChart.setEntryLabelTextSize(labelTextSize - 2);
+        vChart.setCenterTextSize(labelTextSize);
+        vChart.setCenterTextColor(labelTextColor);
+        vChart.setHoleColor(backgroundColor);
+        vChart.setHoleRadius(45);
+        vChart.setTransparentCircleRadius(55);
     }
 
     @Override
     protected int getLayoutResId() {
         return R.layout.card_account_type_pie_frag;
-    }
-
-    protected void reloadView() {
-        super.reloadView();
-
-        ContextsActivity activity = getContextsActivity();
-        //calculate better padding for slide over vChart(give more space for slide)
-        float dp = GUIs.getDPRatio(activity);
-        float w = GUIs.getDPWidth(activity);
-        float h = GUIs.getDPHeight(activity);
-
-        int pTop, pBottom, pLeft, pRight;
-
-        pBottom = (int) (10 * dp);
-        if (h >= w) {
-            pTop = (int) (showTitle ? 0 : 40 * dp);
-            pLeft = pRight = (int) (4 * dp);
-        } else {
-            pTop = (int) (showTitle ? 0 : 4 * dp);
-            pLeft = pRight = (int) (40 * dp);
-        }
-
-        vContent.setPadding(pLeft, pTop, pRight, pBottom);
-
-        float size = Math.max(w, h) / 2f;
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vChart.getLayoutParams();
-        lp.height = (int) (size * dp);
-        vChart.setLayoutParams(lp);
     }
 
     @Override
@@ -266,10 +198,7 @@ public class AccountTypePieFragment extends CardBaseFragment implements EventQue
                 });
 
                 vChart.setData(data);
-
-                PieChart pieChart = ((PieChart) vChart);
-
-                pieChart.setCenterText(description);
+                vChart.setCenterText(description);
                 vChart.invalidate(); // refresh
             }
         });
