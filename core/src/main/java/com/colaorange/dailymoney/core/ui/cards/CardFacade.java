@@ -50,17 +50,31 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_PIE:
                 return newChartMonthlyExpensePieFragment(desktopIndex, pos, card);
             case CHART_MONTHLY_EXPENSE_LINE:
-                break;
+                return newChartMonthlyExpenseLineFragment(desktopIndex, pos, card, false);
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
+                return newChartMonthlyExpenseLineFragment(desktopIndex, pos, card, true);
             case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 break;
         }
         throw new IllegalStateException("unknown card fragment " + card.getType());
     }
 
+    private Fragment newChartMonthlyExpenseLineFragment(int desktopIndex, int pos, Card card, boolean cumulative) {
+        LineAccountTypeFragment f = new LineAccountTypeFragment();
+        Bundle b = newBaseBundle(desktopIndex, pos);
+        b.putSerializable(LineAccountTypeFragment.ARG_MODE, LineAccountTypeFragment.Mode.MONTHLY);
+        b.putSerializable(LineAccountTypeFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, cumulative ? LineAccountTypeFragment.CalculationMode.CUMULATIVE : LineAccountTypeFragment.CalculationMode.NORMAL);
+        f.setArguments(b);
+        return f;
+    }
+
     private Fragment newChartMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
         PieAccountTypeFragment f = new PieAccountTypeFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         b.putSerializable(PieAccountTypeFragment.ARG_MODE, PieAccountTypeFragment.Mode.MONTHLY);
+        b.putSerializable(PieAccountTypeFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(PieAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
         return f;
     }
@@ -75,15 +89,6 @@ public class CardFacade {
         return f;
     }
 
-    private Fragment newChearMonthlyExpensePieFragment(int desktopIndex, int pos, Card card) {
-        PieAccountTypeFragment f = new PieAccountTypeFragment();
-        Bundle b = newBaseBundle(desktopIndex, pos);
-        f.setArguments(b);
-        b.putSerializable(PieAccountTypeFragment.ARG_MODE, PieAccountTypeFragment.Mode.MONTHLY);
-        b.putSerializable(PieAccountTypeFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(PieAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
-        return f;
-    }
 
     private Bundle newBaseBundle(int desktopIndex, int pos) {
         Bundle b = new Bundle();
@@ -118,13 +123,15 @@ public class CardFacade {
                 return i18n.string(R.string.card_chart_monthly_expense_pie);
             case CHART_MONTHLY_EXPENSE_LINE:
                 return i18n.string(R.string.card_chart_monthly_expense_line);
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
+                return i18n.string(R.string.card_chart_monthly_expense_line_cumulative);
             case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 return i18n.string(R.string.card_chart_yearly_income_expense_line);
         }
         return i18n.string(R.string.label_unknown);
     }
 
-    public int getTypeIcon(CardType type){
+    public int getTypeIcon(CardType type) {
         switch (type) {
             case NAV_PAGES:
                 return activity.resolveThemeAttrResId(R.attr.ic_nav_page);
@@ -135,6 +142,8 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_PIE:
                 return activity.resolveThemeAttrResId(R.attr.ic_pie_chart);
             case CHART_MONTHLY_EXPENSE_LINE:
+                return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
                 return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
             case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
@@ -154,6 +163,8 @@ public class CardFacade {
                 return false;
             case CHART_MONTHLY_EXPENSE_LINE:
                 return true;
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
+                return true;
             case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 return true;
         }
@@ -170,6 +181,8 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_PIE:
                 break;
             case CHART_MONTHLY_EXPENSE_LINE:
+                break;
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
                 break;
             case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 break;
@@ -260,7 +273,9 @@ public class CardFacade {
         return Collections.asList(CardType.NAV_PAGES,
                 CardType.INFO_EXPENSE,
                 CardType.CHART_WEEKLY_EXPENSE_PIE,
-                CardType.CHART_MONTHLY_EXPENSE_PIE);
+                CardType.CHART_MONTHLY_EXPENSE_PIE,
+                CardType.CHART_MONTHLY_EXPENSE_LINE,
+                CardType.CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE);
     }
 
     public interface OnOKListener {

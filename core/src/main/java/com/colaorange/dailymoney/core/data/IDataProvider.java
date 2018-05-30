@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface IDataProvider {
     
-    int LIST_DETAIL_MODE_BOTH = 0;
-    int LIST_DETAIL_MODE_FROM = 1;
-    int LIST_DETAIL_MODE_TO = 2;
+    int LIST_RECORD_MODE_BOTH = 0;
+    int LIST_RECORD_MODE_FROM = 1;
+    int LIST_RECORD_MODE_TO = 2;
     
 
     void init();

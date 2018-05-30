@@ -7,6 +7,7 @@ import com.colaorange.commons.util.Numbers;
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -48,6 +49,8 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
     AccountType accountType;
     Date baseDate;
 
+    protected int accountTypeTextColor;
+
 
     @Override
     protected void initArgs() {
@@ -73,11 +76,15 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
     @Override
     protected void initMembers() {
         super.initMembers();
+        ContextsActivity activity = getContextsActivity();
+
+        accountTypeTextColor = activity.getAccountTextColorMap().get(accountType);
+        vChart.getLegend().setTextColor(accountTypeTextColor);
 
         vChart.setEntryLabelColor(labelTextColor);
         vChart.setEntryLabelTextSize(labelTextSize - 2);
         vChart.setCenterTextSize(labelTextSize);
-        vChart.setCenterTextColor(labelTextColor);
+        vChart.setCenterTextColor(accountTypeTextColor);
         vChart.setHoleColor(backgroundColor);
         vChart.setHoleRadius(45);
         vChart.setTransparentCircleRadius(55);
@@ -85,7 +92,7 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_account_type_pie_frag;
+        return R.layout.card_pie_account_type_frag;
     }
 
     @Override
@@ -93,7 +100,7 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
 
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-            Var<Double> varExp = new Var<>();
+            Var<Double> varBalance = new Var<>();
             List<PieEntry> entries = new LinkedList<>();
 
             @Override
@@ -115,7 +122,7 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                         end = calHelper.weekEndDate(baseDate);
                         break;
                 }
-                varExp.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
+                varBalance.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
 
 
                 List<Balance> list = new ArrayList<>();
@@ -160,11 +167,11 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
 
                     switch (mode) {
                         case MONTHLY:
-                            description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varExp.value));
+                            description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
                             break;
                         case WEEKLY:
                         default:
-                            description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varExp.value));
+                            description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
                             break;
                     }
                     set = new PieDataSet(entries, "");
@@ -187,8 +194,8 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                     @Override
                     public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
                         StringBuilder sb = new StringBuilder(Numbers.format(v, "#0.##"));
-                        if (varExp.value > 0) {
-                            v = (float) (v * 100 / varExp.value);
+                        if (varBalance.value > 0) {
+                            v = (float) (v * 100 / varBalance.value);
                             if (v >= 10) {//only show that > 10
                                 sb.append("(").append(Numbers.format(v, "#0.#")).append("%)");
                             }

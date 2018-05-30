@@ -9,6 +9,7 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.Legend;
 
 /**
  * @author dennis
@@ -35,7 +36,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragmen
 
         backgroundColor = activity.resolveThemeAttrResData(R.attr.appCardColor);
 
-        if (activity.isLightTheme()) {
+        if (lightTheme) {
             backgroundColor = Colors.darken(backgroundColor, 0.01f);
         } else {
             backgroundColor = Colors.lighten(backgroundColor, 0.01f);
@@ -46,9 +47,15 @@ public abstract class ChartBaseFragment<C extends Chart> extends CardBaseFragmen
         //general vChart
         vChart = rootView.findViewById(R.id.card_chart);
         vChart.setBackgroundColor(backgroundColor);
-        vChart.getLegend().setWordWrapEnabled(true);
-        vChart.getLegend().setTextColor(labelTextColor);
-        vChart.getLegend().setTextSize(labelTextSize - 1);
+        Legend legend = vChart.getLegend();
+        legend.setWordWrapEnabled(true);
+        legend.setTextColor(labelTextColor);
+        legend.setTextSize(labelTextSize - 1);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+
         vChart.getDescription().setEnabled(false);
     }
 

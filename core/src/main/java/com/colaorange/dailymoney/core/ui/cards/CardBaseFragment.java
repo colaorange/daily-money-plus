@@ -40,6 +40,8 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
 
     protected I18N i18n;
 
+    protected boolean lightTheme;
+
     protected abstract int getLayoutResId();
 
     @Override
@@ -80,6 +82,7 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     protected void initMembers() {
         i18n = Contexts.instance().getI18n();
         ContextsActivity activity = getContextsActivity();
+        lightTheme = activity.isLightTheme();
 
         vToolbar = rootView.findViewById(R.id.card_toolbar);
         vNoData = rootView.findViewById(R.id.no_data);
