@@ -141,21 +141,21 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
     public void onStart() {
         lookupQueue().subscribe(this);
         super.onStart();
-        Logger.d(">>> onStart fragment {}:{}:{} ", desktopIndex, index, this);
+//        Logger.d(">>> onStart fragment {}:{}:{} ", desktopIndex, index, this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         lookupQueue().unsubscribe(this);
-        Logger.d(">>> onStop fragment {}:{}:{} ", desktopIndex, index, this);
+//        Logger.d(">>> onStop fragment {}:{}:{} ", desktopIndex, index, this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Logger.d(">>> onDestroy fragment {}:{}:{} ", desktopIndex, index, this);
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+////        Logger.d(">>> onDestroy fragment {}:{}:{} ", desktopIndex, index, this);
+//    }
 
     @Override
     public void onEvent(EventQueue.Event event) {
