@@ -41,6 +41,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_MODE = "mode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
+    public static final String ARG_SERIES_MODE = "seriesMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
 
@@ -49,11 +50,16 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
     }
 
     public enum CalculationMode {
-        NORMAL, CUMULATIVE
+        INDIVIDUAL, CUMULATIVE
+    }
+
+    public enum SeriesMode {
+        INDIVIDUAL, INTEGRATED
     }
 
     private Mode mode;
     private CalculationMode calculationMode;
+    private SeriesMode seriesMode;
     private AccountType accountType;
     private Date baseDate;
 
@@ -73,7 +79,12 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
         calculationMode = (CalculationMode) args.getSerializable(ARG_CALCULATION_MODE);
         if (calculationMode == null) {
-            calculationMode = calculationMode.NORMAL;
+            calculationMode = calculationMode.INDIVIDUAL;
+        }
+
+        seriesMode = (SeriesMode) args.getSerializable(ARG_SERIES_MODE);
+        if (seriesMode == null) {
+            seriesMode = SeriesMode.INTEGRATED;
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -135,7 +146,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         super.reloadChart();
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-            final Map<Account, List<Entry>> series = new LinkedHashMap<>();
+            final Map<Object, List<Entry>> entrySeries = new LinkedHashMap<>();
             final List<Entry> unknownEntries = new LinkedList<>();
 
             @Override
@@ -155,13 +166,17 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
 
                 IDataProvider idp = Contexts.instance().getDataProvider();
+                Map<String, Account> accountMap = null;
 
-                List<Account> accounts = idp.listAccount(accountType);
-                Map<String, Account> accountMap = new LinkedHashMap<>();
-
-                for (Account a : accounts) {
-                    accountMap.put(a.getId(), a);
-                    series.put(a, new LinkedList<Entry>());
+                if (seriesMode == SeriesMode.INDIVIDUAL) {
+                    List<Account> accounts = idp.listAccount(accountType);
+                    accountMap = new LinkedHashMap<>();
+                    for (Account a : accounts) {
+                        accountMap.put(a.getId(), a);
+                        entrySeries.put(a, new LinkedList<Entry>());
+                    }
+                } else {
+                    entrySeries.put(accountType, new LinkedList<Entry>());
                 }
 
                 List<Record> records = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
@@ -176,14 +191,18 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
 
                 for (Record r : records) {
-                    String accto = r.getTo();
-                    Account acc = accountMap.get(accto);
-
                     List<Entry> entries;
-                    if (acc == null) {
-                        entries = unknownEntries;
+
+                    if (seriesMode == SeriesMode.INDIVIDUAL) {
+                        String accto = r.getTo();
+                        Account acc = accountMap.get(accto);
+                        if (acc == null) {
+                            entries = unknownEntries;
+                        } else {
+                            entries = entrySeries.get(acc);
+                        }
                     } else {
-                        entries = series.get(acc);
+                        entries = entrySeries.get(accountType);
                     }
 
                     float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
@@ -205,9 +224,9 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 }
 
                 //remove empty entries account
-                Iterator<Map.Entry<Account, List<Entry>>> iter = series.entrySet().iterator();
+                Iterator<Map.Entry<Object, List<Entry>>> iter = entrySeries.entrySet().iterator();
                 while (iter.hasNext()) {
-                    Map.Entry<Account, List<Entry>> e = iter.next();
+                    Map.Entry<Object, List<Entry>> e = iter.next();
                     List<Entry> l = e.getValue();
                     int s = l.size();
                     if (s == 0) {
@@ -242,13 +261,29 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
                 List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
                 int i = 0;
-                for (Account acc : series.keySet()) {
-                    List<Entry> list = series.get(acc);
-                    LineDataSet set = new LineDataSet(list, acc.getName());
-                    int color = nextColor(i++);
-                    set.setColors(color);
-                    set.setValueTextColor(labelTextColor);
+                for (Object key : entrySeries.keySet()) {
+                    List<Entry> list = entrySeries.get(key);
+                    String label;
+                    if (key instanceof Account) {
+                        label = ((Account) key).getName();
+                    } else if (key instanceof AccountType) {
+                        label = ((AccountType) key).getDisplay(i18n);
+                    } else {
+                        label = key.toString();
+                    }
+                    LineDataSet set = new LineDataSet(list, label);
+
                     set.setValueTextSize(labelTextSize - 4);
+                    set.setValueTextColor(labelTextColor);
+
+                    int color;
+
+                    if (seriesMode == SeriesMode.INDIVIDUAL) {
+                        color = nextColor(i++);
+                    } else {
+                        color = accountTypeTextColor;
+                    }
+                    set.setColors(color);
                     set.setCircleColor(lightTheme ? Colors.darken(color, 0.3f) : Colors.lighten(color, 0.3f));
                     set.setCircleColorHole(lightTheme ? Colors.darken(color, 0.2f) : Colors.lighten(color, 0.2f));
 

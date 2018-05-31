@@ -33,6 +33,9 @@ public class CardFacade {
     public static final String ARG_NAV_PAGES_LIST = "list";
     public static final String ARG_SHOW_TITLE = "show_title";
 
+    public static final String ARG_CHART_SERIES_MODE = "series_mode";
+
+
     ContextsActivity activity;
     I18N i18n;
 
@@ -55,8 +58,6 @@ public class CardFacade {
                 return newChartMonthlyExpenseLineFragment(desktopIndex, pos, card, false);
             case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
                 return newChartMonthlyExpenseLineFragment(desktopIndex, pos, card, true);
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
-                break;
         }
         throw new IllegalStateException("unknown card fragment " + card.getType());
     }
@@ -66,7 +67,17 @@ public class CardFacade {
         Bundle b = newBaseBundle(desktopIndex, pos);
         b.putSerializable(ChartLineAccountTypeFragment.ARG_MODE, ChartLineAccountTypeFragment.Mode.MONTHLY);
         b.putSerializable(ChartLineAccountTypeFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, cumulative ? ChartLineAccountTypeFragment.CalculationMode.CUMULATIVE : ChartLineAccountTypeFragment.CalculationMode.NORMAL);
+        b.putSerializable(ChartLineAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, cumulative ? ChartLineAccountTypeFragment.CalculationMode.CUMULATIVE : ChartLineAccountTypeFragment.CalculationMode.INDIVIDUAL);
+
+        try{
+            ChartLineAccountTypeFragment.SeriesMode seriesMode;
+            seriesMode = ChartLineAccountTypeFragment.SeriesMode.valueOf((String)card.getArg(ARG_CHART_SERIES_MODE));
+            b.putSerializable(ChartLineAccountTypeFragment.ARG_SERIES_MODE,seriesMode);
+        }catch(Exception x){
+            //use default
+        }
+
         f.setArguments(b);
         return f;
     }
@@ -127,8 +138,6 @@ public class CardFacade {
                 return i18n.string(R.string.card_chart_monthly_expense_line);
             case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
                 return i18n.string(R.string.card_chart_monthly_expense_line_cumulative);
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
-                return i18n.string(R.string.card_chart_yearly_income_expense_line);
         }
         return i18n.string(R.string.label_unknown);
     }
@@ -146,8 +155,6 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_LINE:
                 return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
             case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
-                return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
                 return activity.resolveThemeAttrResId(R.attr.ic_series_chart);
         }
         return -1;
@@ -167,8 +174,6 @@ public class CardFacade {
                 return true;
             case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
                 return true;
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
-                return true;
         }
         return false;
     }
@@ -183,15 +188,64 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_PIE:
                 break;
             case CHART_MONTHLY_EXPENSE_LINE:
+                doEditMonthlyExpenseLineArgs(desktopIndex, pos, card, listener);
                 break;
             case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
-                break;
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+                doEditMonthlyExpenseLineArgs(desktopIndex, pos, card, listener);
                 break;
             case INFO_EXPENSE:
             default:
                 return;
         }
+    }
+
+    private void doEditMonthlyExpenseLineArgs(final int desktopIndex, final int pos, Card card, final OnOKListener listener) {
+        List<ChartLineAccountTypeFragment.SeriesMode> values = new LinkedList<>();
+        List<String> labels = new LinkedList<>();
+        Set<ChartLineAccountTypeFragment.SeriesMode> selection = new LinkedHashSet<>();
+
+        NavPageFacade pgFacade = new NavPageFacade(activity);
+
+        for (ChartLineAccountTypeFragment.SeriesMode item : ChartLineAccountTypeFragment.SeriesMode.values()) {
+            values.add(item);
+        }
+        for (ChartLineAccountTypeFragment.SeriesMode item : values) {
+            switch(item){
+                case INDIVIDUAL:
+                    labels.add(i18n.string(R.string.chart_line_account_type_series_individual));
+                    break;
+                case INTEGRATED:
+                    labels.add(i18n.string(R.string.chart_line_account_type_series_integrated));
+                    break;
+            }
+
+        }
+        try {
+            selection.add(ChartLineAccountTypeFragment.SeriesMode.valueOf((String)card.getArg(ARG_CHART_SERIES_MODE)));
+        } catch (Exception x) {
+            selection.add(ChartLineAccountTypeFragment.SeriesMode.INTEGRATED);
+        }
+
+        Dialogs.showSelectionList(activity, i18n.string(R.string.act_edit_args),
+                i18n.string(R.string.msg_edit_chart_monthly_expense_args), (List) values, labels, false,
+                (Set) selection, new Dialogs.OnFinishListener() {
+                    @Override
+                    public boolean onFinish(int which, Object data) {
+                        if (Dialogs.OK_BUTTON == which) {
+                            Preference preference = Contexts.instance().getPreference();
+
+                            Set<ChartLineAccountTypeFragment.SeriesMode> selection = (Set<ChartLineAccountTypeFragment.SeriesMode>) data;
+                            if(selection.size()>0) {
+                                CardDesktop desktop = preference.getDesktop(desktopIndex);
+                                Card card = desktop.get(pos);
+                                card.withArg(ARG_CHART_SERIES_MODE, selection.iterator().next());
+                                preference.updateDesktop(desktopIndex, desktop);
+                                listener.onOK(card);
+                            }
+                        }
+                        return true;
+                    }
+                });
     }
 
     private void doEditNavPagesArgs(final int desktopIndex, final int pos, Card card, final OnOKListener listener) {
@@ -211,7 +265,9 @@ public class CardFacade {
             List<String> sl = card.getArg(ARG_NAV_PAGES_LIST);
             if (sl != null) {
                 for (String s : sl) {
-                    selection.add(NavPage.valueOf(s));
+                    try {
+                        selection.add(NavPage.valueOf(s));
+                    }catch (Exception x){}
                 }
             }
         } catch (Exception x) {
@@ -245,6 +301,7 @@ public class CardFacade {
         StringBuilder sb = new StringBuilder(getTypeText(card.getType()));
 
         List list;
+        String item;
         switch (card.getType()) {
             case NAV_PAGES:
                 sb.append(" : ");
@@ -260,8 +317,22 @@ public class CardFacade {
             case CHART_MONTHLY_EXPENSE_PIE:
                 break;
             case CHART_MONTHLY_EXPENSE_LINE:
-                break;
-            case CHART_YEARLY_INCOME_EXPENSE_LINE:
+            case CHART_MONTHLY_EXPENSE_LINE_CUMULATIVE:
+                ChartLineAccountTypeFragment.SeriesMode mode;
+                try {
+                    sb.append(" : ");
+                    mode = ChartLineAccountTypeFragment.SeriesMode.valueOf((String) card.getArg(ARG_CHART_SERIES_MODE));
+                }catch(Exception x){
+                    mode = ChartLineAccountTypeFragment.SeriesMode.INTEGRATED;
+                }
+                switch(mode){
+                    case INDIVIDUAL:
+                        sb.append(i18n.string(R.string.chart_line_account_type_series_individual));
+                        break;
+                    case INTEGRATED:
+                        sb.append(i18n.string(R.string.chart_line_account_type_series_integrated));
+                        break;
+                }
                 break;
             case INFO_EXPENSE:
             default:
