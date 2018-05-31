@@ -15,6 +15,7 @@ import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.helper.XAxisDateFormatter;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -35,22 +36,23 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * aggregate account chart that compare current and preious period of an account type
+ * line chart of individual accounts in an account type
+ *
  * @author dennis
  */
-public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
+public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
 
-    PeriodMode periodMode;
+    private PeriodMode periodMode;
     private CalculationMode calculationMode;
     private AccountType accountType;
     private Date baseDate;
 
-//    protected int accountTypeTextColor;
+    //    protected int accountTypeTextColor;
     private XAxisDateFormatter formatter;
 
     private DateFormat xAxisFormat;
@@ -155,7 +157,12 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 IDataProvider idp = Contexts.instance().getDataProvider();
                 Map<String, Account> accountMap = null;
 
-                entrySeries.put(accountType, new LinkedList<Entry>());
+                List<Account> accounts = idp.listAccount(accountType);
+                accountMap = new LinkedHashMap<>();
+                for (Account account : accounts) {
+                    accountMap.put(account.getId(), account);
+                    entrySeries.put(account, new LinkedList<Entry>());
+                }
 
                 List<Record> records = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
 
@@ -171,7 +178,12 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 for (Record r : records) {
                     List<Entry> entries;
 
-                    entries = entrySeries.get(accountType);
+                    Account acc = accountMap.get(r.getTo());
+                    if (acc == null) {
+                        entries = unknownEntries;
+                    } else {
+                        entries = entrySeries.get(acc);
+                    }
 
                     float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
                     Date x = r.getDate();
@@ -206,6 +218,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                                 Entry entry = l.get(i);
                                 entry.setY(entry.getY() + l.get(i - 1).getY());
                             }
+
                         }
                     }
                 }

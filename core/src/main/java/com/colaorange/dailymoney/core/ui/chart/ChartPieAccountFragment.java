@@ -29,35 +29,32 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author dennis
  */
-public class ChartPieAccountTypeFragment extends ChartBaseFragment<PieChart> {
+public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
 
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
 
-    public enum Mode {
-        WEEKLY, MONTHLY
-    }
-
-
-    Mode mode;
+    PeriodMode periodMode;
     AccountType accountType;
     Date baseDate;
 
     protected int accountTypeTextColor;
 
+    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY);
 
     @Override
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        mode = (Mode) args.getSerializable(ARG_MODE);
-        if (mode == null) {
-            mode = Mode.WEEKLY;
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.WEEKLY;
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -111,7 +108,7 @@ public class ChartPieAccountTypeFragment extends ChartBaseFragment<PieChart> {
                 Date start;
                 Date end;
 
-                switch (mode) {
+                switch (periodMode) {
                     case MONTHLY:
                         start = calHelper.monthStartDate(baseDate);
                         end = calHelper.monthEndDate(baseDate);
@@ -165,7 +162,7 @@ public class ChartPieAccountTypeFragment extends ChartBaseFragment<PieChart> {
                     set = new PieDataSet(entries, "");
                 } else {
 
-                    switch (mode) {
+                    switch (periodMode) {
                         case MONTHLY:
                             description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
                             break;

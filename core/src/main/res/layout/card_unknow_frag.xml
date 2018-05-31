@@ -13,12 +13,22 @@
 
         <include layout="@layout/no_data" />
 
+
         <LinearLayout
             android:id="@+id/card_content"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:background="?appPrimaryColor"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
+            <TextView
+                android:id="@+id/card_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?appPrimaryTextColor"
+                android:textSize="?textSize" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

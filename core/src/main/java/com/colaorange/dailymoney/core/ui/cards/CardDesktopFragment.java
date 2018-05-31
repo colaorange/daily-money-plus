@@ -29,6 +29,7 @@ import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.Dialogs;
@@ -245,7 +246,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
                         .commitNowAllowingStateLoss();
             } else {
 
-                f = new CardFacade(getContextsActivity()).newFragement(desktopIndex, pos, card);
+                f = new CardFacade(getContextsActivity()).newFragment(desktopIndex, pos, card);
 
                 fragmentManager.beginTransaction()
                         .add(vh.itemView.getId(), f, fragTag)
@@ -344,7 +345,13 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
             CardDesktop desktop = preference.getDesktop(desktopIndex);
             card = desktop.get(pos);
 
-            int icon = cardFacade.getTypeIcon(card.getType());
+            CardType type = null;
+            try {
+                type = card.getTypeEnum();
+            } catch (Exception x) {
+            }
+
+            int icon = type == null ? -1 : cardFacade.getTypeIcon(type);
             if (icon >= 0) {
                 vicon.setImageDrawable(activity.buildDisabledIcon(icon, false));
             } else {
@@ -363,7 +370,8 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
                 }
             });
             MenuItem mi = mMenu.findItem(R.id.menu_edit);
-            mi.setVisible(cardFacade.isTypeEditable(card.getType()));
+
+            mi.setVisible(type==null?false:cardFacade.isTypeEditable(type));
 
             mi = mMenu.findItem(R.id.menu_mode_show_title);
             boolean showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, false);

@@ -32,6 +32,15 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
 
     public static final String ARG_TITLE_PADDING = "titlePadding";
 
+    public enum PeriodMode {
+        WEEKLY, MONTHLY, YEARLY
+    }
+
+    public enum CalculationMode {
+        INDIVIDUAL, CUMULATIVE
+    }
+
+
     protected View rootView;
 
     protected View vContainer;

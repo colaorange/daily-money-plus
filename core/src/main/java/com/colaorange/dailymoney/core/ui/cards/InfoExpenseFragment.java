@@ -33,8 +33,6 @@ public class InfoExpenseFragment extends CardBaseFragment implements EventQueue.
         vInfoMonthlyExpense = rootView.findViewById(R.id.desktop_monthly_expense);
         vInfoCumulativeCash = rootView.findViewById(R.id.desktop_cumulative_cash);
 
-        i18n = Contexts.instance().getI18n();
-
     }
 
     @Override

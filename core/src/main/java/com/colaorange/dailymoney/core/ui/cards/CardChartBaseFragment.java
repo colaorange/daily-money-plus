@@ -4,27 +4,27 @@ import android.os.Bundle;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
-import com.colaorange.dailymoney.core.ui.chart.ChartPieAccountTypeFragment;
+import com.colaorange.dailymoney.core.ui.chart.ChartPieAccountFragment;
 
 /**
  * @author dennis
  */
-public class CardPieAccountTypeFragment extends CardBaseFragment {
+public abstract class CardChartBaseFragment extends CardBaseFragment {
 
     ChartBaseFragment frag;
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_pie_account_type_frag;
+        return R.layout.card_chart_base_frag;
     }
 
     @Override
     protected boolean doReloadContent() {
 
         if (frag == null) {
-            frag = new ChartPieAccountTypeFragment();
+            frag = newFragment();
             Bundle arg = (Bundle) getArguments().clone();
-            arg.putBoolean(ChartPieAccountTypeFragment.ARG_TITLE_PADDING, !showTitle);
+            arg.putBoolean(ChartPieAccountFragment.ARG_TITLE_PADDING, !showTitle);
             frag.setArguments(arg);
             getChildFragmentManager()
                     .beginTransaction()
@@ -35,5 +35,7 @@ public class CardPieAccountTypeFragment extends CardBaseFragment {
         }
         return true;
     }
+
+    abstract protected ChartBaseFragment newFragment();
 
 }
