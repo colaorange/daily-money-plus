@@ -270,7 +270,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 doRecordList((Balance) event.getData());
                 break;
             case QEvents.BalanceMgntFrag.ON_FRAGMENT_START:
-                BalanceMgntFragment.FragInfo info = (BalanceMgntFragment.FragInfo)event.getData();
+                BalanceMgntFragment.FragInfo info = (BalanceMgntFragment.FragInfo) event.getData();
                 fragInfoMap.put(info.pos, info);
                 break;
             case QEvents.BalanceMgntFrag.ON_FRAGMENT_STOP:
@@ -334,8 +334,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         AccountType at = AccountType.find(b.getType());
         intent.putExtra(ChartPieAccountFragment.ARG_ACCOUNT_TYPE, at);
         intent.putExtra(ChartPieAccountFragment.ARG_BASE_DATE, fragInfo.date);
-        intent.putExtra(ChartPieAccountFragment.ARG_PERIOD_MODE, mode==MODE_MONTH? ChartBaseFragment.PeriodMode.MONTHLY:ChartBaseFragment.PeriodMode.YEARLY);
-
+        intent.putExtra(ChartPieAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+        intent.putExtra(ChartPieAccountFragment.ARG_FROM_BEGINNING, totalMode ? true : false);
+        intent.putExtra(PieAccountActivity.ARG_TITLE, getTitle());
         startActivity(intent);
     }
 

@@ -39,10 +39,12 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
+    public static final String ARG_FROM_BEGINNING = "fromBeginning";
 
     PeriodMode periodMode;
     AccountType accountType;
     Date baseDate;
+    boolean fromBeginning;
 
     protected int accountTypeTextColor;
 
@@ -70,6 +72,8 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
         if (baseDate == null) {
             baseDate = new Date();
         }
+
+        fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
 
     }
 
@@ -127,7 +131,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                         end = calHelper.weekEndDate(baseDate);
                         break;
                 }
-                varBalance.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
+                varBalance.value = BalanceHelper.calculateBalance(accountType, fromBeginning ? null : start, end).getMoney();
 
 
                 List<Balance> list = new ArrayList<>();
@@ -135,7 +139,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 IDataProvider idp = Contexts.instance().getDataProvider();
 
                 for (Account acc : idp.listAccount(accountType)) {
-                    Balance balance = BalanceHelper.calculateBalance(acc, start, end);
+                    Balance balance = BalanceHelper.calculateBalance(acc, fromBeginning ? null : start, end);
                     list.add(balance);
                 }
 
@@ -166,17 +170,21 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 String description = "";
                 PieDataSet set;
 
-                switch (periodMode) {
-                    case YEARLY:
-                        description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
-                        break;
-                    case MONTHLY:
-                        description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
-                        break;
-                    case WEEKLY:
-                    default:
-                        description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
-                        break;
+                if (fromBeginning) {
+                    description = contexts().toFormattedMoneyString(varBalance.value);
+                } else {
+                    switch (periodMode) {
+                        case YEARLY:
+                            description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
+                            break;
+                        case MONTHLY:
+                            description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
+                            break;
+                        case WEEKLY:
+                        default:
+                            description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
+                            break;
+                    }
                 }
                 set = new PieDataSet(entries, "");
 

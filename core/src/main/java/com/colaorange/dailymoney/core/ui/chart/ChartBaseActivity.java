@@ -13,9 +13,12 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
  */
 public abstract class ChartBaseActivity extends ContextsActivity {
 
+    public static final String ARG_TITLE = "title";
+
     View vChartContent;
 
     protected abstract ChartBaseFragment newChartFragment();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,11 @@ public abstract class ChartBaseActivity extends ContextsActivity {
     }
 
     protected void initArgs() {
+        Bundle args = getIntentExtras();
+        String title = args.getString(ARG_TITLE);
+        if (title != null) {
+            setTitle(title);
+        }
     }
 
     protected void initMembers() {
