@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
-import com.colaorange.dailymoney.core.ui.chart.ChartPieAccountFragment;
+import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 
 /**
  * @author dennis
@@ -24,7 +24,7 @@ public abstract class CardChartBaseFragment extends CardBaseFragment {
         if (frag == null) {
             frag = newFragment();
             Bundle arg = (Bundle) getArguments().clone();
-            arg.putBoolean(ChartPieAccountFragment.ARG_TITLE_PADDING, !showTitle);
+            arg.putBoolean(PieAccountFragment.ARG_TITLE_PADDING, !showTitle);
             frag.setArguments(arg);
             getChildFragmentManager()
                     .beginTransaction()

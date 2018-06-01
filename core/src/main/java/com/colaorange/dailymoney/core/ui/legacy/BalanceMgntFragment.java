@@ -44,14 +44,14 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
     public static final String ARG_TARGET_DATE = "targetDate";
     public static final String ARG_MODE = "mode";
-    public static final String ARG_TOTAL_MODE = "modeTotal";
+    public static final String ARG_FROM_BEGINNING = "fromBeginning";
     public static final String ARG_POS = "pos";
 
     private TextView vInfo;
 
     private Date targetDate;
     private int mode;
-    private boolean totalMode = false;
+    private boolean fromBeginning = false;
     private int pos;
 
     private DateFormat monthDateFormat;
@@ -93,7 +93,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         Bundle args = getArguments();
         mode = args.getInt(ARG_MODE, BalanceMgntActivity.MODE_MONTH);
         pos = args.getInt(ARG_POS, 0);
-        totalMode = args.getBoolean(ARG_TOTAL_MODE, true);
+        fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
         Object o = args.get(ARG_TARGET_DATE);
         if (o instanceof Date) {
             targetDate = (Date) o;
@@ -149,11 +149,11 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         switch (mode) {
             case BalanceMgntActivity.MODE_YEAR:
                 targetEndDate = cal.yearEndDate(targetDate);
-                targetStartDate = totalMode ? null : cal.yearStartDate(targetDate);
+                targetStartDate = fromBeginning ? null : cal.yearStartDate(targetDate);
                 break;
             default:
                 targetEndDate = cal.monthEndDate(targetDate);
-                targetStartDate = totalMode ? null : cal.monthStartDate(targetDate);
+                targetStartDate = fromBeginning ? null : cal.monthStartDate(targetDate);
                 break;
         }
 
@@ -173,40 +173,40 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
 
                 if (hierarchical) {
-                    asset = BalanceHelper.adjustNestedTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_total_asset)
+                    asset = BalanceHelper.adjustNestedTotalBalance(AccountType.ASSET, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_asset)
                             : i18n.string(R.string.label_asset), asset);
-                    income = BalanceHelper.adjustNestedTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_total_income)
+                    income = BalanceHelper.adjustNestedTotalBalance(AccountType.INCOME, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_income)
                             : i18n.string(R.string.label_income), income);
                     expense = BalanceHelper.adjustNestedTotalBalance(
                             AccountType.EXPENSE,
-                            totalMode ? i18n.string(R.string.label_balance_total_expense) : i18n
+                            fromBeginning ? i18n.string(R.string.label_balance_from_beginning_expense) : i18n
                                     .string(R.string.label_expense), expense);
                     liability = BalanceHelper.adjustNestedTotalBalance(
                             AccountType.LIABILITY,
-                            totalMode ? i18n.string(R.string.label_balance_total_liability) : i18n
+                            fromBeginning ? i18n.string(R.string.label_balance_from_beginning_liability) : i18n
                                     .string(R.string.label_liability), liability);
-                    other = BalanceHelper.adjustNestedTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_total_other)
+                    other = BalanceHelper.adjustNestedTotalBalance(AccountType.OTHER, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_other)
                             : i18n.string(R.string.label_other), other);
 
                 } else {
-                    asset = BalanceHelper.adjustTotalBalance(AccountType.ASSET, totalMode ? i18n.string(R.string.label_balance_total_asset)
+                    asset = BalanceHelper.adjustTotalBalance(AccountType.ASSET, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_asset)
                             : i18n.string(R.string.label_asset), asset);
-                    income = BalanceHelper.adjustTotalBalance(AccountType.INCOME, totalMode ? i18n.string(R.string.label_balance_total_income)
+                    income = BalanceHelper.adjustTotalBalance(AccountType.INCOME, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_income)
                             : i18n.string(R.string.label_income), income);
                     expense = BalanceHelper.adjustTotalBalance(
                             AccountType.EXPENSE,
-                            totalMode ? i18n.string(R.string.label_balance_total_expense) : i18n
+                            fromBeginning ? i18n.string(R.string.label_balance_from_beginning_expense) : i18n
                                     .string(R.string.label_expense), expense);
                     liability = BalanceHelper.adjustTotalBalance(
                             AccountType.LIABILITY,
-                            totalMode ? i18n.string(R.string.label_balance_total_liability) : i18n
+                            fromBeginning ? i18n.string(R.string.label_balance_from_beginning_liability) : i18n
                                     .string(R.string.label_liability), liability);
-                    other = BalanceHelper.adjustTotalBalance(AccountType.OTHER, totalMode ? i18n.string(R.string.label_balance_total_other)
+                    other = BalanceHelper.adjustTotalBalance(AccountType.OTHER, fromBeginning ? i18n.string(R.string.label_balance_from_beginning_other)
                             : i18n.string(R.string.label_other), other);
 
                 }
 
-                if (totalMode) {
+                if (fromBeginning) {
                     all.addAll(asset);
                     all.addAll(liability);
                     all.addAll(income);
@@ -232,17 +232,17 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
 
                 // update info
-                if (totalMode) {
+                if (fromBeginning) {
                     if (mode == BalanceMgntActivity.MODE_MONTH) {
                         Date monthStart = cal.monthStartDate(targetDate);
                         Date monthEnd = cal.monthEndDate(targetDate);
-                        vInfo.setText(i18n.string(R.string.label_balance_mode_month_total, yearMonthFormat.format(monthStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_from_beginning_month, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthEnd)));
                     } else if (mode == BalanceMgntActivity.MODE_YEAR) {
                         Date yearStart = cal.yearStartDate(targetDate);
                         Date yearEnd = cal.yearEndDate(targetDate);
 
-                        vInfo.setText(i18n.string(R.string.label_balance_mode_year_total, yearFormat.format(yearStart),
+                        vInfo.setText(i18n.string(R.string.label_balance_from_beginning_year, yearFormat.format(yearStart),
                                 yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 } else {

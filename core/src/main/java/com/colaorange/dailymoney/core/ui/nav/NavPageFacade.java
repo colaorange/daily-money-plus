@@ -57,8 +57,8 @@ public class NavPageFacade {
                 return R.drawable.nav_pg_balance_month;
             case YEARLY_BALANCE:
                 return R.drawable.nav_pg_balance_year;
-            case CUMULATIVE_BALANCE:
-                return R.drawable.nav_pg_balance_cumulative_month;
+            case FROM_BEGINNING_BALANCE:
+                return R.drawable.nav_pg_balance_from_beginning_month;
             case ABOUT:
             case CONTRIBUTOR:
             case WHATISNEW:
@@ -131,17 +131,17 @@ public class NavPageFacade {
                 break;
             case MONTHLY_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
-                intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, false);
+                intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, false);
                 intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
                 break;
             case YEARLY_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
-                intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, false);
+                intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, false);
                 intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_YEAR);
                 break;
-            case CUMULATIVE_BALANCE:
+            case FROM_BEGINNING_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
-                intent.putExtra(BalanceMgntActivity.ARG_TOTAL_MODE, true);
+                intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, true);
                 intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
                 break;
             default:
@@ -179,8 +179,8 @@ public class NavPageFacade {
                 return i18n.string(R.string.nav_pg_report_monthly_balance);
             case YEARLY_BALANCE:
                 return i18n.string(R.string.nav_pg_report_yearly_balance);
-            case CUMULATIVE_BALANCE:
-                return i18n.string(R.string.nav_pg_report_cumulative_balance);
+            case FROM_BEGINNING_BALANCE:
+                return i18n.string(R.string.nav_pg_report_from_beginning_balance);
             case ABOUT:
                 return i18n.string(R.string.label_about);
             case CONTRIBUTOR:

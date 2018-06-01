@@ -1,24 +1,14 @@
 package com.colaorange.dailymoney.core.ui.nav;
 
-import android.content.Intent;
 import android.view.View;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
-import com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity;
-import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity;
-import com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity;
-import com.colaorange.dailymoney.core.ui.legacy.DataMaintenanceActivity;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuHeader;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuDivider;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter.NavMenuItem;
-import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
-import com.colaorange.dailymoney.core.ui.legacy.RecordMgntActivity;
-import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.List;
 
@@ -54,7 +44,7 @@ public class NavMenuHelper {
         navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_reports)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.MONTHLY_BALANCE), new DoPageListener(NavPage.MONTHLY_BALANCE), facade.getPageIcon(NavPage.MONTHLY_BALANCE)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.YEARLY_BALANCE), new DoPageListener(NavPage.YEARLY_BALANCE), facade.getPageIcon(NavPage.YEARLY_BALANCE)));
-        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.CUMULATIVE_BALANCE), new DoPageListener(NavPage.CUMULATIVE_BALANCE), facade.getPageIcon(NavPage.CUMULATIVE_BALANCE)));
+        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.FROM_BEGINNING_BALANCE), new DoPageListener(NavPage.FROM_BEGINNING_BALANCE), facade.getPageIcon(NavPage.FROM_BEGINNING_BALANCE)));
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.DATA_MAIN), new DoPageListener(NavPage.DATA_MAIN), facade.getPageIcon(NavPage.DATA_MAIN)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.PREFS), new DoPageListener(NavPage.PREFS), facade.getPageIcon(NavPage.PREFS)));

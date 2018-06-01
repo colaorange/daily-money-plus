@@ -34,16 +34,16 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
+public class PieAccountFragment extends ChartBaseFragment<PieChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
     public static final String ARG_FROM_BEGINNING = "fromBeginning";
 
-    PeriodMode periodMode;
-    AccountType accountType;
-    Date baseDate;
+    protected PeriodMode periodMode;
+    protected AccountType accountType;
+    protected Date baseDate;
     boolean fromBeginning;
 
     protected int accountTypeTextColor;
@@ -74,7 +74,6 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
         }
 
         fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
-
     }
 
     @Override
@@ -170,21 +169,17 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 String description = "";
                 PieDataSet set;
 
-                if (fromBeginning) {
-                    description = contexts().toFormattedMoneyString(varBalance.value);
-                } else {
-                    switch (periodMode) {
-                        case YEARLY:
-                            description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
-                            break;
-                        case MONTHLY:
-                            description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
-                            break;
-                        case WEEKLY:
-                        default:
-                            description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
-                            break;
-                    }
+                switch (periodMode) {
+                    case YEARLY:
+                        description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
+                    case MONTHLY:
+                        description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
+                    case WEEKLY:
+                    default:
+                        description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
                 }
                 set = new PieDataSet(entries, "");
 
@@ -194,9 +189,6 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 set.setValueTextSize(labelTextSize - 4);
                 set.setValueTextColor(labelTextColor);
                 set.setSelectionShift(10f);//size shift after highlight
-//                set.setValueLinePart1OffsetPercentage(90.f);//begin position of value line
-//                set.setValueLinePart1Length(1f);//length of value line
-//                set.setValueLinePart2Length(2f);//length of value line
                 set.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
                 set.setValueLineColor(labelTextColor);
 

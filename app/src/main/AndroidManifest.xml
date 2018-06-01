@@ -71,6 +71,8 @@
         <activity
             android:name=".core.ui.chart.PieAccountActivity"/>
         <activity
+            android:name=".core.ui.chart.LineAccountActivity"/>
+        <activity
             android:name="org.achartengine.GraphicalActivity"
             android:theme="@style/Theme.AppCompat" />
 

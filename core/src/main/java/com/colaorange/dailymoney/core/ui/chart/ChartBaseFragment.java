@@ -29,6 +29,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
 
 
     public static final String ARG_TITLE_PADDING = "titlePadding";
+    public static final String ARG_MORE_HEIGHT = "moreHeight";
 
     public enum PeriodMode {
         WEEKLY, MONTHLY, YEARLY
@@ -52,6 +53,8 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
     protected boolean lightTheme;
     protected boolean titlePadding;
 
+    protected boolean moreHeight;
+
     protected abstract int getLayoutResId();
 
     @Override
@@ -74,6 +77,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
     protected void initArgs() {
         Bundle args = getArguments();
         titlePadding = args.getBoolean(ARG_TITLE_PADDING, true);
+        moreHeight = args.getBoolean(ARG_MORE_HEIGHT, false);
     }
 
     @CallSuper
@@ -132,7 +136,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
 
         vContainer.setPadding(pLeft, pTop, pRight, pBottom);
 
-        float size = Math.max(w, h) / 2f;
+        float size = Math.max(w, h) / (moreHeight ? 1.5f : 2f);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vChart.getLayoutParams();
         lp.height = (int) (size * dp);
         vChart.setLayoutParams(lp);

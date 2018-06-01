@@ -5,15 +5,14 @@ import android.os.Bundle;
 /**
  * Created by Dennis
  */
-public class PieAccountActivity extends ChartBaseActivity{
+public class LineAccountActivity extends ChartBaseActivity{
 
 
     @Override
     protected ChartBaseFragment newChartFragment() {
-        ChartBaseFragment frag = new PieAccountFragment();
+        ChartBaseFragment frag = new LineAccountFragment();
         Bundle args = (Bundle)getIntentExtras().clone();
-        //label be cut
-//        args.putBoolean(ChartBaseFragment.ARG_MORE_HEIGHT, true);
+        args.putBoolean(ChartBaseFragment.ARG_MORE_HEIGHT, true);
         frag.setArguments(args);
         return frag;
     }

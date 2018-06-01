@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class UnknowFragment extends CardBaseFragment implements EventQueue.EventListener {
+public class CardUnknowFragment extends CardBaseFragment implements EventQueue.EventListener {
 
     private TextView vText;
 
