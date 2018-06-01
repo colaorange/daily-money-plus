@@ -124,8 +124,10 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
 
         leftAxis.setTextColor(accountTypeTextColor);
         leftAxis.setTextSize(labelTextSize - 3);
-        rightAxis.setTextColor(accountTypeTextColor);
-        rightAxis.setTextSize(labelTextSize - 3);
+
+//        rightAxis.setEnabled(false);
+//        rightAxis.setTextColor(accountTypeTextColor);
+//        rightAxis.setTextSize(labelTextSize - 3);
     }
 
     @Override
@@ -215,7 +217,7 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
                     List<Entry> l = e.getValue();
                     int s = l.size();
                     if (s == 0) {
-                        //remove zero
+                        //remove empty entry
                         iter.remove();
                     } else {
                         if (calculationMode == CalculationMode.CUMULATIVE) {
@@ -249,6 +251,20 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
                 int i = 0;
                 for (Object key : entrySeries.keySet()) {
                     List<Entry> list = entrySeries.get(key);
+
+                    /**
+                     * java.lang.IndexOutOfBoundsException
+                     at java.util.LinkedList.get(LinkedList.java:519)
+                     at com.github.mikephil.charting.data.DataSet.getEntryForIndex(DataSet.java:286)
+                     at com.github.mikephil.charting.utils.Transformer.generateTransformedValuesLine(Transformer.java:184)
+                     at com.github.mikephil.charting.renderer.LineChartRenderer.drawValues(LineChartRenderer.java:547)
+                     at com.github.mikephil.charting.charts.BarLineChartBase.onDraw(BarLineChartBase.java:264)
+                     at android.view.View.draw(View.java:15114)
+                     */
+                    if(list.size()<=0){
+                        continue;
+                    }
+
                     String label;
                     if (key instanceof Account) {
                         label = ((Account) key).getName();
@@ -280,12 +296,13 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
                     dataSets.add(set);
                 }
 
-                LineData data = new LineData(dataSets);
-
-                data.setValueFormatter(new MoneyFormatter());
-
-
-                vChart.setData(data);
+                if (dataSets.size() > 0) {
+                    LineData data = new LineData(dataSets);
+                    data.setValueFormatter(new MoneyFormatter());
+                    vChart.setData(data);
+                } else {
+                    vChart.setData(null);
+                }
                 vChart.invalidate(); // refresh
             }
         });

@@ -54,15 +54,12 @@ public class DefaultCardDesktopCreator {
         }
         desktop1.setTitle(i18n.string(R.string.desktop_reports));
 
-        //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_pie_monthly_expense));
+        card = new Card(CardType.PIE_WEEKLY_EXPENSE, i18n.string(R.string.card_pie_weekly_expense));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         desktop1.add(card);
 
-        //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_pie_monthly_expense));
+        card = new Card(CardType.LINE_MONTHLY_EXPENSE_AGGREGATE, i18n.string(R.string.card_line_monthly_expense_aggregate));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
-
         desktop1.add(card);
 
 
@@ -121,13 +118,12 @@ public class DefaultCardDesktopCreator {
         desktop1.add(card);
 
 
-        //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_pie_monthly_expense));
+        card = new Card(CardType.PIE_WEEKLY_EXPENSE, i18n.string(R.string.card_pie_weekly_expense));
         card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         desktop1.add(card);
 
-        //TODO chart
-        card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_pie_monthly_expense));
+        card = new Card(CardType.LINE_MONTHLY_EXPENSE_AGGREGATE, i18n.string(R.string.card_line_monthly_expense_aggregate));
+        card.withArg(CardFacade.ARG_SHOW_TITLE, Boolean.TRUE);
         desktop1.add(card);
 
         preference.updateDesktop(1, desktop1, true);

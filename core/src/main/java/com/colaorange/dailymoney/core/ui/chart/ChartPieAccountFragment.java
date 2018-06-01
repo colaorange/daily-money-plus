@@ -157,22 +157,18 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
             public void onAsyncFinish() {
                 String description = "";
                 PieDataSet set;
-                if (entries.size() == 0) {
-                    entries.add(new PieEntry(100, i18n.string(R.string.msg_no_data)));
-                    set = new PieDataSet(entries, "");
-                } else {
 
-                    switch (periodMode) {
-                        case MONTHLY:
-                            description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
-                            break;
-                        case WEEKLY:
-                        default:
-                            description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
-                            break;
-                    }
-                    set = new PieDataSet(entries, "");
+                switch (periodMode) {
+                    case MONTHLY:
+                        description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
+                    case WEEKLY:
+                    default:
+                        description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
                 }
+                set = new PieDataSet(entries, "");
+
                 set.setColors(colorTemplate);
 
                 set.setSliceSpace(1f);//space between entry
@@ -201,8 +197,12 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                     }
                 });
 
-                vChart.setData(data);
-                vChart.setCenterText(description);
+                if (entries.size() > 0) {
+                    vChart.setData(data);
+                    vChart.setCenterText(description);
+                } else {
+                    vChart.setData(null);
+                }
                 vChart.invalidate(); // refresh
             }
         });

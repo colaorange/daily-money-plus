@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Numbers;
+import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -125,8 +126,10 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
         leftAxis.setTextColor(accountTypeTextColor);
         leftAxis.setTextSize(labelTextSize - 3);
-        rightAxis.setTextColor(accountTypeTextColor);
-        rightAxis.setTextSize(labelTextSize - 3);
+
+        rightAxis.setEnabled(false);
+//        rightAxis.setTextColor(accountTypeTextColor);
+//        rightAxis.setTextSize(labelTextSize - 3);
     }
 
     @Override
@@ -139,6 +142,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         super.reloadChart();
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
+            final Var<Boolean> noPrimary = new Var<>(false);
             final Map<Object, List<Entry>> entrySeries = new LinkedHashMap<>();
 
             @Override
@@ -166,14 +170,26 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 vChart.getXAxis().setAxisMaximum(end.getTime());
 
 
-                List<Entry> thisEntries = buildSeries(calHelper, baseDate, 0);
-
-
-
+                List<Entry> primaryEntries = buildSeries(calHelper, baseDate, 0);
                 List<Entry> previousEntries = buildSeries(calHelper, previousDate, timeshift);
 
-                entrySeries.put(accountType.getDisplay(i18n), thisEntries);
-                entrySeries.put(i18n.string(R.string.label_previous_period), previousEntries);
+                /**
+                 * java.lang.IndexOutOfBoundsException
+                 at java.util.LinkedList.get(LinkedList.java:519)
+                 at com.github.mikephil.charting.data.DataSet.getEntryForIndex(DataSet.java:286)
+                 at com.github.mikephil.charting.utils.Transformer.generateTransformedValuesLine(Transformer.java:184)
+                 at com.github.mikephil.charting.renderer.LineChartRenderer.drawValues(LineChartRenderer.java:547)
+                 at com.github.mikephil.charting.charts.BarLineChartBase.onDraw(BarLineChartBase.java:264)
+                 at android.view.View.draw(View.java:15114)
+                 */
+                if (primaryEntries.size() > 0) {
+                    entrySeries.put(accountType.getDisplay(i18n), primaryEntries);
+                } else {
+                    noPrimary.value = true;
+                }
+                if (previousEntries.size() > 0) {
+                    entrySeries.put(i18n.string(R.string.label_previous_period), previousEntries);
+                }
 
             }
 
@@ -200,35 +216,45 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                     LineDataSet set = new LineDataSet(list, label);
 
 
-
                     int color;
 
                     color = nextColor(i);
 
                     set.setColors(color);
 
-                    if(i==0) {
+                    if (i == 0 && !noPrimary.value) {
                         set.setValueTextSize(labelTextSize - 4);
                         set.setValueTextColor(labelTextColor);
                         set.setCircleColor(lightTheme ? Colors.darken(color, 0.3f) : Colors.lighten(color, 0.3f));
                         set.setCircleColorHole(lightTheme ? Colors.darken(color, 0.2f) : Colors.lighten(color, 0.2f));
-                    }else{
+                    } else {
                         set.setDrawValues(false);
                         set.setDrawCircles(false);
                         set.setDrawCircleHole(false);
-                        set.enableDashedLine(10f,10f,0);
+                        set.enableDashedLine(10f, 10f, 0);
                     }
                     dataSets.add(set);
 
                     i++;
                 }
 
-                LineData data = new LineData(dataSets);
+                /**
+                 * java.lang.IndexOutOfBoundsException
+                 at java.util.LinkedList.get(LinkedList.java:519)
+                 at com.github.mikephil.charting.data.DataSet.getEntryForIndex(DataSet.java:286)
+                 at com.github.mikephil.charting.utils.Transformer.generateTransformedValuesLine(Transformer.java:184)
+                 at com.github.mikephil.charting.renderer.LineChartRenderer.drawValues(LineChartRenderer.java:547)
+                 at com.github.mikephil.charting.charts.BarLineChartBase.onDraw(BarLineChartBase.java:264)
+                 at android.view.View.draw(View.java:15114)
+                 */
+                if (dataSets.size() > 0) {
+                    LineData data = new LineData(dataSets);
 
-                data.setValueFormatter(new MoneyFormatter());
-
-
-                vChart.setData(data);
+                    data.setValueFormatter(new MoneyFormatter());
+                    vChart.setData(data);
+                } else {
+                    vChart.setData(null);
+                }
                 vChart.invalidate(); // refresh
             }
         });

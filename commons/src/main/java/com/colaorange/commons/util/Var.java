@@ -6,4 +6,11 @@ package com.colaorange.commons.util;
  */
 public class Var<T> {
     public T value;
+
+    public Var(){
+
+    }
+    public Var(T value){
+        this.value = value;
+    }
 }
