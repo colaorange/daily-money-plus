@@ -23,6 +23,9 @@ import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
+import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
+import com.colaorange.dailymoney.core.ui.chart.ChartPieAccountFragment;
+import com.colaorange.dailymoney.core.ui.chart.PieAccountActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -167,6 +170,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         switch (mode) {
             case MODE_MONTH:
                 mode = MODE_YEAR;
+                break;
             case MODE_YEAR:
                 mode = MODE_MONTH;
                 break;
@@ -325,33 +329,14 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             return;
         }
 
-        GUIs.doBusy(this, new GUIs.BusyAdapter() {
-            @Override
-            public void run() {
-                AccountType at;
-                List<Balance> group = b.getGroup();
-                if (b.getTarget() instanceof Account) {
-                    group = new ArrayList<Balance>(group);
-                    group.remove(b);
-                    group.add(0, b);
-                    at = AccountType.find(((Account) b.getTarget()).getType());
-                } else {
-                    at = AccountType.find(b.getType());
-                }
-                List<Balance> list = new ArrayList<Balance>();
-                for (Balance g : group) {
-                    if (!(g.getTarget() instanceof Account)) {
-                        continue;
-                    }
-                    Account acc = (Account) g.getTarget();
-                    Balance balance = BalanceHelper.calculateBalance(acc, fragInfo.startDate, fragInfo.endDate);
-                    list.add(balance);
-                }
-                trackEvent(TE.CHART + "pie");
-                Intent intent = new BalancePieChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(at, list);
-                startActivity(intent);
-            }
-        });
+
+        Intent intent = new Intent(this, PieAccountActivity.class);
+        AccountType at = AccountType.find(b.getType());
+        intent.putExtra(ChartPieAccountFragment.ARG_ACCOUNT_TYPE, at);
+        intent.putExtra(ChartPieAccountFragment.ARG_BASE_DATE, fragInfo.date);
+        intent.putExtra(ChartPieAccountFragment.ARG_PERIOD_MODE, mode==MODE_MONTH? ChartBaseFragment.PeriodMode.MONTHLY:ChartBaseFragment.PeriodMode.YEARLY);
+
+        startActivity(intent);
     }
 
     private void doYearlyTimeChart(final Balance b) {

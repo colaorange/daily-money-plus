@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * this is still used by test
  * @author dennis
  */
 @Deprecated

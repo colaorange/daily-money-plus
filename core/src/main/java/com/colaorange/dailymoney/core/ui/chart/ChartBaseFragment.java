@@ -14,12 +14,6 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
-import com.colaorange.dailymoney.core.context.EventQueue;
-import com.colaorange.dailymoney.core.context.Preference;
-import com.colaorange.dailymoney.core.data.Card;
-import com.colaorange.dailymoney.core.data.CardDesktop;
-import com.colaorange.dailymoney.core.ui.cards.CardBaseFragment;
-import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.github.mikephil.charting.charts.Chart;
@@ -132,7 +126,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
             pTop = (int) (titlePadding ? 40 * dp : 0);
             pLeft = pRight = (int) (4 * dp);
         } else {
-            pTop = (int) (titlePadding ? 4 * dp : 0);
+            pTop = (int) (titlePadding ? 10 * dp : 0);
             pLeft = pRight = (int) (40 * dp);
         }
 

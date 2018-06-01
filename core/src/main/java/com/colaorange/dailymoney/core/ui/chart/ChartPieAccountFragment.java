@@ -46,7 +46,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
 
     protected int accountTypeTextColor;
 
-    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY);
+    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
     @Override
     protected void initArgs() {
@@ -55,6 +55,10 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
         periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
         if (periodMode == null) {
             periodMode = PeriodMode.WEEKLY;
+        }
+
+        if (!supportPeriod.contains(periodMode)) {
+            throw new IllegalStateException("unsupported period " + periodMode);
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -109,6 +113,10 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 Date end;
 
                 switch (periodMode) {
+                    case YEARLY:
+                        start = calHelper.yearStartDate(baseDate);
+                        end = calHelper.yearEndDate(baseDate);
+                        break;
                     case MONTHLY:
                         start = calHelper.monthStartDate(baseDate);
                         end = calHelper.monthEndDate(baseDate);
@@ -159,12 +167,15 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 PieDataSet set;
 
                 switch (periodMode) {
+                    case YEARLY:
+                        description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
                     case MONTHLY:
-                        description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
                         break;
                     case WEEKLY:
                     default:
-                        description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
                         break;
                 }
                 set = new PieDataSet(entries, "");
