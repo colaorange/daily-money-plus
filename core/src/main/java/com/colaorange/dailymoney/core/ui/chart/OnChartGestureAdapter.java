@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.helper;
+package com.colaorange.dailymoney.core.ui.chart;
 
 import android.view.MotionEvent;
 

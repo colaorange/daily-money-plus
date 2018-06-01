@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.ui.cards;
+package com.colaorange.dailymoney.core.ui.chart;
 
 import android.os.Bundle;
 
@@ -7,7 +7,7 @@ import com.colaorange.commons.util.Numbers;
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
@@ -29,33 +29,32 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author dennis
  */
-public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implements EventQueue.EventListener {
+public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
 
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
 
-    public enum Mode {
-        WEEKLY, MONTHLY
-    }
-
-
-    Mode mode;
+    PeriodMode periodMode;
     AccountType accountType;
     Date baseDate;
 
+    protected int accountTypeTextColor;
+
+    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY);
 
     @Override
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        mode = (Mode) args.getSerializable(ARG_MODE);
-        if (mode == null) {
-            mode = Mode.WEEKLY;
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.WEEKLY;
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -73,11 +72,15 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
     @Override
     protected void initMembers() {
         super.initMembers();
+        ContextsActivity activity = getContextsActivity();
+
+        accountTypeTextColor = activity.getAccountTextColorMap().get(accountType);
+        vChart.getLegend().setTextColor(accountTypeTextColor);
 
         vChart.setEntryLabelColor(labelTextColor);
         vChart.setEntryLabelTextSize(labelTextSize - 2);
         vChart.setCenterTextSize(labelTextSize);
-        vChart.setCenterTextColor(labelTextColor);
+        vChart.setCenterTextColor(accountTypeTextColor);
         vChart.setHoleColor(backgroundColor);
         vChart.setHoleRadius(45);
         vChart.setTransparentCircleRadius(55);
@@ -85,15 +88,16 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_account_type_pie_frag;
+        return R.layout.chart_pie_account_type_frag;
     }
 
     @Override
-    protected boolean doReloadContent() {
+    public void reloadChart() {
+        super.reloadChart();
 
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-            Var<Double> varExp = new Var<>();
+            Var<Double> varBalance = new Var<>();
             List<PieEntry> entries = new LinkedList<>();
 
             @Override
@@ -104,7 +108,7 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                 Date start;
                 Date end;
 
-                switch (mode) {
+                switch (periodMode) {
                     case MONTHLY:
                         start = calHelper.monthStartDate(baseDate);
                         end = calHelper.monthEndDate(baseDate);
@@ -115,7 +119,7 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                         end = calHelper.weekEndDate(baseDate);
                         break;
                 }
-                varExp.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
+                varBalance.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
 
 
                 List<Balance> list = new ArrayList<>();
@@ -153,22 +157,18 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
             public void onAsyncFinish() {
                 String description = "";
                 PieDataSet set;
-                if (entries.size() == 0) {
-                    entries.add(new PieEntry(100, i18n.string(R.string.msg_no_data)));
-                    set = new PieDataSet(entries, "");
-                } else {
 
-                    switch (mode) {
-                        case MONTHLY:
-                            description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varExp.value));
-                            break;
-                        case WEEKLY:
-                        default:
-                            description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varExp.value));
-                            break;
-                    }
-                    set = new PieDataSet(entries, "");
+                switch (periodMode) {
+                    case MONTHLY:
+                        description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
+                    case WEEKLY:
+                    default:
+                        description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
                 }
+                set = new PieDataSet(entries, "");
+
                 set.setColors(colorTemplate);
 
                 set.setSliceSpace(1f);//space between entry
@@ -187,8 +187,8 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                     @Override
                     public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
                         StringBuilder sb = new StringBuilder(Numbers.format(v, "#0.##"));
-                        if (varExp.value > 0) {
-                            v = (float) (v * 100 / varExp.value);
+                        if (varBalance.value > 0) {
+                            v = (float) (v * 100 / varBalance.value);
                             if (v >= 10) {//only show that > 10
                                 sb.append("(").append(Numbers.format(v, "#0.#")).append("%)");
                             }
@@ -197,13 +197,16 @@ public class PieAccountTypeFragment extends ChartBaseFragment<PieChart> implemen
                     }
                 });
 
-                vChart.setData(data);
-                vChart.setCenterText(description);
+                if (entries.size() > 0) {
+                    vChart.setData(data);
+                    vChart.setCenterText(description);
+                } else {
+                    vChart.setData(null);
+                }
                 vChart.invalidate(); // refresh
             }
         });
 
-        return true;
     }
 
 }

@@ -213,14 +213,14 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
             @Override
             public void run() {
                 if (condition instanceof Account) {
-                    data = idp.listRecord((Account) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((Account) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((Account) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((Account) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate);
                 } else if (condition instanceof AccountType) {
-                    data = idp.listRecord((AccountType) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((AccountType) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((AccountType) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((AccountType) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate);
                 } else if (condition instanceof String) {
-                    data = idp.listRecord((String) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
-                    count = idp.countRecord((String) condition, IDataProvider.LIST_DETAIL_MODE_BOTH, startDate, endDate);
+                    data = idp.listRecord((String) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate, preference().getMaxRecords());
+                    count = idp.countRecord((String) condition, IDataProvider.LIST_RECORD_MODE_BOTH, startDate, endDate);
                 } else {
                     data = Collections.emptyList();
                     count = 0;

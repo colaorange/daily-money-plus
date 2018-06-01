@@ -277,12 +277,12 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                                     .append(yearFormat.format(targetEndDate)).append(" ").append(nonDigitalMonthFormat.format(targetEndDate)).append(" ").append(cal.dayOfMonth(targetEndDate));
                         }
 
-                        vInfo.setText(i18n.string(R.string.label_year_details, sb.toString(), Integer.toString(count)));
+                        vInfo.setText(i18n.string(R.string.label_year_records, sb.toString(), Integer.toString(count)));
                         break;
                     case MODE_WEEK:
                     default:
                         //<string name="label_week_details">%5$s %1$s to %2$s - Week %3$s/%4$s (%6$s)</string>
-                        vInfo.setText(i18n.string(R.string.label_week_details, nonDigitalMonthFormat.format(targetStartDate) + " " + cal.dayOfMonth(targetStartDate),
+                        vInfo.setText(i18n.string(R.string.label_week_records, nonDigitalMonthFormat.format(targetStartDate) + " " + cal.dayOfMonth(targetStartDate),
                                 (!sameMonth ? nonDigitalMonthFormat.format(targetEndDate) + " " : "") + cal.dayOfMonth(targetEndDate),
                                 cal.weekOfMonth(targetDate), cal.weekOfYear(targetDate), yearFormat.format(targetStartDate), Integer.toString(count)));
                         break;

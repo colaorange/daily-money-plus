@@ -29,6 +29,7 @@ import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.Dialogs;
@@ -226,37 +227,55 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
 
 
         @Override
-        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position) {
-            //have to overird both onBindViewHolder, it depends on implementation.
-            clearBoundFragment(holder);
-            super.onBindViewHolder(holder, position);
-        }
+        public void onViewAttachedToWindow(@NonNull SimpleViewHolder holder) {
+            super.onViewAttachedToWindow(holder);
 
+            CardFragmentViewHolder vh = (CardFragmentViewHolder) holder;
+
+            int pos = vh.getAdapterPosition();
+            Card card = get(pos);
+            FragmentManager fragmentManager = getChildFragmentManager();
+            // I Finally get the root cause of fking java.lang.IllegalArgumentException: No view found for id issue
+            // with itemView id, to prevent remove wrong fragment in new card_desktop at recrate case
+            String fragTag = "switcher:" + vh.itemView.getId() + ":" + card.getId();
+
+            Fragment f = fragmentManager.findFragmentByTag(fragTag);
+            if (f != null) {
+                fragmentManager.beginTransaction()
+                        .attach(f)
+                        .commitNowAllowingStateLoss();
+            } else {
+
+                f = new CardFacade(getContextsActivity()).newFragment(desktopIndex, pos, card);
+
+                fragmentManager.beginTransaction()
+                        .add(vh.itemView.getId(), f, fragTag)
+                        .commitNowAllowingStateLoss();
+                vh.boundFragTag = fragTag;
+
+                createdFragments.put(fragTag, f);
+            }
+        }
 
         @Override
-        public void onBindViewHolder(@NonNull SimpleViewHolder holder, int position, @NonNull List<Object> payloads) {
-            clearBoundFragment(holder);
-            super.onBindViewHolder(holder, position, payloads);
-        }
+        public void onViewDetachedFromWindow(@NonNull SimpleViewHolder holder) {
+            super.onViewDetachedFromWindow(holder);
 
-        private void clearBoundFragment(SimpleViewHolder holder) {
-            //remove fragment that is going to unbind
             CardFragmentViewHolder vh = (CardFragmentViewHolder) holder;
 
 
-            //remove old fragment
+            //detach old fragment
             if (vh.boundFragTag != null) {
                 FragmentManager fm = getChildFragmentManager();
                 Fragment f = fm.findFragmentByTag(vh.boundFragTag);
                 if (f != null) {
                     try {
-                        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                        ft.remove(f);
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.detach(f);
                         ft.commitNowAllowingStateLoss();
                     } catch (Exception x) {
                         Logger.w(x.getMessage(), x);
                     }
-                    createdFragments.remove(vh.boundFragTag);
                 }
                 vh.boundFragTag = null;
             }
@@ -285,29 +304,6 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
         @Override
         public void bindViewValue(Card card) {
             super.bindViewValue(card);
-
-
-            FragmentManager fragmentManager = getChildFragmentManager();
-            // I Finally get the root cause of fking java.lang.IllegalArgumentException: No view found for id issue
-            // with itemView id, to prevent remove wrong fragment in new card_desktop at recrate case
-            String fragTag = itemView.getId() + ":" + card.getId();
-
-            if (fragmentManager.findFragmentByTag(fragTag) != null) {
-                //ignore it, don't attach again
-            } else {
-                int pos = getAdapterPosition();
-
-                Fragment f = new CardFacade(getContextsActivity()).newFragement(desktopIndex, pos, card);
-
-//                Logger.d(">>> new fragment {}:{}:{} ", fragTag, "0x" + Integer.toHexString(itemView.getId()), f);
-
-                //itemView id is dynamic, use replace or add?
-                fragmentManager.beginTransaction()
-                        .add(itemView.getId(), f, fragTag)
-                        .commit();
-                boundFragTag = fragTag;
-                createdFragments.put(fragTag, f);
-            }
         }
     }
 
@@ -349,7 +345,13 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
             CardDesktop desktop = preference.getDesktop(desktopIndex);
             card = desktop.get(pos);
 
-            int icon = cardFacade.getTypeIcon(card.getType());
+            CardType type = null;
+            try {
+                type = card.getTypeEnum();
+            } catch (Exception x) {
+            }
+
+            int icon = type == null ? -1 : cardFacade.getTypeIcon(type);
             if (icon >= 0) {
                 vicon.setImageDrawable(activity.buildDisabledIcon(icon, false));
             } else {
@@ -368,7 +370,8 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
                 }
             });
             MenuItem mi = mMenu.findItem(R.id.menu_edit);
-            mi.setVisible(cardFacade.isTypeEditable(card.getType()));
+
+            mi.setVisible(type==null?false:cardFacade.isTypeEditable(type));
 
             mi = mMenu.findItem(R.id.menu_mode_show_title);
             boolean showTitle = card.getArg(CardFacade.ARG_SHOW_TITLE, false);

@@ -14,7 +14,7 @@ public class Card extends JsonBase {
     @Expose
     String id;
     @Expose
-    CardType type;
+    String type;
     @Expose
     String title;
     @Expose
@@ -32,11 +32,20 @@ public class Card extends JsonBase {
     }
 
     public Card(CardType type, String title) {
-        this.type = type;
+        this.type = type.name();
         this.title = title;
     }
 
     public Card(CardType type) {
+        this.type = type.name();
+    }
+
+    public Card(String type, String title) {
+        this.type = type;
+        this.title = title;
+    }
+
+    public Card(String type) {
         this.type = type;
     }
 
@@ -64,8 +73,12 @@ public class Card extends JsonBase {
         this.title = title;
     }
 
-    public CardType getType() {
+    public String getType() {
         return type;
+    }
+
+    public CardType getTypeEnum(){
+        return CardType.valueOf(type);
     }
 
     @Override

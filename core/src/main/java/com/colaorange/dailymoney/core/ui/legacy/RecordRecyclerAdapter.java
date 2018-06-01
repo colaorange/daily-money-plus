@@ -100,11 +100,11 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<Record,
             LinearLayout vlayout = itemView.findViewById(R.id.record_item_layout);
             LinearLayout vfromborder = itemView.findViewById(R.id.record_item_from_border);
             LinearLayout vtoborder = itemView.findViewById(R.id.record_item_to_border);
-            TextView vfrom = itemView.findViewById(R.id.detail_mgnt_item_from);
-            TextView vto = itemView.findViewById(R.id.detail_mgnt_item_to);
-            TextView vmoney = itemView.findViewById(R.id.detail_mgnt_item_money);
-            TextView vnote = itemView.findViewById(R.id.detail_mgnt_item_note);
-            TextView vdate = itemView.findViewById(R.id.detail_mgnt_item_date);
+            TextView vfrom = itemView.findViewById(R.id.record_item_from);
+            TextView vto = itemView.findViewById(R.id.record_item_to);
+            TextView vmoney = itemView.findViewById(R.id.record_item_money);
+            TextView vnote = itemView.findViewById(R.id.record_item_note);
+            TextView vdate = itemView.findViewById(R.id.record_item_date);
 
 
             Account fromAcc = accountMap.get(record.getFrom());

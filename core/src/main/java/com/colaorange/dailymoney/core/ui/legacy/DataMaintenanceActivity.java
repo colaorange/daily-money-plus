@@ -368,7 +368,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
                             public void onBusyFinish() {
                                 if (result.isSuccess()) {
-                                    String msg = i18n().string(R.string.msg_csv_imported, Integer.toString(result.getAccount() + result.getDetail()), workingFolder);
+                                    String msg = i18n().string(R.string.msg_csv_imported, Integer.toString(result.getAccount() + result.getDetail()), result.getLastFolder());
                                     GUIs.alert(DataMaintenanceActivity.this, msg);
                                 } else {
                                     GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.label_error) + ":" + result.getErr());

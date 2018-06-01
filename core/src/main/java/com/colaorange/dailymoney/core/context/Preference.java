@@ -115,6 +115,7 @@ public class Preference {
     String monthDateFormat;
     String yearFormat;
     String yearMonthFormat;
+    String dayFormat;
 
     boolean autoBackup = true;
 
@@ -396,6 +397,7 @@ public class Preference {
 
         boolean monthDigital = false;
         yearFormat = "yyyy";
+        dayFormat = "dd";
 
         switch (formatMonth) {
             case FORMAT_MONTH_FULL:
@@ -625,6 +627,10 @@ public class Preference {
 
     public DateFormat getYearMonthFormat() {
         return new SimpleDateFormat(yearMonthFormat);
+    }
+
+    public DateFormat getDayFormat() {
+        return new SimpleDateFormat(dayFormat);
     }
 
 

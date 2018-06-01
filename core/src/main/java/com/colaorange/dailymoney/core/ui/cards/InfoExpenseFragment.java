@@ -29,11 +29,9 @@ public class InfoExpenseFragment extends CardBaseFragment implements EventQueue.
     protected void initMembers() {
         super.initMembers();
 
-        vInfoWeeklyExpense = rootView.findViewById(R.id.desktop_weekly_expense);
-        vInfoMonthlyExpense = rootView.findViewById(R.id.desktop_monthly_expense);
-        vInfoCumulativeCash = rootView.findViewById(R.id.desktop_cumulative_cash);
-
-        i18n = Contexts.instance().getI18n();
+        vInfoWeeklyExpense = rootView.findViewById(R.id.card_info_weekly_expense);
+        vInfoMonthlyExpense = rootView.findViewById(R.id.card_info_monthly_expense);
+        vInfoCumulativeCash = rootView.findViewById(R.id.card_info_cumulative_cash);
 
     }
 

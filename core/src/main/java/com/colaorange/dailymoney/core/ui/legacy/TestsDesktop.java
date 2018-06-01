@@ -53,7 +53,7 @@ public class TestsDesktop extends AbstractDesktop {
                 Contexts ctx = Contexts.instance();
                 ctx.getMasterDataProvider().reset();
             }
-        }, "Reset Master Dataprovider", R.drawable.dtitem_test);
+        }, "Reset Master Dataprovider", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -64,7 +64,7 @@ public class TestsDesktop extends AbstractDesktop {
                     preference.removeDesktop(i);
                 }
             }
-        }, "Remove all card_desktop", R.drawable.dtitem_test);
+        }, "Remove all card_desktop", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -88,7 +88,7 @@ public class TestsDesktop extends AbstractDesktop {
                     }
                 }
             }
-        }, "Create 10 card_desktop ", R.drawable.dtitem_test);
+        }, "Create 10 card_desktop ", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -96,7 +96,7 @@ public class TestsDesktop extends AbstractDesktop {
             public void run() {
                 new DefaultCardDesktopCreator().createForWholeNew(true);
             }
-        }, "Create Cards for whole new ", R.drawable.dtitem_test);
+        }, "Create Cards for whole new ", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -104,7 +104,7 @@ public class TestsDesktop extends AbstractDesktop {
             public void run() {
                 new DefaultCardDesktopCreator().createForUpgrade(true);
             }
-        }, "Create Cards for upgrade ", R.drawable.dtitem_test);
+        }, "Create Cards for upgrade ", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -119,7 +119,7 @@ public class TestsDesktop extends AbstractDesktop {
                 intent.putExtra(BookEditorActivity.ARG_BOOK, book);
                 activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
-        }, "Edit selected book", R.drawable.dtitem_test);
+        }, "Edit selected book", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -132,7 +132,7 @@ public class TestsDesktop extends AbstractDesktop {
                 intent.putExtra(BookEditorActivity.ARG_BOOK, book);
                 activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
             }
-        }, "Add book", R.drawable.dtitem_test);
+        }, "Add book", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -143,38 +143,38 @@ public class TestsDesktop extends AbstractDesktop {
                 Contexts.instance().getDataProvider().reset();
                 GUIs.shortToast(activity, "reset data provider");
             }
-        }, "rest data provider", R.drawable.dtitem_test));
+        }, "rest data provider", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testFirstDayOfWeek();
             }
-        }, "first day of week", R.drawable.dtitem_test) {
+        }, "first day of week", R.drawable.nav_pg_test) {
         });
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(200, null);
             }
-        }, "Busy 200ms", R.drawable.dtitem_test));
+        }, "Busy 200ms", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(200, "error short");
             }
-        }, "Busy 200ms Error", R.drawable.dtitem_test));
+        }, "Busy 200ms Error", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(5000, null);
             }
-        }, "Busy 5s", R.drawable.dtitem_test));
+        }, "Busy 5s", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testBusy(5000, "error long");
             }
-        }, "Busy 5s Error", R.drawable.dtitem_test));
+        }, "Busy 5s Error", R.drawable.nav_pg_test));
 
 
         addItem(new DesktopItem(new Runnable() {
@@ -182,38 +182,38 @@ public class TestsDesktop extends AbstractDesktop {
             public void run() {
                 testCreateTestdata(25);
             }
-        }, "test data25", R.drawable.dtitem_test));
+        }, "test data25", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(50);
             }
-        }, "test data50", R.drawable.dtitem_test));
+        }, "test data50", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(100);
             }
-        }, "test data100", R.drawable.dtitem_test));
+        }, "test data100", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testCreateTestdata(200);
             }
-        }, "test data200", R.drawable.dtitem_test));
+        }, "test data200", R.drawable.nav_pg_test));
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
                 testJust();
             }
-        }, "just test", R.drawable.dtitem_test));
+        }, "just test", R.drawable.nav_pg_test));
 
         DesktopItem padding = new DesktopItem(new Runnable() {
             @Override
             public void run() {
 
             }
-        }, "padding", R.drawable.dtitem_test);
+        }, "padding", R.drawable.nav_pg_test);
 
         addItem(padding);
         addItem(padding);

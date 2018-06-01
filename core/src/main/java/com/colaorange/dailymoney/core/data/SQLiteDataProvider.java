@@ -401,21 +401,21 @@ public class SQLiteDataProvider implements IDataProvider {
         List<String> args = new ArrayList<String>();
         String nestedId = accountId+".%";
         where.append(" 1=1 ");
-        if(mode ==LIST_DETAIL_MODE_FROM){
+        if(mode == LIST_RECORD_MODE_FROM){
             where.append(" AND (");
             where.append(COL_DET_FROM + " = ? OR ");
             where.append(COL_DET_FROM + " LIKE ? ");
             where.append(")");
             args.add(accountId);
             args.add(nestedId);
-        }else if(mode==LIST_DETAIL_MODE_TO){
+        }else if(mode== LIST_RECORD_MODE_TO){
             where.append(" AND (");
             where.append(COL_DET_TO + " = ? OR ");
             where.append(COL_DET_TO + " LIKE ? ");
             where.append(")");
             args.add(accountId);
             args.add(nestedId);
-        }else if(mode==LIST_DETAIL_MODE_BOTH){
+        }else if(mode== LIST_RECORD_MODE_BOTH){
             where.append(" AND (");
             where.append(COL_DET_FROM + " = ? OR ");
             where.append(COL_DET_FROM + " LIKE ? OR ");
@@ -459,13 +459,13 @@ public class SQLiteDataProvider implements IDataProvider {
 
         StringBuilder where = new StringBuilder();
         where.append(" 1=1 ");
-        if(mode ==LIST_DETAIL_MODE_FROM){
+        if(mode == LIST_RECORD_MODE_FROM){
             where.append(" AND ");
             where.append(COL_DET_FROM_TYPE + "= '" + type.getType()+"'");
-        }else if(mode==LIST_DETAIL_MODE_TO){
+        }else if(mode== LIST_RECORD_MODE_TO){
             where.append(" AND ");
             where.append(COL_DET_TO_TYPE + "= '" + type.getType()+"'");
-        }else if(mode==LIST_DETAIL_MODE_BOTH){
+        }else if(mode== LIST_RECORD_MODE_BOTH){
             where.append(" AND (");
             where.append(COL_DET_FROM_TYPE + "= '" + type.getType()+"' OR ");
             where.append(COL_DET_TO_TYPE + "= '" + type.getType()+"')");
@@ -539,21 +539,21 @@ public class SQLiteDataProvider implements IDataProvider {
         List<String> args = new ArrayList<String>();
         StringBuilder where = new StringBuilder();
         where.append(" 1=1 ");
-        if(mode ==LIST_DETAIL_MODE_FROM){
+        if(mode == LIST_RECORD_MODE_FROM){
             where.append(" AND (");
             where.append(COL_DET_FROM + " = ? OR ");
             where.append(COL_DET_FROM + " LIKE ? ");
             where.append(")");
             args.add(accountId);
             args.add(nestedId);
-        }else if(mode==LIST_DETAIL_MODE_TO){
+        }else if(mode== LIST_RECORD_MODE_TO){
             where.append(" AND (");
             where.append(COL_DET_TO + " = ? OR ");
             where.append(COL_DET_TO + " LIKE ? ");
             where.append(")");
             args.add(accountId);
             args.add(nestedId);
-        }else if(mode==LIST_DETAIL_MODE_BOTH){
+        }else if(mode== LIST_RECORD_MODE_BOTH){
             where.append(" AND (");
             where.append(COL_DET_FROM + " = ? OR ");
             where.append(COL_DET_FROM + " LIKE ? OR ");
@@ -607,13 +607,13 @@ public class SQLiteDataProvider implements IDataProvider {
         StringBuilder where = new StringBuilder();
         where.append(" 1=1 ");
         
-        if(mode ==LIST_DETAIL_MODE_FROM){
+        if(mode == LIST_RECORD_MODE_FROM){
             where.append(" AND ");
             where.append(COL_DET_FROM_TYPE + "= '" + type.getType()+"'");
-        }else if(mode==LIST_DETAIL_MODE_TO){
+        }else if(mode== LIST_RECORD_MODE_TO){
             where.append(" AND ");
             where.append(COL_DET_TO_TYPE + "= '" + type.getType()+"'");
-        }else if(mode==LIST_DETAIL_MODE_BOTH){
+        }else if(mode== LIST_RECORD_MODE_BOTH){
             where.append(" AND (");
             where.append(COL_DET_FROM_TYPE + "= '" + type.getType()+"' OR ");
             where.append(COL_DET_TO_TYPE + "= '" + type.getType()+"')");
