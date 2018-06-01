@@ -2,7 +2,6 @@ package com.colaorange.dailymoney.core.ui.nav;
 
 import android.content.Intent;
 
-import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -35,31 +34,31 @@ public class NavPageFacade {
     public int getPageIcon(NavPage page) {
         switch (page) {
             case RECORD_EDITOR:
-                return R.drawable.dtitem_add_record;
+                return R.drawable.nav_pg_add_record;
             case DAILY_LIST:
-                return R.drawable.dtitem_detail_day;
+                return R.drawable.nav_pg_reclist_day;
             case WEEKLY_LIST:
-                return R.drawable.dtitem_detail_week;
+                return R.drawable.nav_pg_reclist_week;
             case MONTHLY_LIST:
-                return R.drawable.dtitem_detail_month;
+                return R.drawable.nav_pg_reclist_month;
             case YEARLY_LIST:
-                return R.drawable.dtitem_detail_year;
+                return R.drawable.nav_pg_reclist_year;
             case ACCOUNT_MGNT:
-                return R.drawable.dtitem_account;
+                return R.drawable.nav_pg_account;
             case BOOK_MGNT:
-                return R.drawable.dtitem_books;
+                return R.drawable.nav_pg_books;
             case DATA_MAIN:
-                return R.drawable.dtitem_datamain;
+                return R.drawable.nav_pg_datamain;
             case PREFS:
-                return R.drawable.dtitem_prefs;
+                return R.drawable.nav_pg_prefs;
             case HOW2USE:
-                return R.drawable.dtitem_how2use;
+                return R.drawable.nav_pg_how2use;
             case MONTHLY_BALANCE:
-                return R.drawable.dtitem_balance_month;
+                return R.drawable.nav_pg_balance_month;
             case YEARLY_BALANCE:
-                return R.drawable.dtitem_balance_year;
+                return R.drawable.nav_pg_balance_year;
             case CUMULATIVE_BALANCE:
-                return R.drawable.dtitem_balance_cumulative_month;
+                return R.drawable.nav_pg_balance_cumulative_month;
             case ABOUT:
             case CONTRIBUTOR:
             case WHATISNEW:
