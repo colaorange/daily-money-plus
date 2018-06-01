@@ -21,7 +21,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
     private AccountType accountType;
     private Date baseDate;
 
-    //    protected int accountTypeTextColor;
+    protected int accountTypeTextColor;
     private XAxisDateFormatter formatter;
 
     private DateFormat xAxisFormat;
@@ -68,13 +70,13 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
             periodMode = PeriodMode.MONTHLY;
         }
 
-        if(!supportPeriod.contains(periodMode)){
-            throw new IllegalStateException("unsupported period "+periodMode);
+        if (!supportPeriod.contains(periodMode)) {
+            throw new IllegalStateException("unsupported period " + periodMode);
         }
 
         calculationMode = (CalculationMode) args.getSerializable(ARG_CALCULATION_MODE);
         if (calculationMode == null) {
-            calculationMode = calculationMode.INDIVIDUAL;
+            calculationMode = calculationMode.CUMULATIVE;
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -93,12 +95,15 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
     protected void initMembers() {
         super.initMembers();
         ContextsActivity activity = getContextsActivity();
-
+        accountTypeTextColor = activity.getAccountTextColorMap().get(accountType);
         if (periodMode == PeriodMode.MONTHLY) {
             xAxisFormat = Contexts.instance().getPreference().getDayFormat();
         } else {
             xAxisFormat = Contexts.instance().getPreference().getNonDigitalMonthFormat();
         }
+
+        vChart.getLegend().setTextColor(accountTypeTextColor);
+
         //x
         XAxis xAxis = vChart.getXAxis();
         xAxis.setDrawGridLines(false);
@@ -117,9 +122,9 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
         YAxis leftAxis = vChart.getAxisLeft();
         YAxis rightAxis = vChart.getAxisRight();
 
-        leftAxis.setTextColor(labelTextColor);
+        leftAxis.setTextColor(accountTypeTextColor);
         leftAxis.setTextSize(labelTextSize - 3);
-        rightAxis.setTextColor(labelTextColor);
+        rightAxis.setTextColor(accountTypeTextColor);
         rightAxis.setTextSize(labelTextSize - 3);
     }
 
@@ -277,13 +282,7 @@ public class ChartLineAccountFragment extends ChartBaseFragment<LineChart> {
 
                 LineData data = new LineData(dataSets);
 
-//                data.setValueFormatter(new IValueFormatter() {
-//                    @Override
-//                    public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
-//                        StringBuilder sb = new StringBuilder(Numbers.format(v, "#0.##"));
-//                        return sb.toString();
-//                    }
-//                });
+                data.setValueFormatter(new MoneyFormatter());
 
 
                 vChart.setData(data);

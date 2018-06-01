@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.colaorange.commons.util.Colors;
+import com.colaorange.commons.util.Numbers;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -23,6 +24,9 @@ import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
  * @author dennis
@@ -140,4 +144,11 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         vChart.setLayoutParams(lp);
     }
 
+
+    public static class MoneyFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
+            return Numbers.format(v, "#0.##");
+        }
+    }
 }

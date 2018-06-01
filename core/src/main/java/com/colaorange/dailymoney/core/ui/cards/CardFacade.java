@@ -82,7 +82,7 @@ public class CardFacade {
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
             b.putSerializable(ChartLineAccountFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            //use default
+            b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -100,7 +100,7 @@ public class CardFacade {
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
             b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            //use default
+            b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -261,6 +261,7 @@ public class CardFacade {
         try {
             selection.add(ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE)));
         } catch (Exception x) {
+            //default cumulative
             selection.add(ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
