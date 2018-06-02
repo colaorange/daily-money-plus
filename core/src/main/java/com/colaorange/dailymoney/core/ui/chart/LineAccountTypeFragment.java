@@ -141,7 +141,7 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
             final Var<Boolean> noPrimary = new Var<>(false);
-            final Map<Object, List<Entry>> entrySeries = new LinkedHashMap<>();
+            final Map<String, List<Entry>> entrySeries = new LinkedHashMap<>();
 
             @Override
             public void run() {
@@ -203,14 +203,8 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 int i = 0;
                 for (Object key : entrySeries.keySet()) {
                     List<Entry> list = entrySeries.get(key);
-                    String label;
-                    if (key instanceof Account) {
-                        label = ((Account) key).getName();
-                    } else if (key instanceof AccountType) {
-                        label = ((AccountType) key).getDisplay(i18n);
-                    } else {
-                        label = key.toString();
-                    }
+                    String label = key.toString();
+
                     LineDataSet set = new LineDataSet(list, label);
 
 

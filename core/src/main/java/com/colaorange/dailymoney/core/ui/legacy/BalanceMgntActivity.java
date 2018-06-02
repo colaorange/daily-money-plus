@@ -24,6 +24,8 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateActivity;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateFragment;
@@ -60,6 +62,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
     private boolean fromBeginning = false;
 
     private DateFormat yearFormat;
+    private DateFormat yearMonthFormat;
 
     private Map<Integer, BalanceMgntFragment.FragInfo> fragInfoMap;
 
@@ -105,6 +108,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         i18n = i18n();
         Preference pref = preference();
         yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
+        yearMonthFormat = pref.getYearMonthFormat();
         vPager = findViewById(R.id.viewpager);
         vPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -357,7 +361,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         if (fromBeginning) {
 
-            Intent intent = new Intent(this, LineFromBeginningAggregateActivity.class);
+            Intent intent = new Intent(this, LineFromBeginningAccountActivity.class);
 
             AccountType at = AccountType.find(balance.getType());
 
@@ -367,9 +371,11 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             } else {
                 intent.putExtra(LineAccountFragment.ARG_ACCOUNT_TYPE, at);
             }
-            intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
-            intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-            intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.act_balance_yearly_aggregate_line_chart, at.getDisplay(i18n)));
+            intent.putExtra(LineFromBeginningAccountFragment.ARG_BASE_DATE, fragInfo.date);
+//            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+            //always use yearly mode, monthly mode is useless. (going mess when having too many data)
+            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.YEARLY);
+            intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, LineAccountActivity.class);
@@ -404,7 +410,8 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
         intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.act_balance_yearly_aggregate_line_chart));
+        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.label_yearly_aggregate_line_chart, mode == MODE_MONTH ? yearMonthFormat.format(fragInfo.date) :
+                yearFormat.format(fragInfo.date)));
         startActivity(intent);
     }
 

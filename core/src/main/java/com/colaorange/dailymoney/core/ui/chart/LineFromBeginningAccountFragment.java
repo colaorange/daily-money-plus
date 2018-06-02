@@ -11,8 +11,9 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.data.Balance;
+import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.GUIs;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -25,28 +26,25 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * line chart of individual accounts in an account type
  *
  * @author dennis
  */
-public class LineAccountFragment extends ChartBaseFragment<LineChart> {
+public class LineFromBeginningAccountFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
-    public static final String ARG_CALCULATION_MODE = "calculationMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_ACCOUNT = "account";
     public static final String ARG_BASE_DATE = "baseDate";
 
     private PeriodMode periodMode;
-    private CalculationMode calculationMode;
     private AccountType accountType;
     private Account account;
     private Date baseDate;
@@ -56,7 +54,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
 
     private DateFormat xAxisFormat;
 
-    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
+    private static Set<PeriodMode> supportPeriod = Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
     @Override
     protected void initArgs() {
@@ -69,11 +67,6 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
 
         if (!supportPeriod.contains(periodMode)) {
             throw new IllegalStateException("unsupported period " + periodMode);
-        }
-
-        calculationMode = (CalculationMode) args.getSerializable(ARG_CALCULATION_MODE);
-        if (calculationMode == null) {
-            calculationMode = calculationMode.CUMULATIVE;
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
@@ -142,8 +135,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
         super.reloadChart();
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
-            final Map<Account, TreeMap<Long, Entry>> entrySeries = new LinkedHashMap<>();
-            final TreeMap<Long, Entry> unknownEntries = new TreeMap<>();
+            final Map<Account, List<Entry>> entrySeries = new LinkedHashMap<>();
 
             @Override
             public void run() {
@@ -175,116 +167,29 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                 accountMap = new LinkedHashMap<>();
                 for (Account account : accounts) {
                     accountMap.put(account.getId(), account);
-                    entrySeries.put(account, new TreeMap<Long, Entry>());
+                    entrySeries.put(account, new LinkedList<Entry>());
                 }
 
-
-                List<Record> recordsFrom = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_FROM, start, end, -1));
-                List<Record> recordsTo = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
-
-                boolean positive;
-                switch (accountType) {
-                    case INCOME:
-                    case LIABILITY:
-                        positive = false;
-                        break;
-                    case UNKONW:
-                    case EXPENSE:
-                    case ASSET:
-                    case OTHER:
-                    default:
-                        positive = true;
-                        break;
-                }
-
-                int i = 0;
-                for (List<Record> records : new List[]{recordsFrom, recordsTo}) {
-                    boolean from = i == 0;
-                    for (Record r : records) {
-                        TreeMap<Long, Entry> entries;
-
-                        Account acc = accountMap.get(from ? r.getFrom() : r.getTo());
-                        if (acc == null) {
-                            entries = unknownEntries;
-                        } else {
-                            entries = entrySeries.get(acc);
-                        }
-
-                        float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
-                        Date x = r.getDate();
-
-                        if (from) {
-                            y = -y;
-                        }
-
-                        //group by day or month
+                for (Account account : accounts) {
+                    Date localStart = start;
+                    List<Entry> entries = new LinkedList<>();
+                    while (localStart.getTime() < end.getTime()) {
+                        Date localEnd;
                         if (periodMode == PeriodMode.MONTHLY) {
-                            x = calHelper.toDayStart(x);
+                            localEnd = calHelper.toDayEnd(localStart);
                         } else {
-                            x = calHelper.monthStartDate(x);
+                            localEnd = calHelper.monthEndDate(localStart);
                         }
+                        Balance b = BalanceHelper.calculateBalance(account, null, localEnd);
+                        entries.add(new Entry(localStart.getTime(), (float) b.getMoney()));
 
-                        if (!entries.containsKey(x.getTime())) {
-                            entries.put(x.getTime(), new Entry(x.getTime(), y));
+                        if (periodMode == PeriodMode.MONTHLY) {
+                            localStart = calendarHelper().dateAfter(localStart, 1);
                         } else {
-                            Entry e = entries.get(x.getTime());
-                            e.setY(e.getY() + y);
+                            localStart = calendarHelper().monthAfter(localStart, 1);
                         }
                     }
-                    i++;
-                }
-
-                //remove empty entries account
-                Iterator<Map.Entry<Account, TreeMap<Long, Entry>>> iter = entrySeries.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<Account, TreeMap<Long, Entry>> e = iter.next();
-                    TreeMap<Long, Entry> map = e.getValue();
-                    int s = map.size();
-                    if (s == 0) {
-                        //remove empty entry
-                        iter.remove();
-                    } else {
-                        if (calculationMode == CalculationMode.CUMULATIVE) {
-                            List<Entry> l = new ArrayList<>(map.values());
-                            for (int j = 1; j < s; j++) {
-                                Entry entry = l.get(j);
-                                entry.setY(entry.getY() + l.get(j - 1).getY());
-                            }
-
-                        }
-                    }
-                }
-
-                if (!positive) {
-                    iter = entrySeries.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry<Account, TreeMap<Long, Entry>> e = iter.next();
-                        List<Entry> l = new ArrayList<Entry>(e.getValue().values());
-                        int s = l.size();
-                        for (int j = 0; j < s; j++) {
-                            Entry entry = l.get(j);
-                            entry.setY(entry.getY() * -1);
-                        }
-                    }
-                }
-
-                if (unknownEntries.size() > 0) {
-                    if (calculationMode == CalculationMode.CUMULATIVE) {
-                        List<Entry> l = new ArrayList<Entry>(unknownEntries.values());
-                        int s = l.size();
-                        for (int j = 1; j < s; j++) {
-                            Entry entry = l.get(j);
-                            entry.setY(entry.getY() + l.get(j - 1).getY());
-                        }
-                    }
-                    if (!positive) {
-                        List<Entry> l = new ArrayList<Entry>(unknownEntries.values());
-                        int s = l.size();
-                        for (int j = 0; j < s; j++) {
-                            Entry entry = l.get(j);
-                            entry.setY(entry.getY() * -1);
-                        }
-                    }
+                    entrySeries.put(account, entries);
                 }
             }
 
@@ -299,7 +204,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                 List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
                 int i = 0;
                 for (Account key : entrySeries.keySet()) {
-                    TreeMap<Long, Entry> list = entrySeries.get(key);
+                    List<Entry> list = entrySeries.get(key);
 
                     /**
                      * java.lang.IndexOutOfBoundsException
@@ -316,7 +221,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
 
                     String label = key.getName();
 
-                    LineDataSet set = new LineDataSet(new ArrayList<Entry>(list.values()), label);
+                    LineDataSet set = new LineDataSet(list, label);
 
                     set.setValueTextSize(labelTextSize - 4);
                     set.setValueTextColor(labelTextColor);
@@ -329,14 +234,6 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                     set.setCircleColor(lightTheme ? Colors.darken(color, 0.3f) : Colors.lighten(color, 0.3f));
                     set.setCircleColorHole(lightTheme ? Colors.darken(color, 0.2f) : Colors.lighten(color, 0.2f));
 
-                    dataSets.add(set);
-                }
-                //don't show unknown if account is present
-                if (account==null && unknownEntries.size() > 0) {
-                    LineDataSet set = new LineDataSet(new ArrayList<Entry>(unknownEntries.values()), i18n.string(R.string.label_unknown));
-                    set.setColors(nextColor(i++));
-                    set.setValueTextColor(labelTextColor);
-                    set.setValueTextSize(labelTextSize - 4);
                     dataSets.add(set);
                 }
 

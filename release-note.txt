@@ -4,6 +4,8 @@
  #25 Provide a drawer for function access
  #26 Support customizable desktop
  #28 Support weekly/monthly expense pie chart card
+ #29 Support monthly expense line chart card
+ #30 Support new chart style for balance
 === Bugs ===
  #24 always popped up about page
 
