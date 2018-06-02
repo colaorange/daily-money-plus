@@ -20,12 +20,13 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
-import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateActivity;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
@@ -33,11 +34,9 @@ import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -357,7 +356,21 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         }
 
         if (fromBeginning) {
-            //TODO
+
+            Intent intent = new Intent(this, LineFromBeginningAggregateActivity.class);
+
+            AccountType at = AccountType.find(balance.getType());
+
+            if (balance.getTarget() instanceof Account) {
+                Account account = (Account) balance.getTarget();
+                intent.putExtra(LineAccountFragment.ARG_ACCOUNT, account);
+            } else {
+                intent.putExtra(LineAccountFragment.ARG_ACCOUNT_TYPE, at);
+            }
+            intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
+            intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+            intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.act_balance_yearly_aggregate_line_chart, at.getDisplay(i18n)));
+            startActivity(intent);
         } else {
             Intent intent = new Intent(this, LineAccountActivity.class);
 
@@ -387,43 +400,12 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             return;
         }
 
-        GUIs.doBusy(this, new GUIs.BusyAdapter() {
-            @Override
-            public void run() {
-                CalendarHelper calHelper = calendarHelper();
+        Intent intent = new Intent(this, LineFromBeginningAggregateActivity.class);
 
-                boolean[] yearly = new boolean[]{false, false, true, true, false};
-                AccountType[] ats = new AccountType[]{AccountType.ASSET, AccountType.LIABILITY, AccountType.INCOME, AccountType.EXPENSE, AccountType.OTHER};
-                List<List<Balance>> balances = new ArrayList<List<Balance>>();
-                Date yearstart = calHelper.yearStartDate(fragInfo.date);
-                for (int j = 0; j < ats.length; j++) {
-                    AccountType at = ats[j];
-                    List<Balance> blist = new ArrayList<Balance>();
-                    balances.add(blist);
-                    Date d = yearstart;
-                    if (yearly[j]) {
-                        for (int i = 0; i < 12; i++) {
-                            Balance balance = BalanceHelper.calculateBalance(at, yearstart, calHelper.monthEndDate(d));
-                            blist.add(balance);
-                            d = calHelper.monthAfter(d, 1);
-                        }
-                    } else {
-                        double total = 0;
-                        for (int i = 0; i < 12; i++) {
-                            Balance balance = BalanceHelper.calculateBalance(at, i == 0 ? null : calHelper.monthStartDate(d), calHelper.monthEndDate(d));
-                            total += balance.getMoney();
-                            balance.setMoney(total);
-                            blist.add(balance);
-                            d = calHelper.monthAfter(d, 1);
-                        }
-                    }
-                }
-                trackEvent(TE.CHART + "yr");
-                Intent intent = new BalanceTimeChart(BalanceMgntActivity.this, GUIs.getOrientation(BalanceMgntActivity.this), GUIs.getDPRatio(BalanceMgntActivity.this)).createIntent(
-                        i18n.string(R.string.label_balance_yearly_runchart, yearFormat.format(fragInfo.date)), balances);
-                startActivity(intent);
-            }
-        });
+        intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
+        intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.act_balance_yearly_aggregate_line_chart));
+        startActivity(intent);
     }
 
     public class BalancePagerAdapter extends FragmentPagerAdapter {

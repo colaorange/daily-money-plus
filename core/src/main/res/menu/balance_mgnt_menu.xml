@@ -35,6 +35,6 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_yearly_from_beginning_aggregate_line_chart"
-        android:title="@string/act_balance_yearly_from_beginning_aggregate_line_chart"
+        android:title="@string/act_balance_yearly_aggregate_line_chart"
         app:showAsAction="never" />
 </menu>
