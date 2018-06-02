@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.chart;
 import android.os.Bundle;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Numbers;
 import com.colaorange.dailymoney.core.R;
@@ -41,11 +42,13 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
+    public static final String ARG_ACCOUNT = "account";
     public static final String ARG_BASE_DATE = "baseDate";
 
     private PeriodMode periodMode;
     private CalculationMode calculationMode;
     private AccountType accountType;
+    private Account account;
     private Date baseDate;
 
     protected int accountTypeTextColor;
@@ -74,8 +77,15 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
-        if (accountType == null) {
-            accountType = AccountType.EXPENSE;
+
+        account = (Account) args.getSerializable(ARG_ACCOUNT);
+
+        if (account == null && accountType == null) {
+            throw new IllegalStateException("must have account or account type arg");
+        }
+
+        if (account != null) {
+            accountType = AccountType.find(account.getType());
         }
 
         baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
@@ -156,7 +166,12 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                 IDataProvider idp = Contexts.instance().getDataProvider();
                 Map<String, Account> accountMap = null;
 
-                List<Account> accounts = idp.listAccount(accountType);
+                List<Account> accounts;
+                if (account == null) {
+                    accounts = idp.listAccount(accountType);
+                } else {
+                    accounts = Collections.asList(account);
+                }
                 accountMap = new LinkedHashMap<>();
                 for (Account account : accounts) {
                     accountMap.put(account.getId(), account);
@@ -248,7 +263,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                         int s = l.size();
                         for (int j = 0; j < s; j++) {
                             Entry entry = l.get(j);
-                            entry.setY(entry.getY()*-1);
+                            entry.setY(entry.getY() * -1);
                         }
                     }
                 }
@@ -267,7 +282,7 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
                         int s = l.size();
                         for (int j = 0; j < s; j++) {
                             Entry entry = l.get(j);
-                            entry.setY(entry.getY()*-1);
+                            entry.setY(entry.getY() * -1);
                         }
                     }
                 }
@@ -322,7 +337,8 @@ public class LineAccountFragment extends ChartBaseFragment<LineChart> {
 
                     dataSets.add(set);
                 }
-                if (unknownEntries.size() > 0) {
+                //don't show unknown if account is present
+                if (account==null && unknownEntries.size() > 0) {
                     LineDataSet set = new LineDataSet(new ArrayList<Entry>(unknownEntries.values()), i18n.string(R.string.label_unknown));
                     set.setColors(nextColor(i++));
                     set.setValueTextColor(labelTextColor);

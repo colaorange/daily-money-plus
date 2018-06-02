@@ -40,9 +40,11 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
     public static final String ARG_FROM_BEGINNING = "fromBeginning";
+    public static final String ARG_ACCOUNT = "account";
 
     protected PeriodMode periodMode;
     protected AccountType accountType;
+    protected Account account;
     protected Date baseDate;
     boolean fromBeginning;
 
@@ -64,8 +66,15 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
         }
 
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
-        if (accountType == null) {
-            accountType = AccountType.EXPENSE;
+
+        account = (Account) args.getSerializable(ARG_ACCOUNT);
+
+        if (account == null && accountType == null) {
+            throw new IllegalStateException("must have account or account type arg");
+        }
+
+        if (account != null) {
+            accountType = AccountType.find(account.getType());
         }
 
         baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
@@ -154,6 +163,13 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
                 Collections.sort(list, new Comparator<Balance>() {
                     @Override
                     public int compare(Balance o1, Balance o2) {
+                        if(account!=null){
+                            if(account.equals(o1.getTarget())){
+                                return -1;
+                            }else if(account.equals(o2.getTarget())){
+                                return 1;
+                            }
+                        }
                         return Double.compare(o2.getMoney(), o1.getMoney());
                     }
                 });

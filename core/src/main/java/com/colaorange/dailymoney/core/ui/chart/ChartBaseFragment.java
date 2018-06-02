@@ -71,6 +71,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         initArgs();
         initMembers();
         reloadChart();
+        trackEvent(Contexts.TE.CHART+""+getClass().getSimpleName());
     }
 
     @CallSuper

@@ -17,8 +17,8 @@
         android:icon="?ic_series_chart"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/menu_yearly_cumulative_linechart"
-        android:title="@string/act_balance_yearly_cumulative_linechart"
+        android:id="@+id/menu_yearly_linechart_cumulative"
+        android:title="@string/act_balance_yearly_linechart_cumulative"
         android:icon="?ic_multiline_chart"
         app:showAsAction="ifRoom"/>
 

@@ -379,6 +379,8 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     private void doEditTitle() {
         I18N i18n = i18n();
 
+        trackEvent(Contexts.TE.CHART+"editTitle");
+
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {
             GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, desktop.getTitle()));
@@ -408,6 +410,8 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
 
     private void doAddCard() {
         final I18N i18n = i18n();
+
+        trackEvent(Contexts.TE.CHART+"add");
 
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {

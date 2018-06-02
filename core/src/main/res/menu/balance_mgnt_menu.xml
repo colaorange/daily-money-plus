@@ -34,7 +34,7 @@
         android:title="@string/act_hierarchical_balance"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_yearly_runchart"
-        android:title="@string/act_balance_yearly_runchart"
+        android:id="@+id/menu_yearly_from_beginning_aggregate_line_chart"
+        android:title="@string/act_balance_yearly_from_beginning_aggregate_line_chart"
         app:showAsAction="never" />
 </menu>
