@@ -292,7 +292,7 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
         } else {
             /*
             I don't know the reason yet, so just clear all when reloading
-              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment NavPagesFragment{2d9894f #40 id=0x1 desktopList:0:0}
+              Caused by: java.lang.IllegalArgumentException: No view found for id 0x1 (unknown) for fragment CardNavPagesFragment{2d9894f #40 id=0x1 desktopList:0:0}
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1422)
         at android.support.v4.app.FragmentManagerImpl.moveFragmentToExpectedState(FragmentManager.java:1759)
         at android.support.v4.app.FragmentManagerImpl.moveToState(FragmentManager.java:1827)
@@ -379,6 +379,8 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     private void doEditTitle() {
         I18N i18n = i18n();
 
+        trackEvent(Contexts.TE.CHART+"editTitle");
+
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {
             GUIs.shortToast(this, i18n.string(R.string.msg_not_available_for, desktop.getTitle()));
@@ -408,6 +410,8 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
 
     private void doAddCard() {
         final I18N i18n = i18n();
+
+        trackEvent(Contexts.TE.CHART+"add");
 
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {

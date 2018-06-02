@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class NavPagesFragment extends CardBaseFragment implements EventQueue.EventListener {
+public class CardNavPagesFragment extends CardBaseFragment implements EventQueue.EventListener {
 
     private List<NavPage> recyclerDataList;
     private RecyclerView vRecycler;

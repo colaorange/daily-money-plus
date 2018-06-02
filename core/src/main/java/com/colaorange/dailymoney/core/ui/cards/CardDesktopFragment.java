@@ -437,6 +437,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
 
     private void doDelete(final int pos) {
         I18N i18n = i18n();
+        trackEvent(Contexts.TE.CHART+"delete");
         GUIs.confirm(getContextsActivity(), i18n.string(R.string.qmsg_common_confirm, i18n.string(R.string.act_delete)),
                 new GUIs.OnFinishListener() {
                     @Override
@@ -465,6 +466,8 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
     private void doMove(int pos, int posTo) {
         Preference preference = Contexts.instance().getPreference();
 
+        trackEvent(Contexts.TE.CHART+"move");
+
         CardDesktop desktop = preference.getDesktop(desktopIndex);
         if (pos >= desktop.size()) {
             return;
@@ -481,7 +484,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
 
     private void doEditTitle(final int pos) {
         I18N i18n = i18n();
-
+        trackEvent(Contexts.TE.CHART+"editCardTitle");
         CardDesktop desktop = preference().getDesktop(desktopIndex);
         Card card = desktop.get(pos);
 
@@ -510,7 +513,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
     private void doEditArg(final int pos) {
         CardDesktop desktop = preference().getDesktop(desktopIndex);
         Card card = desktop.get(pos);
-
+        trackEvent(Contexts.TE.CHART+"editCardArg");
         cardFacade.doEditArgs(desktopIndex, pos, card, new CardFacade.OnOKListener() {
             @Override
             public void onOK(Card card) {

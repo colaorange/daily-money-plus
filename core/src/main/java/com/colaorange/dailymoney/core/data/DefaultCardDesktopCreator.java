@@ -38,7 +38,7 @@ public class DefaultCardDesktopCreator {
                 NavPage.DAILY_LIST,
                 NavPage.MONTHLY_LIST,
                 NavPage.MONTHLY_BALANCE,
-                NavPage.CUMULATIVE_BALANCE));
+                NavPage.FROM_BEGINNING_BALANCE));
         desktop0.add(card);
 
         card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
@@ -114,7 +114,7 @@ public class DefaultCardDesktopCreator {
         card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
                 NavPage.MONTHLY_BALANCE,
                 NavPage.YEARLY_BALANCE,
-                NavPage.CUMULATIVE_BALANCE));
+                NavPage.FROM_BEGINNING_BALANCE));
         desktop1.add(card);
 
 

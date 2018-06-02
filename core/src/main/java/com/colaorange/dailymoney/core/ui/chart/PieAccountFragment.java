@@ -34,19 +34,23 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
+public class PieAccountFragment extends ChartBaseFragment<PieChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_BASE_DATE = "baseDate";
+    public static final String ARG_FROM_BEGINNING = "fromBeginning";
+    public static final String ARG_ACCOUNT = "account";
 
-    PeriodMode periodMode;
-    AccountType accountType;
-    Date baseDate;
+    protected PeriodMode periodMode;
+    protected AccountType accountType;
+    protected Account account;
+    protected Date baseDate;
+    boolean fromBeginning;
 
     protected int accountTypeTextColor;
 
-    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY);
+    private static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.WEEKLY, PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
     @Override
     protected void initArgs() {
@@ -57,9 +61,20 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
             periodMode = PeriodMode.WEEKLY;
         }
 
+        if (!supportPeriod.contains(periodMode)) {
+            throw new IllegalStateException("unsupported period " + periodMode);
+        }
+
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
-        if (accountType == null) {
-            accountType = AccountType.EXPENSE;
+
+        account = (Account) args.getSerializable(ARG_ACCOUNT);
+
+        if (account == null && accountType == null) {
+            throw new IllegalStateException("must have account or account type arg");
+        }
+
+        if (account != null) {
+            accountType = AccountType.find(account.getType());
         }
 
         baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
@@ -67,6 +82,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
             baseDate = new Date();
         }
 
+        fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
     }
 
     @Override
@@ -109,6 +125,10 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 Date end;
 
                 switch (periodMode) {
+                    case YEARLY:
+                        start = calHelper.yearStartDate(baseDate);
+                        end = calHelper.yearEndDate(baseDate);
+                        break;
                     case MONTHLY:
                         start = calHelper.monthStartDate(baseDate);
                         end = calHelper.monthEndDate(baseDate);
@@ -119,7 +139,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                         end = calHelper.weekEndDate(baseDate);
                         break;
                 }
-                varBalance.value = BalanceHelper.calculateBalance(accountType, start, end).getMoney();
+                varBalance.value = BalanceHelper.calculateBalance(accountType, fromBeginning ? null : start, end).getMoney();
 
 
                 List<Balance> list = new ArrayList<>();
@@ -127,7 +147,7 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 IDataProvider idp = Contexts.instance().getDataProvider();
 
                 for (Account acc : idp.listAccount(accountType)) {
-                    Balance balance = BalanceHelper.calculateBalance(acc, start, end);
+                    Balance balance = BalanceHelper.calculateBalance(acc, fromBeginning ? null : start, end);
                     list.add(balance);
                 }
 
@@ -143,6 +163,13 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 Collections.sort(list, new Comparator<Balance>() {
                     @Override
                     public int compare(Balance o1, Balance o2) {
+                        if(account!=null){
+                            if(account.equals(o1.getTarget())){
+                                return -1;
+                            }else if(account.equals(o2.getTarget())){
+                                return 1;
+                            }
+                        }
                         return Double.compare(o2.getMoney(), o1.getMoney());
                     }
                 });
@@ -159,12 +186,15 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 PieDataSet set;
 
                 switch (periodMode) {
+                    case YEARLY:
+                        description = i18n.string(R.string.label_yearly_value, contexts().toFormattedMoneyString(varBalance.value));
+                        break;
                     case MONTHLY:
-                        description = i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        description = i18n.string(R.string.label_monthly_value, contexts().toFormattedMoneyString(varBalance.value));
                         break;
                     case WEEKLY:
                     default:
-                        description = i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varBalance.value));
+                        description = i18n.string(R.string.label_weekly_value, contexts().toFormattedMoneyString(varBalance.value));
                         break;
                 }
                 set = new PieDataSet(entries, "");
@@ -175,9 +205,6 @@ public class ChartPieAccountFragment extends ChartBaseFragment<PieChart> {
                 set.setValueTextSize(labelTextSize - 4);
                 set.setValueTextColor(labelTextColor);
                 set.setSelectionShift(10f);//size shift after highlight
-//                set.setValueLinePart1OffsetPercentage(90.f);//begin position of value line
-//                set.setValueLinePart1Length(1f);//length of value line
-//                set.setValueLinePart2Length(2f);//length of value line
                 set.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
                 set.setValueLineColor(labelTextColor);
 

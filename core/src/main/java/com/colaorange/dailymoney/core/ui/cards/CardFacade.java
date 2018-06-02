@@ -13,9 +13,9 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
-import com.colaorange.dailymoney.core.ui.chart.ChartLineAccountFragment;
-import com.colaorange.dailymoney.core.ui.chart.ChartLineAccountTypeFragment;
-import com.colaorange.dailymoney.core.ui.chart.ChartPieAccountFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
+import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
 import com.colaorange.dailymoney.core.util.Dialogs;
@@ -72,17 +72,17 @@ public class CardFacade {
     }
 
     private Fragment newLineMonthlyExpense(int desktopIndex, int pos, Card card) {
-        LineAccountFragment f = new LineAccountFragment();
+        CardLineAccountFragment f = new CardLineAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ChartLineAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
-        b.putSerializable(ChartLineAccountFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(ChartLineAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(LineAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(LineAccountFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(LineAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         try {
             ChartBaseFragment.CalculationMode calMode;
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
-            b.putSerializable(ChartLineAccountFragment.ARG_CALCULATION_MODE, calMode);
+            b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -90,17 +90,17 @@ public class CardFacade {
     }
 
     private Fragment newLineMonthlyExpenseAggregate(int desktopIndex, int pos, Card card) {
-        LineAccountTypeFragment f = new LineAccountTypeFragment();
+        CardLineAccountTypeFragment f = new CardLineAccountTypeFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ChartLineAccountTypeFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
-        b.putSerializable(ChartLineAccountTypeFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(ChartLineAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(LineAccountTypeFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(LineAccountTypeFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(LineAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         try {
             ChartBaseFragment.CalculationMode calMode;
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
-            b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, calMode);
+            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(ChartLineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -108,21 +108,21 @@ public class CardFacade {
     }
 
     private Fragment newPieMonthlyExpense(int desktopIndex, int pos, Card card) {
-        PieAccountFragment f = new PieAccountFragment();
+        CardPieAccountFragment f = new CardPieAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ChartPieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
-        b.putSerializable(ChartPieAccountFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(ChartPieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(PieAccountFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(PieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newPieWeeklyExpense(int desktopIndex, int pos, Card card) {
-        PieAccountFragment f = new PieAccountFragment();
+        CardPieAccountFragment f = new CardPieAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(ChartPieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.WEEKLY);
-        b.putSerializable(ChartPieAccountFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(ChartPieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.WEEKLY);
+        b.putSerializable(PieAccountFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(PieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
         return f;
     }
@@ -130,27 +130,27 @@ public class CardFacade {
 
     private Bundle newBaseBundle(int desktopIndex, int pos) {
         Bundle b = new Bundle();
-        b.putSerializable(InfoExpenseFragment.ARG_DESKTOP_INDEX, desktopIndex);
-        b.putSerializable(InfoExpenseFragment.ARG_INDEX, pos);
+        b.putSerializable(CardInfoExpenseFragment.ARG_DESKTOP_INDEX, desktopIndex);
+        b.putSerializable(CardInfoExpenseFragment.ARG_INDEX, pos);
         return b;
     }
 
     private Fragment newInfoExpense(int desktopIndex, int pos, Card card) {
-        InfoExpenseFragment f = new InfoExpenseFragment();
+        CardInfoExpenseFragment f = new CardInfoExpenseFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newUnknow(int desktopIndex, int pos, Card card) {
-        UnknowFragment f = new UnknowFragment();
+        CardUnknowFragment f = new CardUnknowFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;
     }
 
     private Fragment newNavPages(int desktopIndex, int pos, Card card) {
-        NavPagesFragment f = new NavPagesFragment();
+        CardNavPagesFragment f = new CardNavPagesFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
         f.setArguments(b);
         return f;

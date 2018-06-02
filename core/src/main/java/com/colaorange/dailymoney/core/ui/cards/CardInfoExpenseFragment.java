@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author dennis
  */
-public class InfoExpenseFragment extends CardBaseFragment implements EventQueue.EventListener {
+public class CardInfoExpenseFragment extends CardBaseFragment implements EventQueue.EventListener {
 
     private TextView vInfoWeeklyExpense;
     private TextView vInfoMonthlyExpense;

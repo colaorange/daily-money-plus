@@ -35,9 +35,6 @@
             android:name=".core.ui.PasswordProtectionActivity"
             android:label="@string/label_pwd_protection" />
         <activity
-            android:name=".core.ui.legacy.DesktopMgntActivity"
-            android:label="@string/app_name" />
-        <activity
             android:name=".core.ui.cards.CardDesktopActivity"
             android:label="@string/app_name" />
         <activity
@@ -71,6 +68,14 @@
         <activity
             android:name=".core.ui.legacy.BalanceMgntActivity"
             android:label="@string/label_balance" />
+        <activity
+            android:name=".core.ui.chart.PieAccountActivity"/>
+        <activity
+            android:name=".core.ui.chart.LineAccountActivity"/>
+        <activity
+            android:name=".core.ui.chart.LineFromBeginningAggregateActivity"/>
+        <activity
+            android:name=".core.ui.chart.LineFromBeginningAccountActivity"/>
         <activity
             android:name="org.achartengine.GraphicalActivity"
             android:theme="@style/Theme.AppCompat" />

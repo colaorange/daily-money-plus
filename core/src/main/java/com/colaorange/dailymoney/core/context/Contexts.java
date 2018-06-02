@@ -550,5 +550,6 @@ public class Contexts {
         String CHART = "chart-";
         String WEBVIEW = "webv-";
 
+        String CARD = "card-";
     }
 }

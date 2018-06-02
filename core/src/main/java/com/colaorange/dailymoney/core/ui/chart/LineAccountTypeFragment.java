@@ -27,18 +27,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * aggregate account chart that compare current and preious period of an account type
  *
  * @author dennis
  */
-public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
+public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
@@ -126,8 +128,6 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         leftAxis.setTextSize(labelTextSize - 3);
 
         rightAxis.setEnabled(false);
-//        rightAxis.setTextColor(accountTypeTextColor);
-//        rightAxis.setTextSize(labelTextSize - 3);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
             final Var<Boolean> noPrimary = new Var<>(false);
-            final Map<Object, List<Entry>> entrySeries = new LinkedHashMap<>();
+            final Map<String, List<Entry>> entrySeries = new LinkedHashMap<>();
 
             @Override
             public void run() {
@@ -168,8 +168,8 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 vChart.getXAxis().setAxisMaximum(end.getTime());
 
 
-                List<Entry> primaryEntries = buildSeries(calHelper, baseDate, 0);
-                List<Entry> previousEntries = buildSeries(calHelper, previousDate, timeshift);
+                TreeMap<Long, Entry> primaryEntries = buildSeries(calHelper, baseDate, 0);
+                TreeMap<Long, Entry> previousEntries = buildSeries(calHelper, previousDate, timeshift);
 
                 /**
                  * java.lang.IndexOutOfBoundsException
@@ -181,12 +181,12 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                  at android.view.View.draw(View.java:15114)
                  */
                 if (primaryEntries.size() > 0) {
-                    entrySeries.put(accountType.getDisplay(i18n), primaryEntries);
+                    entrySeries.put(accountType.getDisplay(i18n), new LinkedList<Entry>(primaryEntries.values()));
                 } else {
                     noPrimary.value = true;
                 }
                 if (previousEntries.size() > 0) {
-                    entrySeries.put(i18n.string(R.string.label_previous_period), previousEntries);
+                    entrySeries.put(i18n.string(R.string.label_previous_period), new LinkedList<Entry>(previousEntries.values()));
                 }
 
             }
@@ -203,14 +203,8 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                 int i = 0;
                 for (Object key : entrySeries.keySet()) {
                     List<Entry> list = entrySeries.get(key);
-                    String label;
-                    if (key instanceof Account) {
-                        label = ((Account) key).getName();
-                    } else if (key instanceof AccountType) {
-                        label = ((AccountType) key).getDisplay(i18n);
-                    } else {
-                        label = key.toString();
-                    }
+                    String label = key.toString();
+
                     LineDataSet set = new LineDataSet(list, label);
 
 
@@ -258,7 +252,7 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         });
     }
 
-    private LinkedList<Entry> buildSeries(CalendarHelper calHelper, Date shiftData, long shiftBackTime) {
+    private TreeMap<Long, Entry> buildSeries(CalendarHelper calHelper, Date shiftData, long shiftBackTime) {
         Date start;
         Date end;
         if (periodMode == PeriodMode.MONTHLY) {
@@ -272,47 +266,68 @@ public class ChartLineAccountTypeFragment extends ChartBaseFragment<LineChart> {
         IDataProvider idp = Contexts.instance().getDataProvider();
         Map<String, Account> accountMap = null;
 
-        LinkedList<Entry> entries = new LinkedList<Entry>();
+        TreeMap<Long, Entry> entries = new TreeMap<>();
 
-        List<Record> records = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
+        List<Record> recordsFrom = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_FROM, start, end, -1));
+        List<Record> recordsTo = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
 
-        //sort by time, so we don't need to care seq in following processing
-        Collections.sort(records, new Comparator<Record>() {
-            @Override
-            public int compare(Record o1, Record o2) {
-                return o1.getDate().compareTo(o2.getDate());
-            }
-        });
+        boolean positive;
+        switch (accountType) {
+            case INCOME:
+            case LIABILITY:
+                positive = false;
+                break;
+            case UNKONW:
+            case EXPENSE:
+            case ASSET:
+            case OTHER:
+            default:
+                positive = true;
+                break;
+        }
+
+        int i = 0;
+        for (List<Record> records : new List[]{recordsFrom, recordsTo}) {
+            boolean from = i == 0;
+            for (Record r : records) {
+
+                float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
+                Date x = r.getDate();
+
+                //group by day or month
+                if (periodMode == PeriodMode.MONTHLY) {
+                    x = calHelper.toDayStart(x);
+                } else {
+                    x = calHelper.monthStartDate(x);
+                }
+
+                x.setTime(x.getTime() + shiftBackTime);
 
 
-        for (Record r : records) {
-
-            float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
-            Date x = r.getDate();
-
-            //group by day or month
-            if (periodMode == PeriodMode.MONTHLY) {
-                x = calHelper.toDayStart(x);
-            } else {
-                x = calHelper.monthStartDate(x);
-            }
-
-            x.setTime(x.getTime() + shiftBackTime);
-
-            if (entries.size() == 0 || entries.get(entries.size() - 1).getX() != (float) x.getTime()) {
-                entries.add(new Entry(x.getTime(), y));
-            } else {
-                Entry e = entries.get(entries.size() - 1);
-                e.setY(e.getY() + y);
+                if (!entries.containsKey(x.getTime())) {
+                    entries.put(x.getTime(), new Entry(x.getTime(), y));
+                } else {
+                    Entry e = entries.get(x.getTime());
+                    e.setY(e.getY() + y);
+                }
             }
         }
 
-        //remove empty entries account
         if (calculationMode == CalculationMode.CUMULATIVE) {
-            int s = entries.size();
-            for (int i = 1; i < s; i++) {
-                Entry entry = entries.get(i);
-                entry.setY(entry.getY() + entries.get(i - 1).getY());
+            List<Entry> l = new ArrayList<>(entries.values());
+            int s = l.size();
+            for (int j = 1; j < s; j++) {
+                Entry entry = l.get(j);
+                entry.setY(entry.getY() + l.get(j - 1).getY());
+            }
+        }
+
+        if (!positive) {
+            List<Entry> l = new ArrayList<Entry>(entries.values());
+            int s = l.size();
+            for (int j = 0; j < s; j++) {
+                Entry entry = l.get(j);
+                entry.setY(entry.getY() * -1);
             }
         }
 
