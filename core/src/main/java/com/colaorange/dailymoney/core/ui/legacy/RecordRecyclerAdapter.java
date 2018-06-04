@@ -31,6 +31,7 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
     static final private int VT_RECORD = 0;
     static final private int VT_HEADER = 1;
+    static final private int VT_FOOTER = 2;
 
     private int listLayout;
     private Map<String, Account> accountMap;
@@ -74,7 +75,8 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
     @Override
     public int getItemViewType(int position) {
-        return get(position).isRecord() ? VT_RECORD : VT_HEADER;
+        RecordFolk folk = get(position);
+        return folk.isRecord() ? VT_RECORD : folk.isHeader() ? VT_HEADER : VT_FOOTER;
     }
 
     @NonNull
@@ -97,12 +99,15 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
                     itemLayout = R.layout.record_list_item1;
             }
 
-            View viewItem = inflater.inflate(R.layout.record_mgnt_item, parent, false);
+            View viewItem = inflater.inflate(R.layout.record_list_item, parent, false);
             inflater.inflate(itemLayout, (ViewGroup) viewItem.findViewById(R.id.layout_select), true);
             return new RecordViewHolder(this, viewItem);
         } else if (viewType == VT_HEADER) {
-            View viewItem = inflater.inflate(R.layout.record_mgnt_item_header, parent, false);
+            View viewItem = inflater.inflate(R.layout.record_list_item_header, parent, false);
             return new RecordHeaderViewHolder(this, viewItem);
+        } else if (viewType == VT_FOOTER) {
+            View viewItem = inflater.inflate(R.layout.record_list_item_footer, parent, false);
+            return new RecordFooterViewHolder(this, viewItem);
         }
         throw new IllegalStateException("unknow view type " + viewType);
     }
@@ -208,9 +213,9 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
             RecordHeader header = folk.getHeader();
 
-            TextView vYear = itemView.findViewById(R.id.record_year_text);
-            TextView vMonth = itemView.findViewById(R.id.record_month_text);
-            TextView vDate = itemView.findViewById(R.id.record_date_text);
+            TextView vYear = itemView.findViewById(R.id.record_header_year);
+            TextView vMonth = itemView.findViewById(R.id.record_header_month);
+            TextView vDate = itemView.findViewById(R.id.record_header_day);
 
 
             if (header.showYear) {
@@ -238,6 +243,19 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
         }
     }
 
+    private class RecordFooterViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<RecordRecyclerAdapter, RecordFolk> {
+
+        private RecordFooterViewHolder(RecordRecyclerAdapter adapter, View itemView) {
+            super(adapter, itemView);
+        }
+
+        @Override
+        public void bindViewValue(RecordFolk folk) {
+            super.bindViewValue(folk);
+            //nothing
+        }
+    }
+
     public static class RecordHeader {
         final Calendar calendar;
         final boolean showYear;
@@ -249,6 +267,11 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             this.showYear = showYear;
             this.showMonth = showMonth;
             this.showDay = showDay;
+        }
+    }
+
+    public static class RecordFooter {
+        public RecordFooter() {
         }
     }
 
@@ -268,6 +291,11 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             return obj instanceof RecordHeader;
         }
 
+        public boolean isFooter() {
+            return obj instanceof RecordFooter;
+        }
+
+
         public Record getRecord() {
             return (Record) obj;
         }
@@ -276,6 +304,9 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             return (RecordHeader) obj;
         }
 
+        public RecordFooter getFooter() {
+            return (RecordFooter) obj;
+        }
 
     }
 

@@ -103,7 +103,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
         vRecycler = rootView.findViewById(R.id.record_recycler);
-        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+//        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
@@ -155,13 +155,13 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);
 
-            recyclerDataList.addAll(precessHeader(data));
+            recyclerDataList.addAll(precessHeaderFooter(data));
         }
         recyclerAdapter.notifyDataSetChanged();
 
     }
 
-    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessHeader(List<Record> data) {
+    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessHeaderFooter(List<Record> data) {
         List<RecordRecyclerAdapter.RecordFolk> folks = new LinkedList<>();
 
 
@@ -180,15 +180,21 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             //add header
             boolean showYear = mode == MODE_ALL && diffYear;
             boolean showMonth = mode > MODE_MONTH && diffMonth;
-            boolean shoDay = mode > MODE_DAY && diffDay;
-            if (showYear || showMonth || shoDay) {
-                lastHeader = header = new RecordRecyclerAdapter.RecordHeader(cal, showYear, showMonth, shoDay);
+            boolean showDay = mode > MODE_DAY && diffDay;
+            if (showYear || showMonth || showDay) {
+                header = new RecordRecyclerAdapter.RecordHeader(cal, showYear, showMonth, showDay);
             }
             if (header != null) {
+                if (lastHeader != null) {
+                    folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
+                }
                 folks.add(new RecordRecyclerAdapter.RecordFolk(header));
+                lastHeader = header;
             }
-
             folks.add(new RecordRecyclerAdapter.RecordFolk(r));
+        }
+        if (lastHeader != null) {
+            folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
         }
 
         return folks;
