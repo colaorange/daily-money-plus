@@ -76,9 +76,6 @@
             android:name=".core.ui.chart.LineFromBeginningAggregateActivity"/>
         <activity
             android:name=".core.ui.chart.LineFromBeginningAccountActivity"/>
-        <activity
-            android:name="org.achartengine.GraphicalActivity"
-            android:theme="@style/Theme.AppCompat" />
 
         <receiver
             android:name=".core.bg.StartupReceiver"
