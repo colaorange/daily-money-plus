@@ -129,7 +129,6 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
             itemView.setOnClickListener(this);
             itemView.setOnTouchListener(this);
 //            itemView.setBackgroundResource(adaptor.activity.resolveThemeAttrResId(android.R.attr.selectableItemBackground));
-            itemView.setBackgroundResource(adaptor.activity.getSelectableBackgroundId());
 
             View select = itemView.findViewById(R.id.layout_select);
             if(select!=null) {
@@ -140,6 +139,12 @@ public abstract class SelectableRecyclerViewAdaptor<T, VH extends SelectableRecy
         @Override
         public void bindViewValue(T item) {
             super.bindViewValue(item);
+            if (adaptor.isSelectable(item)) {
+                itemView.setBackgroundResource(adaptor.activity.getSelectableBackgroundId());
+            }else{
+                itemView.setBackgroundDrawable(null);
+            }
+
             View select = itemView.findViewById(R.id.layout_select);
             if(select!=null) {
                 select.setSelected(adaptor.isSelected(item));
