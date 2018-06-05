@@ -47,8 +47,9 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private DateFormat monthFormat;
     private DateFormat nonDigitalMonthFormat;
     private DateFormat weekDayFormat;
-    CalendarHelper calHelper;
-    Date today;
+    private CalendarHelper calHelper;
+    private Date today;
+    private boolean showRecordDate;
 
     public RecordRecyclerAdapter(ContextsActivity activity, List<RecordFolk> data) {
         super(activity, data);
@@ -72,6 +73,10 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
     public void setAccountMap(Map<String, Account> accountMap) {
         this.accountMap = accountMap;
+    }
+
+    public void setShowRecordDate(boolean showRecordDate) {
+        this.showRecordDate = showRecordDate;
     }
 
     @Override
@@ -195,7 +200,11 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             String from = fromAcc == null ? record.getFrom() : (i18n.string(R.string.label_reclist_from, fromAcc.getName(), AccountType.getDisplay(i18n, fromAcc.getType())));
             String to = toAcc == null ? record.getTo() : (i18n.string(R.string.label_reclist_to, toAcc.getName(), AccountType.getDisplay(i18n, toAcc.getType())));
             String money = Contexts.instance().toFormattedMoneyString(record.getMoney());
-            String date = dateFormat.format(record.getDate()) + "(" + weekDayFormat.format(record.getDate()) + ")";
+            String date = "";
+
+            if(showRecordDate) {
+                date = dateFormat.format(record.getDate());
+            }
 
             vfrom.setText(from);
             vto.setText(to);

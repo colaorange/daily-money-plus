@@ -40,8 +40,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     public static final int MODE_DAY = 0;
     public static final int MODE_MONTH = 1;
-    public static final int MODE_YEAR = 2;
-    public static final int MODE_WEEK = 3;
+    public static final int MODE_WEEK = 2;//week could cross month, so has higher value
+    public static final int MODE_YEAR = 3;
     public static final int MODE_ALL = 4;
 
     public static final String ARG_POS = "pos";
@@ -103,6 +103,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
+        recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR);
         vRecycler = rootView.findViewById(R.id.record_recycler);
 //        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
@@ -173,7 +174,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         for (Record r : data) {
             header = null;
 
-            if(!skipHeadFooter) {
+            if (!skipHeadFooter) {
                 Calendar cal = calendarHelper.calendar(r.getDate());
 
                 boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
