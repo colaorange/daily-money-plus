@@ -83,11 +83,6 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         }
         dirty = false;
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
-
-        //clear backup error mark, since preference of backup might change.
-        Intent intent = new Intent();
-        intent.setAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
-        getActivity().sendBroadcast(intent);
     }
 
 

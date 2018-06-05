@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Backup & Restore util
@@ -91,11 +92,21 @@ public class DataBackupRestorer {
         }
     }
 
+    private static void checkCanceling(AtomicBoolean canceling){
+        if(canceling.get()){
+            throw new RuntimeException("task is canceling, break it");
+        }
+    }
+
     public static Result backup() {
+        return backup(new AtomicBoolean(false));
+    }
+
+    public static Result backup(AtomicBoolean canceling) {
         Result r = new Result();
         Contexts ctxs = contexts();
         if (!ctxs.hasWorkingFolderPermission()) {
-            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access);
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, ctxs.getWorkingFolder());
             return r;
         }
         long now = System.currentTimeMillis();
@@ -114,7 +125,7 @@ public class DataBackupRestorer {
                     f.delete();
                 }
             }
-
+            checkCanceling(canceling);
 
             File dbFolder = ctxs.getAppDbFolder();
             File prefFolder = ctxs.getAppPrefFolder();
@@ -132,6 +143,8 @@ public class DataBackupRestorer {
             File[] dbfs = dbFolder.listFiles(new DBFileFilter());
             if (dbfs != null) {//just in case
                 for (File dbf : dbfs) {
+                    checkCanceling(canceling);
+
                     File tf;
                     Files.copyFileTo(dbf, tf = new File(lastFolder, dbf.getName()));
                     Logger.d("backup db " + dbf + " to " + tf);
@@ -147,6 +160,7 @@ public class DataBackupRestorer {
             File[] prefs = prefFolder.listFiles(new PrefFileFilter());
             if (prefs != null) {//just in case
                 for (File pref : prefs) {
+                    checkCanceling(canceling);
                     File tf;
                     Files.copyFileTo(pref, tf = new File(lastFolder, pref.getName()));
                     Logger.d("backup pref " + pref + " to " + tf);

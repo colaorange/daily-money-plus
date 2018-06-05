@@ -16,9 +16,7 @@ import java.util.concurrent.Executors;
  */
 public class TimeTickReceiver extends BroadcastReceiver {
 
-    public static final String ACTION_CLEAR_BACKUP_ERROR = "com.colaorange.dailymoney.broadcast.CLEAR_BACKUP_ERROR";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -26,9 +24,7 @@ public class TimeTickReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Logger.d("time ticker onReceive {}", action);
 
-        if (ACTION_CLEAR_BACKUP_ERROR.equals(action)) {
-            AutoBackupRunnable.singleton().clearErrorDayHour();
-        } else if (Intent.ACTION_TIME_TICK.equals(action)) {
+        if (Intent.ACTION_TIME_TICK.equals(action)) {
             executorService.execute(AutoBackupRunnable.singleton());
         }
 

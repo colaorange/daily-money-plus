@@ -97,6 +97,11 @@
             android:enabled="true"
             android:exported="false" />
 
+        <service
+            android:name=".core.bg.AutoBackupJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:enabled="true"
+            android:exported="false"/>
         <!-- ga -->
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"

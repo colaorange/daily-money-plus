@@ -1,10 +1,12 @@
 package com.colaorange.dailymoney.core.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.bg.StartupJobSchedulerFacade;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -14,6 +16,7 @@ import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
 import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
 import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.util.Logger;
 
 /**
  * @author Dennis
@@ -54,10 +57,16 @@ public class StartupActivity extends ContextsActivity {
             firstTime = true;
         }
 
-        //notify app is startup
-        Intent intent = new Intent();
-        intent.setAction(StartupReceiver.ACTION_STARTUP);
-        sendBroadcast(intent);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Logger.d(">> sending startup broadcast from activity");
+            Intent intent = new Intent();
+            intent.setAction(StartupReceiver.ACTION_STARTUP);
+            sendBroadcast(intent);
+        }else{
+            //android 5+
+            Logger.d(">> trying startup job scheduler from activity ");
+            StartupJobSchedulerFacade.startup(this);
+        }
 
         trackEvent(TE.STARTUP);
         if (!firstTime) {

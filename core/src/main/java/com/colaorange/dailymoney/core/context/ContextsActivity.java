@@ -576,7 +576,7 @@ public class ContextsActivity extends AppCompatActivity {
                     return q;
                 }
                 m.put(queueName, q = new EventQueueImpl(queueName));
-                Logger.d("Event queue '{}:{}' created", getTitle(), queueName);
+                Logger.d("Event queue '{}:{}' created", getClass().getSimpleName(), queueName);
             }
         }
         return q;

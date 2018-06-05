@@ -452,16 +452,4 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         idp.reset();
         Logger.d("reset working book");
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-
-        //simply clear backup error
-        Intent intent = new Intent();
-        intent.setAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
-        sendBroadcast(intent);
-
-    }
 }
