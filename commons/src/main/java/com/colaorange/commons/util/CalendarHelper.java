@@ -185,15 +185,17 @@ public class CalendarHelper {
         return cal.get(Calendar.WEEK_OF_YEAR);
     }
 
-    public int dayOfMonth(Date d){
+    public int dayOfMonth(Date d) {
         Calendar cal = calendar(d);
         return cal.get(Calendar.DAY_OF_MONTH);
     }
-    public int dayOfWeek(Date d){
+
+    public int dayOfWeek(Date d) {
         Calendar cal = calendar(d);
         return cal.get(Calendar.DAY_OF_WEEK);
     }
-    public int dayOfYear(Date d){
+
+    public int dayOfYear(Date d) {
         Calendar cal = calendar(d);
         return cal.get(Calendar.DAY_OF_YEAR);
     }
@@ -345,10 +347,29 @@ public class CalendarHelper {
     }
 
 
-    public boolean isSameDay(Date d1, Date d2) {
-        Calendar cal1 = calendar(d1);
+    public boolean isSameDay(Date base, Date d2) {
+        Calendar cal1 = calendar(base);
         Calendar cal2 = calendar(d2);
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public boolean isYesterday(Date base, Date date2) {
+        Calendar cal1 = calendar(base);
+        Calendar cal2 = calendar(date2);
+        int y1 = cal1.get(Calendar.YEAR);
+        int y2 = cal2.get(Calendar.YEAR);
+        int d1 = cal1.get(Calendar.DAY_OF_YEAR);
+        int d2 = cal2.get(Calendar.DAY_OF_YEAR);
+        return (y1 == y2 && d1 == d2 + 1) || (y1 == y2 + 1 && d1 == 1 && d2 == 365);
+    }
+    public boolean isTomorrow(Date base, Date date2) {
+        Calendar cal1 = calendar(base);
+        Calendar cal2 = calendar(date2);
+        int y1 = cal1.get(Calendar.YEAR);
+        int y2 = cal2.get(Calendar.YEAR);
+        int d1 = cal1.get(Calendar.DAY_OF_YEAR);
+        int d2 = cal2.get(Calendar.DAY_OF_YEAR);
+        return (y1 == y2 && d1 == d2 - 1) || (y1 == y2 - 1 && d1 == 365 && d2 == 1);
     }
 
     public boolean isPastDay(Date base, Date d2) {

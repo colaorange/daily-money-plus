@@ -34,11 +34,11 @@ import java.util.Map;
  */
 public class RecordMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final int MODE_DAY = 0;
-    public static final int MODE_WEEK = 1;
-    public static final int MODE_MONTH = 2;
-    public static final int MODE_YEAR = 3;
-    public static final int MODE_ALL = 4;
+    public static final int MODE_DAY = RecordListFragment.MODE_DAY;
+    public static final int MODE_WEEK = RecordListFragment.MODE_WEEK;
+    public static final int MODE_MONTH = RecordListFragment.MODE_MONTH;
+    public static final int MODE_YEAR = RecordListFragment.MODE_YEAR;
+    public static final int MODE_ALL = RecordListFragment.MODE_ALL;
 
 
     public static final String ARG_TARGET_DATE = "targetDate";
@@ -139,6 +139,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
             f = new RecordListFragment();
             Bundle b = new Bundle();
             b.putInt(RecordListFragment.ARG_POS, pos);
+            b.putInt(RecordListFragment.ARG_MODE, mode);
             f.setArguments(b);
 
             fragmentManager.beginTransaction()

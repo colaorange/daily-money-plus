@@ -42,6 +42,12 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     public static final String ARG_START = "start";
     public static final String ARG_END = "end";
+
+    public static final int MODE_MONTH = RecordMgntFragment.MODE_MONTH;
+    public static final int MODE_YEAR = RecordMgntFragment.MODE_YEAR;
+    public static final int MODE_ALL = RecordMgntFragment.MODE_ALL;
+
+    public static final String ARG_MODE = "mode";
     /**
      * accept AccountType, Account or the Account id path
      */
@@ -62,6 +68,7 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     //there is only one, so set is to 0
     private int pos = 0;
+    private int mode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,8 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
         startDate = (Date) b.get(ARG_START);
         endDate = (Date) b.get(ARG_END);
         condition = b.getSerializable(ARG_CONDITION);
+        mode = b.getInt(ARG_MODE, MODE_MONTH);
+
         String title = b.getString(ARG_CONDITION_INFO);
         if(title!=null) {
             setTitle(title);
@@ -120,6 +129,7 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
             f = new RecordListFragment();
             Bundle b = new Bundle();
             b.putInt(RecordListFragment.ARG_POS, pos);
+            b.putInt(RecordListFragment.ARG_MODE, mode);
             f.setArguments(b);
 
             fragmentManager.beginTransaction()

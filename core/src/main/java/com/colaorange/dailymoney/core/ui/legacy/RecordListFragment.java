@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -24,6 +25,8 @@ import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
 
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,14 +38,23 @@ import java.util.Set;
  */
 public class RecordListFragment extends ContextsFragment implements EventQueue.EventListener {
 
+    public static final int MODE_DAY = 0;
+    public static final int MODE_MONTH = 1;
+    public static final int MODE_YEAR = 2;
+    public static final int MODE_WEEK = 3;
+    public static final int MODE_ALL = 4;
+
     public static final String ARG_POS = "pos";
+
+    public static final String ARG_MODE = "mode";
 
     private View vNoData;
     private TextView vNoDataText;
 
     private int pos;
+    private int mode;
 
-    private List<Record> recyclerDataList;
+    private List<RecordRecyclerAdapter.RecordFolk> recyclerDataList;
     private RecyclerView vRecycler;
     private RecordRecyclerAdapter recyclerAdapter;
 
@@ -52,6 +64,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     Map<AccountType, Integer> accountBgColorMap;
     Map<AccountType, Integer> accountTextColorMap;
     I18N i18n;
+    CalendarHelper calendarHelper;
 
     boolean lightTheme;
 
@@ -76,6 +89,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         Bundle args = getArguments();
 
         pos = args.getInt(ARG_POS, 0);
+        mode = args.getInt(ARG_MODE, MODE_DAY);
     }
 
     private void initMembers() {
@@ -90,20 +104,20 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
         vRecycler = rootView.findViewById(R.id.record_recycler);
-        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+//        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
 
-        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Record>() {
+        recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<RecordRecyclerAdapter.RecordFolk>() {
             @Override
-            public void onSelect(Set<Record> selection) {
-                lookupQueue().publish(QEvents.RecordListFrag.ON_SELECT_RECORD, selection.size() == 0 ? null : selection.iterator().next());
+            public void onSelect(Set<RecordRecyclerAdapter.RecordFolk> selection) {
+                lookupQueue().publish(QEvents.RecordListFrag.ON_SELECT_RECORD, selection.size() == 0 ? null : selection.iterator().next().getRecord());
             }
 
             @Override
-            public boolean onReselect(Record selected) {
-                lookupQueue().publish(QEvents.RecordListFrag.ON_RESELECT_RECORD, selected);
+            public boolean onReselect(RecordRecyclerAdapter.RecordFolk selected) {
+                lookupQueue().publish(QEvents.RecordListFrag.ON_RESELECT_RECORD, selected.getRecord());
                 return true;
             }
         });
@@ -111,7 +125,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         accountBgColorMap = activity.getAccountBgColorMap();
         accountTextColorMap = activity.getAccountTextColorMap();
         i18n = Contexts.instance().getI18n();
-
+        calendarHelper = calendarHelper();
     }
 
     private void reloadData(List<Record> data) {
@@ -141,10 +155,54 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         } else {
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);
-            recyclerDataList.addAll(data);
+
+            recyclerDataList.addAll(precessHeaderFooter(data));
         }
         recyclerAdapter.notifyDataSetChanged();
 
+    }
+
+    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessHeaderFooter(List<Record> data) {
+        List<RecordRecyclerAdapter.RecordFolk> folks = new LinkedList<>();
+
+        //<21, it doesn't support color reference in drawable
+        boolean skipHeadFooter = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
+
+        RecordRecyclerAdapter.RecordHeader lastHeader = null;
+        RecordRecyclerAdapter.RecordHeader header;
+        for (Record r : data) {
+            header = null;
+
+            if(!skipHeadFooter) {
+                Calendar cal = calendarHelper.calendar(r.getDate());
+
+                boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
+                boolean diffMonth = diffYear || (lastHeader == null || lastHeader.calendar.get(Calendar.MONTH) != cal.get(Calendar.MONTH));
+                boolean diffDay = diffMonth || (lastHeader == null || lastHeader.calendar.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH));
+
+                boolean showYear = mode == MODE_ALL && diffYear;
+                boolean showMonth = mode > MODE_MONTH && diffMonth;
+                boolean showDay = mode >= MODE_DAY && diffDay;
+                //is same header
+                if (showYear || showMonth || showDay || lastHeader == null) {
+                    //add header
+                    header = new RecordRecyclerAdapter.RecordHeader(cal, showYear, showMonth, showDay);
+                }
+                if (header != null) {
+                    if (lastHeader != null) {
+                        folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
+                    }
+                    folks.add(new RecordRecyclerAdapter.RecordFolk(header));
+                    lastHeader = header;
+                }
+            }
+            folks.add(new RecordRecyclerAdapter.RecordFolk(r));
+        }
+        if (!skipHeadFooter && lastHeader != null) {
+            folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
+        }
+
+        return folks;
     }
 
     @Override

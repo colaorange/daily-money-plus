@@ -10,6 +10,7 @@
     <attr name="appSecondaryTextColor" format="color" />
 
     <attr name="appCardColor" format="color" />
+    <attr name="appCardBorderColor" format="color" />
 
     <attr name="appbarTheme" format="reference" />
     <attr name="appbarSize" fromat="reference"/>
@@ -156,6 +157,7 @@
         <item name="appSecondaryTextColor">@color/themeColaSecondaryText</item>
 
         <item name="appCardColor">@color/themeColaCardColor</item>
+        <item name="appCardBorderColor">@color/themeColaCardBorderColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextLight</item>
         <item name="accountIncomeTextColor">@color/incomeTextLight</item>
@@ -211,6 +213,7 @@
         <item name="appSecondaryTextColor">@color/themeLemonSecondaryText</item>
 
         <item name="appCardColor">@color/themeLemonCardColor</item>
+        <item name="appCardBorderColor">@color/themeLemonCardBorderColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
@@ -268,6 +271,7 @@
         <item name="appSecondaryTextColor">@color/themeOrangeSecondaryText</item>
 
         <item name="appCardColor">@color/themeOrangeCardColor</item>
+        <item name="appCardBorderColor">@color/themeOrangeCardBorderColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
@@ -322,6 +326,7 @@
         <item name="appSecondaryTextColor">@color/themeSakuraSecondaryText</item>
 
         <item name="appCardColor">@color/themeSakuraCardColor</item>
+        <item name="appCardBorderColor">@color/themeSakuraCardBorderColor</item>
 
         <item name="accountAssetTextColor">@color/assetTextDark</item>
         <item name="accountIncomeTextColor">@color/incomeTextDark</item>
