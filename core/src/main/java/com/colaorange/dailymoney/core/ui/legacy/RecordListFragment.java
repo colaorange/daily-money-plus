@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -164,36 +165,40 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessHeaderFooter(List<Record> data) {
         List<RecordRecyclerAdapter.RecordFolk> folks = new LinkedList<>();
 
+        //<21, it doesn't support color reference in drawable
+        boolean skipHeadFooter = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
 
         RecordRecyclerAdapter.RecordHeader lastHeader = null;
         RecordRecyclerAdapter.RecordHeader header;
         for (Record r : data) {
             header = null;
 
-            //is same header
-            Calendar cal = calendarHelper.calendar(r.getDate());
+            if(!skipHeadFooter) {
+                Calendar cal = calendarHelper.calendar(r.getDate());
 
-            boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
-            boolean diffMonth = diffYear || (lastHeader == null || lastHeader.calendar.get(Calendar.MONTH) != cal.get(Calendar.MONTH));
-            boolean diffDay = diffMonth || (lastHeader == null || lastHeader.calendar.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH));
+                boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
+                boolean diffMonth = diffYear || (lastHeader == null || lastHeader.calendar.get(Calendar.MONTH) != cal.get(Calendar.MONTH));
+                boolean diffDay = diffMonth || (lastHeader == null || lastHeader.calendar.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH));
 
-            //add header
-            boolean showYear = mode == MODE_ALL && diffYear;
-            boolean showMonth = mode > MODE_MONTH && diffMonth;
-            boolean showDay = mode > MODE_DAY && diffDay;
-            if (showYear || showMonth || showDay) {
-                header = new RecordRecyclerAdapter.RecordHeader(cal, showYear, showMonth, showDay);
-            }
-            if (header != null) {
-                if (lastHeader != null) {
-                    folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
+                boolean showYear = mode == MODE_ALL && diffYear;
+                boolean showMonth = mode > MODE_MONTH && diffMonth;
+                boolean showDay = mode >= MODE_DAY && diffDay;
+                //is same header
+                if (showYear || showMonth || showDay || lastHeader == null) {
+                    //add header
+                    header = new RecordRecyclerAdapter.RecordHeader(cal, showYear, showMonth, showDay);
                 }
-                folks.add(new RecordRecyclerAdapter.RecordFolk(header));
-                lastHeader = header;
+                if (header != null) {
+                    if (lastHeader != null) {
+                        folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
+                    }
+                    folks.add(new RecordRecyclerAdapter.RecordFolk(header));
+                    lastHeader = header;
+                }
             }
             folks.add(new RecordRecyclerAdapter.RecordFolk(r));
         }
-        if (lastHeader != null) {
+        if (!skipHeadFooter && lastHeader != null) {
             folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
         }
 

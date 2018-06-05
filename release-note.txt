@@ -1,4 +1,12 @@
 
+== 0.10.3 ==
+=== Features ===
+ #31 add heading information to group records by date
+
+=== Bugs ===
+
+
+====================================================================================================
 == 0.10.2 ==
 === Features ===
  #25 Provide a drawer for function access
@@ -9,7 +17,6 @@
 === Bugs ===
  #24 always popped up about page
 
-====================================================================================================
 == 0.10.1 ==
 === Features ===
  ##  re-support Italian

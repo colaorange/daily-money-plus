@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -21,6 +22,7 @@ import com.colaorange.dailymoney.core.util.I18N;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,8 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private DateFormat monthFormat;
     private DateFormat nonDigitalMonthFormat;
     private DateFormat weekDayFormat;
+    CalendarHelper calHelper;
+    Date today;
 
     public RecordRecyclerAdapter(ContextsActivity activity, List<RecordFolk> data) {
         super(activity, data);
@@ -62,6 +66,8 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
         listLayout = preference.getRecordListLayout();
         i18n = Contexts.instance().getI18n();
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        calHelper = Contexts.instance().getCalendarHelper();
+        today = new Date();
     }
 
     public void setAccountMap(Map<String, Account> accountMap) {
@@ -235,7 +241,20 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             if (header.showDay) {
                 vDate.setVisibility(View.VISIBLE);
                 int d = header.calendar.get(Calendar.DAY_OF_MONTH);
-                vDate.setText((d < 10 ? "0" : "") + d + " ( " + weekDayFormat.format(header.calendar.getTime()) + " )");
+                StringBuilder sb = new StringBuilder();
+                sb.append((d < 10 ? "0" : "")).append(d).append(" ( ").append(weekDayFormat.format(header.calendar.getTime()))
+                        .append(" ) ");
+                if(calHelper.isSameDay(today, header.calendar.getTime())){
+                    sb.append(" - ").append(i18n.string(R.string.label_today));
+                }else if(calHelper.isYesterday(today, header.calendar.getTime())){
+                    sb.append(" - ").append(i18n.string(R.string.label_yesterday));
+                }else if(calHelper.isTomorrow(today, header.calendar.getTime())){
+                    sb.append(" - ").append(i18n.string(R.string.label_tomorrow));
+                }else if(calHelper.isFutureDay(today, header.calendar.getTime())){
+                    sb.append(" - ").append(i18n.string(R.string.label_feature));
+                }
+
+                vDate.setText(sb.toString());
             } else {
                 vDate.setVisibility(View.GONE);
                 vDate.setText("");
