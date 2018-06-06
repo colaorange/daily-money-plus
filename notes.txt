@@ -56,6 +56,7 @@
     https://blog.30sparks.com/material-design-5-appbarlayout/
     https://www.jianshu.com/p/4a77ae4cd82f
     https://blog.csdn.net/github_35180164/article/details/54025071
+    https://antonioleiva.com/collapsing-toolbar-layout/
 
 * recycler view menu
     https://www.simplifiedcoding.net/create-options-menu-recyclerview-item-tutorial/

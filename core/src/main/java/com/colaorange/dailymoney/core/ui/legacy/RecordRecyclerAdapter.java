@@ -260,7 +260,7 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
                 }else if(calHelper.isTomorrow(today, header.calendar.getTime())){
                     sb.append(" - ").append(i18n.string(R.string.label_tomorrow));
                 }else if(calHelper.isFutureDay(today, header.calendar.getTime())){
-                    sb.append(" - ").append(i18n.string(R.string.label_feature));
+                    sb.append(" - ").append(i18n.string(R.string.label_future));
                 }
 
                 vDate.setText(sb.toString());

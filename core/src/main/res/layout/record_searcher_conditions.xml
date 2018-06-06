@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="?appbarSize"
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_from_account"
+        android:textSize="?textSize" />
+
+    <Spinner
+        android:id="@+id/record_from_account"
+        style="@style/editorFieldInput" />
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_to_account"
+        android:textSize="?textSize" />
+
+    <Spinner
+        android:id="@+id/record_to_account"
+        style="@style/editorFieldInput" />
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_date"
+        android:textSize="?textSize" />
+
+
+    <LinearLayout
+        style="@style/editorFieldInput"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/record_from_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:editable="false"
+            android:textSize="?textSize" />
+
+        <ImageButton
+            android:id="@+id/btn_from_datepicker"
+            style="@style/editorToolIconBtn"
+            android:src="?ic_date_range" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="~" />
+
+        <EditText
+            android:id="@+id/record_to_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:editable="false"
+            android:textSize="?textSize" />
+
+        <ImageButton
+            android:id="@+id/btn_to_datepicker"
+            style="@style/editorToolIconBtn"
+            android:src="?ic_date_range" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_money"
+        android:textSize="?textSize" />
+
+    <LinearLayout
+        style="@style/editorFieldInput"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/record_from_money"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:digits="0123456789.,"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:textSize="?textSize" />
+
+        <ImageButton
+            android:id="@+id/btn_from_cal2"
+            style="@style/editorToolIconBtn"
+            android:src="?ic_grid_on" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="~" />
+
+        <EditText
+            android:id="@+id/record_to_money"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:digits="0123456789.,"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:textSize="?textSize" />
+
+        <ImageButton
+            android:id="@+id/btn_to_cal2"
+            style="@style/editorToolIconBtn"
+            android:src="?ic_grid_on" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_note"
+        android:textSize="?textSize" />
+
+    <EditText
+        android:id="@+id/record_note"
+        style="@style/editorFieldInput"
+        android:maxLines="1"
+        android:textSize="?textSize" />
+</LinearLayout>

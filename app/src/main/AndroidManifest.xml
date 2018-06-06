@@ -46,6 +46,10 @@
             android:label="@string/title_recmgnt" />
 
         <activity android:name=".core.ui.legacy.RecordEditorActivity"/>
+
+        <activity android:name=".core.ui.legacy.RecordSearcherActivity"
+            android:label="@string/label_search"/>
+
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />

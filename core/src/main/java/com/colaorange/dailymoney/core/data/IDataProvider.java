@@ -72,7 +72,6 @@ public interface IDataProvider {
     int countRecord(String accountId, int mode, Date start, Date end);
     
     List<Record> listRecord(Date start, Date end, int max);
-    List<Record> listRecord(Date start, Date end, String note, int max);
     /**
      * mode : 0 both, 1 from, 2 to;
      */
@@ -86,7 +85,84 @@ public interface IDataProvider {
     
     double sumTo(AccountType type,Date start, Date end);
     double sumTo(Account account,Date start, Date end);
-    
+
+
+    List<Record> searchRecord(SearchCondition condition, int max);
+
+    public class SearchCondition{
+        String fromAccountId = null;
+        String toAccountId = null;
+        Date fromDate = null;
+        Date toDate = null;
+        Double fromMoney = null;
+        Double toMoney = null;
+        String note = null;
+
+        public String getFromAccountId() {
+            return fromAccountId;
+        }
+
+        public SearchCondition withFromAccountId(String fromAccountId) {
+            this.fromAccountId = fromAccountId;
+            return this;
+        }
+
+        public String getToAccountId() {
+            return toAccountId;
+        }
+
+        public SearchCondition withToAccountId(String toAccountId) {
+            this.toAccountId = toAccountId;
+            return this;
+        }
+
+        public Date getFromDate() {
+            return fromDate;
+        }
+
+        public SearchCondition withFromDate(Date fromDate) {
+            this.fromDate = fromDate;
+            return this;
+        }
+
+        public Date getToDate() {
+            return toDate;
+        }
+
+        public SearchCondition withToDate(Date toDate) {
+            this.toDate = toDate;
+            return this;
+        }
+
+        public Double getFromMoney() {
+            return fromMoney;
+        }
+
+        public SearchCondition withFromMoney(Double fromMoney) {
+            this.fromMoney = fromMoney;
+            return this;
+        }
+
+        public Double getToMoney() {
+            return toMoney;
+        }
+
+        public SearchCondition withToMoney(Double toMoney) {
+            this.toMoney = toMoney;
+            return this;
+        }
+
+        public String getNote() {
+            return note;
+        }
+
+        public SearchCondition withNote(String note) {
+            this.note = note;
+            return this;
+        }
+    }
+
+
     
     Record getFirstRecord();
 

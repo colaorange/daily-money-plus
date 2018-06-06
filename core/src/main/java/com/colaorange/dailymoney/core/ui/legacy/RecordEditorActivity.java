@@ -93,8 +93,6 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private Button btnCancel;
     private Button btnClose;
 
-    private float nodePaddingBase;
-
     //0:usual, 1:last
     private int applyMode = APPLY_USUAL;
 
@@ -308,37 +306,16 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         vFromAccount = findViewById(R.id.record_from_account);
 
         fromAccountList = new LinkedList<>();
-        fromAccountAdapter = new RegularSpinnerAdapter<AccountIndentNode>(this, fromAccountList) {
-
+        fromAccountAdapter = new AccountIndentNodeSpinnerAdapter(this, fromAccountList) {
             public boolean isSelected(int position) {
                 return vFromAccount.getSelectedItemPosition() == position;
-            }
-
-            @Override
-            public boolean isEnabled(int position) {
-                return getItem(position).getAccount() != null;
-            }
-
-            @Override
-            public ViewHolder<AccountIndentNode> createViewHolder() {
-                return new AccountTypeViewBinder(this);
             }
         };
         vFromAccount.setAdapter(fromAccountAdapter);
 
         vToAccount = findViewById(R.id.record_to_account);
         toAccountList = new LinkedList<>();
-        toAccountAdapter = new RegularSpinnerAdapter<AccountIndentNode>(this, toAccountList) {
-
-            public boolean isSelected(int position) {
-                return vToAccount.getSelectedItemPosition() == position;
-            }
-
-            @Override
-            public boolean isEnabled(int position) {
-                return getItem(position).getAccount() != null;
-            }
-
+        toAccountAdapter = new AccountIndentNodeSpinnerAdapter(this, toAccountList) {
             @Override
             public ViewHolder<AccountIndentNode> createViewHolder() {
                 return new AccountTypeViewBinder(this);
@@ -373,9 +350,6 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        //10dp
-        nodePaddingBase = 10 * getDpRatio();
     }
 
     private void refreshUI() {
@@ -666,52 +640,5 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         setResult(RESULT_OK);
         GUIs.shortToast(this, i18n().string(R.string.msg_created_record, counterCreate));
         finish();
-    }
-
-
-    public class AccountTypeViewBinder extends RegularSpinnerAdapter.ViewHolder<AccountIndentNode> {
-
-        public AccountTypeViewBinder(RegularSpinnerAdapter adapter) {
-            super(adapter);
-        }
-
-        @Override
-        public void bindViewValue(AccountIndentNode item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
-            I18N i18n = i18n();
-
-            Map<AccountType, Integer> textColorMap = getAccountTextColorMap();
-            Map<AccountType, Integer> bgColorMap = getAccountBgColorMap();
-
-            AccountType at = item.getType();
-
-            int textColor = textColorMap.get(at);
-
-
-            StringBuilder display = new StringBuilder();
-
-            if (isDropdown) {
-                vlayout.setPadding((int) ((1 + item.getIndent()) * nodePaddingBase), vlayout.getPaddingTop(), vlayout.getPaddingRight(), vlayout.getPaddingBottom());
-
-                if (item.getIndent() == 0) {
-                    display.append(item.getType().getDisplay(i18n));
-                    display.append(" - ");
-                }
-                display.append(item.getName());
-
-                if (item.getAccount() == null) {
-                    textColor = Colors.lighten(textColor, 0.3f);
-                } else if (isSelected) {
-                    textColor = Colors.darken(textColor, 0.3f);
-                }
-            } else {
-                if (item.getAccount() != null) {
-                    display.append(item.getType().getDisplay(i18n));
-                    display.append("-");
-                    display.append(item.getAccount().getName());
-                }
-            }
-            vtext.setTextColor(textColor);
-            vtext.setText(display.toString());
-        }
     }
 }
