@@ -26,12 +26,10 @@ public class AutoBackupRunnable implements Runnable {
 
     AtomicBoolean running = new AtomicBoolean(false);
 
-    String errorDayHour;
+    AtomicBoolean canceling = new AtomicBoolean(false);
 
     private AutoBackupRunnable() {
     }
-
-    ;
 
     @Override
     public void run() {
@@ -39,6 +37,7 @@ public class AutoBackupRunnable implements Runnable {
             Logger.d("autobackup is still running");
             return;
         }
+        canceling.set(false);
 
         try {
             Preference pref = Contexts.instance().getPreference();
@@ -50,6 +49,7 @@ public class AutoBackupRunnable implements Runnable {
             Logger.e(x.getMessage(), x);
         } finally {
             running.set(false);
+            canceling.set(false);
         }
     }
 
@@ -63,14 +63,6 @@ public class AutoBackupRunnable implements Runnable {
         Calendar cal = helper.calendar(new Date());
 
         Long lastBackup = pref.getLastBackupTime();
-
-        //don't backup again in same err hour
-        synchronized (this) {
-            if (errorDayHour != null && errorDayHour.equals(format.format(cal.getTime()))) {
-                Logger.d("same errorDayhour {}, skip", errorDayHour);
-                return;
-            }
-        }
 
         Set<Integer> autoBackupWeekDays = pref.getAutoBackupWeekDays();
         Set<Integer> autoBackupAtHours = pref.getAutoBackupAtHours();
@@ -99,11 +91,10 @@ public class AutoBackupRunnable implements Runnable {
 
         contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a", "", null);
 
-        DataBackupRestorer.Result r = DataBackupRestorer.backup();
+        DataBackupRestorer.Result r = DataBackupRestorer.backup(canceling);
         if (r.isSuccess()) {
             pref.setLastBackupTime(cal.getTime().getTime());
             Logger.d("backup finished");
-            errorDayHour = null;
 
             String count = "" + (r.getDb() + r.getPref());
             String msg = i18n.string(R.string.msg_db_backuped, count, r.getLastFolder());
@@ -112,7 +103,6 @@ public class AutoBackupRunnable implements Runnable {
                     i18n.string(R.string.label_backup_data), msg, null, 0);
         } else {
             Logger.w(r.getErr());
-            errorDayHour = format.format(cal.getTime());
             Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.WARN,
                     i18n.string(R.string.label_backup_data), r.getErr(), null, 0);
             contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a-fail", "", null);
@@ -120,14 +110,15 @@ public class AutoBackupRunnable implements Runnable {
 
     }
 
-    public synchronized void clearErrorDayHour() {
-        errorDayHour = null;
-    }
 
     public static synchronized AutoBackupRunnable singleton() {
         if (instance == null) {
             instance = new AutoBackupRunnable();
         }
         return instance;
+    }
+
+    public void cancel() {
+        canceling.set(true);
     }
 }

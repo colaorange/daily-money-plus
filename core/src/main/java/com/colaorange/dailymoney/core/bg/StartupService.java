@@ -34,11 +34,9 @@ public class StartupService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.d("startup service onStartCommand");
 
-
         IntentFilter filter = new IntentFilter();
 
         filter.addAction(Intent.ACTION_TIME_TICK);
-        filter.addAction(TimeTickReceiver.ACTION_CLEAR_BACKUP_ERROR);
 
         registerReceiver(timeTickReceiver, filter);
         return Service.START_STICKY;
