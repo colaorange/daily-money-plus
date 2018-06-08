@@ -105,7 +105,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerAdapter.setAccountMap(accountMap);
         recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR);
         vRecycler = rootView.findViewById(R.id.record_recycler);
-//        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+        vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 

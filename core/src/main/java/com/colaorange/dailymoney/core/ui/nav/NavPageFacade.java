@@ -12,6 +12,7 @@ import com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.DataMaintenanceActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordMgntActivity;
+import com.colaorange.dailymoney.core.ui.legacy.RecordSearcherActivity;
 import com.colaorange.dailymoney.core.ui.pref.PrefsActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
@@ -29,7 +30,7 @@ public class NavPageFacade {
     public NavPageFacade(ContextsActivity activity) {
         this.activity = activity;
     }
-    
+
 
     public int getPageIcon(NavPage page) {
         switch (page) {
@@ -59,6 +60,8 @@ public class NavPageFacade {
                 return R.drawable.nav_pg_balance_year;
             case FROM_BEGINNING_BALANCE:
                 return R.drawable.nav_pg_balance_from_beginning_month;
+            case RECORD_SEARCHER:
+                return R.drawable.nav_pg_search;
             case ABOUT:
             case CONTRIBUTOR:
             case WHATISNEW:
@@ -91,6 +94,9 @@ public class NavPageFacade {
             case YEARLY_LIST:
                 intent = new Intent(activity, RecordMgntActivity.class);
                 intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_YEAR);
+                break;
+            case RECORD_SEARCHER:
+                intent = new Intent(activity, RecordSearcherActivity.class);
                 break;
             case ACCOUNT_MGNT:
                 intent = new Intent(activity, AccountMgntActivity.class);
@@ -189,6 +195,8 @@ public class NavPageFacade {
                 return i18n.string(R.string.label_what_is_new);
             case HISTORY:
                 return i18n.string(R.string.label_history);
+            case RECORD_SEARCHER:
+                return i18n.string(R.string.label_search);
             default:
                 return i18n.string(R.string.label_unknown);
         }
@@ -196,8 +204,8 @@ public class NavPageFacade {
 
     public List<NavPage> listPrimary() {
         List<NavPage> l = new LinkedList<>();
-        for(NavPage p:NavPage.values()){
-            if(getPageIcon(p)>0){
+        for (NavPage p : NavPage.values()) {
+            if (getPageIcon(p) > 0) {
                 l.add(p);
             }
         }

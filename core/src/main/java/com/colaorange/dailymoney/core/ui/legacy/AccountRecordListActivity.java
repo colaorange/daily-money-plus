@@ -305,7 +305,6 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
     }
 
     private void doSetTemplate(final Record actionObj) {
-        ;
         List<String> items = new LinkedList<>();
         RecordTemplateCollection col = preference().getRecordTemplates();
         String nodata = i18n.string(R.string.msg_no_data);

@@ -46,6 +46,8 @@ public class NavMenuHelper {
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.YEARLY_BALANCE), new DoPageListener(NavPage.YEARLY_BALANCE), facade.getPageIcon(NavPage.YEARLY_BALANCE)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.FROM_BEGINNING_BALANCE), new DoPageListener(NavPage.FROM_BEGINNING_BALANCE), facade.getPageIcon(NavPage.FROM_BEGINNING_BALANCE)));
         navMenuList.add(new NavMenuDivider());
+        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.RECORD_SEARCHER), new DoPageListener(NavPage.RECORD_SEARCHER), facade.getPageIcon(NavPage.RECORD_SEARCHER)));
+        navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.DATA_MAIN), new DoPageListener(NavPage.DATA_MAIN), facade.getPageIcon(NavPage.DATA_MAIN)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.PREFS), new DoPageListener(NavPage.PREFS), facade.getPageIcon(NavPage.PREFS)));
         navMenuList.add(new NavMenuDivider());

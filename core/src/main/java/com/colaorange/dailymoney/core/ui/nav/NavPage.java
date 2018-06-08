@@ -14,6 +14,7 @@ public enum NavPage {
     FROM_BEGINNING_BALANCE,
     ACCOUNT_MGNT,
     BOOK_MGNT,
+    RECORD_SEARCHER,
     DATA_MAIN,
     PREFS,
     HOW2USE,

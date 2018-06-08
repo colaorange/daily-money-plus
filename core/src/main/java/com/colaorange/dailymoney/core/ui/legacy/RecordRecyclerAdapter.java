@@ -51,6 +51,10 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private Date today;
     private boolean showRecordDate;
 
+    private int header1Color;
+    private int header1TextColor;
+    private float dpRatio;
+
     public RecordRecyclerAdapter(ContextsActivity activity, List<RecordFolk> data) {
         super(activity, data);
         accountBgColorMap = activity.getAccountBgColorMap();
@@ -69,6 +73,14 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         calHelper = Contexts.instance().getCalendarHelper();
         today = new Date();
+        header1Color = activity.resolveThemeAttrResData(R.attr.appPrimaryDarkColor);
+        header1TextColor = activity.resolveThemeAttrResData(R.attr.appPrimaryTextColor);
+        if (lightTheme) {
+            header1TextColor = Colors.lighten(header1TextColor, 0.8f);
+        } else {
+            header1TextColor = Colors.lighten(header1TextColor, 0.1f);
+        }
+        dpRatio = activity.getDpRatio();
     }
 
     public void setAccountMap(Map<String, Account> accountMap) {
@@ -202,7 +214,7 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             String money = Contexts.instance().toFormattedMoneyString(record.getMoney());
             String date = "";
 
-            if(showRecordDate) {
+            if (showRecordDate) {
                 date = dateFormat.format(record.getDate());
             }
 
@@ -228,10 +240,14 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
             RecordHeader header = folk.getHeader();
 
+            View vH1 = itemView.findViewById(R.id.record_header_1);
             TextView vYear = itemView.findViewById(R.id.record_header_year);
             TextView vMonth = itemView.findViewById(R.id.record_header_month);
             TextView vDate = itemView.findViewById(R.id.record_header_day);
 
+            vH1.setBackgroundColor(header1Color);
+            vYear.setTextColor(header1TextColor);
+            vMonth.setTextColor(header1TextColor);
 
             if (header.showYear) {
                 vYear.setVisibility(View.VISIBLE);
@@ -253,14 +269,14 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
                 StringBuilder sb = new StringBuilder();
                 sb.append((d < 10 ? "0" : "")).append(d).append(" ( ").append(weekDayFormat.format(header.calendar.getTime()))
                         .append(" ) ");
-                if(calHelper.isSameDay(today, header.calendar.getTime())){
+                if (calHelper.isSameDay(today, header.calendar.getTime())) {
                     sb.append(" - ").append(i18n.string(R.string.label_today));
-                }else if(calHelper.isYesterday(today, header.calendar.getTime())){
+                } else if (calHelper.isYesterday(today, header.calendar.getTime())) {
                     sb.append(" - ").append(i18n.string(R.string.label_yesterday));
-                }else if(calHelper.isTomorrow(today, header.calendar.getTime())){
+                } else if (calHelper.isTomorrow(today, header.calendar.getTime())) {
                     sb.append(" - ").append(i18n.string(R.string.label_tomorrow));
-                }else if(calHelper.isFutureDay(today, header.calendar.getTime())){
-                    sb.append(" - ").append(i18n.string(R.string.label_feature));
+                } else if (calHelper.isFutureDay(today, header.calendar.getTime())) {
+                    sb.append(" - ").append(i18n.string(R.string.label_future));
                 }
 
                 vDate.setText(sb.toString());
@@ -280,7 +296,20 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
         @Override
         public void bindViewValue(RecordFolk folk) {
             super.bindViewValue(folk);
-            //nothing
+            if (getAdapterPosition() < data.size() - 1) {
+                RecordFolk f = get(getAdapterPosition() + 1);
+                View vFooter1 = itemView.findViewById(R.id.record_footer_1);
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)vFooter1.getLayoutParams();
+                int mbottom;
+                if (f.isHeader() && (f.getHeader().showYear || f.getHeader().showMonth)) {
+                    //enlarge bottom space
+                    mbottom = (int) (36 * dpRatio);
+                }else{
+                    mbottom = (int) (4 * dpRatio);
+                }
+                lp.bottomMargin = mbottom;
+                vFooter1.setLayoutParams(lp);
+            }
         }
     }
 
