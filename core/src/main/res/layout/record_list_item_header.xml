@@ -10,13 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="4dp"
+        android:paddingTop="3dp"
         android:background="@drawable/record_list_item_header"
         >
 
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/record_header_1"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
@@ -25,18 +27,17 @@
                 android:id="@+id/record_header_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingLeft="6dp"
-                android:paddingTop="2dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:textSize="?textSizeMedium" />
 
             <TextView
                 android:id="@+id/record_header_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingLeft="6dp"
-                android:paddingTop="2dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:textSize="?textSizeMedium" />
         </LinearLayout>
 
