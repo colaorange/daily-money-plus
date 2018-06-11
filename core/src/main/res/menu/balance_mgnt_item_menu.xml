@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_reclist"
-        android:title="@string/act_balance_reclist"
+        android:title="@string/label_balance_reclist"
         android:icon="?ic_list"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu_piechart"
-        android:title="@string/act_balance_piechart"
+        android:id="@+id/menu_chart_account_pie"
+        android:title="@string/label_chart_account_pie"
         android:icon="?ic_pie_chart"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu_yearly_linechart"
-        android:title="@string/act_balance_yearly_linechart"
+        android:id="@+id/menu_chart_account_line"
+        android:title="@string/label_chart_account_line"
         android:icon="?ic_series_chart"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/menu_yearly_linechart_cumulative"
-        android:title="@string/act_balance_yearly_linechart_cumulative"
+        android:id="@+id/menu_chart_account_cumulative_line"
+        android:title="@string/label_chart_account_cumulative_line"
         android:icon="?ic_multiline_chart"
         app:showAsAction="ifRoom"/>
 

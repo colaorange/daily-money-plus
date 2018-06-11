@@ -211,6 +211,8 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         inflater.inflate(R.menu.balance_mgnt_menu, menu);
         menu.findItem(R.id.menu_hierarchy).setChecked(preference().isHierarchicalBalance());
 
+        menu.findItem(R.id.menu_chart_from_beginning_account_aggregate_line).setVisible(fromBeginning);
+
 //        MenuItem menuItem = menu.findItem(R.id.menu_operations);
 //        ActionMenuView amView = (ActionMenuView) menuItem.getActionView();
 
@@ -242,7 +244,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_yearly_from_beginning_aggregate_line_chart) {
+        if (item.getItemId() == R.id.menu_chart_from_beginning_account_aggregate_line) {
             doYearlyFromBeginningAggregateLineChart();
             return true;
         } else if (item.getItemId() == R.id.menu_hierarchy) {
@@ -311,11 +313,11 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         intent.putExtra(AccountRecordListActivity.ARG_CONDITION, balance.getTarget());
         intent.putExtra(AccountRecordListActivity.ARG_CONDITION_INFO, balance.getName());
 
-        if(fromBeginning){
+        if (fromBeginning) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_ALL);
-        }else if(mode==MODE_MONTH){
+        } else if (mode == MODE_MONTH) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_MONTH);
-        }else if(mode==MODE_YEAR){
+        } else if (mode == MODE_YEAR) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_YEAR);
         }
 
@@ -362,7 +364,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
     }
 
-    private void doYearlyLineChart(final Balance balance, boolean cumulative) {
+    private void doAccountLineChart(final Balance balance, boolean cumulative) {
         final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
@@ -401,9 +403,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             intent.putExtra(LineAccountFragment.ARG_BASE_DATE, fragInfo.date);
             intent.putExtra(LineAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
             intent.putExtra(LineAccountFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
-            intent.putExtra(LineAccountActivity.ARG_TITLE,
-                    cumulative ? i18n.string(R.string.label_balance_yearly_linechart_cumulative, at.getDisplay(i18n), yearFormat.format(fragInfo.date)) :
-                            i18n.string(R.string.label_balance_yearly_linechart, at.getDisplay(i18n), yearFormat.format(fragInfo.date)));
+            intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         }
     }
@@ -420,7 +420,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
         intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.label_yearly_aggregate_line_chart, mode == MODE_MONTH ? yearMonthFormat.format(fragInfo.date) :
+        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.msg_chart_from_beginning_account_aggregate_line, mode == MODE_MONTH ? yearMonthFormat.format(fragInfo.date) :
                 yearFormat.format(fragInfo.date)));
         startActivity(intent);
     }
@@ -511,7 +511,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             }
             mi.setIcon(buildDisabledIcon(resolveThemeAttrResId(R.attr.ic_list), mi.isEnabled()));
 
-            mi = menu.findItem(R.id.menu_yearly_linechart);
+            mi = menu.findItem(R.id.menu_chart_account_line);
             mi.setVisible(!fromBeginning);
 
             return true;
@@ -520,14 +520,14 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.menu_piechart) {
+            if (item.getItemId() == R.id.menu_chart_account_pie) {
                 doPieChart(actionObj);
                 return true;
-            } else if (item.getItemId() == R.id.menu_yearly_linechart) {
-                doYearlyLineChart(actionObj, false);
+            } else if (item.getItemId() == R.id.menu_chart_account_line) {
+                doAccountLineChart(actionObj, false);
                 return true;
-            } else if (item.getItemId() == R.id.menu_yearly_linechart_cumulative) {
-                doYearlyLineChart(actionObj, true);
+            } else if (item.getItemId() == R.id.menu_chart_account_cumulative_line) {
+                doAccountLineChart(actionObj, true);
                 return true;
             } else if (item.getItemId() == R.id.menu_reclist) {
                 doRecordList(actionObj);
