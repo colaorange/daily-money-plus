@@ -24,6 +24,8 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountActivity;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateActivity;
@@ -213,7 +215,6 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         menu.findItem(R.id.menu_chart_from_beginning_account_aggregate_line).setVisible(fromBeginning);
 
-
         menu.findItem(R.id.menu_slide_hint).setVisible(!preference().checkEver(Constants.Hint.BALANCE_SLIDE, false));
 
         return true;
@@ -362,15 +363,15 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
             if (balance.getTarget() instanceof Account) {
                 Account account = (Account) balance.getTarget();
-                intent.putExtra(LineAccountFragment.ARG_ACCOUNT, account);
+                intent.putExtra(LineFromBeginningAccountFragment.ARG_ACCOUNT, account);
             } else {
-                intent.putExtra(LineAccountFragment.ARG_ACCOUNT_TYPE, at);
+                intent.putExtra(LineFromBeginningAccountFragment.ARG_ACCOUNT_TYPE, at);
             }
             intent.putExtra(LineFromBeginningAccountFragment.ARG_BASE_DATE, fragInfo.date);
 //            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
             //always use yearly mode, monthly mode is useless. (going mess when having too many data)
             intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.YEARLY);
-            intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
+            intent.putExtra(LineFromBeginningAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, LineAccountActivity.class);
@@ -389,6 +390,28 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         }
+    }
+
+    private void doAccountTypeLineChart(final Balance balance, boolean cumulative) {
+        final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
+        if (fragInfo == null) {
+            Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
+            return;
+        }
+
+
+        Intent intent = new Intent(this, LineAccountTypeActivity.class);
+
+        AccountType at = AccountType.find(balance.getType());
+
+        intent.putExtra(LineAccountTypeFragment.ARG_ACCOUNT_TYPE, at);
+        intent.putExtra(LineAccountTypeFragment.ARG_BASE_DATE, fragInfo.date);
+        intent.putExtra(LineAccountTypeFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+        intent.putExtra(LineAccountTypeFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
+        intent.putExtra(LineAccountTypeFragment.ARG_PREVIOUS_PERIOD, true);
+        intent.putExtra(LineAccountTypeActivity.ARG_TITLE, getTitle());
+        startActivity(intent);
+
     }
 
 
@@ -494,8 +517,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             }
             mi.setIcon(buildDisabledIcon(resolveThemeAttrResId(R.attr.ic_list), mi.isEnabled()));
 
-            mi = menu.findItem(R.id.menu_chart_account_line);
-            mi.setVisible(!fromBeginning);
+            menu.findItem(R.id.menu_chart_account_line).setVisible(!fromBeginning);
+            menu.findItem(R.id.menu_chart_account_aggregate_line).setVisible(!fromBeginning);
+            menu.findItem(R.id.menu_chart_account_aggregate_cumulative_line).setVisible(!fromBeginning);
 
             return true;
         }
@@ -511,6 +535,12 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 return true;
             } else if (item.getItemId() == R.id.menu_chart_account_cumulative_line) {
                 doAccountLineChart(actionObj, true);
+                return true;
+            } else if (item.getItemId() == R.id.menu_chart_account_aggregate_line) {
+                doAccountTypeLineChart(actionObj, false);
+                return true;
+            } else if (item.getItemId() == R.id.menu_chart_account_aggregate_cumulative_line) {
+                doAccountTypeLineChart(actionObj, true);
                 return true;
             } else if (item.getItemId() == R.id.menu_reclist) {
                 doRecordList(actionObj);

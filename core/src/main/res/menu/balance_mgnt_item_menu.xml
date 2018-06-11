@@ -19,7 +19,16 @@
     <item
         android:id="@+id/menu_chart_account_cumulative_line"
         android:title="@string/label_chart_account_cumulative_line"
-        android:icon="?ic_multiline_chart"
+        android:icon="?ic_series_chart"
         app:showAsAction="ifRoom"/>
-
+    <item
+        android:id="@+id/menu_chart_account_aggregate_line"
+        android:title="@string/label_chart_account_aggregate_line"
+        android:icon="?ic_series_chart"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_chart_account_aggregate_cumulative_line"
+        android:title="@string/label_chart_account_aggregate_cumulative_line"
+        android:icon="?ic_series_chart"
+        app:showAsAction="ifRoom"/>
 </menu>

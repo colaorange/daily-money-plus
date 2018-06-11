@@ -289,6 +289,11 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
             for (Record r : records) {
 
                 float y = r.getMoney() == null ? 0f : r.getMoney().floatValue();
+
+                if (from) {
+                    y = -y;
+                }
+
                 Date x = r.getDate();
 
                 //group by day or month
@@ -308,6 +313,7 @@ public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
                     e.setY(e.getY() + y);
                 }
             }
+            i++;
         }
 
         if (calculationMode == CalculationMode.CUMULATIVE) {

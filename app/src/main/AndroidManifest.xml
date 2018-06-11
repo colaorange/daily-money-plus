@@ -77,6 +77,8 @@
         <activity
             android:name=".core.ui.chart.LineAccountActivity"/>
         <activity
+            android:name=".core.ui.chart.LineAccountTypeActivity"/>
+        <activity
             android:name=".core.ui.chart.LineFromBeginningAggregateActivity"/>
         <activity
             android:name=".core.ui.chart.LineFromBeginningAccountActivity"/>
