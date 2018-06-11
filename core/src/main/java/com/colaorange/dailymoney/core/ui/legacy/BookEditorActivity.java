@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +16,7 @@ import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
 import java.util.List;

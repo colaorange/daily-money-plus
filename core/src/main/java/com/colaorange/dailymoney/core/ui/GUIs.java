@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.util;
+package com.colaorange.dailymoney.core.ui;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.Calendar;
 import java.util.Date;

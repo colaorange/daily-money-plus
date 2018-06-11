@@ -14,7 +14,7 @@ import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
 import com.colaorange.dailymoney.core.ui.cards.CardFacade;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.R;

@@ -13,7 +13,7 @@ import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;

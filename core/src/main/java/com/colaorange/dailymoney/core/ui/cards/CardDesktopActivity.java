@@ -44,8 +44,8 @@ import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.TestsDesktop;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuAdapter;
 import com.colaorange.dailymoney.core.ui.nav.NavMenuHelper;
-import com.colaorange.dailymoney.core.util.Dialogs;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.Dialogs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 

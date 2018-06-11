@@ -6,7 +6,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.context.Preference;
-import com.colaorange.dailymoney.core.util.GUIs;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.R;
 

@@ -1,4 +1,4 @@
-package com.colaorange.dailymoney.core.util;
+package com.colaorange.dailymoney.core.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,10 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +18,7 @@ import android.widget.TextView;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.util.I18N;
 
 import java.util.LinkedHashSet;
 import java.util.List;

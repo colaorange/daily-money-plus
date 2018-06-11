@@ -2,19 +2,9 @@ package com.colaorange.dailymoney.core.ui.cards;
 
 import android.widget.TextView;
 
-import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Var;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.EventQueue;
-import com.colaorange.dailymoney.core.data.Account;
-import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.data.BalanceHelper;
-import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.util.GUIs;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author dennis

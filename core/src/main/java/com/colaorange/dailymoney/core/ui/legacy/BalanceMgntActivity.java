@@ -31,7 +31,7 @@ import com.colaorange.dailymoney.core.ui.chart.LineAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountActivity;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 

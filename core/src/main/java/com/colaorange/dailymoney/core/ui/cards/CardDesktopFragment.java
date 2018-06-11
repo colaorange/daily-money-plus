@@ -32,8 +32,8 @@ import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.RecyclerViewAdaptor;
-import com.colaorange.dailymoney.core.util.Dialogs;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.Dialogs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 

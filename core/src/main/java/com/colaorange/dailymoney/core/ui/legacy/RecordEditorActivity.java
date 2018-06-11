@@ -11,13 +11,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
@@ -31,7 +28,7 @@ import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.AccountIndentNode;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -40,7 +37,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Edit or create a record

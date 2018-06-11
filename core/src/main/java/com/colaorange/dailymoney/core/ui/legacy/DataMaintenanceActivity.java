@@ -3,10 +3,8 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,13 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.CSVImportExporter;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.io.File;

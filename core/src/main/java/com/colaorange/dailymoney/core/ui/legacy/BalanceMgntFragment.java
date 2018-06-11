@@ -25,7 +25,7 @@ import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
 import java.io.Serializable;

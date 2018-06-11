@@ -20,7 +20,7 @@ import com.colaorange.commons.util.Collections;
 import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.context.ContextsActivity;

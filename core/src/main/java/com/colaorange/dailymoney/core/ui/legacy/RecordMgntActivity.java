@@ -24,7 +24,7 @@ import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
-import com.colaorange.dailymoney.core.util.GUIs;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 

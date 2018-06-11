@@ -18,7 +18,7 @@ import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
-import com.colaorange.dailymoney.core.util.Dialogs;
+import com.colaorange.dailymoney.core.ui.Dialogs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
