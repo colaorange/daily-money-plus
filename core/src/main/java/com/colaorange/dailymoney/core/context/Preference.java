@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -34,6 +35,8 @@ public class Preference {
      */
     public static final String CARD_DESKTOP_ENABLE_PREFIX = "card-desktop-enable-";
     public static final String CARD_DESKTOP_PREFIX = "card-desktop-";
+
+    public static final String EVER_FILE_NAME = "com.colaorange.ever";
 
     private static final String THEME_DARK_PREFIX = "dark-";
     private static final String THEME_LIGHT_PREFIX = "light-";
@@ -831,6 +834,17 @@ public class Preference {
         editor.remove(CARD_DESKTOP_PREFIX + index);
         editor.remove(CARD_DESKTOP_ENABLE_PREFIX + index);
         editor.commit();
+    }
+
+    public boolean checkEver(String key, boolean setIfNever) {
+        SharedPreferences prefs = contextsApp.getSharedPreferences(EVER_FILE_NAME, Context.MODE_PRIVATE);
+        boolean ever = prefs.getBoolean(key, false);
+        if (!ever && setIfNever) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(key, true);
+            editor.commit();
+        }
+        return ever;
     }
 
 }

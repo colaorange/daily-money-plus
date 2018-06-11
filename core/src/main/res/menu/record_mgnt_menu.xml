@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_slide_hint"
+        android:icon="?ic_slide_hint"
+        android:title="@string/act_slide_hint"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_go_today"
         android:icon="?ic_today"
         android:title="@string/act_go_today"

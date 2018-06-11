@@ -213,32 +213,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         menu.findItem(R.id.menu_chart_from_beginning_account_aggregate_line).setVisible(fromBeginning);
 
-//        MenuItem menuItem = menu.findItem(R.id.menu_operations);
-//        ActionMenuView amView = (ActionMenuView) menuItem.getActionView();
 
-        //don't have a way to set align right of buttons
-//        ActionMenuView.LayoutParams lp = new ActionMenuView.LayoutParams(0, ActionMenuView.LayoutParams.WRAP_CONTENT);
-//        amView.setLayoutParams(lp);
-//        amView.setGravity(Gravity.RIGHT);
-//        amView.setBackgroundColor(Color.RED);
+        menu.findItem(R.id.menu_slide_hint).setVisible(!preference().checkEver(Constants.Hint.BALANCE_SLIDE, false));
 
-//        Menu menuObject = amView.getMenu();
-//        inflater.inflate(R.menu.balance_mgnt_operations_menu, menuObject);
-//
-//        amView.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
-//            public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.menu_prev) {
-//                    doPrev();
-//                } else if (item.getItemId() == R.id.menu_next) {
-//                    doNext();
-//                } else if (item.getItemId() == R.id.menu_go_today) {
-//                    doGoToday();
-//                } else if (item.getItemId() == R.id.menu_change_mode) {
-//                    doChangeMode();
-//                }
-//                return true;
-//            }
-//        });
         return true;
     }
 
@@ -257,14 +234,20 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 }
             });
             return true;
-        } else if (item.getItemId() == R.id.menu_prev) {
-            doPrev();
-        } else if (item.getItemId() == R.id.menu_next) {
-            doNext();
         } else if (item.getItemId() == R.id.menu_go_today) {
             doGoToday();
         } else if (item.getItemId() == R.id.menu_change_mode) {
             doChangeMode();
+        } else if (item.getItemId() == R.id.menu_slide_hint) {
+            preference().checkEver(Constants.Hint.BALANCE_SLIDE, true);
+            GUIs.shortToast(this, i18n().string(R.string.msg_slide_hint));
+            doPrev();
+            GUIs.delayPost(new Runnable() {
+                @Override
+                public void run() {
+                    doNext();
+                }
+            }, 400);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -84,7 +84,6 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
         super.onActivityCreated(savedInstanceState);
         initArgs();
         initMembers();
-        reloadData();
     }
 
 

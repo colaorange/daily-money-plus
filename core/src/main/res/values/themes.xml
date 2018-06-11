@@ -89,6 +89,8 @@
     <attr name="ic_search" format="reference"/>
     <attr name="ic_reset" format="reference"/>
 
+    <attr name="ic_slide_hint" format="reference"/>
+
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
         <item name="appCardbarSize">@dimen/appCardbarSize</item>
@@ -441,6 +443,8 @@
 
         <item name="ic_search">@drawable/ic_search_light_24dp</item>
         <item name="ic_reset">@drawable/ic_clear_all_light_24dp</item>
+
+        <item name="ic_slide_hint">@drawable/ic_slide_hint_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -489,6 +493,8 @@
 
         <item name="ic_search">@drawable/ic_search_dark_24dp</item>
         <item name="ic_reset">@drawable/ic_clear_all_dark_24dp</item>
+
+        <item name="ic_slide_hint">@drawable/ic_slide_hint_dark_24dp</item>
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

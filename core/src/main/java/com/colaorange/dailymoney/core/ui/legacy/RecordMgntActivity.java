@@ -216,6 +216,9 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.record_mgnt_menu, menu);
+
+        menu.findItem(R.id.menu_slide_hint).setVisible(!preference().checkEver(Constants.Hint.RECORD_SLIDE, false));
+
         return true;
     }
 
@@ -225,14 +228,20 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         if (item.getItemId() == R.id.menu_new) {
             doNewRecord();
             return true;
-        } else if (item.getItemId() == R.id.menu_prev) {
-            doPrev();
-        } else if (item.getItemId() == R.id.menu_next) {
-            doNext();
         } else if (item.getItemId() == R.id.menu_go_today) {
             doGoToday();
         } else if (item.getItemId() == R.id.menu_change_mode) {
             doChangeMode();
+        } else if (item.getItemId() == R.id.menu_slide_hint) {
+            preference().checkEver(Constants.Hint.RECORD_SLIDE, true);
+            GUIs.shortToast(this, i18n().string(R.string.msg_slide_hint));
+            doPrev();
+            GUIs.delayPost(new Runnable() {
+                @Override
+                public void run() {
+                    doNext();
+                }
+            },400);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -322,11 +331,11 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                     publishReloadFragment();
 
                     //refresh action mode
-                    if(actionMode!=null){
+                    if (actionMode != null) {
                         actionObj = contexts().getDataProvider().findRecord(actionObj.getId());
-                        if(actionObj==null){
+                        if (actionObj == null) {
                             actionMode.finish();
-                        }else {
+                        } else {
                             actionMode.setTitle(Contexts.instance().toFormattedMoneyString(actionObj.getMoney()));
                         }
                     }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<item-->
-        <!--android:id="@+id/menu_next"-->
-        <!--android:icon="?ic_arrow_right"-->
-        <!--android:title="@string/act_next"-->
-        <!--app:showAsAction="always" />-->
+    <item
+        android:id="@+id/menu_slide_hint"
+        android:icon="?ic_slide_hint"
+        android:title="@string/act_slide_hint"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_go_today"
         android:icon="?ic_today"
