@@ -6,28 +6,11 @@
     android:orientation="vertical"
     tools:showIn="@layout/balance_mgnt">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
+        android:id="@+id/frag_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        app:cardBackgroundColor="?infoCardBgColor"
-        app:cardCornerRadius="2dp">
-
-        <TextView
-            android:id="@+id/balance_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
-            android:textSize="?textSizeMedium"
-            android:textColor="?infoCardTextColor"/>
-    </android.support.v7.widget.CardView>
+        android:orientation="vertical"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
