@@ -1,30 +1,11 @@
 package com.colaorange.dailymoney.core.ui.chart;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.colaorange.commons.util.Colors;
-import com.colaorange.commons.util.Numbers;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.PeriodMode;
-import com.colaorange.dailymoney.core.data.Account;
-import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
-import com.colaorange.dailymoney.core.util.I18N;
 import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.Date;
 
@@ -49,7 +30,7 @@ public abstract class PeriodModeChartBaseFragment<C extends Chart> extends Chart
         Bundle args = getArguments();
         periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
         if (periodMode == null) {
-            periodMode = PeriodMode.WEEKLY;
+            periodMode = PeriodMode.MONTHLY;
         }
 
         baseDate = (Date) args.getSerializable(ARG_BASE_DATE);

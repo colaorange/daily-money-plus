@@ -62,7 +62,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         initArgs();
         initMembers();
         reloadChart();
-        trackEvent(Contexts.TE.CHART+""+getClass().getSimpleName());
+        trackEvent(Contexts.TE.CHART + "" + getClass().getSimpleName());
     }
 
     @CallSuper
@@ -93,7 +93,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
 
         vContainer = rootView.findViewById(R.id.chart_container);
         //general vChart
-        vChart = rootView.findViewById(R.id.chart_chart);
+        vChart = rootView.findViewById(R.id.chart);
         vChart.setBackgroundColor(backgroundColor);
         Legend legend = vChart.getLegend();
         legend.setWordWrapEnabled(true);
