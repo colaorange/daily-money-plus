@@ -5,12 +5,12 @@ import android.os.Bundle;
 /**
  * Created by Dennis
  */
-public class LineAccountTypeActivity extends ChartBaseActivity{
+public class LineAccountAggregateActivity extends ChartBaseActivity{
 
 
     @Override
     protected ChartBaseFragment newChartFragment() {
-        ChartBaseFragment frag = new LineAccountTypeFragment();
+        ChartBaseFragment frag = new LineAccountAggregateFragment();
         Bundle args = (Bundle)getIntentExtras().clone();
         args.putBoolean(ChartBaseFragment.ARG_MORE_HEIGHT, true);
         frag.setArguments(args);

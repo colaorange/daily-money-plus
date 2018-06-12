@@ -24,8 +24,8 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountActivity;
-import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeActivity;
-import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountAggregateActivity;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountAggregateFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountActivity;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAccountFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineFromBeginningAggregateActivity;
@@ -400,16 +400,16 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         }
 
 
-        Intent intent = new Intent(this, LineAccountTypeActivity.class);
+        Intent intent = new Intent(this, LineAccountAggregateActivity.class);
 
         AccountType at = AccountType.find(balance.getType());
 
-        intent.putExtra(LineAccountTypeFragment.ARG_ACCOUNT_TYPE, at);
-        intent.putExtra(LineAccountTypeFragment.ARG_BASE_DATE, fragInfo.date);
-        intent.putExtra(LineAccountTypeFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-        intent.putExtra(LineAccountTypeFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
-        intent.putExtra(LineAccountTypeFragment.ARG_PREVIOUS_PERIOD, true);
-        intent.putExtra(LineAccountTypeActivity.ARG_TITLE, getTitle());
+        intent.putExtra(LineAccountAggregateFragment.ARG_ACCOUNT_TYPE, at);
+        intent.putExtra(LineAccountAggregateFragment.ARG_BASE_DATE, fragInfo.date);
+        intent.putExtra(LineAccountAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+        intent.putExtra(LineAccountAggregateFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
+        intent.putExtra(LineAccountAggregateFragment.ARG_PREVIOUS_PERIOD, true);
+        intent.putExtra(LineAccountAggregateActivity.ARG_TITLE, getTitle());
         startActivity(intent);
 
     }

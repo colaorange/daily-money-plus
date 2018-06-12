@@ -1,16 +1,16 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
-import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountAggregateFragment;
 
 /**
  * @author dennis
  */
-public class CardLineAccountTypeFragment extends CardChartBaseFragment {
+public class CardLineAccountAggregateFragment extends CardChartBaseFragment {
 
     @Override
     protected ChartBaseFragment newFragment() {
-        return new LineAccountTypeFragment();
+        return new LineAccountAggregateFragment();
     }
 
 }

@@ -37,7 +37,7 @@ import java.util.TreeMap;
  *
  * @author dennis
  */
-public class LineAccountTypeFragment extends ChartBaseFragment<LineChart> {
+public class LineAccountAggregateFragment extends ChartBaseFragment<LineChart> {
 
     public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";

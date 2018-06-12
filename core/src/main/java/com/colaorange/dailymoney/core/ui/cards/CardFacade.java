@@ -14,7 +14,7 @@ import com.colaorange.dailymoney.core.data.CardDesktop;
 import com.colaorange.dailymoney.core.data.CardType;
 import com.colaorange.dailymoney.core.ui.chart.ChartBaseFragment;
 import com.colaorange.dailymoney.core.ui.chart.LineAccountFragment;
-import com.colaorange.dailymoney.core.ui.chart.LineAccountTypeFragment;
+import com.colaorange.dailymoney.core.ui.chart.LineAccountAggregateFragment;
 import com.colaorange.dailymoney.core.ui.chart.PieAccountFragment;
 import com.colaorange.dailymoney.core.ui.nav.NavPage;
 import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
@@ -82,7 +82,7 @@ public class CardFacade {
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
             b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -90,17 +90,17 @@ public class CardFacade {
     }
 
     private Fragment newLineMonthlyExpenseAggregate(int desktopIndex, int pos, Card card) {
-        CardLineAccountTypeFragment f = new CardLineAccountTypeFragment();
+        CardLineAccountAggregateFragment f = new CardLineAccountAggregateFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(LineAccountTypeFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
-        b.putSerializable(LineAccountTypeFragment.ARG_BASE_DATE, new Date());
-        b.putSerializable(LineAccountTypeFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
+        b.putSerializable(LineAccountAggregateFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(LineAccountAggregateFragment.ARG_BASE_DATE, new Date());
+        b.putSerializable(LineAccountAggregateFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         try {
             ChartBaseFragment.CalculationMode calMode;
             calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
-            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, calMode);
+            b.putSerializable(LineAccountAggregateFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(LineAccountTypeFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountAggregateFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
