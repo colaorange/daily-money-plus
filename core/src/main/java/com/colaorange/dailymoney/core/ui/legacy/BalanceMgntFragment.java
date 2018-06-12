@@ -19,6 +19,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
@@ -43,14 +44,14 @@ import java.util.Set;
 public class BalanceMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
     public static final String ARG_TARGET_DATE = "targetDate";
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_FROM_BEGINNING = "fromBeginning";
     public static final String ARG_POS = "pos";
 
     private TextView vInfo;
 
     private Date targetDate;
-    private int mode;
+    private PeriodMode periodMode;
     private boolean fromBeginning = false;
     private int pos;
 
@@ -72,6 +73,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
     private View rootView;
 
+    static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,7 +94,15 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
     private void initArgs() {
         Bundle args = getArguments();
-        mode = args.getInt(ARG_MODE, BalanceMgntActivity.MODE_MONTH);
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
+
+        if (!supportPeriod.contains(periodMode)) {
+            throw new IllegalStateException("unsupported period " + periodMode);
+        }
+
         pos = args.getInt(ARG_POS, 0);
         fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
         Object o = args.get(ARG_TARGET_DATE);
@@ -146,8 +157,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         targetStartDate = null;
         vInfo.setText("");
 
-        switch (mode) {
-            case BalanceMgntActivity.MODE_YEAR:
+        switch (periodMode) {
+            case YEARLY:
                 targetEndDate = cal.yearEndDate(targetDate);
                 targetStartDate = fromBeginning ? null : cal.yearStartDate(targetDate);
                 break;
@@ -233,28 +244,28 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
                 // update info
                 if (fromBeginning) {
-                    if (mode == BalanceMgntActivity.MODE_MONTH) {
+                    if (PeriodMode.MONTHLY.equals(periodMode)) {
                         Date monthStart = cal.monthStartDate(targetDate);
                         Date monthEnd = cal.monthEndDate(targetDate);
-                        vInfo.setText(i18n.string(R.string.label_balance_from_beginning_month, yearMonthFormat.format(monthStart),
+                        vInfo.setText(i18n.string(R.string.label_until_time, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthEnd)));
-                    } else if (mode == BalanceMgntActivity.MODE_YEAR) {
+                    } else if (PeriodMode.YEARLY.equals(periodMode)) {
                         Date yearStart = cal.yearStartDate(targetDate);
                         Date yearEnd = cal.yearEndDate(targetDate);
 
-                        vInfo.setText(i18n.string(R.string.label_balance_from_beginning_year, yearFormat.format(yearStart),
+                        vInfo.setText(i18n.string(R.string.label_until_time, yearFormat.format(yearStart),
                                 yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 } else {
-                    if (mode == BalanceMgntActivity.MODE_MONTH) {
+                    if (PeriodMode.MONTHLY.equals(periodMode)) {
                         Date monthStart = cal.monthStartDate(targetDate);
                         Date monthEnd = cal.monthEndDate(targetDate);
-                        vInfo.setText(i18n.string(R.string.label_balance_mode_month, yearMonthFormat.format(monthStart),
+                        vInfo.setText(i18n.string(R.string.label_in_time, yearMonthFormat.format(monthStart),
                                 monthDateFormat.format(monthStart), monthDateFormat.format(monthEnd)));
-                    } else if (mode == BalanceMgntActivity.MODE_YEAR) {
+                    } else if (PeriodMode.YEARLY.equals(periodMode)) {
                         Date yearStart = cal.yearStartDate(targetDate);
                         Date yearEnd = cal.yearEndDate(targetDate);
-                        vInfo.setText(i18n.string(R.string.label_balance_mode_year, yearFormat.format(yearStart),
+                        vInfo.setText(i18n.string(R.string.label_in_time, yearFormat.format(yearStart),
                                 monthDateFormat.format(yearStart), yearFormat.format(yearEnd) + " " + monthDateFormat.format(yearEnd)));
                     }
                 }

@@ -14,8 +14,10 @@ import android.view.MenuItem;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.CalculationMode;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -42,25 +44,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author dennis
  */
 public class BalanceMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
-    public static final int MODE_MONTH = 0;
-    public static final int MODE_YEAR = 1;
 
     public static final String ARG_BASE_DATE = "baseDate";
-    public static final String ARG_MODE = "mode";
-    public static final String ARG_FROM_BEGINNING = "fromBeginning";
+    public static final String ARG_PERIOD_MODE = BalanceMgntFragment.ARG_PERIOD_MODE;
+    public static final String ARG_FROM_BEGINNING = BalanceMgntFragment.ARG_FROM_BEGINNING;
 
     private ViewPager vPager;
     BalancePagerAdapter adapter;
 
     private Date baseDate;
 
-    private int mode = MODE_MONTH;
+    private PeriodMode periodMode = PeriodMode.MONTHLY;
     private boolean fromBeginning = false;
 
     private DateFormat yearFormat;
@@ -71,6 +72,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
     private ActionMode actionMode;
     private Balance actionObj;
     I18N i18n;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,15 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
     private void initArgs() {
         Bundle b = getIntentExtras();
-        mode = b.getInt(ARG_MODE, MODE_MONTH);
+        periodMode = (PeriodMode) b.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
+
+        if (!BalanceMgntFragment.supportPeriod.contains(periodMode)) {
+            throw new IllegalStateException("unsupported period " + periodMode);
+        }
+
         fromBeginning = b.getBoolean(ARG_FROM_BEGINNING, false);
         Object o = b.get(ARG_BASE_DATE);
         if (o instanceof Date) {
@@ -154,11 +164,11 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         if (fromBeginning) {
             setTitle(R.string.nav_pg_report_from_beginning_balance);
         } else {
-            switch (mode) {
-                case MODE_YEAR:
+            switch (periodMode) {
+                case YEARLY:
                     setTitle(R.string.nav_pg_report_yearly_balance);
                     break;
-                case MODE_MONTH:
+                case MONTHLY:
                 default:
                     setTitle(R.string.nav_pg_report_monthly_balance);
                     break;
@@ -172,16 +182,16 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         vPager.setAdapter(adapter);
         vPager.setCurrentItem(adapter.getBasePos());
 
-        trackEvent(ContextsActivity.TE.BALANCE + mode);
+        trackEvent(ContextsActivity.TE.BALANCE + periodMode);
     }
 
     private void doChangeMode() {
-        switch (mode) {
-            case MODE_MONTH:
-                mode = MODE_YEAR;
+        switch (periodMode) {
+            case MONTHLY:
+                periodMode = PeriodMode.YEARLY;
                 break;
-            case MODE_YEAR:
-                mode = MODE_MONTH;
+            case YEARLY:
+                periodMode = PeriodMode.MONTHLY;
                 break;
         }
         refreshToolbar();
@@ -299,9 +309,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         if (fromBeginning) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_ALL);
-        } else if (mode == MODE_MONTH) {
+        } else if (periodMode == PeriodMode.MONTHLY) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_MONTH);
-        } else if (mode == MODE_YEAR) {
+        } else if (periodMode == PeriodMode.YEARLY) {
             intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_YEAR);
         }
 
@@ -341,7 +351,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             intent.putExtra(PieAccountFragment.ARG_ACCOUNT_TYPE, at);
         }
         intent.putExtra(PieAccountFragment.ARG_BASE_DATE, fragInfo.date);
-        intent.putExtra(PieAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
+        intent.putExtra(PieAccountFragment.ARG_PERIOD_MODE, periodMode);
         intent.putExtra(PieAccountFragment.ARG_FROM_BEGINNING, fromBeginning);
         intent.putExtra(PieAccountActivity.ARG_TITLE, getTitle());
         startActivity(intent);
@@ -370,7 +380,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             intent.putExtra(LineFromBeginningAccountFragment.ARG_BASE_DATE, fragInfo.date);
 //            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
             //always use yearly mode, monthly mode is useless. (going mess when having too many data)
-            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.YEARLY);
+            intent.putExtra(LineFromBeginningAccountFragment.ARG_PERIOD_MODE, PeriodMode.YEARLY);
             intent.putExtra(LineFromBeginningAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         } else {
@@ -385,8 +395,8 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 intent.putExtra(LineAccountFragment.ARG_ACCOUNT_TYPE, at);
             }
             intent.putExtra(LineAccountFragment.ARG_BASE_DATE, fragInfo.date);
-            intent.putExtra(LineAccountFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-            intent.putExtra(LineAccountFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
+            intent.putExtra(LineAccountFragment.ARG_PERIOD_MODE, periodMode);
+            intent.putExtra(LineAccountFragment.ARG_CALCULATION_MODE, cumulative ? CalculationMode.CUMULATIVE : CalculationMode.INDIVIDUAL);
             intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
             startActivity(intent);
         }
@@ -406,8 +416,8 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         intent.putExtra(LineAccountAggregateFragment.ARG_ACCOUNT_TYPE, at);
         intent.putExtra(LineAccountAggregateFragment.ARG_BASE_DATE, fragInfo.date);
-        intent.putExtra(LineAccountAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-        intent.putExtra(LineAccountAggregateFragment.ARG_CALCULATION_MODE, cumulative ? ChartBaseFragment.CalculationMode.CUMULATIVE : ChartBaseFragment.CalculationMode.INDIVIDUAL);
+        intent.putExtra(LineAccountAggregateFragment.ARG_PERIOD_MODE, periodMode);
+        intent.putExtra(LineAccountAggregateFragment.ARG_CALCULATION_MODE, cumulative ? CalculationMode.CUMULATIVE : CalculationMode.INDIVIDUAL);
         intent.putExtra(LineAccountAggregateFragment.ARG_PREVIOUS_PERIOD, true);
         intent.putExtra(LineAccountAggregateActivity.ARG_TITLE, getTitle());
         startActivity(intent);
@@ -425,9 +435,8 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         Intent intent = new Intent(this, LineFromBeginningAggregateActivity.class);
 
         intent.putExtra(LineFromBeginningAggregateFragment.ARG_BASE_DATE, fragInfo.date);
-        intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, mode == MODE_MONTH ? ChartBaseFragment.PeriodMode.MONTHLY : ChartBaseFragment.PeriodMode.YEARLY);
-        intent.putExtra(LineAccountActivity.ARG_TITLE, i18n.string(R.string.msg_chart_from_beginning_account_aggregate_line, mode == MODE_MONTH ? yearMonthFormat.format(fragInfo.date) :
-                yearFormat.format(fragInfo.date)));
+        intent.putExtra(LineFromBeginningAggregateFragment.ARG_PERIOD_MODE, periodMode);
+        intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
         startActivity(intent);
     }
 
@@ -449,14 +458,14 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
             int diffYear = calbase.get(Calendar.YEAR) - cal0.get(Calendar.YEAR);
 
-            if (mode == MODE_MONTH) {
+            if (PeriodMode.MONTHLY.equals(periodMode)) {
                 basePos = diffYear * 12 + calbase.get(Calendar.MONTH) - cal0.get(Calendar.MONTH);
             } else {
                 basePos = diffYear;
             }
             basePos -= 1;//just for prvent hit boundary
 
-            maxPos = basePos + (mode == MODE_MONTH ? Constants.MONTH_LOOK_AFTER : Constants.YEAR_LOOK_AFTER);
+            maxPos = basePos + (PeriodMode.MONTHLY.equals(periodMode) ? Constants.MONTH_LOOK_AFTER : Constants.YEAR_LOOK_AFTER);
         }
 
         public int getBasePos() {
@@ -474,7 +483,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             Date targetDate;
 
             int diff = position - basePos;
-            if (mode == MODE_MONTH) {
+            if (PeriodMode.MONTHLY.equals(periodMode)) {
                 targetDate = calHelper.monthAfter(baseDate, diff);
             } else {
                 targetDate = calHelper.yearAfter(baseDate, diff);
@@ -482,9 +491,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
             BalanceMgntFragment f = new BalanceMgntFragment();
             Bundle b = new Bundle();
+            b.putSerializable(ARG_PERIOD_MODE, periodMode);
+            b.putBoolean(ARG_FROM_BEGINNING, fromBeginning);
             b.putInt(BalanceMgntFragment.ARG_POS, position);
-            b.putInt(BalanceMgntFragment.ARG_MODE, mode);
-            b.putBoolean(BalanceMgntFragment.ARG_FROM_BEGINNING, fromBeginning);
             b.putSerializable(BalanceMgntFragment.ARG_TARGET_DATE, targetDate);
             f.setArguments(b);
             return f;

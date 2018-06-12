@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.ui.LocalWebViewActivity;
 import com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity;
@@ -138,17 +139,17 @@ public class NavPageFacade {
             case MONTHLY_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
                 intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, false);
-                intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
+                intent.putExtra(BalanceMgntActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
                 break;
             case YEARLY_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
                 intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, false);
-                intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_YEAR);
+                intent.putExtra(BalanceMgntActivity.ARG_PERIOD_MODE, PeriodMode.YEARLY);
                 break;
             case FROM_BEGINNING_BALANCE:
                 intent = new Intent(activity, BalanceMgntActivity.class);
                 intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, true);
-                intent.putExtra(BalanceMgntActivity.ARG_MODE, BalanceMgntActivity.MODE_MONTH);
+                intent.putExtra(BalanceMgntActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
                 break;
             default:
                 Logger.w("Unknow page {}", page);

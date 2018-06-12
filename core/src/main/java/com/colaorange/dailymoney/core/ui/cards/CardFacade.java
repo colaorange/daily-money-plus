@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 
 import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.CalculationMode;
 import com.colaorange.dailymoney.core.context.Contexts;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Card;
@@ -74,15 +76,15 @@ public class CardFacade {
     private Fragment newLineMonthlyExpense(int desktopIndex, int pos, Card card) {
         CardLineAccountFragment f = new CardLineAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(LineAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(LineAccountFragment.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
         b.putSerializable(LineAccountFragment.ARG_BASE_DATE, new Date());
         b.putSerializable(LineAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         try {
-            ChartBaseFragment.CalculationMode calMode;
-            calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
+            CalculationMode calMode;
+            calMode = CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
             b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountFragment.ARG_CALCULATION_MODE, CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -92,15 +94,15 @@ public class CardFacade {
     private Fragment newLineMonthlyExpenseAggregate(int desktopIndex, int pos, Card card) {
         CardLineAccountAggregateFragment f = new CardLineAccountAggregateFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(LineAccountAggregateFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(LineAccountAggregateFragment.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
         b.putSerializable(LineAccountAggregateFragment.ARG_BASE_DATE, new Date());
         b.putSerializable(LineAccountAggregateFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         try {
-            ChartBaseFragment.CalculationMode calMode;
-            calMode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
+            CalculationMode calMode;
+            calMode = CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
             b.putSerializable(LineAccountAggregateFragment.ARG_CALCULATION_MODE, calMode);
         } catch (Exception x) {
-            b.putSerializable(LineAccountAggregateFragment.ARG_CALCULATION_MODE, ChartBaseFragment.CalculationMode.CUMULATIVE);
+            b.putSerializable(LineAccountAggregateFragment.ARG_CALCULATION_MODE, CalculationMode.CUMULATIVE);
         }
 
         f.setArguments(b);
@@ -110,7 +112,7 @@ public class CardFacade {
     private Fragment newPieMonthlyExpense(int desktopIndex, int pos, Card card) {
         CardPieAccountFragment f = new CardPieAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.MONTHLY);
+        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
         b.putSerializable(PieAccountFragment.ARG_BASE_DATE, new Date());
         b.putSerializable(PieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
@@ -120,7 +122,7 @@ public class CardFacade {
     private Fragment newPieWeeklyExpense(int desktopIndex, int pos, Card card) {
         CardPieAccountFragment f = new CardPieAccountFragment();
         Bundle b = newBaseBundle(desktopIndex, pos);
-        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, ChartBaseFragment.PeriodMode.WEEKLY);
+        b.putSerializable(PieAccountFragment.ARG_PERIOD_MODE, PeriodMode.WEEKLY);
         b.putSerializable(PieAccountFragment.ARG_BASE_DATE, new Date());
         b.putSerializable(PieAccountFragment.ARG_ACCOUNT_TYPE, AccountType.EXPENSE);
         f.setArguments(b);
@@ -238,16 +240,16 @@ public class CardFacade {
     }
 
     private void doEditLineMonthlyExpenseArgs(final int desktopIndex, final int pos, Card card, final OnOKListener listener) {
-        List<ChartBaseFragment.CalculationMode> values = new LinkedList<>();
+        List<CalculationMode> values = new LinkedList<>();
         List<String> labels = new LinkedList<>();
-        Set<ChartBaseFragment.CalculationMode> selection = new LinkedHashSet<>();
+        Set<CalculationMode> selection = new LinkedHashSet<>();
 
         NavPageFacade pgFacade = new NavPageFacade(activity);
 
-        for (ChartBaseFragment.CalculationMode item : ChartBaseFragment.CalculationMode.values()) {
+        for (CalculationMode item : CalculationMode.values()) {
             values.add(item);
         }
-        for (ChartBaseFragment.CalculationMode item : values) {
+        for (CalculationMode item : values) {
             switch (item) {
                 case INDIVIDUAL:
                     labels.add(i18n.string(R.string.chart_arg_calculation_mode_individual));
@@ -259,10 +261,10 @@ public class CardFacade {
 
         }
         try {
-            selection.add(ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE)));
+            selection.add(CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE)));
         } catch (Exception x) {
             //default cumulative
-            selection.add(ChartBaseFragment.CalculationMode.CUMULATIVE);
+            selection.add(CalculationMode.CUMULATIVE);
         }
 
         Dialogs.showSelectionList(activity, i18n.string(R.string.act_edit_args),
@@ -273,7 +275,7 @@ public class CardFacade {
                         if (Dialogs.OK_BUTTON == which) {
                             Preference preference = Contexts.instance().getPreference();
 
-                            Set<ChartBaseFragment.CalculationMode> selection = (Set<ChartBaseFragment.CalculationMode>) data;
+                            Set<CalculationMode> selection = (Set<CalculationMode>) data;
                             if (selection.size() > 0) {
                                 CardDesktop desktop = preference.getDesktop(desktopIndex);
                                 Card card = desktop.get(pos);
@@ -365,12 +367,12 @@ public class CardFacade {
                 break;
             case LINE_MONTHLY_EXPENSE:
             case LINE_MONTHLY_EXPENSE_AGGREGATE:
-                ChartBaseFragment.CalculationMode mode;
+                CalculationMode mode;
                 try {
                     sb.append(" : ");
-                    mode = ChartBaseFragment.CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
+                    mode = CalculationMode.valueOf((String) card.getArg(ARG_CHART_CALCULATION_MODE));
                 } catch (Exception x) {
-                    mode = ChartBaseFragment.CalculationMode.CUMULATIVE;
+                    mode = CalculationMode.CUMULATIVE;
                 }
                 switch (mode) {
                     case INDIVIDUAL:
