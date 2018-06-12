@@ -35,19 +35,14 @@ import java.util.Set;
 /**
  * @author dennis
  */
-public class PieAccountFragment extends ChartBaseFragment<PieChart> {
+public class PieAccountFragment extends PeriodModeChartBaseFragment<PieChart> {
 
-    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
-    public static final String ARG_BASE_DATE = "baseDate";
-    public static final String ARG_FROM_BEGINNING = "fromBeginning";
     public static final String ARG_ACCOUNT = "account";
 
-    protected PeriodMode periodMode;
+
     protected AccountType accountType;
     protected Account account;
-    protected Date baseDate;
-    boolean fromBeginning;
 
     protected int accountTypeTextColor;
 
@@ -57,10 +52,6 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
-        if (periodMode == null) {
-            periodMode = PeriodMode.WEEKLY;
-        }
 
         if (!supportPeriod.contains(periodMode)) {
             throw new IllegalStateException("unsupported period " + periodMode);
@@ -77,13 +68,6 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
         if (account != null) {
             accountType = AccountType.find(account.getType());
         }
-
-        baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
-        if (baseDate == null) {
-            baseDate = new Date();
-        }
-
-        fromBeginning = args.getBoolean(ARG_FROM_BEGINNING, false);
     }
 
     @Override
@@ -101,11 +85,13 @@ public class PieAccountFragment extends ChartBaseFragment<PieChart> {
         vChart.setHoleColor(backgroundColor);
         vChart.setHoleRadius(45);
         vChart.setTransparentCircleRadius(55);
+
+
     }
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.chart_pie_account_type_frag;
+        return R.layout.chart_pie_period_frag;
     }
 
     @Override

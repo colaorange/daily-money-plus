@@ -38,17 +38,13 @@ import java.util.Set;
  *
  * @author dennis
  */
-public class LineFromBeginningAccountFragment extends ChartBaseFragment<LineChart> {
+public class LineFromBeginningAccountFragment extends PeriodModeChartBaseFragment<LineChart> {
 
-    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_ACCOUNT = "account";
-    public static final String ARG_BASE_DATE = "baseDate";
 
-    private PeriodMode periodMode;
     private AccountType accountType;
     private Account account;
-    private Date baseDate;
 
     protected int accountTypeTextColor;
     private XAxisDateFormatter formatter;
@@ -61,11 +57,6 @@ public class LineFromBeginningAccountFragment extends ChartBaseFragment<LineChar
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
-        if (periodMode == null) {
-            periodMode = PeriodMode.MONTHLY;
-        }
-
         if (!supportPeriod.contains(periodMode)) {
             throw new IllegalStateException("unsupported period " + periodMode);
         }
@@ -81,12 +72,6 @@ public class LineFromBeginningAccountFragment extends ChartBaseFragment<LineChar
         if (account != null) {
             accountType = AccountType.find(account.getType());
         }
-
-        baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
-        if (baseDate == null) {
-            baseDate = new Date();
-        }
-
     }
 
     @Override
@@ -128,7 +113,7 @@ public class LineFromBeginningAccountFragment extends ChartBaseFragment<LineChar
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.chart_line_account_type_frag;
+        return R.layout.chart_line_period_frag;
     }
 
     @Override

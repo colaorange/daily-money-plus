@@ -68,7 +68,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
     @CallSuper
     protected void initArgs() {
         Bundle args = getArguments();
-        titlePadding = args.getBoolean(ARG_TITLE_PADDING, true);
+        titlePadding = args.getBoolean(ARG_TITLE_PADDING, false);
         moreHeight = args.getBoolean(ARG_MORE_HEIGHT, false);
     }
 

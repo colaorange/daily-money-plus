@@ -6,7 +6,7 @@ import com.colaorange.dailymoney.core.ui.chart.LineAccountAggregateFragment;
 /**
  * @author dennis
  */
-public class CardLineAccountAggregateFragment extends CardChartBaseFragment {
+public class CardLineAccountAggregateFragment extends CardPeriodModeChartBaseFragment {
 
     @Override
     protected ChartBaseFragment newFragment() {

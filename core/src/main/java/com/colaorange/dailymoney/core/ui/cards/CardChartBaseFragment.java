@@ -18,13 +18,17 @@ public abstract class CardChartBaseFragment extends CardBaseFragment {
         return R.layout.card_chart_base_frag;
     }
 
+    protected boolean isTitlePadding(){
+        return !showTitle;
+    }
+
     @Override
     protected boolean doReloadContent() {
 
         if (frag == null) {
             frag = newFragment();
             Bundle arg = (Bundle) getArguments().clone();
-            arg.putBoolean(PieAccountFragment.ARG_TITLE_PADDING, !showTitle);
+            arg.putBoolean(PieAccountFragment.ARG_TITLE_PADDING, isTitlePadding());
             frag.setArguments(arg);
             getChildFragmentManager()
                     .beginTransaction()

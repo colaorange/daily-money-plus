@@ -4,9 +4,16 @@
     android:id="@+id/chart_container"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center">
-    <!--padding and size are controlled by code-->
-    <com.github.mikephil.charting.charts.PieChart
+    android:orientation="vertical"
+    android:gravity="top|center">
+
+    <LinearLayout
+        android:id="@+id/period_info_frag_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

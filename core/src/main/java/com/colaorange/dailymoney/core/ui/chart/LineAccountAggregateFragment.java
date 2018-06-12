@@ -39,18 +39,14 @@ import java.util.TreeMap;
  *
  * @author dennis
  */
-public class LineAccountAggregateFragment extends ChartBaseFragment<LineChart> {
+public class LineAccountAggregateFragment extends PeriodModeChartBaseFragment<LineChart> {
 
-    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_CALCULATION_MODE = "calculationMode";
     public static final String ARG_ACCOUNT_TYPE = "accountType";
-    public static final String ARG_BASE_DATE = "baseDate";
     public static final String ARG_PREVIOUS_PERIOD = "previousPeriod";
 
-    PeriodMode periodMode;
     private CalculationMode calculationMode;
     private AccountType accountType;
-    private Date baseDate;
     private boolean previousPeriod = true;
 
     protected int accountTypeTextColor;
@@ -64,10 +60,6 @@ public class LineAccountAggregateFragment extends ChartBaseFragment<LineChart> {
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
-        if (periodMode == null) {
-            periodMode = PeriodMode.MONTHLY;
-        }
 
         if (!supportPeriod.contains(periodMode)) {
             throw new IllegalStateException("unsupported period " + periodMode);
@@ -81,11 +73,6 @@ public class LineAccountAggregateFragment extends ChartBaseFragment<LineChart> {
         accountType = (AccountType) args.getSerializable(ARG_ACCOUNT_TYPE);
         if (accountType == null) {
             accountType = AccountType.EXPENSE;
-        }
-
-        baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
-        if (baseDate == null) {
-            baseDate = new Date();
         }
 
         previousPeriod = args.getBoolean(ARG_PREVIOUS_PERIOD, previousPeriod);
@@ -131,7 +118,7 @@ public class LineAccountAggregateFragment extends ChartBaseFragment<LineChart> {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.chart_line_account_type_frag;
+        return R.layout.chart_line_period_frag;
     }
 
     @Override

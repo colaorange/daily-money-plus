@@ -36,13 +36,7 @@ import java.util.Set;
  *
  * @author dennis
  */
-public class LineFromBeginningAggregateFragment extends ChartBaseFragment<LineChart> {
-
-    public static final String ARG_PERIOD_MODE = "periodMode";
-    public static final String ARG_BASE_DATE = "baseDate";
-
-    PeriodMode periodMode;
-    private Date baseDate;
+public class LineFromBeginningAggregateFragment extends PeriodModeChartBaseFragment<LineChart> {
 
     protected Map<AccountType, Integer> accountTypeTextColorMap;
     private XAxisDateFormatter formatter;
@@ -55,18 +49,9 @@ public class LineFromBeginningAggregateFragment extends ChartBaseFragment<LineCh
     protected void initArgs() {
         super.initArgs();
         Bundle args = getArguments();
-        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
-        if (periodMode == null) {
-            periodMode = PeriodMode.MONTHLY;
-        }
 
         if (!supportPeriod.contains(periodMode)) {
             throw new IllegalStateException("unsupported period " + periodMode);
-        }
-
-        baseDate = (Date) args.getSerializable(ARG_BASE_DATE);
-        if (baseDate == null) {
-            baseDate = new Date();
         }
     }
 
@@ -103,7 +88,7 @@ public class LineFromBeginningAggregateFragment extends ChartBaseFragment<LineCh
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.chart_line_account_type_frag;
+        return R.layout.chart_line_period_frag;
     }
 
     @Override
