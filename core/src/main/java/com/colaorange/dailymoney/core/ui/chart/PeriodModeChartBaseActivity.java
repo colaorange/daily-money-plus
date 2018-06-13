@@ -4,15 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.PeriodMode;
+import com.colaorange.dailymoney.core.ui.helper.FragsRecyclerViewFragment;
 import com.colaorange.dailymoney.core.ui.helper.PeriodModePagerAdapter;
-import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity;
-import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntFragment;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -32,9 +31,19 @@ public abstract class PeriodModeChartBaseActivity extends ContextsActivity {
     private ViewPager vPager;
     private ChartPagerAdapter adapter;
 
+    protected abstract FragNewerBase newFragNewer(Date targetDate);
 
-    protected abstract PeriodModeChartBaseFragment newChartFragment(Date targetDate);
+    public abstract static class FragNewerBase implements FragsRecyclerViewFragment.FragNewer{
+        protected Bundle args;
 
+        protected FragNewerBase(){
+        }
+
+        public FragNewerBase(Bundle args){
+            this.args = args;
+        }
+        public abstract Fragment newFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,7 @@ public abstract class PeriodModeChartBaseActivity extends ContextsActivity {
         initArgs();
         initMembers();
     }
+
 
     protected void initArgs() {
         Bundle args = getIntentExtras();
@@ -71,7 +81,6 @@ public abstract class PeriodModeChartBaseActivity extends ContextsActivity {
         adapter = new ChartPagerAdapter(getSupportFragmentManager(), baseDate, periodMode);
         vPager.setAdapter(adapter);
         vPager.setCurrentItem(adapter.getBasePos());
-
     }
 
 
@@ -82,8 +91,16 @@ public abstract class PeriodModeChartBaseActivity extends ContextsActivity {
         }
 
         @Override
-        protected Fragment getItem(int position, Date targetDate) {
-            return newChartFragment(targetDate);
+        protected Fragment getItem(final int position, final Date targetDate) {
+            FragsRecyclerViewFragment scrollWrap = new FragsRecyclerViewFragment();
+
+            Bundle args = new Bundle();
+            ArrayList<FragsRecyclerViewFragment.FragNewer> l = new ArrayList<>();
+            l.add(newFragNewer(targetDate));
+            args.putSerializable(FragsRecyclerViewFragment.ARG_FRAGS_NEWER_LIST, l);
+
+            scrollWrap.setArguments(args);
+            return scrollWrap;
         }
     }
 

@@ -236,7 +236,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
             FragmentManager fragmentManager = getChildFragmentManager();
             // I Finally get the root cause of fking java.lang.IllegalArgumentException: No view found for id issue
             // with itemView id, to prevent remove wrong fragment in new card_desktop at recrate case
-            String fragTag = "switcher:" + vh.itemView.getId() + ":" + card.getId();
+            String fragTag = "card-desktop:" + vh.itemView.getId() + ":" + card.getId();
 
             Fragment f = fragmentManager.findFragmentByTag(fragTag);
             if (f != null) {

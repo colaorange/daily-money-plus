@@ -129,7 +129,7 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         vContainer.setPadding(pLeft, pTop, pRight, pBottom);
 
         float size = Math.max(w, h) / (moreHeight ? 1.5f : 2f);
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vChart.getLayoutParams();
+        ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) vChart.getLayoutParams();
         lp.height = (int) (size * dp);
         vChart.setLayoutParams(lp);
     }
