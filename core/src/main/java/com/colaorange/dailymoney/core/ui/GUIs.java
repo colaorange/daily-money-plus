@@ -145,7 +145,7 @@ public class GUIs {
 
     private static ScheduledExecutorService delayPostExecutor = Executors.newSingleThreadScheduledExecutor();
     private static ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
-    private static ExecutorService multipleExecutor = Executors.newFixedThreadPool(3);
+    private static ExecutorService multipleExecutor = Executors.newFixedThreadPool(2);
 
     static public void doAsync(Context context, final IAsyncRunnable r) {
         final Activity activity = context instanceof Activity ? (Activity)context : null;
