@@ -35,7 +35,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:singleLine="true"
-                    android:textSize="?textSize"/>
+                    android:textStyle="bold"
+                    android:textSize="?textSizeMedium"/>
             </LinearLayout>
 
             <TextView
@@ -44,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 android:singleLine="true"
-                android:textSize="?textSize"/>
+                android:textSize="?textSizeMedium"/>
         </LinearLayout>
 
         <LinearLayout
