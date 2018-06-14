@@ -17,7 +17,7 @@ public class LineAccountAggregateActivity extends PeriodModeChartBaseActivity {
         args.putSerializable(PeriodModeChartBaseFragment.ARG_BASE_DATE, targetDate);
         args.putSerializable(PeriodModeChartBaseFragment.ARG_PERIOD_MODE, periodMode);
         args.putSerializable(PeriodModeChartBaseFragment.ARG_FROM_BEGINNING, fromBeginning);
-        return new LineFromBeginningAggregateActivity.FragNewerImpl(args);
+        return new FragNewerImpl(args);
     }
 
     public static class FragNewerImpl extends FragNewerBase {

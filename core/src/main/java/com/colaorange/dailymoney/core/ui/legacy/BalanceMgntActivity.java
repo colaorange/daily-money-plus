@@ -399,7 +399,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         }
     }
 
-    private void doAccountTypeLineChart(final Balance balance, boolean cumulative) {
+    private void doAccountAggregateLineChart(final Balance balance, boolean cumulative) {
         final BalanceMgntFragment.FragInfo fragInfo = fragInfoMap.get(vPager.getCurrentItem());
         if (fragInfo == null) {
             Logger.w("fragInfo is null on {}", vPager.getCurrentItem());
@@ -414,7 +414,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         intent.putExtra(LineAccountAggregateFragment.ARG_ACCOUNT_TYPE, at);
         intent.putExtra(LineAccountAggregateFragment.ARG_BASE_DATE, fragInfo.date);
         intent.putExtra(LineAccountAggregateFragment.ARG_PERIOD_MODE, periodMode);
-        intent.putExtra(PieAccountFragment.ARG_FROM_BEGINNING, fromBeginning);
+        intent.putExtra(LineAccountAggregateFragment.ARG_FROM_BEGINNING, fromBeginning);
         intent.putExtra(LineAccountAggregateFragment.ARG_CALCULATION_MODE, cumulative ? CalculationMode.CUMULATIVE : CalculationMode.INDIVIDUAL);
         intent.putExtra(LineAccountAggregateFragment.ARG_PREVIOUS_PERIOD, true);
         intent.putExtra(LineAccountAggregateActivity.ARG_TITLE, getTitle());
@@ -503,10 +503,10 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                 doAccountLineChart(actionObj, true);
                 return true;
             } else if (item.getItemId() == R.id.menu_chart_account_aggregate_line) {
-                doAccountTypeLineChart(actionObj, false);
+                doAccountAggregateLineChart(actionObj, false);
                 return true;
             } else if (item.getItemId() == R.id.menu_chart_account_aggregate_cumulative_line) {
-                doAccountTypeLineChart(actionObj, true);
+                doAccountAggregateLineChart(actionObj, true);
                 return true;
             } else if (item.getItemId() == R.id.menu_reclist) {
                 doRecordList(actionObj);
