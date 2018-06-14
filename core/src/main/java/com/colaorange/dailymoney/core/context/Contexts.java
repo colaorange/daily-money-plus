@@ -439,10 +439,15 @@ public class Contexts {
         return contextsApp.getResources().getDrawable(id);
     }
 
-    public String toFormattedMoneyString(double money) {
+    public String toFormattedMoneyString(Number money) {
         IMasterDataProvider imdp = getMasterDataProvider();
         Book book = imdp.findBook(preference.getWorkingBookId());
         return SymbolPosition.money2String(money, book.getSymbol(), book.getSymbolPosition());
+    }
+    public String toFormattedMoneyString(Number money, int decimalLength) {
+        IMasterDataProvider imdp = getMasterDataProvider();
+        Book book = imdp.findBook(preference.getWorkingBookId());
+        return SymbolPosition.money2String(money, book.getSymbol(), book.getSymbolPosition(), decimalLength);
     }
 
 

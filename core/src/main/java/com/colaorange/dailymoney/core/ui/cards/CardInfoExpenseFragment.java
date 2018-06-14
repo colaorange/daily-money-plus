@@ -1,5 +1,6 @@
 package com.colaorange.dailymoney.core.ui.cards;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -28,23 +29,19 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
     @Override
     protected void initMembers() {
         super.initMembers();
-
         vInfoWeeklyExpense = rootView.findViewById(R.id.card_info_weekly_expense);
         vInfoMonthlyExpense = rootView.findViewById(R.id.card_info_monthly_expense);
-        vInfoCumulativeCash = rootView.findViewById(R.id.card_info_cumulative_cash);
+        vInfoCumulativeCash = rootView.findViewById(R.id.card_info_cash);
 
     }
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.card_info_expanse_frag;
+        return R.layout.card_info_expense_frag;
     }
 
     @Override
     protected boolean doReloadContent() {
-        vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, "--"));
-        vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, "--"));
-        vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, "--"));
 
         GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
 
@@ -84,9 +81,9 @@ public class CardInfoExpenseFragment extends CardBaseFragment implements EventQu
             @Override
             public void onAsyncFinish() {
                 setNoData(false);
-                vInfoWeeklyExpense.setText(i18n.string(R.string.label_weekly_expense, contexts().toFormattedMoneyString(varWE.value)));
-                vInfoMonthlyExpense.setText(i18n.string(R.string.label_monthly_expense, contexts().toFormattedMoneyString(varME.value)));
-                vInfoCumulativeCash.setText(i18n.string(R.string.label_cumulative_cash, contexts().toFormattedMoneyString(varC.value)));
+                vInfoWeeklyExpense.setText(contexts().toFormattedMoneyString(varWE.value));
+                vInfoMonthlyExpense.setText(contexts().toFormattedMoneyString(varME.value));
+                vInfoCumulativeCash.setText(contexts().toFormattedMoneyString(varC.value));
             }
         });
 

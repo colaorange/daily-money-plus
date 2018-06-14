@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Colors;
+import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
@@ -32,6 +33,7 @@ import com.colaorange.dailymoney.core.util.I18N;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -72,6 +74,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private View rootView;
 
     I18N i18n;
+
+    private int decimalLength;
 
     static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
@@ -240,6 +244,12 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                     all.addAll(liability);
                     all.addAll(other);
                 }
+
+                decimalLength = 0;
+                DecimalFormat df = Formats.getMoneyFormat();
+                for(Balance b: all){
+                    decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, b.getMoney()));
+                }
             }
 
             @Override
@@ -332,7 +342,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
             Integer textColor;
 
             vname.setText(balance.getName());
-            vmoney.setText(contexts().toFormattedMoneyString(balance.getMoney()));
+            vmoney.setText(contexts().toFormattedMoneyString(balance.getMoney(), decimalLength));
 
             boolean selected = adaptor.isSelected(balance);
 

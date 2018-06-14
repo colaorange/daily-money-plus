@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textStyle="bold"
                 android:textSize="?textSize" />
         </LinearLayout>
     </LinearLayout>

@@ -46,12 +46,18 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     public static final String ARG_POS = "pos";
 
     private TextView vInfo;
-    private TextView vSumIncome;
-    private TextView vSumExpense;
-    private TextView vSumAsset;
-    private TextView vSumLiability;
-    private TextView vSumOther;
-    private TextView vSumUnknow;
+    private View vSumIncome;
+    private View vSumExpense;
+    private View vSumAsset;
+    private View vSumLiability;
+    private View vSumOther;
+    private View vSumUnknown;
+    private TextView vSumIncomeMoney;
+    private TextView vSumExpenseMoney;
+    private TextView vSumAssetMoney;
+    private TextView vSumLiabilityMoney;
+    private TextView vSumOtherMoney;
+    private TextView vSumUnknownMoney;
 
     private Date targetDate;
     private int mode;
@@ -117,12 +123,19 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         nonDigitalMonthFormat = preference.getNonDigitalMonthFormat();
 
         vInfo = rootView.findViewById(R.id.record_info);
+
         vSumIncome = rootView.findViewById(R.id.sum_income);
         vSumExpense = rootView.findViewById(R.id.sum_expense);
         vSumAsset = rootView.findViewById(R.id.sum_asset);
         vSumLiability = rootView.findViewById(R.id.sum_liability);
         vSumOther = rootView.findViewById(R.id.sum_other);
-        vSumUnknow = rootView.findViewById(R.id.sum_unknow);
+        vSumUnknown = rootView.findViewById(R.id.sum_unknown);
+        vSumIncomeMoney = rootView.findViewById(R.id.sum_income_money);
+        vSumExpenseMoney = rootView.findViewById(R.id.sum_expense_money);
+        vSumAssetMoney = rootView.findViewById(R.id.sum_asset_money);
+        vSumLiabilityMoney = rootView.findViewById(R.id.sum_liability_money);
+        vSumOtherMoney = rootView.findViewById(R.id.sum_other_money);
+        vSumUnknownMoney = rootView.findViewById(R.id.sum_unknown_money);
 
         vInfo = rootView.findViewById(R.id.record_info);
 
@@ -165,7 +178,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
         vSumLiability.setVisibility(TextView.GONE);
         vSumOther.setVisibility(TextView.GONE);
 
-        vSumUnknow.setVisibility(TextView.VISIBLE);
+        vSumUnknown.setVisibility(TextView.VISIBLE);
 
         switch (mode) {
             case MODE_ALL:
@@ -224,26 +237,26 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
                 lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordListFragment.ARG_POS, pos).build());
 
-                vSumUnknow.setVisibility(TextView.GONE);
+                vSumUnknown.setVisibility(TextView.GONE);
 
                 if (income != 0) {
-                    vSumIncome.setText(i18n.string(R.string.label_reclist_sum_income, contexts().toFormattedMoneyString((income))));
+                    vSumIncomeMoney.setText(contexts().toFormattedMoneyString((income)));
                     vSumIncome.setVisibility(TextView.VISIBLE);
                 }
                 if (expense != 0) {
-                    vSumExpense.setText(i18n.string(R.string.label_reclist_sum_expense, contexts().toFormattedMoneyString((expense))));
+                    vSumExpenseMoney.setText(contexts().toFormattedMoneyString((expense)));
                     vSumExpense.setVisibility(TextView.VISIBLE);
                 }
                 if (asset != 0) {
-                    vSumAsset.setText(i18n.string(R.string.label_reclist_sum_asset, contexts().toFormattedMoneyString((asset))));
+                    vSumAssetMoney.setText(contexts().toFormattedMoneyString((asset)));
                     vSumAsset.setVisibility(TextView.VISIBLE);
                 }
                 if (liability != 0) {
-                    vSumLiability.setText(i18n.string(R.string.label_reclist_sum_liability, contexts().toFormattedMoneyString((liability))));
+                    vSumLiabilityMoney.setText(contexts().toFormattedMoneyString((liability)));
                     vSumLiability.setVisibility(TextView.VISIBLE);
                 }
                 if (other != 0) {
-                    vSumOther.setText(i18n.string(R.string.label_reclist_sum_other, contexts().toFormattedMoneyString((other))));
+                    vSumOtherMoney.setText(contexts().toFormattedMoneyString((other)));
                     vSumOther.setVisibility(TextView.VISIBLE);
                 }
 

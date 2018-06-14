@@ -21,6 +21,30 @@ public class Formats {
         return new DecimalFormat("###,###,###,##0.###");
     }
 
+    public static DecimalFormat getFormat(boolean group, int decimalLen) {
+        StringBuilder sb = new StringBuilder();
+        if(group){
+            sb.append("###,###,###,##0");
+        }else{
+            sb.append("#0");
+        }
+        if(decimalLen>0){
+            sb.append(".");
+            for(int i=0;i<decimalLen;i++){
+                sb.append("0");
+            }
+        }
+        return new DecimalFormat(sb.toString());
+    }
+
+    public static int getDecimalLength(DecimalFormat df, Number number) {
+        char sep = df.getDecimalFormatSymbols().getDecimalSeparator();
+        String str = df.format(number);
+        int i = str.indexOf(sep);
+        return i == -1 ? 0 : str.length() - i - 1;
+    }
+
+
     public static DateFormat getNormalizeDateFormat() {
         //never chnage nor format, it effect import/export
         return new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -45,7 +69,7 @@ public class Formats {
         return getDoubleFormat().format(d);
     }
 
-    public static double string2Double(String d)  throws ParseException {
+    public static double string2Double(String d) throws ParseException {
 
         return getDoubleFormat().parse(d).doubleValue();
     }
