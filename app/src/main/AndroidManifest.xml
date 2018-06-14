@@ -61,10 +61,15 @@
         <activity
             android:name=".core.ui.pref.PrefsContributionActivity"
             android:label="@string/label_contribution"/>
-
         <activity
             android:name=".core.ui.pref.PrefsDeveloperActivity"
             android:label="@string/label_developer"/>
+        <activity
+            android:name=".core.ui.pref.PrefsFormatActivity"
+            android:label="@string/label_format"/>
+        <activity
+            android:name=".core.ui.pref.PrefsRecordActivity"
+            android:label="@string/label_record"/>
 
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"

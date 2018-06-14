@@ -16,41 +16,18 @@
             android:key="@string/pref_text_size"
             android:summary="@string/label_prefs_text_size_sum"
             android:title="@string/label_prefs_text_size" />
-        <ListPreference
-            android:defaultValue="@string/default_pref_record_list_layout"
-            android:entries="@array/prefs_detlayout_labels"
-            android:entryValues="@array/prefs_detlayout_values"
-            android:key="@string/pref_record_list_layout"
-            android:summary="@string/label_prefs_reclayout_sum"
-            android:title="@string/label_prefs_reclayout" />
 
-        <ListPreference
-            android:defaultValue="@string/default_pref_format_date"
-            android:entries="@array/prefs_format_date_labels"
-            android:entryValues="@array/prefs_format_date_values"
-            android:key="@string/pref_format_date"
-            android:summary="@string/label_prefs_format_date_sum"
-            android:title="@string/label_prefs_format_date" />
-        <ListPreference
-            android:defaultValue="@string/default_pref_format_time"
-            android:entries="@array/prefs_format_time_val"
-            android:entryValues="@array/prefs_format_time_val"
-            android:key="@string/pref_format_time"
-            android:summary="@string/label_prefs_format_time_sum"
-            android:title="@string/label_prefs_format_time" />
-        <ListPreference
-            android:defaultValue="@string/default_pref_format_month"
-            android:entries="@array/prefs_format_month_labels"
-            android:entryValues="@array/prefs_format_month_values"
-            android:key="@string/pref_format_month"
-            android:summary="@string/label_prefs_format_month_sum"
-            android:title="@string/label_prefs_format_month" />
-        <EditTextPreference
-            android:defaultValue="@string/default_pref_max_records"
-            android:key="@string/pref_max_records"
-            android:numeric="signed"
-            android:summary="@string/label_prefs_maxrecords_sum"
-            android:title="@string/label_prefs_maxrecords" />
+        <Preference android:title="@string/label_format">
+            <intent
+                android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsFormatActivity"
+                android:targetPackage="com.colaorange.dailymoney" />
+        </Preference>
+        <Preference android:title="@string/label_record">
+            <intent
+                android:targetClass="com.colaorange.dailymoney.core.ui.pref.PrefsRecordActivity"
+                android:targetPackage="com.colaorange.dailymoney" />
+        </Preference>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_security">

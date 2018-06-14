@@ -157,24 +157,24 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);
 
-            recyclerDataList.addAll(precessHeaderFooter(data));
+            recyclerDataList.addAll(precessGroupRecordsByDate(data));
         }
         recyclerAdapter.notifyDataSetChanged();
 
     }
 
-    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessHeaderFooter(List<Record> data) {
+    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessGroupRecordsByDate(List<Record> data) {
         List<RecordRecyclerAdapter.RecordFolk> folks = new LinkedList<>();
 
         //<21, it doesn't support color reference in drawable
-        boolean skipHeadFooter = Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
+        boolean skipGroup = !preference().isGroupRecordsByDate() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
 
         RecordRecyclerAdapter.RecordHeader lastHeader = null;
         RecordRecyclerAdapter.RecordHeader header;
         for (Record r : data) {
             header = null;
 
-            if (!skipHeadFooter) {
+            if (!skipGroup) {
                 Calendar cal = calendarHelper.calendar(r.getDate());
 
                 boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
@@ -199,7 +199,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             }
             folks.add(new RecordRecyclerAdapter.RecordFolk(r));
         }
-        if (!skipHeadFooter && lastHeader != null) {
+        if (!skipGroup && lastHeader != null) {
             folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
         }
 

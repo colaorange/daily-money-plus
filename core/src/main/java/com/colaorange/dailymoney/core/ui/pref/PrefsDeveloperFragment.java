@@ -1,32 +1,15 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * @author dennis
@@ -38,12 +21,12 @@ public class PrefsDeveloperFragment extends ContextsPrefsFragment implements Sha
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs_developer);
         final I18N i18n = Contexts.instance().getI18n();
-        initDeveloperPrefs(i18n);
+        initPrefs(i18n);
     }
 
 
 
-    private void initDeveloperPrefs(final I18N i18n) {
+    private void initPrefs(final I18N i18n) {
 
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_csv_encoding)));
 

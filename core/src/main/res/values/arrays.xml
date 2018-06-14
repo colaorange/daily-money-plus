@@ -24,13 +24,13 @@
         <item>@string/label_text_size_large</item>
     </string-array>
 
-	<string-array name="prefs_detlayout_values" translatable="false">
+	<string-array name="prefs_record_layout_values" translatable="false">
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>
 		<item>4</item>
 	</string-array>
-	<string-array name="prefs_detlayout_labels" translatable="false">
+	<string-array name="prefs_record_layout_labels" translatable="false">
 		<item>@string/label_rec_layout1</item>
 		<item>@string/label_rec_layout2</item>
 		<item>@string/label_rec_layout3</item>

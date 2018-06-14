@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="parent_screen"
+    android:title="@string/label_record">
+    <ListPreference
+        android:defaultValue="@string/default_pref_record_list_layout"
+        android:entries="@array/prefs_record_layout_labels"
+        android:entryValues="@array/prefs_record_layout_values"
+        android:key="@string/pref_record_list_layout"
+        android:summary="@string/label_prefs_reccord_layout_sum"
+        android:title="@string/label_prefs_record_layout" />
+    <SwitchPreference
+        android:defaultValue="@string/default_pref_group_records_by_date"
+        android:key="@string/pref_group_records_by_date"
+        android:summary="@string/label_prefs_group_records_by_date_sum"
+        android:title="@string/label_prefs_group_records_by_date" />
+    <EditTextPreference
+        android:defaultValue="@string/default_pref_max_records"
+        android:key="@string/pref_max_records"
+        android:numeric="signed"
+        android:summary="@string/label_prefs_maxrecords_sum"
+        android:title="@string/label_prefs_maxrecords" />
+
+
+</PreferenceScreen>

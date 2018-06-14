@@ -119,6 +119,7 @@ public class Preference {
     String yearFormat;
     String yearMonthFormat;
     String dayFormat;
+    boolean groupRecordsByDate = true;
 
     boolean autoBackup = true;
 
@@ -369,6 +370,12 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
+        try {
+            groupRecordsByDate = Objects.coerceToBoolean(i18n.string(R.string.default_pref_group_records_by_date));
+            groupRecordsByDate = prefs.getBoolean(i18n.string(R.string.pref_group_records_by_date), groupRecordsByDate);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
+        }
 
         String formatDate = i18n.string(R.string.default_pref_format_date);
         String formatTime = i18n.string(R.string.default_pref_format_time);
@@ -488,6 +495,7 @@ public class Preference {
         Logger.d("preference : yearFormat {}", yearFormat);
         Logger.d("preference : yearMonthFormat {}", yearMonthFormat);
         Logger.d("preference : record layout {}", recordListLayout);
+        Logger.d("preference : group records by date {}", groupRecordsByDate);
         Logger.d("preference : max records {}", maxRecords);
 
     }
@@ -551,6 +559,10 @@ public class Preference {
 
     public int getMaxRecords() {
         return maxRecords;
+    }
+
+    public boolean isGroupRecordsByDate(){
+        return groupRecordsByDate;
     }
 
     public int getFirstdayWeek() {

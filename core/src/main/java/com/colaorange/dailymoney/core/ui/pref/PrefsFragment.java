@@ -78,11 +78,6 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
     private void initDisplayPrefs(I18N i18n) {
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_theme)));
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_text_size)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_record_list_layout)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_date)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_month)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_format_time)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_max_records)));
     }
 
     private void initDataPrefs(I18N i18n) {

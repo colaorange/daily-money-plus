@@ -25,11 +25,11 @@ public class PrefsContributionFragment extends ContextsPrefsFragment implements 
         super.onCreate(bundle);
         addPreferencesFromResource(R.xml.prefs_contribution);
         final I18N i18n = Contexts.instance().getI18n();
-        initContributionPrefs(i18n);
+        initPrefs(i18n);
     }
 
 
-    private void initContributionPrefs(final I18N i18n) {
+    private void initPrefs(final I18N i18n) {
         try {
             Preference pref = findPreference("mailme_lang");
             if (pref != null) {

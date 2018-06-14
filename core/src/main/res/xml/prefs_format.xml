@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/label_format">
+    <ListPreference
+        android:defaultValue="@string/default_pref_format_date"
+        android:entries="@array/prefs_format_date_labels"
+        android:entryValues="@array/prefs_format_date_values"
+        android:key="@string/pref_format_date"
+        android:summary="@string/label_prefs_format_date_sum"
+        android:title="@string/label_prefs_format_date" />
+    <ListPreference
+        android:defaultValue="@string/default_pref_format_time"
+        android:entries="@array/prefs_format_time_val"
+        android:entryValues="@array/prefs_format_time_val"
+        android:key="@string/pref_format_time"
+        android:summary="@string/label_prefs_format_time_sum"
+        android:title="@string/label_prefs_format_time" />
+    <ListPreference
+        android:defaultValue="@string/default_pref_format_month"
+        android:entries="@array/prefs_format_month_labels"
+        android:entryValues="@array/prefs_format_month_values"
+        android:key="@string/pref_format_month"
+        android:summary="@string/label_prefs_format_month_sum"
+        android:title="@string/label_prefs_format_month" />
+
+
+</PreferenceScreen>
