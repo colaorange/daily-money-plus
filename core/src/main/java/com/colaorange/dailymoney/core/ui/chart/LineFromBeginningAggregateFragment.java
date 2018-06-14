@@ -94,7 +94,7 @@ public class LineFromBeginningAggregateFragment extends PeriodModeChartBaseFragm
     @Override
     public void reloadChart() {
         super.reloadChart();
-        GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
+        GUIs.doAsync(getContextsActivity(), new ChartLoading() {
             final Map<AccountType, List<Entry>> entrySeries = new LinkedHashMap<>();
 
             @Override
@@ -139,7 +139,7 @@ public class LineFromBeginningAggregateFragment extends PeriodModeChartBaseFragm
 
             @Override
             public void onAsyncFinish() {
-
+                super.onAsyncFinish();
 
                 List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
                 int i = 0;

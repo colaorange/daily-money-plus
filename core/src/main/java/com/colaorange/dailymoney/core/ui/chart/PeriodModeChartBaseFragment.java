@@ -1,10 +1,13 @@
 package com.colaorange.dailymoney.core.ui.chart;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.PeriodMode;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
+import com.colaorange.dailymoney.core.util.Logger;
 import com.github.mikephil.charting.charts.Chart;
 
 import java.util.Date;

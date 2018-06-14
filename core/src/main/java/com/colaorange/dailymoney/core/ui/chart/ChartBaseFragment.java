@@ -105,6 +105,8 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
 
         vChart.getDescription().setEnabled(false);
+
+        vChart.setNoDataTextColor(labelTextColor);
     }
 
     @CallSuper
@@ -132,13 +134,27 @@ public abstract class ChartBaseFragment<C extends Chart> extends ContextsFragmen
         ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) vChart.getLayoutParams();
         lp.height = (int) (size * dp);
         vChart.setLayoutParams(lp);
+
     }
 
 
-    public static class MoneyFormatter implements IValueFormatter {
+    public abstract class ChartLoading extends GUIs.AsyncAdapter {
+
+        public ChartLoading(){
+            vChart.setNoDataText(i18n.string(R.string.msg_data_loading));
+        }
+
+        @CallSuper
         @Override
-        public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
-            return Numbers.format(v, "#0.##");
+        public void onAsyncFinish() {
+            vChart.setNoDataText(i18n.string(R.string.msg_no_data));
+        }
+
+        @CallSuper
+        @Override
+        public void onAsyncError(Throwable t) {
+            vChart.setNoDataText(i18n.string(R.string.msg_no_data));
+            super.onAsyncError(t);
         }
     }
 }

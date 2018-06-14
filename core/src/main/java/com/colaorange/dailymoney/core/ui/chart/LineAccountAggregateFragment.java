@@ -124,7 +124,7 @@ public class LineAccountAggregateFragment extends PeriodModeChartBaseFragment<Li
     @Override
     public void reloadChart() {
         super.reloadChart();
-        GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
+        GUIs.doAsync(getContextsActivity(), new ChartLoading() {
 
             final Var<Boolean> noPrimary = new Var<>(false);
             final Map<String, List<Entry>> entrySeries = new LinkedHashMap<>();
@@ -183,7 +183,7 @@ public class LineAccountAggregateFragment extends PeriodModeChartBaseFragment<Li
 
             @Override
             public void onAsyncFinish() {
-
+                super.onAsyncFinish();
 
                 List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
                 int i = 0;

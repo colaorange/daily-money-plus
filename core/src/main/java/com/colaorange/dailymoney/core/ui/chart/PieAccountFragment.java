@@ -98,14 +98,13 @@ public class PieAccountFragment extends PeriodModeChartBaseFragment<PieChart> {
     public void reloadChart() {
         super.reloadChart();
 
-        GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
+        GUIs.doAsync(getContextsActivity(), new ChartLoading() {
 
             Var<Double> varBalance = new Var<>();
             List<PieEntry> entries = new LinkedList<>();
 
             @Override
             public void run() {
-
                 CalendarHelper calHelper = calendarHelper();
 
                 Date start;
@@ -169,6 +168,8 @@ public class PieAccountFragment extends PeriodModeChartBaseFragment<PieChart> {
 
             @Override
             public void onAsyncFinish() {
+                super.onAsyncFinish();
+
                 String description = "";
                 PieDataSet set;
 

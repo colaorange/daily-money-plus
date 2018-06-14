@@ -127,7 +127,7 @@ public class LineAccountFragment extends PeriodModeChartBaseFragment<LineChart> 
     @Override
     public void reloadChart() {
         super.reloadChart();
-        GUIs.doAsync(getContextsActivity(), new GUIs.AsyncAdapter() {
+        GUIs.doAsync(getContextsActivity(), new ChartLoading() {
 
             final Map<Account, TreeMap<Long, Entry>> entrySeries = new LinkedHashMap<>();
             final TreeMap<Long, Entry> unknownEntries = new TreeMap<>();
@@ -281,7 +281,7 @@ public class LineAccountFragment extends PeriodModeChartBaseFragment<LineChart> 
 
             @Override
             public void onAsyncFinish() {
-
+                super.onAsyncFinish();
 
                 List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
                 int i = 0;
