@@ -15,6 +15,8 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.DefaultCardDesktopCreator;
 import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
+import com.colaorange.dailymoney.core.ui.nav.NavPage;
+import com.colaorange.dailymoney.core.ui.nav.NavPageFacade;
 import com.colaorange.dailymoney.core.util.Logger;
 
 /**
@@ -109,10 +111,14 @@ public class StartupActivity extends ContextsActivity {
     }
 
     private void doNextActivity() {
-//        Intent intent = new Intent(StartupActivity.this, DesktopMgntActivity.class);
-        Intent intent = new Intent(StartupActivity.this, CardDesktopActivity.class);
-        intent.putExtra(ARG_FIRST_TIME, firstTime);
-        startActivity(intent);
+        String action = getIntent().getAction();
+        if(Constants.ACTION_CREATE_RECORD.equals(action)){
+            new NavPageFacade(this).doPage(NavPage.RECORD_EDITOR);
+        }else{
+            Intent intent = new Intent(this, CardDesktopActivity.class);
+            intent.putExtra(ARG_FIRST_TIME, firstTime);
+            startActivity(intent);
+        }
         started = true;
         firstTime = false;
     }

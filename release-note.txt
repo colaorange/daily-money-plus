@@ -4,6 +4,7 @@
  #31 add heading information to group records by date
  #11 Support to search records
  #33 make chart slideable too
+ #4  Support desktop widget
 
 === Bugs ===
  #16 RuntimeException when starting service
