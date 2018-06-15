@@ -4,6 +4,9 @@ package com.colaorange.dailymoney.core.ui;
  * @author dennis
  */
 public class Constants {
+
+    public static final String ACTION_CREATE_RECORD = "com.colaorange.dailymoney.action.createRecord";
+
     static final public String PREFS_WORKING_BOOK_ID = "working_book_id";
 
     static final public String PREFS_HIERARCHICAL_REPORT = "hierarchical_report";

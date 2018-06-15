@@ -24,4 +24,7 @@
     <dimen name="nav_drawer_width">304dp</dimen>
     <dimen name="nav_drawer_header_height">138dp</dimen>
     <dimen name="nav_drawer_menu_margin_top">140dp</dimen>
+
+    <!-- https://developer.android.com/guide/topics/appwidgets/ -->
+    <dimen name="widget_margin">0dp</dimen>
 </resources>
