@@ -115,7 +115,8 @@
             android:enabled="true"
             android:exported="false"/>
 
-        <receiver android:name=".core.ui.widget.CreateRecordWidget" >
+        <receiver android:name=".core.ui.widget.CreateRecordWidget"
+            android:label="@string/nav_pg_add_record" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
