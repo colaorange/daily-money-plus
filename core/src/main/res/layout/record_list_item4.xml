@@ -45,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right"
                 android:singleLine="true"
-                android:textSize="?textSizeMedium"/>
+                android:textSize="?textSize"/>
         </LinearLayout>
 
         <LinearLayout
