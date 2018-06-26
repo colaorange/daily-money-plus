@@ -152,4 +152,9 @@ public class StartupActivity extends ContextsActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    protected boolean handleRecreate() {
+        finish();
+        return true;
+    }
 }

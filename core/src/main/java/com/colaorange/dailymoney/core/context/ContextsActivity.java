@@ -145,19 +145,19 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
 
-    protected void restartApp(boolean passedProtection) {
-        //TODO passProtection
-        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//    protected void restartApp(boolean passedProtection) {
+//        //TODO passProtection
+//        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        i = (Intent) i.clone();
+////        String bypassId = Strings.randomUUID();
+////        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
+//
+//        startActivity(i);
+//    }
 
-        i = (Intent) i.clone();
-//        String bypassId = Strings.randomUUID();
-//        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
-
-        startActivity(i);
-    }
-
-    protected void restartAppCold() {
+    protected void restartAppColdly() {
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -276,8 +276,23 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     public void recreate() {
-        super.recreate();
+        if (recreating) {
+            return;
+        }
         recreating = true;
+        //since android will reuse fragment after you recreate activity (shit fragments)
+        //it cause many bugs, so we give it a chance to remove all fragment when recreating,
+        if(!handleRecreate()){
+            super.recreate();
+        }
+    }
+
+    /**
+     *
+     * @return true if you handle the recreate or false if didn't. default return false
+     */
+    protected boolean handleRecreate() {
+        return false;
     }
 
 
@@ -710,7 +725,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     /**
      * the method copy for @link {@link View#generateViewId()}, it is api > 17 only, but we use 15
-     * Generate a value suitable for use in {@link #setId(int)}.
+     * Generate a value suitable for use in {@link View#setId(int)}.
      * This value will not collide with ID values generated at build time by aapt for R.id.
      *
      * @return a generated ID value
