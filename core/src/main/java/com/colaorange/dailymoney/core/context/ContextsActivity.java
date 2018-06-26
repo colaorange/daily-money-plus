@@ -18,11 +18,9 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -282,18 +280,19 @@ public class ContextsActivity extends AppCompatActivity {
             return;
         }
         recreating = true;
-        //since android will reuse fragment after you recrate activity (shit fragments)
+        //since android will reuse fragment after you recreate activity (shit fragments)
         //it cause many bugs, so we give it a chance to remove all fragment when recreating,
-        whenRecreate();
+        if(!handleRecreate()){
+            super.recreate();
+        }
     }
 
-    protected void whenRecreate() {
-        //don't use super's recreate, it has bug on fragment in my case (after recrate, onResume of fragment are all out of call)
-//        super.recreate();
-        Intent intent = (Intent) getIntent().clone();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+    /**
+     *
+     * @return true if you handle the recreate or false if didn't. default return false
+     */
+    protected boolean handleRecreate() {
+        return false;
     }
 
 

@@ -153,7 +153,8 @@ public class StartupActivity extends ContextsActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void whenRecreate() {
-        //do nothing, a recreate super call cause it pops desktop again.
+    protected boolean handleRecreate() {
+        finish();
+        return true;
     }
 }

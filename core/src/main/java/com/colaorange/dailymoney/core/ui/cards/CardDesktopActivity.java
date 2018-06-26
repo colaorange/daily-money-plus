@@ -218,8 +218,7 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     }
 
     @Override
-    protected void whenRecreate() {
-        super.whenRecreate();
+    protected boolean handleRecreate() {
         //clear fragment as possible, bad android
         DesktopPagerAdapter adapter = (DesktopPagerAdapter) vPager.getAdapter();
         vPager.setAdapter(null);
@@ -234,6 +233,13 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
                 Logger.e("error when removing fragment in onRecreate", x);
             }
         }
+
+        //don't use super's recreate, it has bug on fragment in my case (after recreate, onResume of fragment are all out of call)
+        Intent intent = (Intent) getIntent().clone();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        return true;
     }
 
     @Override
