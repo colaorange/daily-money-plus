@@ -44,10 +44,10 @@ public class QEvents {
         String ON_RELOAD_FRAGMENT = "BalanceMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        String ON_SELECT_BALANCE = "balanceMgnt:onSelectBalance";
-        String ON_RESELECT_BALANCE = "balanceMgnt:onReselectBalance";
-        String ON_FRAGMENT_START = "balanceMgnt:onFragmentStart";
-        String ON_FRAGMENT_STOP = "balanceMgnt:onFragmentStop";
+        String ON_SELECT_BALANCE = "BalanceMgnt:onSelectBalance";
+        String ON_RESELECT_BALANCE = "BalanceMgnt:onReselectBalance";
+        String ON_FRAGMENT_START = "BalanceMgnt:onFragmentStart";
+        String ON_FRAGMENT_STOP = "BalanceMgnt:onFragmentStop";
 
     }
 

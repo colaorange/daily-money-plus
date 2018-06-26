@@ -181,7 +181,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                         @Override
                         public boolean onFinish(int which, Object data) {
                             if(which == GUIs.OK_BUTTON) {
-                                restartAppCold();
+                                restartAppColdly();
                             }
                             return true;
                         }

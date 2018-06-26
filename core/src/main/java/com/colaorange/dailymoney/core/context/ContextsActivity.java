@@ -18,9 +18,11 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -145,19 +147,19 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
 
-    protected void restartApp(boolean passedProtection) {
-        //TODO passProtection
-        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//    protected void restartApp(boolean passedProtection) {
+//        //TODO passProtection
+//        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        i = (Intent) i.clone();
+////        String bypassId = Strings.randomUUID();
+////        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
+//
+//        startActivity(i);
+//    }
 
-        i = (Intent) i.clone();
-//        String bypassId = Strings.randomUUID();
-//        i.putExtra(StartupActivity.ARG_BYPASS_PROTECTION,true);
-
-        startActivity(i);
-    }
-
-    protected void restartAppCold() {
+    protected void restartAppColdly() {
 
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -276,8 +278,22 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
     public void recreate() {
-        super.recreate();
+        if (recreating) {
+            return;
+        }
         recreating = true;
+        //since android will reuse fragment after you recrate activity (shit fragments)
+        //it cause many bugs, so we give it a chance to remove all fragment when recreating,
+        whenRecreate();
+    }
+
+    protected void whenRecreate() {
+        //don't use super's recreate, it has bug on fragment in my case (after recrate, onResume of fragment are all out of call)
+//        super.recreate();
+        Intent intent = (Intent) getIntent().clone();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
 
@@ -710,7 +726,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     /**
      * the method copy for @link {@link View#generateViewId()}, it is api > 17 only, but we use 15
-     * Generate a value suitable for use in {@link #setId(int)}.
+     * Generate a value suitable for use in {@link View#setId(int)}.
      * This value will not collide with ID values generated at build time by aapt for R.id.
      *
      * @return a generated ID value

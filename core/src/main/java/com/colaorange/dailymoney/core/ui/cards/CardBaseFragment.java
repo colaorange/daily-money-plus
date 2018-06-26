@@ -69,7 +69,6 @@ public abstract class CardBaseFragment extends ContextsFragment implements Event
         initArgs();
         initMembers();
         reloadView();
-        trackEvent(Contexts.TE.CARD+""+getClass().getSimpleName());
     }
 
     @CallSuper

@@ -8,15 +8,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.view.ActionMode;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -215,6 +218,25 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     }
 
     @Override
+    protected void whenRecreate() {
+        super.whenRecreate();
+        //clear fragment as possible, bad android
+        DesktopPagerAdapter adapter = (DesktopPagerAdapter) vPager.getAdapter();
+        vPager.setAdapter(null);
+        if (adapter != null) {
+            try {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                for (Fragment f : adapter.getCreatedFragmentSet()) {
+                    ft.remove(f);
+                }
+                ft.commitNowAllowingStateLoss();
+            } catch (Exception x) {
+                Logger.e("error when removing fragment in onRecreate", x);
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (vDrawer.isDrawerOpen(GravityCompat.START)) {
             vDrawer.closeDrawer(GravityCompat.START);
@@ -379,7 +401,7 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     private void doEditTitle() {
         I18N i18n = i18n();
 
-        trackEvent(Contexts.TE.CHART+"editTitle");
+        trackEvent(Contexts.TE.CHART + "editTitle");
 
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {
@@ -411,7 +433,7 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     private void doAddCard() {
         final I18N i18n = i18n();
 
-        trackEvent(Contexts.TE.CHART+"add");
+        trackEvent(Contexts.TE.CHART + "add");
 
         CardDesktop desktop = desktopList.get(vPager.getCurrentItem());
         if (isTestDesktop(desktop)) {
@@ -490,6 +512,9 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
 
 
     public class DesktopPagerAdapter extends FragmentPagerAdapter {
+
+        private Set<Fragment> createdFragmentSet = new LinkedHashSet<>();
+
         public DesktopPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -518,6 +543,20 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
 
                 return f;
             }
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            //give it a chance to remember that we created it, so we can destroy it.
+            Object obj = super.instantiateItem(container, position);
+            if (obj instanceof Fragment) {
+                createdFragmentSet.add((Fragment) obj);
+            }
+            return obj;
+        }
+
+        public Set<Fragment> getCreatedFragmentSet() {
+            return createdFragmentSet;
         }
     }
 
