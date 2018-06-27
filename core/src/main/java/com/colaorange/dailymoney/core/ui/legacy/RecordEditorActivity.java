@@ -312,9 +312,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         vToAccount = findViewById(R.id.record_to_account);
         toAccountList = new LinkedList<>();
         toAccountAdapter = new AccountIndentNodeSpinnerAdapter(this, toAccountList) {
-            @Override
-            public ViewHolder<AccountIndentNode> createViewHolder() {
-                return new AccountTypeViewBinder(this);
+            public boolean isSelected(int position) {
+                return vToAccount.getSelectedItemPosition() == position;
             }
         };
         vToAccount.setAdapter(toAccountAdapter);
