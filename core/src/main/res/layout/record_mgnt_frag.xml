@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_income"
-                        android:textColor="?accountUnknownTextColor"
+                        android:textColor="?accountIncomeTextColor"
                         android:textSize="?textSize"
                         android:paddingRight="4dp"/>
                     <TextView
@@ -157,7 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_liability"
-                        android:textColor="?accountUnknownTextColor"
+                        android:textColor="?accountLiabilityTextColor"
                         android:textSize="?textSize"
                         android:paddingRight="4dp"/>
                     <TextView

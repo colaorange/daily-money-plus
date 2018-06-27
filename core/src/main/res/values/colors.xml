@@ -77,34 +77,34 @@
 
     <!-- http://colorschemedesigner.com/csd-3.5/ -->
     <color name="expenseText">#ff9ab5</color>
-    <color name="expenseTextLight">#ffcdda</color>
-    <color name="expenseTextDark">#593640</color>
+    <color name="expenseTextLight">#ff99b4</color>
+    <color name="expenseTextDark">#8f0029</color>
     <color name="expenseBgLight">#ffc7d6</color>
-    <color name="expenseBgDark">#5d283c</color>
+    <color name="expenseBgDark">#4d192d</color>
 
     <color name="incomeText">#7AFFA2</color>
-    <color name="incomeTextLight">#ccffdb</color>
+    <color name="incomeTextLight">#99ffb7</color>
     <color name="incomeTextDark">#008a23</color>
     <color name="incomeBgLight">#9bffb9</color>
-    <color name="incomeBgDark">#2b592f</color>
+    <color name="incomeBgDark">#194d1e</color>
 
     <color name="assetText">#f6d174</color>
-    <color name="assetTextLight">#ffefcc</color>
-    <color name="assetTextDark">#816d3b</color>
+    <color name="assetTextLight">#ffdf99</color>
+    <color name="assetTextDark">#8a6200</color>
     <color name="assetBgLight">#fee6b2</color>
-    <color name="assetBgDark">#735712</color>
+    <color name="assetBgDark">#4d3e19</color>
 
     <color name="liabilityText">#7a94ff</color>
-    <color name="liabilityTextLight">#ccd6ff</color>
-    <color name="liabilityTextDark">#2c365d</color>
+    <color name="liabilityTextLight">#99adff</color>
+    <color name="liabilityTextDark">#001c8a</color>
     <color name="liabilityBgLight">#b6c4ff</color>
-    <color name="liabilityBgDark">#122572</color>
+    <color name="liabilityBgDark">#19244d</color>
 
     <color name="otherText">#61cfff</color>
-    <color name="otherTextLight">#ccefff</color>
-    <color name="otherTextDark">#265164</color>
+    <color name="otherTextLight">#99dfff</color>
+    <color name="otherTextDark">#00608a</color>
     <color name="otherBgLight">#a8e5ff</color>
-    <color name="otherBgDark">#0d5777</color>
+    <color name="otherBgDark">#193d4d</color>
 
     <color name="unknownText">#555555</color>
     <color name="unknownTextLight">#e6e6e6</color>
