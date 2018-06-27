@@ -76,6 +76,9 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
     }
 
     private void initDisplayPrefs(I18N i18n) {
+        addRecreateKeys(i18n.string(R.string.pref_theme));
+        addRecreateKeys(i18n.string(R.string.pref_text_size));
+
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_theme)));
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_text_size)));
     }

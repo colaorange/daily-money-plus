@@ -70,7 +70,9 @@
         <activity
             android:name=".core.ui.pref.PrefsRecordActivity"
             android:label="@string/label_record"/>
-
+        <activity
+            android:name=".core.ui.pref.PrefsDesktopActivity"
+            android:label="@string/label_desktop"/>
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"
             android:label="@string/title_datamain" />

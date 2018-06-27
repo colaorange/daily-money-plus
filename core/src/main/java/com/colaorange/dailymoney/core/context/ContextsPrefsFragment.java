@@ -1,7 +1,6 @@
 package com.colaorange.dailymoney.core.context;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -12,9 +11,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.TimeTickReceiver;
 import com.colaorange.dailymoney.core.util.I18N;
 
 import java.util.HashMap;
@@ -48,13 +45,10 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         }
     }
 
-    @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-
-        final I18N i18n = Contexts.instance().getI18n();
-        recreateKeys.add(i18n.string(R.string.pref_theme));
-        recreateKeys.add(i18n.string(R.string.pref_text_size));
+    protected void addRecreateKeys(String... keys){
+        for(String key: keys){
+            recreateKeys.add(key);
+        }
     }
 
     @Override
@@ -93,8 +87,6 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
         if (recreateKeys.contains(key)) {
             ((ContextsActivity) getActivity()).markWholeRecreate();
             getActivity().recreate();
-        }else if(!Strings.isBlank(key) && key.startsWith(com.colaorange.dailymoney.core.context.Preference.CARD_DESKTOP_ENABLE_PREFIX)){
-            ((ContextsActivity) getActivity()).markWholeRecreate();
         }
 
         adjustSummaryValue(findPreference(key));
