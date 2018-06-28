@@ -55,6 +55,8 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private int header1TextColor;
     private float dpRatio;
 
+    private boolean disableSelection;
+
     public RecordRecyclerAdapter(ContextsActivity activity, List<RecordFolk> data) {
         super(activity, data);
         accountBgColorMap = activity.getAccountBgColorMap();
@@ -91,9 +93,17 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
         this.showRecordDate = showRecordDate;
     }
 
+    public boolean isDisableSelection() {
+        return disableSelection;
+    }
+
+    public void setDisableSelection(boolean disableSelection) {
+        this.disableSelection = disableSelection;
+    }
+
     @Override
     public boolean isSelectable(RecordFolk obj) {
-        return obj.isRecord();
+        return disableSelection ? false : obj.isRecord();
     }
 
     @Override
@@ -299,12 +309,12 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
             if (getAdapterPosition() < data.size() - 1) {
                 RecordFolk f = get(getAdapterPosition() + 1);
                 View vFooter1 = itemView.findViewById(R.id.record_footer_1);
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)vFooter1.getLayoutParams();
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) vFooter1.getLayoutParams();
                 int mbottom;
                 if (f.isHeader() && (f.getHeader().showYear || f.getHeader().showMonth)) {
                     //enlarge bottom space
                     mbottom = (int) (36 * dpRatio);
-                }else{
+                } else {
                     mbottom = (int) (4 * dpRatio);
                 }
                 lp.bottomMargin = mbottom;

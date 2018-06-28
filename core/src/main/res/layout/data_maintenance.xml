@@ -106,6 +106,16 @@
 
 
             <Button
+                android:id="@+id/migrate_record"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:drawableLeft="?ic_record_migrate"
+                android:gravity="center"
+                android:text="@string/label_migrate_record"
+                android:textSize="?textSize" />
+
+            <Button
                 android:id="@+id/restore"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

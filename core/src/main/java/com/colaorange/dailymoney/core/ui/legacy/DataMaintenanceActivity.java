@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.io.File;
@@ -93,6 +95,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         findViewById(R.id.export_csv).setOnClickListener(this);
         findViewById(R.id.share_csv).setOnClickListener(this);
 
+        findViewById(R.id.migrate_record).setOnClickListener(this);
+
         findViewById(R.id.restore).setOnClickListener(this);
         findViewById(R.id.import_csv).setOnClickListener(this);
 
@@ -116,6 +120,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doBackup();
         } else if (v.getId() == R.id.restore) {
             doRestore();
+        } else if (v.getId() == R.id.migrate_record) {
+            doMigrateRecord();
         } else if (v.getId() == R.id.reset) {
             doReset();
         } else if (v.getId() == R.id.create_default) {
@@ -158,6 +164,11 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
+    }
+
+    private void doMigrateRecord() {
+        Intent intent = new Intent(this, RecordMigratorActivity.class);
+        startActivity(intent);
     }
 
     private void doRestore() {
