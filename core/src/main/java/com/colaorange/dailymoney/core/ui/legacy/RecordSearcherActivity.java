@@ -52,8 +52,6 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
 
     private DateFormat dateFormat;
 
-    private boolean archived = false;
-
     private List<AccountIndentNode> fromAccountList;
     private List<AccountIndentNode> toAccountList;
 
@@ -211,7 +209,11 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
         if (id == R.id.btn_from_datepicker || v.getId() == R.id.btn_to_datepicker) {
             Date d = null;
             try {
-                d = dateFormat.parse(vFromDate.getText().toString());
+                if (id == R.id.btn_from_datepicker) {
+                    d = dateFormat.parse(vToDate.getText().toString());
+                } else if (id == R.id.btn_to_datepicker) {
+                    d = dateFormat.parse(vFromDate.getText().toString());
+                }
             } catch (ParseException e) {
                 d = new Date();
             }
