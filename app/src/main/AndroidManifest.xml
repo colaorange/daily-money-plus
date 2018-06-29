@@ -50,7 +50,7 @@
         <activity android:name=".core.ui.legacy.RecordSearcherActivity"
             android:label="@string/label_search"/>
         <activity android:name=".core.ui.legacy.RecordMigratorActivity"
-            android:label="@string/label_migrate_record"/>
+            android:label="@string/label_migrate_records"/>
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />

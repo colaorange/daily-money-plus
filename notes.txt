@@ -57,6 +57,7 @@
     https://www.jianshu.com/p/4a77ae4cd82f
     https://blog.csdn.net/github_35180164/article/details/54025071
     https://antonioleiva.com/collapsing-toolbar-layout/
+    https://gist.github.com/iPaulPro/1468510f046cb10c51ea
 
 * recycler view menu
     https://www.simplifiedcoding.net/create-options-menu-recyclerview-item-tutorial/

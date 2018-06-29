@@ -13,27 +13,45 @@
         android:layout_height="wrap_content"
         android:theme="?appbarTheme">
 
-
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/appCollapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:minHeight="?appbarSize"
             app:contentScrim="?appPrimaryColor"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-
             app:titleEnabled="false">
 
-            <include layout="@layout/record_migrator_conditions" />
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax">
+                <include layout="@layout/record_migrator_conditions" />
+                <View
+                    android:id="@+id/tabs_padding"
+                    android:layout_width="match_parent"
+                    android:layout_height="?appbarSize"
+                    android:visibility="gone">
+                </View>
+            </LinearLayout>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/appToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?appbarSize"
                 app:contentInsetStartWithNavigation="0dp"
-                app:layout_collapseMode="pin"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="?appPopupTheme"
                 app:titleTextAppearance="@style/appbarTextAppearance" />
 
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?appbarSize"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                app:layout_collapseMode="pin"
+                app:tabMode="scrollable" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -55,13 +73,11 @@
             android:textSize="?textSize" />
     </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
-        android:id="@+id/frag_container"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton

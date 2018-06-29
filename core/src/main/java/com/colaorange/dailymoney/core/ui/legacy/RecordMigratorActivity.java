@@ -2,8 +2,14 @@ package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,8 +55,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     private EditText vToDate;
     private View vPreviewhHint;
-    private View vResultContainer;
-    private RecordListFragment listFragment;
+    private TabLayout vTabs;
+    private View vTabsPadding;
+    private ViewPager vPager;
 
     private int pos = 0;
 
@@ -64,7 +71,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         initArgs();
         initMembers();
         refreshSpinner();
+        refreshTabPager();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,12 +102,12 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         dateFormat = preference().getDateFormat();
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.appCollapsingToolbar);
-        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+//        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         vToDate = findViewById(R.id.record_to_date);
+        vToDate.setText(dateFormat.format(new Date()));
 
         vPreviewhHint = findViewById(R.id.preview_hint);
-        vResultContainer = findViewById(R.id.frag_container);
 
         findViewById(R.id.btn_to_datepicker).setOnClickListener(this);
         findViewById(R.id.fab_preview).setOnClickListener(this);
@@ -129,6 +138,11 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
             }
         };
         vBook.setAdapter(bookAdapter);
+
+
+        vTabs = findViewById(R.id.tabs);
+        vTabsPadding = findViewById(R.id.tabs_padding);
+        vPager = findViewById(R.id.viewpager);
     }
 
     @Override
@@ -148,6 +162,11 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         switch (event.getName()) {
 
         }
+    }
+
+    private void refreshTabPager() {
+        vPager.setAdapter(new MigratorStepsAdaptor(getSupportFragmentManager()));
+        vTabs.setupWithViewPager(vPager);
     }
 
     private void refreshSpinner() {
@@ -197,7 +216,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         vBook.setSelection(0);
         vToDate.setText("");
         vPreviewhHint.setVisibility(View.VISIBLE);
-        vResultContainer.setVisibility(View.GONE);
+        vTabs.setVisibility(View.GONE);
+        vTabsPadding.setVisibility(View.GONE);
+        vPager.setVisibility(View.GONE);
 
         publishReloadData(new LinkedList());
 
@@ -221,7 +242,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         }
 
 
-        anyCondition = toDate != null ;
+        anyCondition = toDate != null;
 
         if (!anyCondition) {
             GUIs.shortToast(this, i18n.string(R.string.msg_no_condition));
@@ -236,22 +257,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         }
 
         vPreviewhHint.setVisibility(View.GONE);
-        vResultContainer.setVisibility(View.VISIBLE);
-
-        if (listFragment == null) {
-            listFragment = new RecordListFragment();
-            Bundle b = new Bundle();
-            b.putInt(RecordListFragment.ARG_POS, pos);
-            b.putInt(RecordListFragment.ARG_MODE, RecordListFragment.MODE_ALL);
-            b.putBoolean(RecordListFragment.ARG_DISABLE_SELECTION, true);
-            listFragment.setArguments(b);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frag_container, listFragment)
-                    .disallowAddToBackStack()
-                    .commit();
-        }
-
+        vTabs.setVisibility(View.VISIBLE);
+        vTabsPadding.setVisibility(View.VISIBLE);
+        vPager.setVisibility(View.VISIBLE);
 
         final IDataProvider idp = contexts().getDataProvider();
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
@@ -283,5 +291,42 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     private void publishReloadData(List<Record> data) {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordListFragment.ARG_POS, pos).build());
+    }
+
+    public class MigratorStepsAdaptor extends FragmentPagerAdapter {
+
+        public MigratorStepsAdaptor(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0 || position == 1) {
+                RecordListFragment frag = new RecordListFragment();
+                Bundle b = new Bundle();
+                b.putInt(RecordListFragment.ARG_MODE, RecordListFragment.MODE_ALL);
+                b.putBoolean(RecordListFragment.ARG_DISABLE_SELECTION, true);
+                frag.setArguments(b);
+                return frag;
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return i18n.string(R.string.label_records)+" 1";
+                case 1:
+                    return i18n.string(R.string.label_records)+" 2";
+            }
+            return Integer.toString(position);
+        }
     }
 }

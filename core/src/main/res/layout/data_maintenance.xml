@@ -112,7 +112,7 @@
                 android:layout_marginBottom="10dp"
                 android:drawableLeft="?ic_record_migrate"
                 android:gravity="center"
-                android:text="@string/label_migrate_record"
+                android:text="@string/label_migrate_records"
                 android:textSize="?textSize" />
 
             <Button

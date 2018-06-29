@@ -27,7 +27,6 @@
 
     <LinearLayout
         style="@style/editorFieldInput"
-        android:paddingRight="50dp"
         android:gravity="bottom|left"
         android:orientation="horizontal">
 
