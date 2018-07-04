@@ -27,6 +27,7 @@ import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
@@ -38,9 +39,14 @@ import com.colaorange.dailymoney.core.util.I18N;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Dennis
@@ -65,9 +71,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     I18N i18n;
     int workingBookId;
 
-    List<Record> step1RecordList;
-    List<ReviewAccount> step2AccountList;
-    List<ReviewAccount> step3AccountList;
+    List<Record> targetRecordList = new LinkedList<>();
+    List<ReviewAccount> newAccountList = new LinkedList<>();
+    List<ReviewAccount> updateAccountList = new LinkedList<>();
+    Integer targetBookId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,7 +160,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int pos = vTabs.getSelectedTabPosition();
-                switch (pos){
+                switch (pos) {
                     case 0:
                         publishReloadStep1Data();
                         break;
@@ -251,9 +258,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         vTabsPadding.setVisibility(View.GONE);
         vPager.setVisibility(View.GONE);
 
-        step1RecordList = new LinkedList<>();
-        step2AccountList = new LinkedList<>();
-        step3AccountList = new LinkedList<>();
+        targetRecordList = new LinkedList<>();
+        newAccountList = new LinkedList<>();
+        updateAccountList = new LinkedList<>();
+        targetBookId = null;
 
         publishReloadStep1Data();
         publishReloadStep2Data();
@@ -267,6 +275,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     private void doPreview(boolean collapse) {
         Book book = bookList.get(vBook.getSelectedItemPosition());
+
+        targetBookId = book == null ? null : book.getId();
+
         String toDateText = vToDate.getText().toString();
 
         boolean anyCondition = false;
@@ -298,19 +309,91 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         vTabsPadding.setVisibility(View.VISIBLE);
         vPager.setVisibility(View.VISIBLE);
 
-        final IDataProvider idp = contexts().getDataProvider();
+
         GUIs.doBusy(this, new GUIs.BusyAdapter() {
 
             @Override
             public void run() {
+                final IDataProvider idp = contexts().getDataProvider();
 
-                step1RecordList = idp.searchRecord(condition, preference().getMaxRecords());
-                //TODO step2 data
-                step2AccountList = new LinkedList<>();
+                targetRecordList = idp.searchRecord(condition, preference().getMaxRecords());
+                newAccountList = new LinkedList<>();
 
-                //TODO step3 data
-                step3AccountList = new LinkedList<>();
+                Map<String, Account> accountMap = new HashMap<>();
+                for (AccountType type : AccountType.getSupportedType()) {
+                    for (Account a : idp.listAccount(type)) {
+                        accountMap.put(a.getId(), a);
 
+                    }
+                }
+
+                Map<String, ReviewAccount> updateAccountMap = new HashMap<>();
+
+                for (Record r : targetRecordList) {
+                    Account fromAcc = accountMap.get(r.getFrom());
+                    Account toAcc = accountMap.get(r.getTo());
+                    if (fromAcc != null) {
+                        ReviewAccount racc = updateAccountMap.get(fromAcc.getId());
+                        if (racc == null) {
+                            updateAccountMap.put(fromAcc.getId(), racc = new ReviewAccount(fromAcc));
+                        }
+
+                        racc.newInitialValue -= r.getMoney();
+                    }
+                    if (toAcc != null) {
+                        ReviewAccount racc = updateAccountMap.get(toAcc.getId());
+                        if (racc == null) {
+                            updateAccountMap.put(toAcc.getId(), racc = new ReviewAccount(toAcc));
+                        }
+
+                        racc.newInitialValue += r.getMoney();
+                    }
+                }
+                updateAccountList = new ArrayList<>(updateAccountMap.values());
+
+                //remove the account that already in target book
+                if (targetBookId != null) {
+                    IDataProvider nidp = contexts().newDataProvider(targetBookId);
+                    try {
+                        for (AccountType type : AccountType.getSupportedType()) {
+                            for (Account a : nidp.listAccount(type)) {
+                                if (updateAccountMap.containsKey(a.getId())) {
+                                    updateAccountMap.remove(a.getId());
+                                }
+                            }
+                        }
+                    } finally {
+                        nidp.close();
+                    }
+                }
+                newAccountList = new ArrayList<>(updateAccountMap.values().size());
+                for (ReviewAccount acc : updateAccountMap.values()) {
+                    //use original initial value for new
+                    newAccountList.add(new ReviewAccount(acc.account));
+                }
+
+
+                final Map<String, Integer> priority = new HashMap<>();
+                int i = 0;
+                for (AccountType t : AccountType.getSupportedType()) {
+                    priority.put(t.getType(), i++);
+                }
+
+                //sort by
+                Comparator<ReviewAccount> comparator = new Comparator<ReviewAccount>() {
+                    @Override
+                    public int compare(ReviewAccount o1, ReviewAccount o2) {
+                        Integer p1 = priority.get(o1.account.getType());
+                        Integer p2 = priority.get(o2.account.getType());
+                        int c = p1.compareTo(p2);
+                        if (c != 0) {
+                            return c;
+                        }
+                        return o1.account.getName().compareTo(o2.account.getName());
+                    }
+                };
+                Collections.sort(newAccountList, comparator);
+                Collections.sort(updateAccountList, comparator);
             }
 
             @Override
@@ -319,7 +402,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 publishReloadStep2Data();
                 publishReloadStep3Data();
 
-                int count = step1RecordList.size() + step2AccountList.size() + step3AccountList.size();
+                int count = targetRecordList.size() + newAccountList.size() + updateAccountList.size();
                 setTitle(i18n.string(R.string.label_migrate) + " - " + i18n.string(R.string.msg_n_items, count));
             }
         });
@@ -331,13 +414,15 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     }
 
     private void publishReloadStep1Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(step1RecordList).withArg(RecordListFragment.ARG_POS, 0).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(targetRecordList).withArg(RecordListFragment.ARG_POS, 0).build());
     }
+
     private void publishReloadStep2Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(step2AccountList).withArg(RecordListFragment.ARG_POS, 1).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(newAccountList).withArg(RecordListFragment.ARG_POS, 1).build());
     }
+
     private void publishReloadStep3Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(step3AccountList).withArg(RecordListFragment.ARG_POS, 2).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(updateAccountList).withArg(RecordListFragment.ARG_POS, 2).build());
     }
 
     public class MigratorStepsAdaptor extends FragmentPagerAdapter {
@@ -357,7 +442,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 b.putBoolean(RecordListFragment.ARG_DISABLE_SELECTION, true);
                 frag.setArguments(b);
                 return frag;
-            }else if (position == 1) {
+            } else if (position == 1) {
                 //step2
                 RecordMigratorReviewAccountListFragment frag = new RecordMigratorReviewAccountListFragment();
                 Bundle b = new Bundle();
@@ -366,7 +451,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 b.putBoolean(RecordMigratorReviewAccountListFragment.ARG_DISABLE_SELECTION, true);
                 frag.setArguments(b);
                 return frag;
-            }else if (position == 2) {
+            } else if (position == 2) {
                 //step3
                 RecordMigratorReviewAccountListFragment frag = new RecordMigratorReviewAccountListFragment();
                 Bundle b = new Bundle();
@@ -375,7 +460,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 b.putBoolean(RecordMigratorReviewAccountListFragment.ARG_DISABLE_SELECTION, true);
                 frag.setArguments(b);
                 return frag;
-            }else if (position == 3) {
+            } else if (position == 3) {
                 //step4
                 MigrateFragment frag = new MigrateFragment();
                 Bundle b = new Bundle();
@@ -410,10 +495,15 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     public static class ReviewAccount {
         Account account;
         double newInitialValue;
+
+        public ReviewAccount(Account account) {
+            this.account = account;
+            newInitialValue = account.getInitialValue();
+        }
     }
 
 
-    public static class MigrateFragment extends ContextsFragment{
+    public static class MigrateFragment extends ContextsFragment {
 
         private View rootView;
 
@@ -433,8 +523,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         }
 
         @Override
-        protected RecordMigratorActivity getContextsActivity(){
-            return (RecordMigratorActivity)super.getContextsActivity();
+        protected RecordMigratorActivity getContextsActivity() {
+            return (RecordMigratorActivity) super.getContextsActivity();
         }
 
         private void initArgs() {

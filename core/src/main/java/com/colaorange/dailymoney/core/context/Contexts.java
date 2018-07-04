@@ -401,7 +401,7 @@ public class Contexts {
 
             Logger.d("cleanDataProvider {}", dataProvider);
 
-            dataProvider.destroyed();
+            dataProvider.close();
             dataProvider = null;
         }
 

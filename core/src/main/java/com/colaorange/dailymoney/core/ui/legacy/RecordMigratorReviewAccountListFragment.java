@@ -54,7 +54,7 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
 
     private List<RecordMigratorActivity.ReviewAccount> recyclerDataList;
     private RecyclerView vRecycler;
-    private Step2n3RecyclerAdapter recyclerAdapter;
+    private ReviewAccountRecyclerAdapter recyclerAdapter;
 
     private View rootView;
 
@@ -99,7 +99,7 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
         vNoDataText = rootView.findViewById(R.id.no_data_text);
 
         recyclerDataList = new LinkedList<>();
-        recyclerAdapter = new Step2n3RecyclerAdapter(activity, recyclerDataList);
+        recyclerAdapter = new ReviewAccountRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setDisableSelection(disableSelection);
         vRecycler = rootView.findViewById(R.id.account_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
@@ -153,7 +153,7 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.RecordListFrag.ON_RELOAD_FRAGMENT:
+            case QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT:
                 Integer pos = event.getArg(ARG_POS);
                 if (pos != null && pos.intValue() == this.pos) {
                     reloadData((List<RecordMigratorActivity.ReviewAccount>) event.getData());
@@ -163,12 +163,12 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
         }
     }
 
-    public class Step2n3RecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordMigratorActivity.ReviewAccount, SelectableRecyclerViewAdaptor.SelectableViewHolder> {
+    public class ReviewAccountRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordMigratorActivity.ReviewAccount, SelectableRecyclerViewAdaptor.SelectableViewHolder> {
 
         private LayoutInflater inflater;
         private boolean disableSelection;
 
-        public Step2n3RecyclerAdapter(ContextsActivity activity, List<RecordMigratorActivity.ReviewAccount> data) {
+        public ReviewAccountRecyclerAdapter(ContextsActivity activity, List<RecordMigratorActivity.ReviewAccount> data) {
             super(activity, data);
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -198,13 +198,13 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
                 break;
             }
             View viewItem = inflater.inflate(l, parent, false);
-            return new Step2n3AccountViewHolder(this, viewItem);
+            return new ReviewAccountAccountViewHolder(this, viewItem);
         }
 
 
-        private class Step2n3AccountViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<Step2n3RecyclerAdapter, RecordMigratorActivity.ReviewAccount> {
+        private class ReviewAccountAccountViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<ReviewAccountRecyclerAdapter, RecordMigratorActivity.ReviewAccount> {
 
-            public Step2n3AccountViewHolder(Step2n3RecyclerAdapter adapter, View itemView) {
+            public ReviewAccountAccountViewHolder(ReviewAccountRecyclerAdapter adapter, View itemView) {
                 super(adapter, itemView);
             }
 
@@ -218,7 +218,8 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
 
                 vname.setText(account.getName());
                 vid.setText(account.getId());
-                initvalue.setText(i18n.string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue()));
+                String initVal = i18n.string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue());//
+
 
                 int textColor = accountTextColorMap.get(AccountType.find(account.getType()));
 
@@ -228,11 +229,14 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
 
                 switch(stepMode){
                     case UPDATE_EXISTING:
+                        initVal = initVal + " >> "+Formats.double2String(reviewAccount.newInitialValue);
                         break;
                     default:
                     case CREATE_NEW:
                         break;
                 }
+
+                initvalue.setText(initVal);
             }
         }
     }

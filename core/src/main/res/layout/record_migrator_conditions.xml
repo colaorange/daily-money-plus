@@ -28,7 +28,8 @@
     <LinearLayout
         style="@style/editorFieldInput"
         android:gravity="bottom|left"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingRight="50dp">
 
         <EditText
             android:id="@+id/record_to_date"
