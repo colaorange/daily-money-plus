@@ -73,4 +73,9 @@ public class QEvents {
 
     }
 
+    public interface MigrateReviewAccountListFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "MigrateAccountList:onReloadFragment";
+    }
+
 }
