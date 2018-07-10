@@ -29,30 +29,46 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/step1_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="info 1"
                     android:padding="10dp"
                     android:textSize="?textSize" />
-
-                <TextView
+                <ProgressBar
+                    android:id="@+id/step1_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info 2"
-                    android:padding="10dp"
-                    android:textSize="?textSize" />
-
+                    style="@android:style/Widget.ProgressBar.Horizontal"/>
                 <TextView
+                    android:id="@+id/step2_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info 3"
+                    android:text="info 1"
                     android:padding="10dp"
                     android:textSize="?textSize" />
+                <ProgressBar
+                    android:id="@+id/step2_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.ProgressBar.Horizontal"/>
+                <TextView
+                    android:id="@+id/step3_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="info 1"
+                    android:padding="10dp"
+                    android:textSize="?textSize" />
+                <ProgressBar
+                    android:id="@+id/step3_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.ProgressBar.Horizontal"/>
             </LinearLayout>
 
 
             <Button
-                android:id="@+id/migrate"
+                android:id="@+id/migrate_record"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

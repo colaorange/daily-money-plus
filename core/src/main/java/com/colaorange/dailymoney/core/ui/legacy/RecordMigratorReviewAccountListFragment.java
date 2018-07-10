@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -153,7 +154,7 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT:
+            case QEvents.RecordMigratorReviewAccountListFrag.ON_RELOAD_FRAGMENT:
                 Integer pos = event.getArg(ARG_POS);
                 if (pos != null && pos.intValue() == this.pos) {
                     reloadData((List<RecordMigratorActivity.ReviewAccount>) event.getData());
@@ -215,10 +216,12 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
                 TextView vname = itemView.findViewById(R.id.account_item_name);
                 TextView vid = itemView.findViewById(R.id.account_item_id);
                 TextView initvalue = itemView.findViewById(R.id.account_item_initvalue);
+                TextView initvalue_update = itemView.findViewById(R.id.account_item_initvalue_update);
+                ImageView initvalue_icon = itemView.findViewById(R.id.account_item_initvalue_icon);
 
                 vname.setText(account.getName());
                 vid.setText(account.getId());
-                String initVal = i18n.string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue());//
+                initvalue.setText(i18n.string(R.string.label_initial_value) + " : " + Formats.double2String(account.getInitialValue()));
 
 
                 int textColor = accountTextColorMap.get(AccountType.find(account.getType()));
@@ -226,17 +229,21 @@ public class RecordMigratorReviewAccountListFragment extends ContextsFragment im
                 vname.setTextColor(textColor);
                 vid.setTextColor(textColor);
                 initvalue.setTextColor(textColor);
+                initvalue_update.setTextColor(textColor);
 
                 switch(stepMode){
                     case UPDATE_EXISTING:
-                        initVal = initVal + " >> "+Formats.double2String(reviewAccount.newInitialValue);
+                        initvalue_icon.setVisibility(View.VISIBLE);
+                        initvalue_update.setVisibility(View.VISIBLE);
+                        initvalue_update.setText(Formats.double2String(reviewAccount.newInitialValue));
                         break;
                     default:
                     case CREATE_NEW:
+                        initvalue_icon.setVisibility(View.GONE);
+                        initvalue_update.setVisibility(View.GONE);
+                        initvalue_update.setText("");
                         break;
                 }
-
-                initvalue.setText(initVal);
             }
         }
     }

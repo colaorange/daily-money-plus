@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -10,11 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -24,7 +23,6 @@ import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -37,6 +35,7 @@ import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.util.I18N;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -68,13 +67,17 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     private View vTabsPadding;
     private ViewPager vPager;
 
-    I18N i18n;
-    int workingBookId;
+    private I18N i18n;
+    private int workingBookId;
 
-    List<Record> targetRecordList = new LinkedList<>();
-    List<ReviewAccount> newAccountList = new LinkedList<>();
-    List<ReviewAccount> updateAccountList = new LinkedList<>();
-    Integer targetBookId;
+    private Book destBook;
+    private List<Record> srcRecordList = new LinkedList<>();
+    private List<ReviewAccount> newAccountList = new LinkedList<>();
+    private List<ReviewAccount> updateAccountList = new LinkedList<>();
+
+    private int srcRecordListProgress;
+    private int newAccountListProgress;
+    private int updateAccountListProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,12 +99,16 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (this.isProcessing()) {
+            this.toastProcessing();
+            return true;
+        }
+
         if (item.getItemId() == R.id.menu_reset) {
             doReset();
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private void initArgs() {
 
@@ -170,6 +177,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                     case 2:
                         publishReloadStep3Data();
                         break;
+                    case 3:
+                        publishReloadStep4Data();
+                        break;
                 }
             }
 
@@ -198,7 +208,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            //nothing currently
+            case QEvents.RecordMigratorFrag.ON_MIGRATE:
+                doMigrate();
         }
     }
 
@@ -226,6 +237,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        if (this.isProcessing()) {
+            this.toastProcessing();
+            return;
+        }
         final int id = v.getId();
         CalendarHelper cal = calendarHelper();
         if (id == R.id.btn_from_datepicker || v.getId() == R.id.btn_to_datepicker) {
@@ -258,14 +273,15 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         vTabsPadding.setVisibility(View.GONE);
         vPager.setVisibility(View.GONE);
 
-        targetRecordList = new LinkedList<>();
+        srcRecordList = new LinkedList<>();
         newAccountList = new LinkedList<>();
         updateAccountList = new LinkedList<>();
-        targetBookId = null;
+        destBook = null;
 
         publishReloadStep1Data();
         publishReloadStep2Data();
         publishReloadStep3Data();
+        publishReloadStep4Data();
 
         ((AppBarLayout) findViewById(R.id.appbar)).setExpanded(true);
 
@@ -274,9 +290,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
 
     private void doPreview(boolean collapse) {
-        Book book = bookList.get(vBook.getSelectedItemPosition());
-
-        targetBookId = book == null ? null : book.getId();
+        destBook = bookList.get(vBook.getSelectedItemPosition());
 
         String toDateText = vToDate.getText().toString();
 
@@ -316,7 +330,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
             public void run() {
                 final IDataProvider idp = contexts().getDataProvider();
 
-                targetRecordList = idp.searchRecord(condition, preference().getMaxRecords());
+                srcRecordList = idp.searchRecord(condition, preference().getMaxRecords());
                 newAccountList = new LinkedList<>();
 
                 Map<String, Account> accountMap = new HashMap<>();
@@ -329,7 +343,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
                 Map<String, ReviewAccount> updateAccountMap = new HashMap<>();
 
-                for (Record r : targetRecordList) {
+                for (Record r : srcRecordList) {
                     Account fromAcc = accountMap.get(r.getFrom());
                     Account toAcc = accountMap.get(r.getTo());
                     if (fromAcc != null) {
@@ -352,8 +366,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 updateAccountList = new ArrayList<>(updateAccountMap.values());
 
                 //remove the account that already in target book
-                if (targetBookId != null) {
-                    IDataProvider nidp = contexts().newDataProvider(targetBookId);
+                if (destBook != null) {
+                    IDataProvider nidp = contexts().newDataProvider(destBook.getId());
                     try {
                         for (AccountType type : AccountType.getSupportedType()) {
                             for (Account a : nidp.listAccount(type)) {
@@ -401,8 +415,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 publishReloadStep1Data();
                 publishReloadStep2Data();
                 publishReloadStep3Data();
+                publishReloadStep4Data();
 
-                int count = targetRecordList.size() + newAccountList.size() + updateAccountList.size();
+                int count = srcRecordList.size() + newAccountList.size() + updateAccountList.size();
                 setTitle(i18n.string(R.string.label_migrate) + " - " + i18n.string(R.string.msg_n_items, count));
             }
         });
@@ -414,15 +429,26 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     }
 
     private void publishReloadStep1Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(targetRecordList).withArg(RecordListFragment.ARG_POS, 0).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(srcRecordList).withArg(RecordListFragment.ARG_POS, 0).build());
     }
 
     private void publishReloadStep2Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(newAccountList).withArg(RecordListFragment.ARG_POS, 1).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(newAccountList).withArg(RecordListFragment.ARG_POS, 1).build());
     }
 
     private void publishReloadStep3Data() {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.MigrateReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(updateAccountList).withArg(RecordListFragment.ARG_POS, 2).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(updateAccountList).withArg(RecordListFragment.ARG_POS, 2).build());
+    }
+
+    private void publishReloadStep4Data() {
+        String bookName = destBook == null ? i18n.string(R.string.label_a_new_book) : destBook.getName();
+
+        Indicator indicator = new Indicator(isProcessing(), bookName,
+                srcRecordList.size(), srcRecordListProgress,
+                newAccountList.size(), newAccountListProgress,
+                updateAccountList.size(), updateAccountListProgress);
+
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorIndicatorFrag.ON_RELOAD_FRAGMENT).withData(indicator).build());
     }
 
     public class MigratorStepsAdaptor extends FragmentPagerAdapter {
@@ -462,7 +488,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 return frag;
             } else if (position == 3) {
                 //step4
-                MigrateFragment frag = new MigrateFragment();
+                RecordMigratorIndicatorFragment frag = new RecordMigratorIndicatorFragment();
                 Bundle b = new Bundle();
                 frag.setArguments(b);
                 return frag;
@@ -482,9 +508,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 case 0:
                     return i18n.string(R.string.label_records);
                 case 1:
-                    return i18n.string(R.string.label_migrate_create_accounts);
+                    return i18n.string(R.string.label_record_migrate_create_accounts);
                 case 2:
-                    return i18n.string(R.string.label_migrate_update_accounts);
+                    return i18n.string(R.string.label_record_migrate_update_accounts);
                 case 3:
                     return i18n.string(R.string.label_migrate);
             }
@@ -502,39 +528,152 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         }
     }
 
+    public static class Indicator {
+        boolean processing;
+        String bookName;
+        int srcRecordListSize;
+        int newAccountListSize;
+        int updateAccountListSize;
+        int srcRecordListProgress;
+        int newAccountListProgress;
+        int updateAccountListProgress;
 
-    public static class MigrateFragment extends ContextsFragment {
+        public Indicator(boolean processing, String bookName,
+                         int srcRecordListSize, int srcRecordListProgress,
+                         int newAccountListSize, int newAccountListProgress,
+                         int updateAccountListSize, int updateAccountListProgress) {
+            this.processing = processing;
+            this.bookName = bookName;
+            this.srcRecordListSize = srcRecordListSize;
+            this.srcRecordListProgress = srcRecordListProgress;
+            this.newAccountListSize = newAccountListSize;
+            this.newAccountListProgress = newAccountListProgress;
+            this.updateAccountListSize = updateAccountListSize;
+            this.updateAccountListProgress = updateAccountListProgress;
+        }
+    }
 
-        private View rootView;
+    private static class MigratorTask extends AsyncTask<Object, Integer, Void> {
+
+        private WeakReference<RecordMigratorActivity> activityRef;
+        private Book srcBook;
+        private Book destBook;
+        private List<Record> srcRecordList;
+        private List<ReviewAccount> newAccountList;
+        private List<ReviewAccount> updateAccountList;
+
+        private MigratorTask(RecordMigratorActivity activity,
+                             Book srcBook, Book destBook, List<Record> srcRecordList, List<ReviewAccount> newAccountList, List<ReviewAccount> updateAccountList) {
+            this.activityRef = new WeakReference<>(activity);
+            this.srcBook = srcBook;
+            this.destBook = destBook;
+            this.srcRecordList = srcRecordList;
+            this.newAccountList = newAccountList;
+            this.updateAccountList = updateAccountList;
+        }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            rootView = inflater.inflate(R.layout.record_migrator_migrate_frag, container, false);
-            return rootView;
-        }
+        protected Void doInBackground(Object[] args) {
 
+            int step1Progress = 0;
+            int step2Progress = 0;
+            int step3Progress = 0;
+
+            for (Record r : srcRecordList) {
+                step1Progress++;
+
+
+                publishProgress(step1Progress, step2Progress, step3Progress);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (ReviewAccount r : newAccountList) {
+                step2Progress++;
+
+
+                publishProgress(step1Progress, step2Progress, step3Progress);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (ReviewAccount r : updateAccountList) {
+                step3Progress++;
+
+
+                publishProgress(step1Progress, step2Progress, step3Progress);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
 
         @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            initArgs();
-            initMembers();
+        protected void onProgressUpdate(Integer... values) {
+            RecordMigratorActivity activity = activityRef.get();
+            if (activity != null) {
+                activity.srcRecordListProgress = values[0];
+                activity.newAccountListProgress = values[1];
+                activity.updateAccountListProgress = values[2];
+
+                activity.publishReloadStep4Data();
+            }
         }
 
         @Override
-        protected RecordMigratorActivity getContextsActivity() {
-            return (RecordMigratorActivity) super.getContextsActivity();
+        protected void onPostExecute(Void o) {
+            super.onPostExecute(o);
+            doDone();
         }
 
-        private void initArgs() {
-            Bundle args = getArguments();
+        @Override
+        protected void onCancelled(Void o) {
+            super.onCancelled(o);
+            doDone();
         }
 
-        private void initMembers() {
-            RecordMigratorActivity activity = getContextsActivity();
-
+        void doDone() {
+            RecordMigratorActivity activity = activityRef.get();
+            if (activity != null) {
+                activity.doMigrated();
+            }
         }
+    }
+
+    private void doMigrate() {
+        GUIs.confirm(this, i18n.string(R.string.qmsg_record_migrate), new GUIs.OnFinishListener() {
+            @Override
+            public boolean onFinish(int which, Object data) {
+                if (GUIs.OK_BUTTON == which) {
+                    markProcessing();
+                    Book srcBook = contexts().getMasterDataProvider().findBook(workingBookId);
+                    new MigratorTask(RecordMigratorActivity.this, srcBook, destBook, srcRecordList, newAccountList, updateAccountList)
+                            .execute();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void doMigrated() {
+        unmarkProcessing();
+        GUIs.alert(this, i18n.string(R.string.msg_record_migrate_done), new GUIs.OnFinishListener() {
+            @Override
+            public boolean onFinish(int which, Object data) {
+                RecordMigratorActivity.this.finish();
+                return true;
+            }
+        });
     }
 
 }

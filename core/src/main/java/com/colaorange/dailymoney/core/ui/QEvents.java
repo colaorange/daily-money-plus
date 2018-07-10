@@ -73,9 +73,18 @@ public class QEvents {
 
     }
 
-    public interface MigrateReviewAccountListFrag {
-        //activity -> fragment
-        String ON_RELOAD_FRAGMENT = "MigrateAccountList:onReloadFragment";
+    public interface RecordMigratorFrag {
+        //fragment -> activity
+        String ON_MIGRATE = "RecordMigrateFrag:onMigrate";
     }
 
+    public interface RecordMigratorReviewAccountListFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "RecordMigrateReviewAccountListFrag:onReloadFragment";
+    }
+
+    public interface RecordMigratorIndicatorFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "RecordMigrateIndicatorFrag:onReloadFragment";
+    }
 }

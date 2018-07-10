@@ -31,8 +31,8 @@ import android.view.View;
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.data.AccountType;
-import com.colaorange.dailymoney.core.ui.StartupActivity;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.StartupActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -82,9 +82,38 @@ public class ContextsActivity extends AppCompatActivity {
 
     private boolean recreating;
 
+    private boolean processing;
+
 
     public ContextsActivity() {
         instanceStateHelper = new InstanceStateHelper(this);
+    }
+
+    protected void markProcessing() {
+        processing = true;
+        GUIs.lockOrientation(this);
+    }
+
+    protected void unmarkProcessing() {
+        processing = false;
+        GUIs.releaseOrientation(this);
+    }
+
+    protected boolean isProcessing() {
+        return processing;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (processing) {
+            toastProcessing();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    protected void toastProcessing() {
+        GUIs.shortToast(this, i18n().string(R.string.msg_busy));
     }
 
     @Override
@@ -282,13 +311,12 @@ public class ContextsActivity extends AppCompatActivity {
         recreating = true;
         //since android will reuse fragment after you recreate activity (shit fragments)
         //it cause many bugs, so we give it a chance to remove all fragment when recreating,
-        if(!handleRecreate()){
+        if (!handleRecreate()) {
             super.recreate();
         }
     }
 
     /**
-     *
      * @return true if you handle the recreate or false if didn't. default return false
      */
     protected boolean handleRecreate() {

@@ -258,7 +258,7 @@ public class GUIs {
         doBusy(context, msg, r, 500);
     }
 
-    static public void doBusy(Context context, String msg, Runnable r, final long dealy) {
+    static public void doBusy(Context context, String msg, Runnable r, final long delay) {
         final ProgressDialog dlg = new ProgressDialog(context);//ProgressDialog.show(context,null,msg,true,false);
         dlg.setMessage(msg);
         dlg.setTitle(null);
@@ -282,7 +282,7 @@ public class GUIs {
                     }
                 }
             }
-        }, dealy);
+        }, delay);
     }
 
     static private class NothrowRunnable implements Runnable {
