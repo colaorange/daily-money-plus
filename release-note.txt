@@ -4,6 +4,7 @@
 
 === Bugs ===
  #36 chaos after set font, theme, and enable/disable desktop
+ #38 can't see date info in record list
 
 ====================================================================================================
 == 0.10.3 ==
