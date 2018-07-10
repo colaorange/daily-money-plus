@@ -61,12 +61,14 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private View rootView;
 
     private Map<String, Account> accountMap = new HashMap<>();
-    Map<AccountType, Integer> accountBgColorMap;
-    Map<AccountType, Integer> accountTextColorMap;
-    I18N i18n;
-    CalendarHelper calendarHelper;
+    private Map<AccountType, Integer> accountBgColorMap;
+    private Map<AccountType, Integer> accountTextColorMap;
+    private I18N i18n;
+    private CalendarHelper calendarHelper;
 
-    boolean lightTheme;
+    private boolean lightTheme;
+
+    private boolean groupRecordByDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,6 +98,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
         ContextsActivity activity = getContextsActivity();
         lightTheme = activity.isLightTheme();
+        //<21, it doesn't support color reference in drawable, so we don't support group effect
+        groupRecordByDate = preference().isGroupRecordsByDate() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 
         vNoData = rootView.findViewById(R.id.no_data);
         vNoDataText = rootView.findViewById(R.id.no_data_text);
@@ -103,7 +107,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
-        recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR);
+        recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR || !groupRecordByDate);
         vRecycler = rootView.findViewById(R.id.record_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
@@ -157,24 +161,21 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);
 
-            recyclerDataList.addAll(precessGroupRecordsByDate(data));
+            recyclerDataList.addAll(processGroupRecordsByDate(data));
         }
         recyclerAdapter.notifyDataSetChanged();
 
     }
 
-    private Collection<? extends RecordRecyclerAdapter.RecordFolk> precessGroupRecordsByDate(List<Record> data) {
+    private Collection<? extends RecordRecyclerAdapter.RecordFolk> processGroupRecordsByDate(List<Record> data) {
         List<RecordRecyclerAdapter.RecordFolk> folks = new LinkedList<>();
-
-        //<21, it doesn't support color reference in drawable
-        boolean skipGroup = !preference().isGroupRecordsByDate() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
 
         RecordRecyclerAdapter.RecordHeader lastHeader = null;
         RecordRecyclerAdapter.RecordHeader header;
         for (Record r : data) {
             header = null;
 
-            if (!skipGroup) {
+            if (groupRecordByDate) {
                 Calendar cal = calendarHelper.calendar(r.getDate());
 
                 boolean diffYear = (lastHeader == null || lastHeader.calendar.get(Calendar.YEAR) != cal.get(Calendar.YEAR));
@@ -199,7 +200,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             }
             folks.add(new RecordRecyclerAdapter.RecordFolk(r));
         }
-        if (!skipGroup && lastHeader != null) {
+        if (groupRecordByDate && lastHeader != null) {
             folks.add(new RecordRecyclerAdapter.RecordFolk(new RecordRecyclerAdapter.RecordFooter()));
         }
 

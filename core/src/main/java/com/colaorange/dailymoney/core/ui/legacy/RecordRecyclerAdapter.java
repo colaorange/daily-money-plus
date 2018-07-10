@@ -49,7 +49,7 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private DateFormat weekDayFormat;
     private CalendarHelper calHelper;
     private Date today;
-    private boolean showRecordDate;
+    private boolean showRecordDate = true;
 
     private int header1Color;
     private int header1TextColor;
