@@ -169,20 +169,7 @@ public class LineAccountFragment extends PeriodModeChartBaseFragment<LineChart> 
                 List<Record> recordsFrom = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_FROM, start, end, -1));
                 List<Record> recordsTo = new ArrayList<>(idp.listRecord(accountType, IDataProvider.LIST_RECORD_MODE_TO, start, end, -1));
 
-                boolean positive;
-                switch (accountType) {
-                    case INCOME:
-                    case LIABILITY:
-                        positive = false;
-                        break;
-                    case UNKONW:
-                    case EXPENSE:
-                    case ASSET:
-                    case OTHER:
-                    default:
-                        positive = true;
-                        break;
-                }
+                boolean positive = AccountType.isPositive(accountType);
 
                 int i = 0;
                 for (List<Record> records : new List[]{recordsFrom, recordsTo}) {

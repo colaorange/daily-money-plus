@@ -24,6 +24,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Book;
@@ -34,6 +35,7 @@ import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
@@ -209,7 +211,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
             case QEvents.RecordMigratorFrag.ON_MIGRATE:
-                doMigrate();
+                doMigrateConfirm();
         }
     }
 
@@ -352,7 +354,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                             updateAccountMap.put(fromAcc.getId(), racc = new ReviewAccount(fromAcc));
                         }
 
-                        racc.newInitialValue -= r.getMoney();
+                        racc.newInitialValue = racc.newInitialValue + (AccountType.isPositive(racc.account.getType()) ? -r.getMoney() : r.getMoney());
                     }
                     if (toAcc != null) {
                         ReviewAccount racc = updateAccountMap.get(toAcc.getId());
@@ -360,7 +362,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                             updateAccountMap.put(toAcc.getId(), racc = new ReviewAccount(toAcc));
                         }
 
-                        racc.newInitialValue += r.getMoney();
+                        racc.newInitialValue = racc.newInitialValue + (AccountType.isPositive(racc.account.getType()) ? r.getMoney() : -r.getMoney());
                     }
                 }
                 updateAccountList = new ArrayList<>(updateAccountMap.values());
@@ -562,6 +564,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         private List<ReviewAccount> newAccountList;
         private List<ReviewAccount> updateAccountList;
 
+        String completeMsg;
+
         private MigratorTask(RecordMigratorActivity activity,
                              Book srcBook, Book destBook, List<Record> srcRecordList, List<ReviewAccount> newAccountList, List<ReviewAccount> updateAccountList) {
             this.activityRef = new WeakReference<>(activity);
@@ -574,45 +578,84 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
         @Override
         protected Void doInBackground(Object[] args) {
+            I18N i18n = Contexts.instance().getI18n();
+            try {
+                doInBackground0(args);
+                completeMsg = i18n.string(R.string.msg_record_migrate_done);
+            } catch (Exception x) {
+                Logger.e(x.getMessage(), x);
+                completeMsg = i18n.string(R.string.label_error) + ":" + x.getMessage();
+            }
+            return null;
+        }
+
+        protected Void doInBackground0(Object[] args) throws Exception {
 
             int step1Progress = 0;
             int step2Progress = 0;
             int step3Progress = 0;
 
-            for (Record r : srcRecordList) {
-                step1Progress++;
+            Contexts ctxs = Contexts.instance();
+            I18N i18n = ctxs.getI18n();
+            Preference pref = ctxs.getPreference();
+            DateFormat dateFormat = pref.getDateFormat();
+            IMasterDataProvider mdp = ctxs.getMasterDataProvider();
+            IDataProvider srcDp = ctxs.getDataProvider();
 
-
-                publishProgress(step1Progress, step2Progress, step3Progress);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if (destBook == null) {
+                destBook = new Book(i18n.string(R.string.label_book) + "_" + dateFormat.format(new Date()),
+                        srcBook.getSymbol(), srcBook.getSymbolPosition(), i18n.string(R.string.label_migrate_records));
+                mdp.newBook(destBook);
             }
 
-            for (ReviewAccount r : newAccountList) {
-                step2Progress++;
 
+            IDataProvider destDp = ctxs.newDataProvider(destBook.getId());
+            try {
+                for (ReviewAccount r : newAccountList) {
 
-                publishProgress(step1Progress, step2Progress, step3Progress);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Account account = r.account.copy();
+                    account.setInitialValue(r.newInitialValue);
+
+                    //just in case
+                    if (destDp.findAccount(account.getType(), account.getName()) == null) {
+                        destDp.newAccount(account);
+                    }
+
+                    step2Progress++;
+                    publishProgress(step1Progress, step2Progress, step3Progress);
                 }
+            } finally {
+                destDp.close();
             }
+
+
+            destDp = ctxs.newDataProvider(destBook.getId());
+            try {
+                for (Record r : srcRecordList) {
+
+                    Record record = r.copy();
+
+                    destDp.newRecord(record);
+
+                    srcDp.deleteRecord(r.getId());
+
+                    step1Progress++;
+                    publishProgress(step1Progress, step2Progress, step3Progress);
+                }
+            } finally {
+                destDp.close();
+            }
+
 
             for (ReviewAccount r : updateAccountList) {
+
+                Account account = r.account.copy();
+                account.setInitialValue(r.newInitialValue);
+
+                srcDp.updateAccount(r.account.getId(), account);
+
                 step3Progress++;
-
-
                 publishProgress(step1Progress, step2Progress, step3Progress);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
             return null;
@@ -645,12 +688,12 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         void doDone() {
             RecordMigratorActivity activity = activityRef.get();
             if (activity != null) {
-                activity.doMigrated();
+                activity.doMigrateCompleted(completeMsg);
             }
         }
     }
 
-    private void doMigrate() {
+    private void doMigrateConfirm() {
         GUIs.confirm(this, i18n.string(R.string.qmsg_record_migrate), new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(int which, Object data) {
@@ -665,12 +708,14 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         });
     }
 
-    private void doMigrated() {
-        unmarkProcessing();
-        GUIs.alert(this, i18n.string(R.string.msg_record_migrate_done), new GUIs.OnFinishListener() {
+    private void doMigrateCompleted(String msg) {
+        GUIs.alert(this, msg, new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(int which, Object data) {
-                RecordMigratorActivity.this.finish();
+                unmarkProcessing();
+                if (GUIs.OK_BUTTON == which) {
+                    RecordMigratorActivity.this.finish();
+                }
                 return true;
             }
         });

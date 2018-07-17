@@ -99,8 +99,11 @@ public class Account implements Serializable{
             return other.id == null;
         } else return id.equals(other.id);
     }
-    
-    
-    
-    
+
+
+    public Account copy() {
+        Account acc = new Account(type, name, initialValue);
+        acc.setCashAccount(acc.isCashAccount());
+        return acc;
+    }
 }
