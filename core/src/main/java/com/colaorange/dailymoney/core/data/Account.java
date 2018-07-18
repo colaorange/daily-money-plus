@@ -103,7 +103,7 @@ public class Account implements Serializable{
 
     public Account copy() {
         Account acc = new Account(type, name, initialValue);
-        acc.setCashAccount(acc.isCashAccount());
+        acc.setCashAccount(cashAccount);
         return acc;
     }
 }

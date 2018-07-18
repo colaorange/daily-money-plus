@@ -95,8 +95,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         findViewById(R.id.export_csv).setOnClickListener(this);
         findViewById(R.id.share_csv).setOnClickListener(this);
 
-        findViewById(R.id.migrate_record).setOnClickListener(this);
-
         findViewById(R.id.restore).setOnClickListener(this);
         findViewById(R.id.import_csv).setOnClickListener(this);
 
@@ -120,8 +118,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doBackup();
         } else if (v.getId() == R.id.restore) {
             doRestore();
-        } else if (v.getId() == R.id.migrate_record) {
-            doMigrateRecord();
         } else if (v.getId() == R.id.reset) {
             doReset();
         } else if (v.getId() == R.id.create_default) {
@@ -164,11 +160,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             }
         };
         GUIs.doBusy(DataMaintenanceActivity.this, job);
-    }
-
-    private void doMigrateRecord() {
-        Intent intent = new Intent(this, RecordMigratorActivity.class);
-        startActivity(intent);
     }
 
     private void doRestore() {

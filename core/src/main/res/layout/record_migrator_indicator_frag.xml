@@ -28,11 +28,19 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:paddingBottom="20dp"
+                    android:text="@string/msg_record_migrate_note"
+                    android:textSize="?textSize" />
+
                 <TextView
                     android:id="@+id/step1_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info 1"
                     android:padding="10dp"
                     android:textSize="?textSize" />
                 <ProgressBar
@@ -44,7 +52,6 @@
                     android:id="@+id/step2_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info 1"
                     android:padding="10dp"
                     android:textSize="?textSize" />
                 <ProgressBar
@@ -56,7 +63,6 @@
                     android:id="@+id/step3_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="info 1"
                     android:padding="10dp"
                     android:textSize="?textSize" />
                 <ProgressBar
@@ -68,7 +74,7 @@
 
 
             <Button
-                android:id="@+id/migrate_record"
+                android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -77,7 +83,7 @@
                 android:drawableLeft="?ic_record_migrate"
                 android:drawablePadding="10dp"
                 android:layout_gravity="center"
-                android:text="@string/label_migrate"
+                android:text="@string/label_start"
                 android:textSize="?textSize" />
         </LinearLayout>
 

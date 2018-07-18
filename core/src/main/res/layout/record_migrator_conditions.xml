@@ -16,12 +16,12 @@
         android:textSize="?textSize" />
 
     <Spinner
-        android:id="@+id/record_to_book"
+        android:id="@+id/to_book"
         style="@style/editorFieldInput" />
 
     <TextView
         style="@style/editorFieldTitle"
-        android:text="@string/label_to_date"
+        android:text="@string/label_by_date"
         android:textSize="?textSize" />
 
 
@@ -32,7 +32,7 @@
         android:paddingRight="50dp">
 
         <EditText
-            android:id="@+id/record_to_date"
+            android:id="@+id/by_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,7 +40,7 @@
             android:textSize="?textSize" />
 
         <ImageButton
-            android:id="@+id/btn_to_datepicker"
+            android:id="@+id/btn_datepicker"
             style="@style/editorToolIconAlongBtn"
             android:src="?ic_date_range" />
     </LinearLayout>

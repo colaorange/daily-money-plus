@@ -24,20 +24,20 @@ public class RecordMigratorIndicatorFragment extends ContextsFragment implements
 
     private View rootView;
 
-    private TextView vStep1Info;
-    private ProgressBar vStep1Progress;
-    private TextView vStep2Info;
-    private ProgressBar vStep2Progress;
-    private TextView vStep3Info;
-    private ProgressBar vStep3Progress;
-    private Button btnMigrate;
+    private TextView vNewAccountInfo;
+    private ProgressBar vNewAccountProgress;
+    private TextView vNewRecordInfo;
+    private ProgressBar vNewRecordProgress;
+    private TextView vUpdateAccountInfo;
+    private ProgressBar vUpdateAccountProgress;
+    private Button btnStart;
 
     private RecordMigratorActivity.Indicator data;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.record_migrator_migrate_frag, container, false);
+        rootView = inflater.inflate(R.layout.record_migrator_indicator_frag, container, false);
         return rootView;
     }
 
@@ -80,42 +80,42 @@ public class RecordMigratorIndicatorFragment extends ContextsFragment implements
 
     private void initMembers() {
 
-        vStep1Info = rootView.findViewById(R.id.step1_info);
-        vStep1Progress = rootView.findViewById(R.id.step1_progress);
-        vStep2Info = rootView.findViewById(R.id.step2_info);
-        vStep2Progress = rootView.findViewById(R.id.step2_progress);
-        vStep3Info = rootView.findViewById(R.id.step3_info);
-        vStep3Progress = rootView.findViewById(R.id.step3_progress);
+        vNewAccountInfo = rootView.findViewById(R.id.step1_info);
+        vNewAccountProgress = rootView.findViewById(R.id.step1_progress);
+        vNewRecordInfo = rootView.findViewById(R.id.step2_info);
+        vNewRecordProgress = rootView.findViewById(R.id.step2_progress);
+        vUpdateAccountInfo = rootView.findViewById(R.id.step3_info);
+        vUpdateAccountProgress = rootView.findViewById(R.id.step3_progress);
 
-        btnMigrate = rootView.findViewById(R.id.migrate_record);
-        btnMigrate.setOnClickListener(this);
+        btnStart = rootView.findViewById(R.id.start);
+        btnStart.setOnClickListener(this);
     }
 
     private void reloadData(RecordMigratorActivity.Indicator data) {
         RecordMigratorActivity activity = getContextsActivity();
         I18N i18n = Contexts.instance().getI18n();
         this.data = data;
-        String bookName = data.bookName;
-        vStep1Info.setText(i18n.string(R.string.msg_record_migrate_step1_info, data.srcRecordListSize, bookName));
-        vStep2Info.setText(i18n.string(R.string.msg_record_migrate_step2_info, data.newAccountListSize, bookName));
-        vStep3Info.setText(i18n.string(R.string.msg_record_migrate_step3_info, data.updateAccountListSize));
+        String bookName = data.destBookName;
+        vNewAccountInfo.setText(i18n.string(R.string.msg_record_migrate_new_account_info, data.newAccountSize, data.newAccountProgress, bookName));
+        vNewAccountProgress.setMax(data.newAccountSize);
+        vNewAccountProgress.setProgress(data.newAccountProgress);
 
-        vStep1Progress.setMax(data.srcRecordListSize);
-        vStep1Progress.setProgress(data.srcRecordListProgress);
-        vStep2Progress.setMax(data.newAccountListSize);
-        vStep2Progress.setProgress(data.newAccountListProgress);
-        vStep3Progress.setMax(data.updateAccountListSize);
-        vStep3Progress.setProgress(data.updateAccountListProgress);
+        vNewRecordInfo.setText(i18n.string(R.string.msg_record_migrate_new_record_info, data.newRecordSize, data.newRecordProgress, bookName));
+        vNewRecordProgress.setMax(data.newRecordSize);
+        vNewRecordProgress.setProgress(data.newRecordProgress);
 
-        btnMigrate.setEnabled(!data.processing);
+        vUpdateAccountInfo.setText(i18n.string(R.string.msg_record_migrate_update_account_info, data.updateAccountSize, data.updateAccountProgress));
+        vUpdateAccountProgress.setMax(data.updateAccountSize);
+        vUpdateAccountProgress.setProgress(data.updateAccountProgress);
+
+        btnStart.setEnabled(!data.processing);
     }
 
     @Override
     public void onClick(View v) {
         RecordMigratorActivity activity = getContextsActivity();
 
-
-        if (v.getId() == R.id.migrate_record) {
+        if (v.getId() == R.id.start) {
             lookupQueue().publish(QEvents.RecordMigratorFrag.ON_MIGRATE);
         }
     }

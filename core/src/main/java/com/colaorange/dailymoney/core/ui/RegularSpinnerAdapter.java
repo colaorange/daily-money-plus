@@ -43,7 +43,7 @@ public abstract class RegularSpinnerAdapter<T> extends ArrayAdapter<T> {
         super(context, R.layout.regular_spinner, items);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         textColor = context.resolveThemeAttrResData(R.attr.appPrimaryTextColor);
-        selectedBgColor = context.resolveThemeAttrResData(R.attr.appSecondaryLightColor);
+        selectedBgColor = context.resolveThemeAttrResData(R.attr.appSecondaryColor);
         selectedTexColor = context.resolveThemeAttrResData(R.attr.appSecondaryTextColor);
     }
 

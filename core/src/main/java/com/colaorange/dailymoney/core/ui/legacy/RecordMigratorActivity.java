@@ -63,8 +63,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     private CollapsingToolbarLayout collapsingToolbar;
     private Spinner vBook;
 
-    private EditText vToDate;
-    private View vPreviewhHint;
+    private EditText vByDate;
+    private View vPreviewHint;
     private TabLayout vTabs;
     private View vTabsPadding;
     private ViewPager vPager;
@@ -77,9 +77,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     private List<ReviewAccount> newAccountList = new LinkedList<>();
     private List<ReviewAccount> updateAccountList = new LinkedList<>();
 
-    private int srcRecordListProgress;
-    private int newAccountListProgress;
-    private int updateAccountListProgress;
+    private int newRecordProgress;
+    private int newAccountProgress;
+    private int updateAccountProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,17 +125,17 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.appCollapsingToolbar);
 //        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        vToDate = findViewById(R.id.record_to_date);
-        vToDate.setText(dateFormat.format(new Date()));
+        vByDate = findViewById(R.id.by_date);
+//        vByDate.setText(dateFormat.format(new Date()));
 
-        vPreviewhHint = findViewById(R.id.preview_hint);
+        vPreviewHint = findViewById(R.id.preview_hint);
 
-        findViewById(R.id.btn_to_datepicker).setOnClickListener(this);
+        findViewById(R.id.btn_datepicker).setOnClickListener(this);
         findViewById(R.id.fab_preview).setOnClickListener(this);
 
         String nullText = " ";
 
-        vBook = findViewById(R.id.record_to_book);
+        vBook = findViewById(R.id.to_book);
         vBook.setSelection(-1);
         bookList = new LinkedList<>();
         bookAdapter = new RegularSpinnerAdapter<Book>(this, bookList) {
@@ -145,7 +145,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                     @Override
                     public void bindViewValue(Book item, LinearLayout layout, TextView text, boolean isDropdown, boolean isSelected) {
                         if (item == null) {
-                            text.setText(i18n.string(R.string.label_a_new_book));
+                            text.setText(i18n.string(R.string.label_new_book));
                         } else {
                             text.setText(item.getName());
                         }
@@ -171,16 +171,16 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 int pos = vTabs.getSelectedTabPosition();
                 switch (pos) {
                     case 0:
-                        publishReloadStep1Data();
+                        publishReloadRecordList();
                         break;
                     case 1:
-                        publishReloadStep2Data();
+                        publishReloadNewAccountList();
                         break;
                     case 2:
-                        publishReloadStep3Data();
+                        publishReloadUpdateAccountList();
                         break;
                     case 3:
-                        publishReloadStep4Data();
+                        publishReloadIndicator();
                         break;
                 }
             }
@@ -216,7 +216,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     }
 
     private void refreshTabPager() {
-        vPager.setAdapter(new MigratorStepsAdaptor(getSupportFragmentManager()));
+        vPager.setAdapter(new MigratorPagerAdaptor(getSupportFragmentManager()));
         vTabs.setupWithViewPager(vPager);
     }
 
@@ -245,10 +245,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         }
         final int id = v.getId();
         CalendarHelper cal = calendarHelper();
-        if (id == R.id.btn_from_datepicker || v.getId() == R.id.btn_to_datepicker) {
+        if (id == R.id.btn_datepicker) {
             Date d = null;
             try {
-                d = dateFormat.parse(vToDate.getText().toString());
+                d = dateFormat.parse(vByDate.getText().toString());
             } catch (ParseException e) {
                 d = new Date();
             }
@@ -256,7 +256,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 @Override
                 public boolean onFinish(int which, Object data) {
                     if (which == GUIs.OK_BUTTON) {
-                        vToDate.setText(dateFormat.format((Date) data));
+                        vByDate.setText(dateFormat.format((Date) data));
                     }
                     return true;
                 }
@@ -269,8 +269,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     private void doReset() {
         vBook.setSelection(0);
-        vToDate.setText("");
-        vPreviewhHint.setVisibility(View.VISIBLE);
+        vByDate.setText("");
+        vPreviewHint.setVisibility(View.VISIBLE);
         vTabs.setVisibility(View.GONE);
         vTabsPadding.setVisibility(View.GONE);
         vPager.setVisibility(View.GONE);
@@ -280,10 +280,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         updateAccountList = new LinkedList<>();
         destBook = null;
 
-        publishReloadStep1Data();
-        publishReloadStep2Data();
-        publishReloadStep3Data();
-        publishReloadStep4Data();
+        publishReloadRecordList();
+        publishReloadNewAccountList();
+        publishReloadUpdateAccountList();
+        publishReloadIndicator();
 
         ((AppBarLayout) findViewById(R.id.appbar)).setExpanded(true);
 
@@ -294,7 +294,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
     private void doPreview(boolean collapse) {
         destBook = bookList.get(vBook.getSelectedItemPosition());
 
-        String toDateText = vToDate.getText().toString();
+        String toDateText = vByDate.getText().toString();
 
         boolean anyCondition = false;
         Date toDate = null;
@@ -320,7 +320,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
             ((AppBarLayout) findViewById(R.id.appbar)).setExpanded(false);
         }
 
-        vPreviewhHint.setVisibility(View.GONE);
+        vPreviewHint.setVisibility(View.GONE);
         vTabs.setVisibility(View.VISIBLE);
         vTabsPadding.setVisibility(View.VISIBLE);
         vPager.setVisibility(View.VISIBLE);
@@ -414,10 +414,10 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
             @Override
             public void onBusyFinish() {
-                publishReloadStep1Data();
-                publishReloadStep2Data();
-                publishReloadStep3Data();
-                publishReloadStep4Data();
+                publishReloadRecordList();
+                publishReloadNewAccountList();
+                publishReloadUpdateAccountList();
+                publishReloadIndicator();
 
                 int count = srcRecordList.size() + newAccountList.size() + updateAccountList.size();
                 setTitle(i18n.string(R.string.label_migrate) + " - " + i18n.string(R.string.msg_n_items, count));
@@ -430,39 +430,39 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void publishReloadStep1Data() {
+    private void publishReloadRecordList() {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(srcRecordList).withArg(RecordListFragment.ARG_POS, 0).build());
     }
 
-    private void publishReloadStep2Data() {
+    private void publishReloadNewAccountList() {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(newAccountList).withArg(RecordListFragment.ARG_POS, 1).build());
     }
 
-    private void publishReloadStep3Data() {
+    private void publishReloadUpdateAccountList() {
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorReviewAccountListFrag.ON_RELOAD_FRAGMENT).withData(updateAccountList).withArg(RecordListFragment.ARG_POS, 2).build());
     }
 
-    private void publishReloadStep4Data() {
-        String bookName = destBook == null ? i18n.string(R.string.label_a_new_book) : destBook.getName();
+    private void publishReloadIndicator() {
+        String destBookName = destBook == null ? i18n.string(R.string.label_new_book) : destBook.getName();
 
-        Indicator indicator = new Indicator(isProcessing(), bookName,
-                srcRecordList.size(), srcRecordListProgress,
-                newAccountList.size(), newAccountListProgress,
-                updateAccountList.size(), updateAccountListProgress);
+        Indicator indicator = new Indicator(isProcessing(), destBookName,
+                newAccountList.size(), newAccountProgress,
+                srcRecordList.size(), newRecordProgress,
+                updateAccountList.size(), updateAccountProgress);
 
         lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordMigratorIndicatorFrag.ON_RELOAD_FRAGMENT).withData(indicator).build());
     }
 
-    public class MigratorStepsAdaptor extends FragmentPagerAdapter {
+    public class MigratorPagerAdaptor extends FragmentPagerAdapter {
 
-        public MigratorStepsAdaptor(FragmentManager fm) {
+        public MigratorPagerAdaptor(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                //step1
+                //record list
                 RecordListFragment frag = new RecordListFragment();
                 Bundle b = new Bundle();
                 b.putInt(RecordListFragment.ARG_MODE, RecordListFragment.MODE_ALL);
@@ -471,7 +471,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 frag.setArguments(b);
                 return frag;
             } else if (position == 1) {
-                //step2
+                //new account list
                 RecordMigratorReviewAccountListFragment frag = new RecordMigratorReviewAccountListFragment();
                 Bundle b = new Bundle();
                 b.putSerializable(RecordMigratorReviewAccountListFragment.ARG_STEP_MODE, RecordMigratorReviewAccountListFragment.StepMode.CREATE_NEW);
@@ -480,7 +480,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 frag.setArguments(b);
                 return frag;
             } else if (position == 2) {
-                //step3
+                //update account list
                 RecordMigratorReviewAccountListFragment frag = new RecordMigratorReviewAccountListFragment();
                 Bundle b = new Bundle();
                 b.putSerializable(RecordMigratorReviewAccountListFragment.ARG_STEP_MODE, RecordMigratorReviewAccountListFragment.StepMode.UPDATE_EXISTING);
@@ -489,7 +489,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 frag.setArguments(b);
                 return frag;
             } else if (position == 3) {
-                //step4
+                //indicator
                 RecordMigratorIndicatorFragment frag = new RecordMigratorIndicatorFragment();
                 Bundle b = new Bundle();
                 frag.setArguments(b);
@@ -532,26 +532,26 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
     public static class Indicator {
         boolean processing;
-        String bookName;
-        int srcRecordListSize;
-        int newAccountListSize;
-        int updateAccountListSize;
-        int srcRecordListProgress;
-        int newAccountListProgress;
-        int updateAccountListProgress;
+        String destBookName;
+        int newRecordSize;
+        int newAccountSize;
+        int updateAccountSize;
+        int newRecordProgress;
+        int newAccountProgress;
+        int updateAccountProgress;
 
-        public Indicator(boolean processing, String bookName,
-                         int srcRecordListSize, int srcRecordListProgress,
-                         int newAccountListSize, int newAccountListProgress,
-                         int updateAccountListSize, int updateAccountListProgress) {
+        public Indicator(boolean processing, String destBookName,
+                         int newAccountSize, int newAccountProgress,
+                         int newRecordSize, int newRecordProgress,
+                         int updateAccountSize, int updateAccountProgress) {
             this.processing = processing;
-            this.bookName = bookName;
-            this.srcRecordListSize = srcRecordListSize;
-            this.srcRecordListProgress = srcRecordListProgress;
-            this.newAccountListSize = newAccountListSize;
-            this.newAccountListProgress = newAccountListProgress;
-            this.updateAccountListSize = updateAccountListSize;
-            this.updateAccountListProgress = updateAccountListProgress;
+            this.destBookName = destBookName;
+            this.newAccountSize = newAccountSize;
+            this.newAccountProgress = newAccountProgress;
+            this.newRecordSize = newRecordSize;
+            this.newRecordProgress = newRecordProgress;
+            this.updateAccountSize = updateAccountSize;
+            this.updateAccountProgress = updateAccountProgress;
         }
     }
 
@@ -591,9 +591,9 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
         protected Void doInBackground0(Object[] args) throws Exception {
 
-            int step1Progress = 0;
-            int step2Progress = 0;
-            int step3Progress = 0;
+            int newAccountProgress = 0;
+            int newRecordProgress = 0;
+            int updateAccountProgress = 0;
 
             Contexts ctxs = Contexts.instance();
             I18N i18n = ctxs.getI18n();
@@ -621,8 +621,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                         destDp.newAccount(account);
                     }
 
-                    step2Progress++;
-                    publishProgress(step1Progress, step2Progress, step3Progress);
+                    newAccountProgress++;
+                    publishProgress(newAccountProgress, newRecordProgress, updateAccountProgress);
                 }
             } finally {
                 destDp.close();
@@ -639,8 +639,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
                     srcDp.deleteRecord(r.getId());
 
-                    step1Progress++;
-                    publishProgress(step1Progress, step2Progress, step3Progress);
+                    newRecordProgress++;
+                    publishProgress(newAccountProgress, newRecordProgress, updateAccountProgress);
                 }
             } finally {
                 destDp.close();
@@ -654,8 +654,8 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
 
                 srcDp.updateAccount(r.account.getId(), account);
 
-                step3Progress++;
-                publishProgress(step1Progress, step2Progress, step3Progress);
+                updateAccountProgress++;
+                publishProgress(newAccountProgress, newRecordProgress, updateAccountProgress);
             }
 
             return null;
@@ -665,11 +665,11 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         protected void onProgressUpdate(Integer... values) {
             RecordMigratorActivity activity = activityRef.get();
             if (activity != null) {
-                activity.srcRecordListProgress = values[0];
-                activity.newAccountListProgress = values[1];
-                activity.updateAccountListProgress = values[2];
+                activity.newAccountProgress = values[0];
+                activity.newRecordProgress = values[1];
+                activity.updateAccountProgress = values[2];
 
-                activity.publishReloadStep4Data();
+                activity.publishReloadIndicator();
             }
         }
 
