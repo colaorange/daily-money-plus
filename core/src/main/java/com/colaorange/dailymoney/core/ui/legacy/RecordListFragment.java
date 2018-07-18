@@ -48,11 +48,14 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     public static final String ARG_MODE = "mode";
 
+    public static final String ARG_DISABLE_SELECTION = "disableSelection";
+
     private View vNoData;
     private TextView vNoDataText;
 
     private int pos;
     private int mode;
+    private boolean disableSelection;
 
     private List<RecordRecyclerAdapter.RecordFolk> recyclerDataList;
     private RecyclerView vRecycler;
@@ -92,6 +95,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
         pos = args.getInt(ARG_POS, 0);
         mode = args.getInt(ARG_MODE, MODE_DAY);
+        disableSelection = args.getBoolean(ARG_DISABLE_SELECTION, false);
     }
 
     private void initMembers() {
@@ -108,6 +112,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
         recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR || !groupRecordByDate);
+        recyclerAdapter.setDisableSelection(disableSelection);
         vRecycler = rootView.findViewById(R.id.record_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));

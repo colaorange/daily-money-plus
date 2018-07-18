@@ -21,7 +21,7 @@ public interface IDataProvider {
 
     void init();
 
-    void destroyed();
+    void close();
     
     void reset();
     

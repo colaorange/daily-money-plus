@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="?appbarSize"
+    android:background="?appPrimaryLightColor"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_to_book"
+        android:textSize="?textSize" />
+
+    <Spinner
+        android:id="@+id/to_book"
+        style="@style/editorFieldInput" />
+
+    <TextView
+        style="@style/editorFieldTitle"
+        android:text="@string/label_by_date"
+        android:textSize="?textSize" />
+
+
+    <LinearLayout
+        style="@style/editorFieldInput"
+        android:gravity="bottom|left"
+        android:orientation="horizontal"
+        android:paddingRight="50dp">
+
+        <EditText
+            android:id="@+id/by_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:editable="false"
+            android:textSize="?textSize" />
+
+        <ImageButton
+            android:id="@+id/btn_datepicker"
+            style="@style/editorToolIconAlongBtn"
+            android:src="?ic_date_range" />
+    </LinearLayout>
+</LinearLayout>

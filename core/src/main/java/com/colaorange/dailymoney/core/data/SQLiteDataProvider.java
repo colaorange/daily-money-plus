@@ -33,7 +33,7 @@ public class SQLiteDataProvider implements IDataProvider {
     }
 
     @Override
-    public void destroyed() {
+    public void close() {
         helper.close();
     }
 

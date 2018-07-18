@@ -104,7 +104,6 @@
                 android:text="@string/label_share_csv"
                 android:textSize="?textSize" />
 
-
             <Button
                 android:id="@+id/restore"
                 android:layout_width="fill_parent"

@@ -1,7 +1,7 @@
 
 == 0.10.4 ==
 === Features ===
-
+ #37 Support to migrate record to a new or another book
 === Bugs ===
  #36 chaos after set font, theme, and enable/disable desktop
  #38 can't see date info in record list

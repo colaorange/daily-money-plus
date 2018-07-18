@@ -128,4 +128,9 @@ public class Record implements Serializable{
     }
 
 
+    public Record copy() {
+        Record obj = new Record(from, to, date, money, note);
+        obj.setArchived(archived);
+        return obj;
+    }
 }

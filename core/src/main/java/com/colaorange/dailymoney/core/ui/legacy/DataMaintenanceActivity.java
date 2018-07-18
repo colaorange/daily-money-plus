@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.cards.CardDesktopActivity;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.io.File;

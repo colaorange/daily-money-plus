@@ -70,7 +70,7 @@ public class BalanceHelper {
                     sum += ib.getMoney();
                     //for search detail
                     b.setTarget(idp.toAccountId(new Account(type.getType(), fullpath, 0D)));
-                } else{
+                } else {
                     //??
                 }
 
@@ -89,7 +89,7 @@ public class BalanceHelper {
     }
 
     public static List<Balance> calculateBalanceList(AccountType type, Date start, Date end) {
-        boolean nat = type == AccountType.INCOME || type == AccountType.LIABILITY;
+        boolean positive = AccountType.isPositive(type);
         IDataProvider idp = contexts().getDataProvider();
         boolean calInit = true;
         if (start != null) {
@@ -107,7 +107,7 @@ public class BalanceHelper {
             double from = idp.sumFrom(acc, start, end);
             double to = idp.sumTo(acc, start, end);
             double init = calInit ? acc.getInitialValue() : 0;
-            double b = init + (nat ? (from - to) : (to - from));
+            double b = init + (positive ? (to - from) : (from - to) );
             Balance balance = new Balance(acc.getName(), type.getType(), b, acc);
             balance.setDate(end);
             blist.add(balance);
@@ -116,7 +116,7 @@ public class BalanceHelper {
     }
 
     public static Balance calculateBalance(AccountType type, Date start, Date end) {
-        boolean nat = type == AccountType.INCOME || type == AccountType.LIABILITY;
+        boolean positive = AccountType.isPositive(type);
         IDataProvider idp = contexts().getDataProvider();
         boolean calInit = true;
         if (start != null) {
@@ -134,7 +134,7 @@ public class BalanceHelper {
 
         double init = calInit ? idp.sumInitialValue(type) : 0;
 
-        double b = init + (nat ? (from - to) : (to - from));
+        double b = init + (positive ? (to - from) : (from - to) );
         Balance balance = new Balance(type.getDisplay(contexts().getI18n()), type.getType(), b, type);
         balance.setDate(end);
 
@@ -143,7 +143,7 @@ public class BalanceHelper {
 
     public static Balance calculateBalance(Account acc, Date start, Date end) {
         AccountType type = AccountType.find(acc.getType());
-        boolean nat = type == AccountType.INCOME || type == AccountType.LIABILITY;
+        boolean positive = AccountType.isPositive(type);
         IDataProvider idp = contexts().getDataProvider();
         boolean calInit = true;
         if (start != null) {
@@ -158,7 +158,7 @@ public class BalanceHelper {
         double from = idp.sumFrom(acc, start, end);
         double to = idp.sumTo(acc, start, end);
         double init = calInit ? acc.getInitialValue() : 0;
-        double b = init + (nat ? (from - to) : (to - from));
+        double b = init + (positive ? (to - from) : (from - to) );
         Balance balance = new Balance(acc.getName(), type.getType(), b, acc);
         balance.setDate(end);
 

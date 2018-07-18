@@ -11,8 +11,8 @@ public class QEvents {
         String ON_RELOAD_FRAGMENT = "DesktopMgntFrag:onReloadFragment";
 
         //fragment -> activity
-        String ON_SELECT_DESKTOP_TEIM = "DesktopMgntFrag:onSelectDesktopItem";
-        String ON_RESELECT_DESKTOP_TEIM = "DesktopMgntFrag:onReselectDesktopItem";
+        String ON_SELECT_DESKTOP_ITEM = "DesktopMgntFrag:onSelectDesktopItem";
+        String ON_RESELECT_DESKTOP_ITEM = "DesktopMgntFrag:onReselectDesktopItem";
     }
 
     public interface CardDesktopFrag {
@@ -73,4 +73,18 @@ public class QEvents {
 
     }
 
+    public interface RecordMigratorFrag {
+        //fragment -> activity
+        String ON_MIGRATE = "RecordMigrateFrag:onMigrate";
+    }
+
+    public interface RecordMigratorReviewAccountListFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "RecordMigrateReviewAccountListFrag:onReloadFragment";
+    }
+
+    public interface RecordMigratorIndicatorFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "RecordMigrateIndicatorFrag:onReloadFragment";
+    }
 }

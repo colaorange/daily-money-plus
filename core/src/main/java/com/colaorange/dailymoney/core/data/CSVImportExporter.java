@@ -218,7 +218,7 @@ public class CSVImportExporter {
             r.err = x.getMessage();
         } finally {
             try {
-                idp.destroyed();
+                idp.close();
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
@@ -351,7 +351,7 @@ public class CSVImportExporter {
             r.err = x.getMessage();
         } finally {
             try {
-                idp.destroyed();
+                idp.close();
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }

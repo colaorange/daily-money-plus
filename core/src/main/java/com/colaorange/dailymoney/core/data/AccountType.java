@@ -104,6 +104,22 @@ public enum AccountType {
                 return fromUnknow;
         }
     }
+    public static boolean isPositive(String type){
+        return isPositive(find(type));
+    }
+    public static boolean isPositive(AccountType type){
+        switch (type) {
+            case INCOME:
+            case LIABILITY:
+                return false;
+            case UNKONW:
+            case EXPENSE:
+            case ASSET:
+            case OTHER:
+            default:
+                return true;
+        }
+    }
 
 
 }

@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.view.ActionMode;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -504,8 +503,8 @@ public class CardDesktopActivity extends ContextsActivity implements EventQueue.
     @Override
     public void onEvent(EventQueue.Event event) {
         switch (event.getName()) {
-            case QEvents.DesktopMgntFrag.ON_SELECT_DESKTOP_TEIM:
-            case QEvents.DesktopMgntFrag.ON_RESELECT_DESKTOP_TEIM:
+            case QEvents.DesktopMgntFrag.ON_SELECT_DESKTOP_ITEM:
+            case QEvents.DesktopMgntFrag.ON_RESELECT_DESKTOP_ITEM:
                 //test desktop
                 ((DesktopItem) event.getData()).run();
                 break;
