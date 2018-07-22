@@ -3,10 +3,10 @@
     <string name="cal2_advanced">Προηγμένος πίνακας</string>
     <string name="cal2_app_name">Αριθμομηχανή</string>
     <string name="cal2_basic">Βασικός πίνακας</string>
-    <string name="cal2_clear">ΚΑΘΑΡΙΣΜΟΣ</string>
+    <string name="cal2_clear">Καθαρισμός</string>
     <string name="cal2_clear_history">Καθαρισμός ιστορικού</string>
-    <string name="cal2_close">CLOSE</string>
-    <string name="cal2_del">ΔΙΑΓΡΑΦΗ</string>
+    <string name="cal2_close">Κλείσιμο</string>
+    <string name="cal2_del">Διαγραφή</string>
     <string name="cal2_error">Λάθος</string>
     <string name="cal2_ok">OK</string>
 </resources>
