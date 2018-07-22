@@ -17,7 +17,7 @@ public class SQLiteMasterDataHelper extends SQLiteOpenHelper{
     /** maintain this field carefully*/
     private static final int VERSION = 1;//0.9.6-
     
-    private static final String BOOK_CREATE_SQL = "CREATE TABLE " + TB_BOOK + " (" 
+    private static final String BOOK_CREATE_SQL = "CREATE TABLE " + TB_BOOK + " ("
             + COL_BOOK_ID + " TEXT PRIMARY KEY, "
             + COL_BOOK_NAME +" TEXT NOT NULL, "
             + COL_BOOK_SYMBOL+" TEXT NULL, "

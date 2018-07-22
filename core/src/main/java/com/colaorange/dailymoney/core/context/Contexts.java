@@ -556,5 +556,7 @@ public class Contexts {
         String WEBVIEW = "webv-";
 
         String CARD = "card-";
+
+        String MIGRATE ="migrate-";
     }
 }

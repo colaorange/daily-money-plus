@@ -698,6 +698,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
             @Override
             public boolean onFinish(int which, Object data) {
                 if (GUIs.OK_BUTTON == which) {
+                    trackEvent(TE.MIGRATE+"s");
                     markProcessing();
                     Book srcBook = contexts().getMasterDataProvider().findBook(workingBookId);
                     new MigratorTask(RecordMigratorActivity.this, srcBook, destBook, srcRecordList, newAccountList, updateAccountList)
@@ -712,6 +713,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
         GUIs.alert(this, msg, new GUIs.OnFinishListener() {
             @Override
             public boolean onFinish(int which, Object data) {
+                trackEvent(TE.MIGRATE+"e");
                 unmarkProcessing();
                 if (GUIs.OK_BUTTON == which) {
                     RecordMigratorActivity.this.finish();
