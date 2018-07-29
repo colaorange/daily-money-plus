@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="appIsLightTheme" format="boolean"/>
-    <attr name="appIsLiteRecord" format="boolean"/>
 
     <attr name="appPrimaryColor" format="color" />
     <attr name="appPrimaryDarkColor" format="color" />
@@ -160,7 +159,6 @@
 
     <style name="themeCola">
         <item name="appIsLightTheme">false</item>
-        <item name="appIsLiteRecord">false</item>
     </style>
     <style name="themeCola.body">
         <item name="appPrimaryColor">@color/themeColaPrimary</item>
@@ -219,7 +217,6 @@
 
     <style name="themeLemon">
         <item name="appIsLightTheme">true</item>
-        <item name="appIsLiteRecord">true</item>
     </style>
     <style name="themeLemon.body">
         <item name="appPrimaryColor">@color/themeLemonPrimary</item>
@@ -280,7 +277,6 @@
 
     <style name="themeOrange">
         <item name="appIsLightTheme">true</item>
-        <item name="appIsLiteRecord">true</item>
     </style>
     <style name="themeOrange.body">
         <item name="appPrimaryColor">@color/themeOrangePrimary</item>
@@ -338,7 +334,6 @@
 
     <style name="themeSakura">
         <item name="appIsLightTheme">true</item>
-        <item name="appIsLiteRecord">true</item>
     </style>
     <style name="themeSakura.body">
         <item name="appPrimaryColor">@color/themeSakuraPrimary</item>
@@ -391,6 +386,63 @@
         <item name="colorButtonNormal">@color/themeSakuraPrimary</item>
 
         <item name="colorSwitchThumbNormal">@color/themeSakuraSecondary</item>
+
+    </style>
+
+    <style name="themeLavender">
+        <item name="appIsLightTheme">true</item>
+    </style>
+    <style name="themeLavender.body">
+        <item name="appPrimaryColor">@color/themeLavenderPrimary</item>
+        <item name="appPrimaryDarkColor">@color/themeLavenderPrimaryDark</item>
+        <item name="appPrimaryLightColor">@color/themeLavenderPrimaryLight</item>
+        <item name="appPrimaryTextColor">@color/themeLavenderPrimaryText</item>
+
+        <item name="appSecondaryColor">@color/themeLavenderSecondary</item>
+        <item name="appSecondaryDarkColor">@color/themeLavenderSecondaryDark</item>
+        <item name="appSecondaryLightColor">@color/themeLavenderSecondaryLight</item>
+        <item name="appSecondaryTextColor">@color/themeLavenderSecondaryText</item>
+
+        <item name="appCardColor">@color/themeLavenderCardColor</item>
+        <item name="appCardBorderColor">@color/themeLavenderCardBorderColor</item>
+
+        <item name="accountAssetTextColor">@color/assetTextDark</item>
+        <item name="accountIncomeTextColor">@color/incomeTextDark</item>
+        <item name="accountExpenseTextColor">@color/expenseTextDark</item>
+        <item name="accountLiabilityTextColor">@color/liabilityTextDark</item>
+        <item name="accountOtherTextColor">@color/otherTextDark</item>
+        <item name="accountUnknownTextColor">@color/unknownTextDark</item>
+
+        <item name="accountAssetBgColor">@color/assetBgLight</item>
+        <item name="accountIncomeBgColor">@color/incomeBgLight</item>
+        <item name="accountExpenseBgColor">@color/expenseBgLight</item>
+        <item name="accountLiabilityBgColor">@color/liabilityBgLight</item>
+        <item name="accountOtherBgColor">@color/otherBgLight</item>
+        <item name="accountUnknownBgColor">@color/unknownBgLight</item>
+
+        <item name="infoCardBgColor">?appSecondaryLightColor</item>
+        <item name="infoCardTextColor">?appSecondaryDarkColor</item>
+        <item name="balanceHeadBgColor">@color/themeLavenderBalanceHeadBg</item>
+        <item name="balanceItemBgColor">@color/themeLavenderBalanceItemBg</item>
+
+
+        <!--overwrite color pallet -->
+        <!-- app branding color for the app bar-->
+        <item name="colorPrimary">@color/themeLavenderPrimary</item>
+        <!-- darker color for app status or action bar -->
+        <item name="colorPrimaryDark">@color/themeLavenderPrimaryDark</item>
+        <!-- ui controls like checkboxs and text fields -->
+        <item name="colorAccent">@color/themeLavenderSecondary</item>
+        <!-- optional for normal status of control -->
+        <item name="colorControlNormal">@color/themeLavenderSecondaryLight</item>
+        <!-- optional for activated/checked status of control -->
+        <item name="colorControlActivated">@color/themeLavenderSecondary</item>
+        <!-- optional for ripple of control -->
+        <item name="colorControlHighlight">@color/themeLavenderSecondaryDark</item>
+
+        <item name="colorButtonNormal">@color/themeLavenderPrimary</item>
+
+        <item name="colorSwitchThumbNormal">@color/themeLavenderSecondary</item>
 
     </style>
 

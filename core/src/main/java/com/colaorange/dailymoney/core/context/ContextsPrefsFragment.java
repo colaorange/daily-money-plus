@@ -112,11 +112,13 @@ public class ContextsPrefsFragment extends PreferenceFragment implements SharedP
 
 
             int idx = -1;
+            int i = 0;
             for (CharSequence s : vp.getEntryValues()) {
-                idx++;
                 if (s.equals(vp.getValue())) {
+                    idx = i;
                     break;
                 }
+                i++;
             }
 
             if (idx >= 0 && vp.getEntries().length > idx) {

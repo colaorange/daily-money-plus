@@ -43,6 +43,7 @@ public class Preference {
     public static final String THEME_ORANGE = "orange";
     public static final String THEME_LEMON = "lemon";
     public static final String THEME_SAKURA = "sakura";
+    public static final String THEME_LAVENDER = "lavender";
 
     public static class Theme {
         final String name;
@@ -60,9 +61,10 @@ public class Preference {
 
     static {
         themeMap.put(THEME_COLA, new Theme(THEME_COLA, R.style.themeCola, R.style.themeCola_body));
-        themeMap.put(THEME_ORANGE, new Theme(THEME_COLA, R.style.themeOrange, R.style.themeOrange_body));
-        themeMap.put(THEME_SAKURA, new Theme(THEME_COLA, R.style.themeSakura, R.style.themeSakura_body));
-        themeMap.put(THEME_LEMON, new Theme(THEME_COLA, R.style.themeLemon, R.style.themeLemon_body));
+        themeMap.put(THEME_ORANGE, new Theme(THEME_ORANGE, R.style.themeOrange, R.style.themeOrange_body));
+        themeMap.put(THEME_SAKURA, new Theme(THEME_SAKURA, R.style.themeSakura, R.style.themeSakura_body));
+        themeMap.put(THEME_LEMON, new Theme(THEME_LEMON, R.style.themeLemon, R.style.themeLemon_body));
+        themeMap.put(THEME_LAVENDER, new Theme(THEME_LAVENDER, R.style.themeLavender, R.style.themeLavender_body));
     }
 
     public static final String TEXT_SIZE_NORMAL = "normal";

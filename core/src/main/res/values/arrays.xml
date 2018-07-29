@@ -5,12 +5,14 @@
         <item>orange</item>
         <item>sakura</item>
         <item>lemon</item>
+        <item>lavender</item>
     </string-array>
     <string-array name="prefs_theme_labels" translatable="false">
         <item>@string/label_theme_cola</item>
         <item>@string/label_theme_orange</item>
         <item>@string/label_theme_sakura</item>
         <item>@string/label_theme_lemon</item>
+        <item>@string/label_theme_lavender</item>
     </string-array>
 
     <string-array name="prefs_text_size_values" translatable="false">

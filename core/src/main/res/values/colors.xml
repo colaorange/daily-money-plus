@@ -55,6 +55,23 @@
     <color name="themeSakuraBalanceHeadBg">#9e6d7d</color>
     <color name="themeSakuraBalanceItemBg">#ffecf3</color>
 
+    <!--lavender 700-->
+    <color name="themeLavenderPrimary">#eecdfe</color>
+    <color name="themeLavenderPrimaryDark">#e0a6fd</color>
+    <color name="themeLavenderPrimaryLight">#fbf3ff</color>
+    <color name="themeLavenderPrimaryText">#333333</color>
+
+    <color name="themeLavenderSecondary">#ae7d7d</color>
+    <color name="themeLavenderSecondaryDark">#755050</color>
+    <color name="themeLavenderSecondaryLight">#f0bdbd</color>
+    <color name="themeLavenderSecondaryText">#e0e0e0</color>
+
+    <color name="themeLavenderCardColor">#f8e9ff</color>
+    <color name="themeLavenderCardBorderColor">#ca8c8083</color>
+
+    <color name="themeLavenderBalanceHeadBg">#9e6d7d</color>
+    <color name="themeLavenderBalanceItemBg">#ffecf3</color>
+
     <!--dark-->
     <!--cola-->
     <color name="themeColaPrimary">#171411</color>

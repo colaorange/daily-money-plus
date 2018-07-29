@@ -69,7 +69,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private I18N i18n;
     private CalendarHelper calendarHelper;
 
-    private boolean lightTheme;
+//    private boolean lightTheme;
 
     private boolean groupRecordByDate;
 
@@ -101,7 +101,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private void initMembers() {
 
         ContextsActivity activity = getContextsActivity();
-        lightTheme = activity.isLightTheme();
+//        lightTheme = activity.isLightTheme();
         //<21, it doesn't support color reference in drawable, so we don't support group effect
         groupRecordByDate = preference().isGroupRecordsByDate() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 
