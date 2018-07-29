@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="appIsLightTheme" format="boolean"/>
+    <attr name="appIsLiteRecord" format="boolean"/>
+
     <attr name="appPrimaryColor" format="color" />
     <attr name="appPrimaryDarkColor" format="color" />
     <attr name="appPrimaryLightColor" format="color" />
@@ -154,8 +157,12 @@
         <item name="android:textColorPrimary">?appPrimaryTextColor</item>
     </style>
 
-    <style name="themeCola">
 
+    <style name="themeCola">
+        <item name="appIsLightTheme">false</item>
+        <item name="appIsLiteRecord">false</item>
+    </style>
+    <style name="themeCola.body">
         <item name="appPrimaryColor">@color/themeColaPrimary</item>
         <item name="appPrimaryDarkColor">@color/themeColaPrimaryDark</item>
         <item name="appPrimaryLightColor">@color/themeColaPrimaryLight</item>
@@ -211,7 +218,10 @@
     </style>
 
     <style name="themeLemon">
-
+        <item name="appIsLightTheme">true</item>
+        <item name="appIsLiteRecord">true</item>
+    </style>
+    <style name="themeLemon.body">
         <item name="appPrimaryColor">@color/themeLemonPrimary</item>
         <item name="appPrimaryDarkColor">@color/themeLemonPrimaryDark</item>
         <item name="appPrimaryLightColor">@color/themeLemonPrimaryLight</item>
@@ -269,7 +279,10 @@
 
 
     <style name="themeOrange">
-
+        <item name="appIsLightTheme">true</item>
+        <item name="appIsLiteRecord">true</item>
+    </style>
+    <style name="themeOrange.body">
         <item name="appPrimaryColor">@color/themeOrangePrimary</item>
         <item name="appPrimaryDarkColor">@color/themeOrangePrimaryDark</item>
         <item name="appPrimaryLightColor">@color/themeOrangePrimaryLight</item>
@@ -324,7 +337,10 @@
     </style>
 
     <style name="themeSakura">
-
+        <item name="appIsLightTheme">true</item>
+        <item name="appIsLiteRecord">true</item>
+    </style>
+    <style name="themeSakura.body">
         <item name="appPrimaryColor">@color/themeSakuraPrimary</item>
         <item name="appPrimaryDarkColor">@color/themeSakuraPrimaryDark</item>
         <item name="appPrimaryLightColor">@color/themeSakuraPrimaryLight</item>

@@ -17,6 +17,7 @@ import com.colaorange.dailymoney.core.ui.Constants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,31 +39,39 @@ public class Preference {
 
     public static final String EVER_FILE_NAME = "com.colaorange.ever";
 
-    private static final String THEME_DARK_PREFIX = "dark-";
-    private static final String THEME_LIGHT_PREFIX = "light-";
+    public static final String THEME_COLA = "cola";
+    public static final String THEME_ORANGE = "orange";
+    public static final String THEME_LEMON = "lemon";
+    public static final String THEME_SAKURA = "sakura";
 
-    public static final String THEME_COLA = THEME_DARK_PREFIX + "cola";
-    public static final String THEME_ORANGE = THEME_LIGHT_PREFIX + "orange";
-    public static final String THEME_LEMON = THEME_LIGHT_PREFIX + "lemon";
-    public static final String THEME_SAKURA = THEME_LIGHT_PREFIX + "sakura";
+    public static class Theme {
+        final String name;
+        final int metaResId;
+        final int bodyResId;
 
-
-    private static final LinkedHashSet<String> themeSet = new LinkedHashSet<>();
-
-    static {
-        themeSet.add(THEME_COLA);
-        themeSet.add(THEME_ORANGE);
-        themeSet.add(THEME_SAKURA);
-        themeSet.add(THEME_LEMON);
+        public Theme(String name, int metaResId, int bodyResId) {
+            this.name = name;
+            this.metaResId = metaResId;
+            this.bodyResId = bodyResId;
+        }
     }
 
-    public static final String TEXT_SIZE_NOMRAL = "normal";
+    private static final LinkedHashMap<String,Theme> themeMap = new LinkedHashMap<>();
+
+    static {
+        themeMap.put(THEME_COLA, new Theme(THEME_COLA, R.style.themeCola, R.style.themeCola_body));
+        themeMap.put(THEME_ORANGE, new Theme(THEME_COLA, R.style.themeOrange, R.style.themeOrange_body));
+        themeMap.put(THEME_SAKURA, new Theme(THEME_COLA, R.style.themeSakura, R.style.themeSakura_body));
+        themeMap.put(THEME_LEMON, new Theme(THEME_COLA, R.style.themeLemon, R.style.themeLemon_body));
+    }
+
+    public static final String TEXT_SIZE_NORMAL = "normal";
     public static final String TEXT_SIZE_MEDIUM = "medium";
     public static final String TEXT_SIZE_LARGE = "large";
     private static final LinkedHashSet<String> textSizeSet = new LinkedHashSet<>();
 
     static {
-        textSizeSet.add(TEXT_SIZE_NOMRAL);
+        textSizeSet.add(TEXT_SIZE_NORMAL);
         textSizeSet.add(TEXT_SIZE_MEDIUM);
         textSizeSet.add(TEXT_SIZE_LARGE);
     }
@@ -471,8 +480,8 @@ public class Preference {
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
         }
-        if (!themeSet.contains(theme)) {
-            theme = themeSet.iterator().next();
+        if (!themeMap.containsKey(theme)) {
+            theme = THEME_LEMON;
         }
 
         try {
@@ -689,13 +698,10 @@ public class Preference {
     }
 
 
-    public String getTheme() {
-        return theme;
+    public Theme getTheme() {
+        return themeMap.get(theme);
     }
 
-    public boolean isLightTheme() {
-        return getTheme().startsWith(THEME_LIGHT_PREFIX);
-    }
 
     public String getTextSize() {
         return textSize;

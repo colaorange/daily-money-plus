@@ -49,7 +49,7 @@
     <string name="default_pref_auto_backup" translatable="false">true</string>
     <string name="default_pref_auto_backup_weekdays" translatable="false">1</string>
     <string name="default_pref_auto_backup_at_hours" translatable="false">2</string>
-    <string name="default_pref_theme" translatable="false">light-lemon</string>
+    <string name="default_pref_theme" translatable="false">lemon</string>
     <string name="default_pref_text_size" translatable="false">normal</string>
     <string name="default_pref_group_records_by_date" translatable="false">true</string>
 

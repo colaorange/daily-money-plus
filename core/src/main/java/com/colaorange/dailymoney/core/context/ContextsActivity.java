@@ -220,6 +220,11 @@ public class ContextsActivity extends AppCompatActivity {
         return attr.data;
     }
 
+    public boolean resolveThemeAttrBoolean(int attrId) {
+        TypedValue attr = resolveThemeAttr(attrId);
+        return attr.data != 0;
+    }
+
     public TypedValue resolveThemeAttr(int attrId) {
         Resources.Theme theme = getTheme();
         TypedValue attr = new TypedValue();
@@ -400,7 +405,7 @@ public class ContextsActivity extends AppCompatActivity {
 
     public boolean isLightTheme() {
         if (lightTheme == null) {
-            lightTheme = preference().isLightTheme();
+            lightTheme = resolveThemeAttrBoolean(R.attr.appIsLightTheme);
         }
         return lightTheme;
     }

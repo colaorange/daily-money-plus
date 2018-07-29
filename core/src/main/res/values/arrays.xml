@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="prefs_theme_values" translatable="false">
-        <item>dark-cola</item>
-        <item>light-orange</item>
-        <item>light-sakura</item>
-        <item>light-lemon</item>
+        <item>cola</item>
+        <item>orange</item>
+        <item>sakura</item>
+        <item>lemon</item>
     </string-array>
     <string-array name="prefs_theme_labels" translatable="false">
         <item>@string/label_theme_cola</item>

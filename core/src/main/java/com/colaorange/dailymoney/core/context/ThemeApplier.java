@@ -18,6 +18,11 @@ public class ThemeApplier {
     public void applyTheme() {
         Resources.Theme theme = activity.getTheme();
 
+        Preference preference = activity.preference();
+        Preference.Theme userTheme = preference.getTheme();
+        //apply meta first for light,etc pre define
+        theme.applyStyle(userTheme.metaResId, true);
+
         boolean light = activity.isLightTheme();
 
         if (light) {
@@ -48,22 +53,7 @@ public class ThemeApplier {
             theme.applyStyle(R.style.lightIconSet, true);
         }
 
-        Preference preference = activity.preference();
-        String userTheme = preference.getTheme();
-        switch (userTheme) {
-            case Preference.THEME_LEMON:
-                theme.applyStyle(R.style.themeLemon, true);
-                break;
-            case Preference.THEME_SAKURA:
-                theme.applyStyle(R.style.themeSakura, true);
-                break;
-            case Preference.THEME_ORANGE:
-                theme.applyStyle(R.style.themeOrange, true);
-                break;
-            case Preference.THEME_COLA:
-            default:
-                theme.applyStyle(R.style.themeCola, true);
-        }
+        theme.applyStyle(userTheme.bodyResId, true);
 
         String userTextSize = preference.getTextSize();
         switch (userTextSize) {
@@ -73,7 +63,7 @@ public class ThemeApplier {
             case Preference.TEXT_SIZE_LARGE:
                 theme.applyStyle(R.style.textSizeLarge, true);
                 break;
-            case Preference.TEXT_SIZE_NOMRAL:
+            case Preference.TEXT_SIZE_NORMAL:
             default:
                 theme.applyStyle(R.style.textSizeNormal, true);
 
