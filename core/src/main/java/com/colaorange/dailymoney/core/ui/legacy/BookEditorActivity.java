@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -12,13 +14,20 @@ import android.widget.TextView;
 import com.colaorange.commons.util.Collections;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Book;
+import com.colaorange.dailymoney.core.data.DataCreator;
+import com.colaorange.dailymoney.core.data.DuplicateKeyException;
+import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -47,6 +56,9 @@ public class BookEditorActivity extends ContextsActivity implements android.view
     private Button btnOk;
     private Button btnCancel;
 
+    private CheckBox vCopyAccount;
+    private CheckBox vDefaultAccount;
+
 
     /**
      * clone book without id
@@ -69,7 +81,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         modeCreate = bundle.getBoolean(ARG_MODE_CREATE, true);
         book = (Book) bundle.get(ARG_BOOK);
 
-        if(modeCreate && book==null){
+        if (modeCreate && book == null) {
             book = new Book("", "$", SymbolPosition.FRONT, "");
         }
         workingBook = clone(book);
@@ -127,6 +139,33 @@ public class BookEditorActivity extends ContextsActivity implements android.view
 
         btnCancel = findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(this);
+
+        vCopyAccount = findViewById(R.id.book_copy_account);
+        vDefaultAccount = findViewById(R.id.book_default_account);
+        if (!modeCreate) {
+            findViewById(R.id.title_account).setVisibility(View.GONE);
+            vCopyAccount.setVisibility(View.GONE);
+            vDefaultAccount.setVisibility(View.GONE);
+        }else{
+            //exclusive eahc other when checking
+            vCopyAccount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        vDefaultAccount.setChecked(false);
+                    }
+                }
+            });
+            vDefaultAccount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        vCopyAccount.setChecked(false);
+                    }
+                }
+            });
+
+        }
     }
 
     @Override
@@ -162,14 +201,44 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         workingBook.setNote(vNote.getText().toString().trim());
         workingBook.setSymbolPosition(pos);
 
-        IMasterDataProvider idp = contexts().getMasterDataProvider();
+        IMasterDataProvider imdp = contexts().getMasterDataProvider();
 
         if (modeCreate) {
-            idp.newBook(workingBook);
+            imdp.newBook(workingBook);
+
+            if (vCopyAccount.isChecked()) {
+                //copy account for current book
+                List<Account> currAccountList = new LinkedList<>();
+                IDataProvider idp = contexts().getDataProvider();
+                currAccountList.addAll(idp.listAccount(null));
+
+                IDataProvider newidp = contexts().newDataProvider(workingBook.getId());
+                try {
+                    for (Account acc : currAccountList) {
+                        try {
+                            newidp.newAccount(acc);
+                        } catch (DuplicateKeyException e) {
+                            //allow it.
+                            Logger.w(e.getMessage(), e);
+                        }
+                    }
+                }finally{
+                    newidp.close();
+                }
+            }else if(vDefaultAccount.isChecked()){
+                IDataProvider newidp = contexts().newDataProvider(workingBook.getId());
+                try {
+                    new DataCreator(newidp, i18n()).createDefaultAccount();
+                }finally{
+                    newidp.close();
+                }
+
+            }
+
             GUIs.shortToast(this, i18n.string(R.string.msg_book_created, name));
             trackEvent(TE.CREATE_BOOK);
         } else {
-            idp.updateBook(book.getId(), workingBook);
+            imdp.updateBook(book.getId(), workingBook);
             GUIs.shortToast(this, i18n.string(R.string.msg_book_updated, name));
             setResult(RESULT_OK);
             finish();

@@ -12,8 +12,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -54,6 +54,24 @@
 
             <TextView
                 style="@style/editorFieldTitle"
+                android:id="@+id/title_account"
+                android:text="@string/label_account"
+                android:textSize="?textSize" />
+
+            <CheckBox
+                android:id="@+id/book_default_account"
+                style="@style/editorFieldInput"
+                android:text="@string/label_create_default_accounts"
+                android:textSize="?textSize" />
+
+            <CheckBox
+                android:id="@+id/book_copy_account"
+                style="@style/editorFieldInput"
+                android:text="@string/label_copy_current_accounts"
+                android:textSize="?textSize" />
+
+            <TextView
+                style="@style/editorFieldTitle"
                 android:text="@string/label_note"
                 android:textSize="?textSize" />
 
@@ -62,6 +80,7 @@
                 style="@style/editorFieldInput"
                 android:maxLines="2"
                 android:textSize="?textSize" />
+
         </LinearLayout>
     </ScrollView>
 

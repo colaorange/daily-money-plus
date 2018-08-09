@@ -2,6 +2,7 @@
 == 0.10.5 ==
 === Features ===
  #39 add lavender theme
+ #40 allow to create/copy default/current account when creating book
 === Bugs ===
 
 ====================================================================================================
