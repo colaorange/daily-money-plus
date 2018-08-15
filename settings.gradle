@@ -1,1 +1,1 @@
-include ':commons', ':material', ':resources', ':calculator2', ':core', ':app', ':example'
+include ':commons', ':material', ':resources', ':calculator2', ':core', ':app', ':example', ':poishadow'

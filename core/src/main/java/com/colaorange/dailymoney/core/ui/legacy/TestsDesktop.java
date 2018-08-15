@@ -1,6 +1,14 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +31,10 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import org.jxls.common.Context;
+import org.jxls.util.JxlsHelper;
 
 /**
  * @author dennis
@@ -50,10 +62,9 @@ public class TestsDesktop extends AbstractDesktop {
         DesktopItem dt = null;
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Contexts ctx = Contexts.instance();
-                ctx.getMasterDataProvider().reset();
+                testCreateXLS();
             }
-        }, "Reset Master Dataprovider", R.drawable.nav_pg_test);
+        }, "Create XLS", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -136,6 +147,12 @@ public class TestsDesktop extends AbstractDesktop {
 
         addItem(dt);
 
+        addItem(new DesktopItem(new Runnable() {
+            public void run() {
+                Contexts ctx = Contexts.instance();
+                ctx.getMasterDataProvider().reset();
+            }
+        }, "Reset Master Dataprovider", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             @Override
@@ -224,6 +241,51 @@ public class TestsDesktop extends AbstractDesktop {
         addItem(padding);
         addItem(padding);
         addItem(padding);
+    }
+
+    private void testCreateXLS() {
+        List<Map<String,String>> employees = new LinkedList<>();
+        for(int i=0;i<10;i++){
+            Map<String,String> employee = new HashMap<>();
+            employee.put("name","Name "+(i+1));
+            employee.put("birthday","Birthday "+(i+1));
+            employee.put("payment","Payment "+(i+1));
+            employee.put("bonus","Bonus "+(i+1));
+        }
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+
+//            javax.xml.stream.XMLEventFactory
+
+            is = activity.getAssets().open("test.xlsx");
+
+            File file = new File(Contexts.instance().getWorkingFolder(),"reports");
+            file.mkdir();
+            file = new File(file,"test1.xlsx");
+            Context context = new Context();
+            context.putVar("employees", employees);
+            JxlsHelper.getInstance().processTemplate(is, os, context);
+
+            Logger.i(">>>> write report to "+file.getAbsolutePath());
+        }catch(Exception x){
+            x.printStackTrace();
+        }finally{
+            if(is!=null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+            if(os!=null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                }
+            }
+
+        }
+
     }
 
     protected void testBusy(final long i, final String error) {

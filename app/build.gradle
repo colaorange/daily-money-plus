@@ -9,6 +9,9 @@ android {
         //yy(2)mm(2)dd(2)increment(3)
         versionCode 180809001
         versionName "0.10.5-freshly-180809001"
+
+        multiDexEnabled true
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions{
@@ -26,7 +29,17 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':core')
+    api project(':core')
+
+    /**
+     * https://developer.android.com/studio/build/multidex
+     * have to set here too, should same as setting in core module
+     */
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //sl4j for jxls, poi
+    runtimeOnly 'org.slf4j:slf4j-android:1.7.25'
+
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:design:27.1.1'

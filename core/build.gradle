@@ -9,6 +9,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -30,6 +32,30 @@ dependencies {
     api project(':material')
     api project(':calculator2')
     api project(':resources')
+
+    //poi
+    api project(':poishadow')
+
+    /**
+     * jxls dependency
+     * commons-logging is already provide in android.
+     *
+     */
+    implementation ('org.jxls:jxls:2.4.6'){
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+    implementation ('org.jxls:jxls-poi:1.0.15'){
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.poi', module: 'poi'
+        exclude group: 'org.apache.poi', module: 'poi-ooxml'
+    }
+
+    /**
+     *  Cannot fit requested classes in a single dex file. Try supplying a main-dex list. # methods: 178828 > 65536
+     * https://developer.android.com/studio/build/multidex
+     */
+    implementation 'com.android.support:multidex:1.0.3'
+
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
