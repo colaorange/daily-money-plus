@@ -1,23 +1,37 @@
 plugins {
-    id 'java' // java plugin must be explicitly applied for shadow plugin
+    id 'java-library'
     id 'com.github.johnrengelman.shadow' version '2.0.3'
 }
 
-sourceCompatibility = 1.7
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation ('org.apache.poi:poi-ooxml:3.17'){
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.xmlbeans', module: 'xmlbeans'
+
+        //these are only needed when handling Visio files, remove it if you would like to use Visio support
+        exclude group:'com.github.virtuald', module: 'curvesapi'
+        exclude group:'commons-codec', module: 'commons-codec'
+        exclude group:'org.apache.commons', module: 'commons-collections4'
+    }
+    implementation ('org.apache.poi:poi:3.17'){
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.xmlbeans', module: 'xmlbeans'
+
+        //these are only needed when handling Visio files, remove it if you would like to use Visio support
+        exclude group:'com.github.virtuald', module: 'curvesapi'
+        exclude group:'commons-codec', module: 'commons-codec'
+        exclude group:'org.apache.commons', module: 'commons-collections4'
     }
     implementation 'com.fasterxml:aalto-xml:1.1.0'
-    //don't use 2.6.0, it has Program type already present: org.apache.xmlbeans.xml.stream.Location
+    //don't use 2.6.0, it cause :  Program type already present: org.apache.xmlbeans.xml.stream.Location
     implementation 'org.apache.xmlbeans:xmlbeans:3.0.0'
+
 }
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
 
 shadowJar {
     exclude 'repackage/**'
@@ -34,7 +48,7 @@ shadowJar {
     dependencies {
         exclude(dependency('com.github.virtuald:curvesapi'))
         exclude(dependency('commons-codec:commons-codec'))
-        exclude(dependency('commons-codec:commons-collections4'))
+        exclude(dependency('org.apache.commons:commons-collections4'))
     }
 
     // Relocate javax dependencies so Android does not choke
@@ -48,3 +62,5 @@ shadowJar {
 
 jar.dependsOn shadowJar
 test.dependsOn shadowJar
+
+

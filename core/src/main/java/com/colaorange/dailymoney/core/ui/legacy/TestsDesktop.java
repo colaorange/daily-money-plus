@@ -1,6 +1,7 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,8 +35,15 @@ import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.util.Logger;
 
-import org.jxls.common.Context;
-import org.jxls.util.JxlsHelper;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * @author dennis
@@ -251,7 +260,10 @@ public class TestsDesktop extends AbstractDesktop {
             employee.put("birthday","Birthday "+(i+1));
             employee.put("payment","Payment "+(i+1));
             employee.put("bonus","Bonus "+(i+1));
+            employees.add(employee);
         }
+        String[] columns = {"Name",  "Date Of Birth", "Payment", "Bonus"};
+
         InputStream is = null;
         OutputStream os = null;
         try {
@@ -262,10 +274,73 @@ public class TestsDesktop extends AbstractDesktop {
 
             File file = new File(Contexts.instance().getWorkingFolder(),"reports");
             file.mkdir();
-            file = new File(file,"test1.xlsx");
-            Context context = new Context();
-            context.putVar("employees", employees);
-            JxlsHelper.getInstance().processTemplate(is, os, context);
+            file = new File(file,"test2.xlsx");
+
+            Workbook workbook = new XSSFWorkbook();
+
+             /* CreationHelper helps us create instances of various things like DataFormat,
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+            CreationHelper createHelper = workbook.getCreationHelper();
+
+            // Create a Sheet
+            Sheet sheet = workbook.createSheet("Employee");
+
+            // Create a Font for styling header cells
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 14);
+            headerFont.setColor(IndexedColors.RED.getIndex());
+
+            // Create a CellStyle with the font
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+
+            // Create a Row
+            Row headerRow = sheet.createRow(0);
+
+            // Create cells
+            for(int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            // Create Cell Style for formatting Date
+            CellStyle dateCellStyle = workbook.createCellStyle();
+            dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
+            // Create Other rows and cells with employees data
+            int rowNum = 1;
+            for(Map<String,String> employee: employees) {
+                Row row = sheet.createRow(rowNum++);
+
+                row.createCell(0)
+                        .setCellValue(employee.get("name"));
+
+                row.createCell(1)
+                        .setCellValue(employee.get("birthday"));
+
+                Cell dateOfBirthCell = row.createCell(2);
+                dateOfBirthCell.setCellValue(employee.get("payment"));
+                dateOfBirthCell.setCellStyle(dateCellStyle);
+
+                row.createCell(3)
+                        .setCellValue(employee.get("bonus"));
+            }
+
+            // Resize all columns to fit the content size
+            for(int i = 0; i < columns.length; i++) {
+//                sheet.autoSizeColumn(i);
+            }
+
+            // Write the output to a file
+            FileOutputStream fileOut = new FileOutputStream(file);
+            workbook.write(fileOut);
+            fileOut.close();
+
+            // Closing the workbook
+            workbook.close();
+
 
             Logger.i(">>>> write report to "+file.getAbsolutePath());
         }catch(Exception x){

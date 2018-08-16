@@ -7,8 +7,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 180809001
-        versionName "0.10.5-freshly-180809001"
+        versionCode 180816000
+        versionName "0.10.5-freshly-poi-180816000"
 
         multiDexEnabled true
 
@@ -25,21 +25,32 @@ android {
     }
     compileOptions {
     }
+
+    // error about duplicates if some of these are not excluded when using 3rd libs
+    packagingOptions {
+        pickFirst 'META-INF/DEPENDENCIES.txt'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/notice.txt'
+        pickFirst 'META-INF/license.txt'
+        pickFirst 'META-INF/dependencies.txt'
+        pickFirst 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api project(':core')
-
+    implementation project(':core')
     /**
      * https://developer.android.com/studio/build/multidex
      * have to set here too, should same as setting in core module
      */
     implementation 'com.android.support:multidex:1.0.3'
-
     //sl4j for jxls, poi
     runtimeOnly 'org.slf4j:slf4j-android:1.7.25'
-
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:design:27.1.1'
@@ -49,3 +60,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
