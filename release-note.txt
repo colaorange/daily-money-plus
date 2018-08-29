@@ -4,6 +4,7 @@
  #39 add lavender theme
  #40 allow to create/copy default/current account when creating book
 === Bugs ===
+ #41 Can't see weekday in android 4.3
 
 ====================================================================================================
 == 0.10.4 ==
