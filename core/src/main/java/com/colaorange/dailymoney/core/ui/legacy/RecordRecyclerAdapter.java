@@ -50,6 +50,7 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
     private CalendarHelper calHelper;
     private Date today;
     private boolean showRecordDate = true;
+    private boolean showRecordDateWeekDay = true;
 
     private int header1Color;
     private int header1TextColor;
@@ -91,6 +92,9 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
     public void setShowRecordDate(boolean showRecordDate) {
         this.showRecordDate = showRecordDate;
+    }
+    public void setShowRecordDateWeekDay(boolean showRecordDateWeekDay) {
+        this.showRecordDateWeekDay = showRecordDateWeekDay;
     }
 
     public boolean isDisableSelection() {
@@ -226,6 +230,9 @@ public class RecordRecyclerAdapter extends SelectableRecyclerViewAdaptor<RecordR
 
             if (showRecordDate) {
                 date = dateFormat.format(record.getDate());
+                if(showRecordDateWeekDay){
+                    date += " (" + weekDayFormat.format(record.getDate()) + ")";
+                }
             }
 
             vfrom.setText(from);
