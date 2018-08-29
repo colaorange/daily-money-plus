@@ -1,8 +1,6 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,11 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Colors;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -25,20 +20,18 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
-import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -56,26 +49,17 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private boolean fromBeginning = false;
     private int pos;
 
-    private DateFormat monthDateFormat;
-    private DateFormat yearMonthFormat;
-    private DateFormat yearFormat;
-
     private Date targetStartDate;
     private Date targetEndDate;
 
     private List<Balance> recyclerDataList;
     private RecyclerView vRecycler;
     private BalanceRecyclerAdapter recyclerAdapter;
-    private LayoutInflater inflater;
-
-    private GUIs.Dimen textSize;
-    private GUIs.Dimen textSizeMedium;
 
     private View rootView;
 
-    I18N i18n;
-
-    private int decimalLength;
+    private I18N i18n;
+    private int decimalLength = 0;
 
     static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
@@ -120,14 +104,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private void initMembers() {
         i18n = i18n();
         ContextsActivity activity = getContextsActivity();
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         Preference pref = preference();
-        monthDateFormat = pref.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
-        yearMonthFormat = pref.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM");
-        yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
-        textSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSize).data);
-        textSizeMedium = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeMedium).data);
 
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new BalanceRecyclerAdapter(activity, recyclerDataList);
@@ -171,7 +149,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         CalendarHelper cal = calendarHelper();
         targetEndDate = null;
         targetStartDate = null;
-
+        decimalLength = 0;
         switch (periodMode) {
             case YEARLY:
                 targetEndDate = cal.yearEndDate(targetDate);
@@ -245,7 +223,6 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                     all.addAll(other);
                 }
 
-                decimalLength = 0;
                 DecimalFormat df = Formats.getMoneyFormat();
                 for(Balance b: all){
                     decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, b.getMoney()));
@@ -259,6 +236,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
                 recyclerDataList.clear();
                 recyclerDataList.addAll(all);
+                recyclerAdapter.setDecimalLength(decimalLength);
                 recyclerAdapter.notifyDataSetChanged();
             }
         });
@@ -298,102 +276,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         }
     }
 
-    public class BalanceRecyclerAdapter extends SelectableRecyclerViewAdaptor<Balance, BalanceViewHolder> {
-
-        public BalanceRecyclerAdapter(ContextsActivity activity, List<Balance> data) {
-            super(activity, data);
-        }
-
-        @NonNull
-        @Override
-        public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View viewItem = inflater.inflate(R.layout.balance_mgnt_item, parent, false);
-            return new BalanceViewHolder(this, viewItem);
-        }
-
-    }
-
-    public class BalanceViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<BalanceRecyclerAdapter, Balance> {
-
-        public BalanceViewHolder(BalanceRecyclerAdapter adapter, View itemView) {
-            super(adapter, itemView);
-        }
-
-        @Override
-        public void bindViewValue(Balance balance) {
-            super.bindViewValue(balance);
-
-
-            ContextsActivity activity = getContextsActivity();
-
-            Map<AccountType, Integer> textColorMap = activity.getAccountTextColorMap();
-            Map<AccountType, Integer> bgColorMap = activity.getAccountBgColorMap();
-            boolean lightTheme = activity.isLightTheme();
-            float dpRatio = activity.getDpRatio();
-
-            LinearLayout vlayout = itemView.findViewById(R.id.balance_item_layout);
-            TextView vname = itemView.findViewById(R.id.balance_item_name);
-            TextView vmoney = itemView.findViewById(R.id.balance_item_money);
-
-            AccountType at = AccountType.find(balance.getType());
-            int indent = balance.getIndent();
-            boolean head = indent == 0;
-
-            Integer textColor;
-
-            vname.setText(balance.getName());
-            vmoney.setText(contexts().toFormattedMoneyString(balance.getMoney(), decimalLength));
-
-            boolean selected = adaptor.isSelected(balance);
-
-            //transparent mask for selecting ripple effect
-            int mask = 0xE0FFFFFF;
-            int hpd = (int) (10 * dpRatio);
-            int vpd = (int) (6 * dpRatio);
-
-            if (head) {
-
-                vpd += 2;
-
-                int bg = mask & activity.resolveThemeAttrResData(R.attr.balanceHeadBgColor);
-                if (selected) {
-                    bg = Colors.lighten(bg, 0.15f);
-                }
-                vlayout.setBackgroundColor(bg);
-                if (!lightTheme) {
-                    textColor = textColorMap.get(at);
-                } else {
-                    textColor = bgColorMap.get(at);
-                }
-
-                vname.setTextSize(textSizeMedium.unit, textSizeMedium.value);
-                vmoney.setTextSize(textSizeMedium.unit, textSizeMedium.value);
-            } else {
-                int bg = mask & activity.resolveThemeAttrResData(R.attr.balanceItemBgColor);
-                if (selected) {
-                    bg = Colors.darken(bg, 0.15f);
-                }
-                vlayout.setBackgroundColor(bg);
-                if (lightTheme) {
-                    textColor = textColorMap.get(at);
-                } else {
-                    textColor = bgColorMap.get(at);
-                }
-                vname.setTextSize(textSize.unit, textSize.value);
-                vmoney.setTextSize(textSize.unit, textSize.value);
-            }
-
-
-            vlayout.setPadding((int) ((1 + indent) * hpd), vpd, hpd, vpd);
-
-
-            vname.setTextColor(textColor);
-            vmoney.setTextColor(textColor);
-
-        }
-    }
-
-    static public class FragInfo implements Serializable {
+    public static class FragInfo implements Serializable {
         final public int pos;
         final public Date date;
         final public Date startDate;
