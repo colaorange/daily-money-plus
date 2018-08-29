@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
@@ -25,7 +27,10 @@ import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Misc;
+import com.colaorange.dailymoney.core.xlsx.BalanceXlsxExporter;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -224,7 +229,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                 }
 
                 DecimalFormat df = Formats.getMoneyFormat();
-                for(Balance b: all){
+                for (Balance b : all) {
                     decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, b.getMoney()));
                 }
             }
@@ -271,9 +276,53 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                 recyclerAdapter.clearSelection();
                 break;
             case QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT:
-                reloadData();
+                if(event.getArg(ARG_POS)==null || pos == ((Integer)event.getArg(ARG_POS)).intValue()) {
+                    reloadData();
+                }
+                break;
+            case QEvents.BalanceMgntFrag.ON_EXPORT_EXCEL:
+                if(event.getArg(ARG_POS)==null || pos == ((Integer)event.getArg(ARG_POS)).intValue()) {
+                    exportExcel();
+                }
                 break;
         }
+    }
+
+    private void exportExcel() {
+        final BalanceXlsxExporter exporter = new BalanceXlsxExporter(getContextsActivity());
+
+        GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
+
+            File destFile;
+
+            @Override
+            public void run() {
+                File folder = new File(Contexts.instance().getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                folder.mkdir();
+                //TODO file name
+
+
+                String sheetName = getContextsActivity().getTitle().toString();
+                String subject = Misc.toPeriodInfo(periodMode, targetDate, fromBeginning);
+
+                String fileName = subject+".xlsx";
+                fileName = Files.normalizeFileName(fileName);
+
+                destFile = new File(folder, fileName);
+
+                exporter.export(sheetName, subject, recyclerDataList, destFile);
+            }
+
+            @Override
+            public void onBusyFinish() {
+
+                if (exporter.getErrMsg() == null) {
+                    GUIs.longToast(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
+                } else {
+                    GUIs.longToast(getContextsActivity(), exporter.getErrMsg());
+                }
+            }
+        });
     }
 
     public static class FragInfo implements Serializable {

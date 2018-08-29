@@ -673,4 +673,14 @@ public class Strings {
         System.out.print(format(str, args));
     }
 
+    public static String padEnd(String str, int length, char padding) {
+        if (length <= 0) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(str);
+        for (int i = 0; i < length; i++) {
+            sb.append(padding);
+        }
+        return sb.toString();
+    }
 }

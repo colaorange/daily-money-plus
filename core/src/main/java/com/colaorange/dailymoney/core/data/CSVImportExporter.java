@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class CSVImportExporter {
     private static final String APPVER = "appver:";
-    private static final String CSV_FOLER = "csv";
-    private static final String LAST_FOLER = "last";
 
     private static Contexts contexts() {
         return Contexts.instance();
@@ -114,8 +112,8 @@ public class CSVImportExporter {
         } else {
             long now = System.currentTimeMillis();
 
-            File csvFolder = new File(contexts().getWorkingFolder(), CSV_FOLER);
-            File lastFolder = r.lastFolder = new File(csvFolder, "last");
+            File csvFolder = new File(contexts().getWorkingFolder(), Contexts.CSV_FOLER_NAME);
+            File lastFolder = r.lastFolder = new File(csvFolder, Contexts.LAST_FOLER_NAME);
 
             if (!lastFolder.exists()) {
                 lastFolder.mkdirs();

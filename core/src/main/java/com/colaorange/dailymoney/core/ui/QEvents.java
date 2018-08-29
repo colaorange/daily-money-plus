@@ -42,6 +42,7 @@ public class QEvents {
         //activity -> fragment
         String ON_CLEAR_SELECTION = "BalanceMgntFrag:onClearSelection";
         String ON_RELOAD_FRAGMENT = "BalanceMgntFrag:onReloadFragment";
+        String ON_EXPORT_EXCEL = "BalanceMgntFrag:onExportExcel";
 
         //fragment -> activity
         String ON_SELECT_BALANCE = "BalanceMgnt:onSelectBalance";
