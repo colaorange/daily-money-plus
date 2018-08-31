@@ -340,7 +340,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
                 Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
 
-                String fileName = book.getName() + "-" + subject + ".xlsx";
+                String fileName = book.getName() + "-" + i18n.string(R.string.label_balance) + "-" + subject + ".xlsx";
                 fileName = Files.normalizeFileName(fileName);
 
                 destFile = new File(folder, fileName);

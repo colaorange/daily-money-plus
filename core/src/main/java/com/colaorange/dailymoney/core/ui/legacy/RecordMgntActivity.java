@@ -241,7 +241,10 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
                 public void run() {
                     doNext();
                 }
-            },400);
+            }, 400);
+        } else if (item.getItemId() == R.id.menu_export_excel) {
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_EXPORT_EXCEL).withArg(BalanceMgntFragment.ARG_POS, vPager.getCurrentItem()).build());
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

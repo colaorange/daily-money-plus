@@ -1,7 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Files;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -19,12 +23,17 @@ import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Misc;
+import com.colaorange.dailymoney.core.xlsx.XlsxRecordExporter;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,6 +82,10 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     private boolean groupRecordByDate;
 
+    private List<Record> recordDataList;
+
+    private static int EXPORT_EXCEL_REQ_CODE = 102;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +132,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
+        recordDataList = new LinkedList<>();
 
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<RecordRecyclerAdapter.RecordFolk>() {
             @Override
@@ -149,6 +163,10 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             accountMap.put(acc.getId(), acc);
         }
 
+        recordDataList.clear();
+        if(data!=null) {
+            recordDataList.addAll(data);
+        }
 
         //refresh account
         recyclerAdapter.setAccountMap(accountMap);
@@ -227,17 +245,87 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     @Override
     public void onEvent(EventQueue.Event event) {
+        Integer pos = event.getArg(ARG_POS);
         switch (event.getName()) {
             case QEvents.RecordListFrag.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
             case QEvents.RecordListFrag.ON_RELOAD_FRAGMENT:
-                Integer pos = event.getArg(ARG_POS);
                 if (pos != null && pos.intValue() == this.pos) {
                     reloadData((List<Record>) event.getData());
                     return;
                 }
                 break;
+            case QEvents.RecordListFrag.ON_EXPORT_EXCEL:
+                if (pos != null && pos.intValue() == this.pos) {
+                    exportExcel();
+                }
+                break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == EXPORT_EXCEL_REQ_CODE &&
+                Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    exportExcel();
+                }
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void doRequestPermission(int code) {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+    }
+
+    private void exportExcel() {
+
+        Contexts contexts = Contexts.instance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
+            doRequestPermission(EXPORT_EXCEL_REQ_CODE);
+            return;
+        }
+
+        final XlsxRecordExporter exporter = new XlsxRecordExporter(getContextsActivity(), accountMap);
+
+        GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
+
+            File destFile;
+
+            @Override
+            public void run() {
+                Contexts contexts = Contexts.instance();
+
+                File folder = new File(contexts.getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                folder.mkdir();
+
+                String sheetName = getContextsActivity().getTitle().toString();
+                String subject = "TODO";//Misc.toPeriodInfo(periodMode, targetDate, fromBeginning);
+
+                Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
+
+                String fileName = book.getName() + "-" + i18n.string(R.string.label_record) + "-" + subject + ".xlsx";
+                fileName = Files.normalizeFileName(fileName);
+
+                destFile = new File(folder, fileName);
+
+                exporter.export(sheetName, subject, recordDataList, destFile);
+            }
+
+            @Override
+            public void onBusyFinish() {
+
+                if (exporter.getErrMsg() == null) {
+                    GUIs.longToast(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
+                } else {
+                    GUIs.longToast(getContextsActivity(), exporter.getErrMsg());
+                }
+            }
+        });
     }
 }

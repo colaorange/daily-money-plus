@@ -107,9 +107,9 @@ public class XlsxBalanceExporter {
             headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-            CellStyle moneyCellStyle = workbook.createCellStyle();
+            CellStyle moneyStyle = workbook.createCellStyle();
             String format = decimalLength == 0 ? "#,##0" : Strings.padEnd("#,##0.", decimalLength, '0');
-            moneyCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
+            moneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
 
             CellStyle headerMoneyStyle = workbook.createCellStyle();
             headerMoneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
@@ -160,7 +160,7 @@ public class XlsxBalanceExporter {
                 if (balance.getIndent() == 0) {
                     cell.setCellStyle(headerMoneyStyle);
                 } else {
-                    cell.setCellStyle(moneyCellStyle);
+                    cell.setCellStyle(moneyStyle);
                 }
 
                 rowIdx++;
