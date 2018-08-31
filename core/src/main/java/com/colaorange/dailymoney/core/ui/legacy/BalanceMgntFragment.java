@@ -1,6 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +26,14 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
+import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Misc;
-import com.colaorange.dailymoney.core.xlsx.BalanceXlsxExporter;
+import com.colaorange.dailymoney.core.xlsx.XlsxBalanceExporter;
 
 import java.io.File;
 import java.io.Serializable;
@@ -67,6 +72,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private int decimalLength = 0;
 
     static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
+
+    private static int EXPORT_EXCEL_REQ_CODE = 101;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -276,20 +283,46 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                 recyclerAdapter.clearSelection();
                 break;
             case QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT:
-                if(event.getArg(ARG_POS)==null || pos == ((Integer)event.getArg(ARG_POS)).intValue()) {
+                if (event.getArg(ARG_POS) == null || pos == ((Integer) event.getArg(ARG_POS)).intValue()) {
                     reloadData();
                 }
                 break;
             case QEvents.BalanceMgntFrag.ON_EXPORT_EXCEL:
-                if(event.getArg(ARG_POS)==null || pos == ((Integer)event.getArg(ARG_POS)).intValue()) {
+                if (event.getArg(ARG_POS) == null || pos == ((Integer) event.getArg(ARG_POS)).intValue()) {
                     exportExcel();
                 }
                 break;
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == EXPORT_EXCEL_REQ_CODE &&
+                Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    exportExcel();
+                }
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void doRequestPermission(int code) {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+    }
+
     private void exportExcel() {
-        final BalanceXlsxExporter exporter = new BalanceXlsxExporter(getContextsActivity());
+
+        Contexts contexts = Contexts.instance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
+            doRequestPermission(EXPORT_EXCEL_REQ_CODE);
+            return;
+        }
+
+        final XlsxBalanceExporter exporter = new XlsxBalanceExporter(getContextsActivity());
 
         GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
 
@@ -297,15 +330,17 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
             @Override
             public void run() {
-                File folder = new File(Contexts.instance().getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
-                folder.mkdir();
-                //TODO file name
+                Contexts contexts = Contexts.instance();
 
+                File folder = new File(contexts.getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                folder.mkdir();
 
                 String sheetName = getContextsActivity().getTitle().toString();
                 String subject = Misc.toPeriodInfo(periodMode, targetDate, fromBeginning);
 
-                String fileName = subject+".xlsx";
+                Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
+
+                String fileName = book.getName() + "-" + subject + ".xlsx";
                 fileName = Files.normalizeFileName(fileName);
 
                 destFile = new File(folder, fileName);

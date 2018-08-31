@@ -36,14 +36,14 @@ import java.util.List;
 /**
  * Created by Dennis
  */
-public class BalanceXlsxExporter {
+public class XlsxBalanceExporter {
 
 
     private Context ctx;
 
     private String errMsg;
 
-    public BalanceXlsxExporter(Context ctx) {
+    public XlsxBalanceExporter(Context ctx) {
         this.ctx = ctx;
     }
 

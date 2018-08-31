@@ -1,5 +1,7 @@
 package com.colaorange.dailymoney.core.util;
 
+import android.content.pm.PackageManager;
+
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -14,6 +16,17 @@ import java.util.Date;
  */
 public class Misc {
 
+    public static boolean isPermissionGranted(String permission, String[] permissionRequests, int[] grantResults) {
+        for (int i = 0; i < permissionRequests.length; i++) {
+            if (permission.equals(permissionRequests[i])) {
+                if (grantResults.length > i) {
+                    return grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
 
     public static String toPeriodInfo(PeriodMode periodMode, Date targetDate, boolean fromBeginning) {
         Contexts contexts = Contexts.instance();
