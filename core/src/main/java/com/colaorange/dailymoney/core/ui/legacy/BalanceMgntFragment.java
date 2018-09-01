@@ -73,8 +73,6 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
     static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
-    private static int EXPORT_EXCEL_REQ_CODE = 101;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -298,7 +296,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == EXPORT_EXCEL_REQ_CODE &&
+        if (requestCode == Contexts.REQ_EXPORT_EXCEL &&
                 Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
             GUIs.post(new Runnable() {
                 @Override
@@ -318,7 +316,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
         Contexts contexts = Contexts.instance();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
-            doRequestPermission(EXPORT_EXCEL_REQ_CODE);
+            doRequestPermission(Contexts.REQ_EXPORT_EXCEL);
             return;
         }
 
@@ -336,7 +334,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                 folder.mkdir();
 
                 String sheetName = getContextsActivity().getTitle().toString();
-                String subject = Misc.toPeriodInfo(periodMode, targetDate, fromBeginning);
+                String subject = Misc.toBalancePeriodInfo(periodMode, targetDate, fromBeginning);
 
                 Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
 

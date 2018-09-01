@@ -79,6 +79,6 @@ public class PeriodInfoFragment extends ContextsFragment {
     }
 
     public void reloadData() {
-        vInfo.setText(Misc.toPeriodInfo(periodMode, targetDate, fromBeginning));
+        vInfo.setText(Misc.toBalancePeriodInfo(periodMode, targetDate, fromBeginning));
     }
 }

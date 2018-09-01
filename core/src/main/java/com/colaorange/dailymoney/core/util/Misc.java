@@ -28,7 +28,7 @@ public class Misc {
         return false;
     }
 
-    public static String toPeriodInfo(PeriodMode periodMode, Date targetDate, boolean fromBeginning) {
+    public static String toBalancePeriodInfo(PeriodMode periodMode, Date targetDate, boolean fromBeginning) {
         Contexts contexts = Contexts.instance();
         CalendarHelper cal = contexts.getCalendarHelper();
         I18N i18n = contexts.getI18n();

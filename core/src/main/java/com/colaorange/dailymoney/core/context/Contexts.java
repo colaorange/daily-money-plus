@@ -53,6 +53,8 @@ public class Contexts {
     public static final String EXCEL_FOLER_NAME = "xlsx";
     public static final String LAST_FOLER_NAME = "last";
 
+    public static final int REQ_EXPORT_EXCEL = 201;
+
     private static Contexts instance;
 
     private ContextsApp contextsApp;

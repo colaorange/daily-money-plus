@@ -84,8 +84,6 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     private List<Record> recordDataList;
 
-    private static int EXPORT_EXCEL_REQ_CODE = 102;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -267,7 +265,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == EXPORT_EXCEL_REQ_CODE &&
+        if (requestCode == Contexts.REQ_EXPORT_EXCEL &&
                 Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
             GUIs.post(new Runnable() {
                 @Override
@@ -287,7 +285,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
         Contexts contexts = Contexts.instance();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
-            doRequestPermission(EXPORT_EXCEL_REQ_CODE);
+            doRequestPermission(Contexts.REQ_EXPORT_EXCEL);
             return;
         }
 
@@ -305,7 +303,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
                 folder.mkdir();
 
                 String sheetName = getContextsActivity().getTitle().toString();
-                String subject = "TODO";//Misc.toPeriodInfo(periodMode, targetDate, fromBeginning);
+                String subject = "TODO";//Misc.toBalancePeriodInfo(periodMode, targetDate, fromBeginning);
 
                 Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
 

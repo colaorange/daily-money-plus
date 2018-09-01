@@ -1,17 +1,19 @@
 package com.colaorange.dailymoney.core.xlsx;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.data.Balance;
+import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -30,30 +32,48 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Dennis
  */
-public class XlsxBalanceExporter {
+public class XlsxRecordExporter {
 
 
     private Context ctx;
 
     private String errMsg;
 
-    public XlsxBalanceExporter(Context ctx) {
+    private Map<String, Account> accountMap;
+
+    public XlsxRecordExporter(Context ctx, Map<String, Account> accountMap) {
         this.ctx = ctx;
+        this.accountMap = accountMap;
     }
 
 
-    public void export(String sheetName, String subject, List<Balance> balanceList, File destFile) {
+    public void export(String sheetName, String subject, List<Record> recordList, File destFile) {
+
+        recordList = new LinkedList<>(recordList);
+
+        Collections.sort(recordList, new Comparator<Record>() {
+            @Override
+            public int compare(Record o1, Record o2) {
+                return Long.valueOf(o1.getDate().getTime()).compareTo(Long.valueOf(o2.getDate().getTime()));
+            }
+        });
+
         Contexts contexts = Contexts.instance();
         CalendarHelper cal = contexts.getCalendarHelper();
         I18N i18n = contexts.getI18n();
+        DateFormat dateFormat = contexts.getPreference().getDateFormat();
 
 
         int cellStart = 1;
@@ -64,12 +84,10 @@ public class XlsxBalanceExporter {
         try {
 
             int decimalLength = 0;
-            int indentLength = 0;
 
             DecimalFormat df = Formats.getMoneyFormat();
-            for (Balance balance : balanceList) {
-                decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, balance.getMoney()));
-                indentLength = Math.max(indentLength, balance.getIndent());
+            for (Record record : recordList) {
+                decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, record.getMoney()));
             }
 
 
@@ -94,11 +112,13 @@ public class XlsxBalanceExporter {
             subjectFont.setBold(true);
             subjectFont.setFontHeightInPoints((short) 14);
 
+
             CellStyle subjectStyle = workbook.createCellStyle();
             subjectStyle.setFont(subjectFont);
             subjectStyle.setAlignment(HorizontalAlignment.CENTER);
             subjectStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             subjectStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            subjectStyle.setBorderBottom(BorderStyle.MEDIUM);
 
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -108,34 +128,35 @@ public class XlsxBalanceExporter {
             headerStyle.setFont(headerFont);
             headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerStyle.setBorderBottom(BorderStyle.MEDIUM);
+
+            CellStyle fieldStyle = workbook.createCellStyle();
+            fieldStyle.setBorderBottom(BorderStyle.THIN);
 
             CellStyle moneyStyle = workbook.createCellStyle();
             String format = decimalLength == 0 ? "#,##0" : Strings.padEnd("#,##0.", decimalLength, '0');
             moneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
-
-            CellStyle headerMoneyStyle = workbook.createCellStyle();
-            headerMoneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
-            headerMoneyStyle.setFont(headerFont);
-            headerMoneyStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerMoneyStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            moneyStyle.setBorderBottom(BorderStyle.THIN);
 
             // Create a Sheet
             Sheet sheet = workbook.createSheet(sheetName);
 
+
+            //cloumns
+            String columns[] = new String[]{
+                    i18n.string(R.string.label_from_account),
+                    i18n.string(R.string.label_to_account),
+                    i18n.string(R.string.label_date),
+                    i18n.string(R.string.label_money),
+                    i18n.string(R.string.label_note),
+            };
+            int columnNum = columns.length;
+
             //apply default style
-            for (int i = 0; i <= cellStart + indentLength + 1; i++) {
+            for (int i = 0; i <= cellStart + columnNum; i++) {
                 sheet.setDefaultColumnStyle(i, defaultStyle);
             }
-
-            //adjust column length
-            for (int i = cellStart; i <= cellStart + indentLength; i++) {
-                if(i==cellStart+indentLength) {
-                    sheet.setColumnWidth(i, XlsxUtil.characterToWidth(20));
-                }else{
-                    sheet.setColumnWidth(i, XlsxUtil.characterToWidth(4));
-                }
-            }
-            sheet.setColumnWidth(cellStart + indentLength + 1, XlsxUtil.characterToWidth(16));
 
             int rowIdx = rowStart;
             //subject
@@ -143,38 +164,77 @@ public class XlsxBalanceExporter {
             Cell cell = row.createCell(cellStart);
             cell.setCellValue(subject);
             cell.setCellStyle(subjectStyle);
-            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, cellStart, cellStart + indentLength + 1));
+            //border
+            for (int i = 1; i < columnNum; i++) {
+                cell = row.createCell(cellStart+i);
+                cell.setCellStyle(subjectStyle);
+            }
+
+            CellRangeAddress range = new CellRangeAddress(rowIdx, rowIdx, cellStart, cellStart + columnNum - 1);
+            sheet.addMergedRegion(range);
+
 
             rowIdx += 2;
 
-            Map<String,CellStyle> reuse = new LinkedHashMap<>();
+            row = sheet.createRow(rowIdx);
+            for (int i = 0; i < columns.length; i++) {
+                int cellIdx = cellStart + i;
+                cell = row.createCell(cellIdx);
+                cell.setCellStyle(headerStyle);
+                cell.setCellValue(columns[i]);
+                switch (i) {
+                    case 0:
+                    case 1:
+                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(30));
+                        break;
+                    case 2:
+                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(18));
+                        break;
+                    case 3:
+                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(16));
+                        break;
+                    case 4:
+                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(50));
+                        break;
+                }
+            }
 
+            rowIdx++;
+
+            Map<String, CellStyle> reuseStyle = new LinkedHashMap<>();
             //balances
-            for (Balance balance : balanceList) {
+            for (Record record : recordList) {
                 row = sheet.createRow(rowIdx);
 
-                //account column
-                int cellIdx = cellStart + balance.getIndent();
+                //From(0)
+                int cellIdx = cellStart;
                 cell = row.createCell(cellIdx);
-                cell.setCellValue(balance.getName());
+                cell.setCellValue(XlsxUtil.toAccountDisplay(i18n, accountMap, record.getFrom()));
+                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuseStyle, fieldStyle, record.getFromType()));
 
-                if (balance.getIndent() == 0) {
-                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuse, headerStyle, balance.getType()));
-                }
-                if (cellStart + indentLength - cellIdx > 0) {
-                    sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, cellIdx, cellStart + indentLength));
-                }
+                //To(1)
+                cellIdx++;
+                cell = row.createCell(cellIdx);
+                cell.setCellValue(XlsxUtil.toAccountDisplay(i18n, accountMap, record.getTo()));
+                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuseStyle, fieldStyle, record.getToType()));
 
+                //Date(2)
+                cellIdx++;
+                cell = row.createCell(cellIdx);
+                cell.setCellValue(dateFormat.format(record.getDate()));
+                cell.setCellStyle(fieldStyle);
 
-                //money column
-                cell = row.createCell(cellStart + indentLength + 1);
-                cell.setCellValue(balance.getMoney());
+                //Money(3)
+                cellIdx++;
+                cell = row.createCell(cellIdx);
+                cell.setCellValue(record.getMoney());
+                cell.setCellStyle(moneyStyle);
 
-                if (balance.getIndent() == 0) {
-                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuse, headerMoneyStyle, balance.getType()));
-                } else {
-                    cell.setCellStyle(moneyStyle);
-                }
+                //Note(4)
+                cellIdx++;
+                cell = row.createCell(cellIdx);
+                cell.setCellValue(record.getNote());
+                cell.setCellStyle(fieldStyle);
 
                 rowIdx++;
             }
@@ -209,6 +269,7 @@ public class XlsxBalanceExporter {
 
         }
     }
+
 
     public String getErrMsg() {
         return errMsg;
