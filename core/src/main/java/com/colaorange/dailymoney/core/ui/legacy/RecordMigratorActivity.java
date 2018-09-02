@@ -24,6 +24,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
@@ -465,7 +466,7 @@ public class RecordMigratorActivity extends ContextsActivity implements View.OnC
                 //record list
                 RecordListFragment frag = new RecordListFragment();
                 Bundle b = new Bundle();
-                b.putInt(RecordListFragment.ARG_MODE, RecordListFragment.MODE_ALL);
+                b.putSerializable(RecordListFragment.ARG_PERIOD_MODE, PeriodMode.ALL);
                 b.putInt(RecordListFragment.ARG_POS, position);
                 b.putBoolean(RecordListFragment.ARG_DISABLE_SELECTION, true);
                 frag.setArguments(b);

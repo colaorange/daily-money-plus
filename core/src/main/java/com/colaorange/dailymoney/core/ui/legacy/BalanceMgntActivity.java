@@ -314,11 +314,11 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         intent.putExtra(AccountRecordListActivity.ARG_CONDITION_INFO, balance.getName());
 
         if (fromBeginning) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_ALL);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.ALL);
         } else if (periodMode == PeriodMode.MONTHLY) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_MONTH);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
         } else if (periodMode == PeriodMode.YEARLY) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_YEAR);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.YEARLY);
         }
 
 

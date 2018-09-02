@@ -21,6 +21,7 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Book;
@@ -36,6 +37,7 @@ import com.colaorange.dailymoney.core.xlsx.XlsxRecordExporter;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,15 +49,10 @@ import java.util.Set;
  */
 public class RecordListFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final int MODE_DAY = 0;
-    public static final int MODE_MONTH = 1;
-    public static final int MODE_WEEK = 2;//week could cross month, so has higher value
-    public static final int MODE_YEAR = 3;
-    public static final int MODE_ALL = 4;
+    public static final String ARG_TARGET_DATE = "targetDate";
+    public static final String ARG_PERIOD_MODE = "periodMode";
 
     public static final String ARG_POS = "pos";
-
-    public static final String ARG_MODE = "mode";
 
     public static final String ARG_DISABLE_SELECTION = "disableSelection";
 
@@ -63,7 +60,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private TextView vNoDataText;
 
     private int pos;
-    private int mode;
+    private PeriodMode periodMode;
+    private Date targetDate;
     private boolean disableSelection;
 
     private List<RecordRecyclerAdapter.RecordFolk> recyclerDataList;
@@ -105,8 +103,15 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         Bundle args = getArguments();
 
         pos = args.getInt(ARG_POS, 0);
-        mode = args.getInt(ARG_MODE, MODE_DAY);
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
         disableSelection = args.getBoolean(ARG_DISABLE_SELECTION, false);
+        targetDate = (Date) args.get(ARG_TARGET_DATE);
+        if (targetDate == null) {
+            targetDate = new Date();
+        }
     }
 
     private void initMembers() {
@@ -122,8 +127,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
-        recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR || !groupRecordByDate);
-        recyclerAdapter.setShowRecordDateWeekDay(mode >= MODE_MONTH && !groupRecordByDate);
+        recyclerAdapter.setShowRecordDate(periodMode.getValue() >= PeriodMode.YEARLY.getValue() || !groupRecordByDate);
+        recyclerAdapter.setShowRecordDateWeekDay(periodMode.getValue() >= PeriodMode.MONTHLY.getValue() && !groupRecordByDate);
         recyclerAdapter.setDisableSelection(disableSelection);
         vRecycler = rootView.findViewById(R.id.record_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
@@ -162,7 +167,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         }
 
         recordDataList.clear();
-        if(data!=null) {
+        if (data != null) {
             recordDataList.addAll(data);
         }
 
@@ -204,9 +209,9 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
                 boolean diffMonth = diffYear || (lastHeader == null || lastHeader.calendar.get(Calendar.MONTH) != cal.get(Calendar.MONTH));
                 boolean diffDay = diffMonth || (lastHeader == null || lastHeader.calendar.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH));
 
-                boolean showYear = mode == MODE_ALL && diffYear;
-                boolean showMonth = mode > MODE_MONTH && diffMonth;
-                boolean showDay = mode >= MODE_DAY && diffDay;
+                boolean showYear = periodMode.getValue() == PeriodMode.ALL.getValue() && diffYear;
+                boolean showMonth = periodMode.getValue() > PeriodMode.MONTHLY.getValue() && diffMonth;
+                boolean showDay = periodMode.getValue() >= PeriodMode.DAILY.getValue() && diffDay;
                 //is same header
                 if (showYear || showMonth || showDay || lastHeader == null) {
                     //add header
@@ -303,7 +308,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
                 folder.mkdir();
 
                 String sheetName = getContextsActivity().getTitle().toString();
-                String subject = "TODO";//Misc.toBalancePeriodInfo(periodMode, targetDate, fromBeginning);
+                String subject = Misc.toRecordPeriodInfo(periodMode, targetDate, recordDataList.size());
 
                 Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
 

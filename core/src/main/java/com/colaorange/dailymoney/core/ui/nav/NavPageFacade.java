@@ -82,19 +82,19 @@ public class NavPageFacade {
                 break;
             case DAILY_LIST:
                 intent = new Intent(activity, RecordMgntActivity.class);
-                intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_DAY);
+                intent.putExtra(RecordMgntActivity.ARG_PERIOD_MODE, PeriodMode.DAILY);
                 break;
             case WEEKLY_LIST:
                 intent = new Intent(activity, RecordMgntActivity.class);
-                intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_WEEK);
+                intent.putExtra(RecordMgntActivity.ARG_PERIOD_MODE, PeriodMode.WEEKLY);
                 break;
             case MONTHLY_LIST:
                 intent = new Intent(activity, RecordMgntActivity.class);
-                intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_MONTH);
+                intent.putExtra(RecordMgntActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
                 break;
             case YEARLY_LIST:
                 intent = new Intent(activity, RecordMgntActivity.class);
-                intent.putExtra(RecordMgntActivity.ARG_MODE, RecordMgntActivity.MODE_YEAR);
+                intent.putExtra(RecordMgntActivity.ARG_PERIOD_MODE, PeriodMode.YEARLY);
                 break;
             case RECORD_SEARCHER:
                 intent = new Intent(activity, RecordSearcherActivity.class);

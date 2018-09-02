@@ -211,6 +211,6 @@ public class Files {
     }
 
     public static String normalizeFileName(String fileName) {
-        return fileName.replaceAll("[\\\\/:*?\"<>|]","");
+        return fileName.replaceAll("[\\\\/:*?\"<>|]","_");
     }
 }

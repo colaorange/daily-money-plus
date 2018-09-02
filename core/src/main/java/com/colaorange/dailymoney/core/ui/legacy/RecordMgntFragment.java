@@ -15,16 +15,16 @@ import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
-import com.colaorange.dailymoney.core.context.Preference;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
-import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Misc;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +34,9 @@ import java.util.Map;
  */
 public class RecordMgntFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final int MODE_DAY = RecordListFragment.MODE_DAY;
-    public static final int MODE_WEEK = RecordListFragment.MODE_WEEK;
-    public static final int MODE_MONTH = RecordListFragment.MODE_MONTH;
-    public static final int MODE_YEAR = RecordListFragment.MODE_YEAR;
-    public static final int MODE_ALL = RecordListFragment.MODE_ALL;
 
-
-    public static final String ARG_TARGET_DATE = "targetDate";
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_TARGET_DATE = RecordListFragment.ARG_TARGET_DATE;
+    public static final String ARG_PERIOD_MODE = RecordListFragment.ARG_PERIOD_MODE;
     public static final String ARG_POS = "pos";
 
     private TextView vInfo;
@@ -60,14 +54,8 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
     private TextView vSumUnknownMoney;
 
     private Date targetDate;
-    private int mode;
+    private PeriodMode periodMode;
     private int pos;
-
-    private DateFormat dateFormat;
-    private DateFormat yearMonthFormat;
-    private DateFormat yearFormat;
-    private DateFormat weekDayFormat;
-    private DateFormat nonDigitalMonthFormat;
 
     private Date targetStartDate;
     private Date targetEndDate;
@@ -99,12 +87,13 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
     private void initArgs() {
         Bundle args = getArguments();
-        mode = args.getInt(ARG_MODE, MODE_WEEK);
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
         pos = args.getInt(ARG_POS, 0);
-        Object o = args.get(ARG_TARGET_DATE);
-        if (o instanceof Date) {
-            targetDate = (Date) o;
-        } else {
+        targetDate = (Date) args.get(ARG_TARGET_DATE);
+        if (targetDate == null) {
             targetDate = new Date();
         }
     }
@@ -113,14 +102,6 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
         ContextsActivity activity = getContextsActivity();
         lightTheme = activity.isLightTheme();
-
-        Preference preference = preference();
-
-        dateFormat = preference.getDateFormat();//new SimpleDateFormat("yyyy/MM/dd");
-        yearMonthFormat = preference.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM - MMM");
-        yearFormat = preference.getYearFormat();//new SimpleDateFormat("yyyy");
-        weekDayFormat = preference.getWeekDayFormat();
-        nonDigitalMonthFormat = preference.getNonDigitalMonthFormat();
 
         vInfo = rootView.findViewById(R.id.record_info);
 
@@ -152,7 +133,8 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
             f = new RecordListFragment();
             Bundle b = new Bundle();
             b.putInt(RecordListFragment.ARG_POS, pos);
-            b.putInt(RecordListFragment.ARG_MODE, mode);
+            b.putSerializable(RecordListFragment.ARG_PERIOD_MODE, periodMode);
+            b.putSerializable(RecordListFragment.ARG_TARGET_DATE, targetDate);
             f.setArguments(b);
 
             fragmentManager.beginTransaction()
@@ -180,34 +162,11 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
 
         vSumUnknown.setVisibility(TextView.VISIBLE);
 
-        switch (mode) {
-            case MODE_ALL:
-                targetStartDate = targetEndDate = null;
-                break;
-            case MODE_MONTH:
-                targetStartDate = cal.monthStartDate(targetDate);
-                targetEndDate = cal.monthEndDate(targetDate);
-                break;
-            case MODE_DAY:
-                targetStartDate = cal.toDayStart(targetDate);
-                targetEndDate = cal.toDayEnd(targetDate);
-                break;
-            case MODE_YEAR:
-                targetStartDate = cal.yearStartDate(targetDate);
-                targetEndDate = cal.yearEndDate(targetDate);
-
-                break;
-            case MODE_WEEK:
-            default:
-                targetStartDate = cal.weekStartDate(targetDate);
-                targetEndDate = cal.weekEndDate(targetDate);
-                break;
-        }
+        Date[] pDates = Misc.toTargetPeriodDates(periodMode, targetDate);
+        targetStartDate = pDates[0];
+        targetEndDate = pDates[1];
 
         final IDataProvider idp = contexts().getDataProvider();
-
-        final boolean sameYear = cal.isSameYear(targetStartDate, targetEndDate);
-        final boolean sameMonth = cal.isSameMonth(targetStartDate, targetEndDate);
 
         GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
             List<Record> data = null;
@@ -260,48 +219,7 @@ public class RecordMgntFragment extends ContextsFragment implements EventQueue.E
                     vSumOther.setVisibility(TextView.VISIBLE);
                 }
 
-                StringBuilder sb = new StringBuilder();
-                //update info
-                switch (mode) {
-                    case MODE_ALL:
-                        vInfo.setText(i18n.string(R.string.label_all_records, Integer.toString(count)));
-                        break;
-                    case MODE_MONTH:
-                        //<string name="label_month_details">%1$s (%2$s records)</string>
-                        if (sameMonth) {
-                            sb.append(yearMonthFormat.format(targetStartDate));
-                        } else {
-                            sb.append(yearFormat.format(targetStartDate));
-                            sb.append(" ").append(nonDigitalMonthFormat.format(targetStartDate)).append(", ").append(cal.dayOfMonth(targetStartDate)).append(" - ")
-                                    .append(nonDigitalMonthFormat.format(targetEndDate)).append(" ").append(cal.dayOfMonth(targetEndDate));
-                        }
-                        vInfo.setText(i18n.string(R.string.label_month_records, sb.toString(), Integer.toString(count)));
-                        break;
-                    case MODE_DAY:
-                        vInfo.setText(i18n.string(R.string.label_day_records, dateFormat.format(targetDate) + " " + weekDayFormat.format(targetDate), Integer.toString(count)));
-                        break;
-                    case MODE_YEAR:
-
-                        //<string name="label_year_details">%1$s (%2$s records)</string>
-                        if (sameYear) {
-                            sb.append(yearFormat.format(targetStartDate));
-                        } else {
-                            sb.append(yearFormat.format(targetStartDate));
-                            sb.append(", ").append(nonDigitalMonthFormat.format(targetStartDate)).append(" ").append(cal.dayOfMonth(targetStartDate)).append(" - ")
-                                    .append(yearFormat.format(targetEndDate)).append(" ").append(nonDigitalMonthFormat.format(targetEndDate)).append(" ").append(cal.dayOfMonth(targetEndDate));
-                        }
-
-                        vInfo.setText(i18n.string(R.string.label_year_records, sb.toString(), Integer.toString(count)));
-                        break;
-                    case MODE_WEEK:
-                    default:
-                        //<string name="label_week_details">%5$s %1$s to %2$s - Week %3$s/%4$s (%6$s)</string>
-                        vInfo.setText(i18n.string(R.string.label_week_records, nonDigitalMonthFormat.format(targetStartDate) + " " + cal.dayOfMonth(targetStartDate),
-                                (!sameMonth ? nonDigitalMonthFormat.format(targetEndDate) + " " : "") + cal.dayOfMonth(targetEndDate),
-                                cal.weekOfMonth(targetDate), cal.weekOfYear(targetDate), yearFormat.format(targetStartDate), Integer.toString(count)));
-                        break;
-                }
-
+                vInfo.setText(Misc.toRecordPeriodInfo(periodMode, targetDate, count));
             }
         });
     }

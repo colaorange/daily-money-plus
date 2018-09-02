@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.RecordTemplate;
 import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Record;
@@ -40,13 +42,7 @@ import java.util.Map;
  */
 public class RecordMgntActivity extends ContextsActivity implements EventQueue.EventListener {
 
-    public static final int MODE_DAY = RecordMgntFragment.MODE_DAY;
-    public static final int MODE_WEEK = RecordMgntFragment.MODE_WEEK;
-    public static final int MODE_MONTH = RecordMgntFragment.MODE_MONTH;
-    public static final int MODE_YEAR = RecordMgntFragment.MODE_YEAR;
-    public static final int MODE_ALL = RecordMgntFragment.MODE_ALL;
-
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_PERIOD_MODE = "periodMode";
     public static final String ARG_BASE_DATE = "baseData";
 
     private ViewPager vPager;
@@ -54,7 +50,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
     private Date baseDate;
 
-    private int mode = MODE_WEEK;
+    private PeriodMode periodMode;
 
     private Map<Integer, RecordMgntFragment.FragInfo> fragInfoMap;
 
@@ -84,9 +80,12 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
     }
 
     private void initArgs() {
-        Bundle b = getIntentExtras();
-        mode = b.getInt(ARG_MODE, MODE_WEEK);
-        Object o = b.get(ARG_BASE_DATE);
+        Bundle args = getIntentExtras();
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
+        Object o = args.get(ARG_BASE_DATE);
         if (o instanceof Date) {
             baseDate = (Date) o;
         } else {
@@ -140,21 +139,21 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 //        toolbarView.setVisibility(TextView.VISIBLE);
 //        btnMode.setVisibility(ImageButton.VISIBLE);
 
-        switch (mode) {
-            case MODE_ALL:
+        switch (periodMode) {
+            case ALL:
 //                toolbarView.setVisibility(TextView.GONE);
                 setTitle(R.string.label_all);
                 break;
-            case MODE_WEEK:
+            case WEEKLY:
                 setTitle(R.string.nav_pg_weekly_list);
                 break;
-            case MODE_DAY:
+            case DAILY:
                 setTitle(R.string.nav_pg_daily_list);
                 break;
-            case MODE_YEAR:
+            case YEARLY:
                 setTitle(R.string.nav_pg_yearly_list);
                 break;
-            case MODE_MONTH:
+            case MONTHLY:
             default:
                 setTitle(R.string.nav_pg_monthly_list);
                 break;
@@ -168,25 +167,25 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         vPager.setAdapter(adapter);
         vPager.setCurrentItem(adapter.getBasePos());
 
-        trackEvent(TE.RECORD + mode);
+        trackEvent(TE.RECORD + periodMode);
     }
 
     private void doChangeMode() {
-        switch (mode) {
-            case MODE_ALL:
-                mode = MODE_ALL;//not switchable
+        switch (periodMode) {
+            case ALL:
+                periodMode = PeriodMode.ALL;//not switchable
                 break;
-            case MODE_WEEK:
-                mode = MODE_MONTH;
+            case WEEKLY:
+                periodMode = PeriodMode.MONTHLY;
                 break;
-            case MODE_DAY:
-                mode = MODE_WEEK;
+            case DAILY:
+                periodMode = PeriodMode.WEEKLY;
                 break;
-            case MODE_MONTH:
-                mode = MODE_YEAR;
+            case MONTHLY:
+                periodMode = PeriodMode.YEARLY;
                 break;
-            case MODE_YEAR:
-                mode = MODE_DAY;
+            case YEARLY:
+                periodMode = PeriodMode.DAILY;
                 break;
         }
         refreshToolbar();
@@ -218,6 +217,9 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
         inflater.inflate(R.menu.record_mgnt_menu, menu);
 
         menu.findItem(R.id.menu_slide_hint).setVisible(!preference().checkEver(Constants.Hint.RECORD_SLIDE, false));
+
+        //poi doesn't work before 5.0 (xml parser error)
+        menu.findItem(R.id.menu_export_excel).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
 
         return true;
     }
@@ -370,10 +372,6 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
         private void calculatePos() {
 
-            if (mode == MODE_ALL) {
-                basePos = maxPos = 0;
-            }
-
             CalendarHelper calHelper = calendarHelper();
 
             Calendar cal0 = calHelper.calendar(new Date(0));
@@ -381,18 +379,20 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
 
             int diffYear = calbase.get(Calendar.YEAR) - cal0.get(Calendar.YEAR) - 1; //-1 for possible bundory issue
 
-            if (mode == MODE_MONTH) {
+            if (PeriodMode.MONTHLY.equals(periodMode)) {
                 basePos = diffYear * 12 + calbase.get(Calendar.MONTH) - cal0.get(Calendar.MONTH);
                 maxPos = basePos + Constants.MONTH_LOOK_AFTER;
-            } else if (mode == MODE_WEEK) {
+            } else if (PeriodMode.WEEKLY.equals(periodMode)) {
                 basePos = diffYear * 52 + calbase.get(Calendar.WEEK_OF_YEAR) - cal0.get(Calendar.WEEK_OF_YEAR);
                 maxPos = basePos + Constants.WEEK_LOOK_AFTER;
-            } else if (mode == MODE_DAY) {
+            } else if (PeriodMode.DAILY.equals(periodMode)) {
                 basePos = diffYear * 365 + calbase.get(Calendar.DAY_OF_YEAR) - cal0.get(Calendar.DAY_OF_YEAR);
                 maxPos = basePos + Constants.DAY_LOOK_AFTER;
-            } else {
+            } else if (PeriodMode.YEARLY.equals(periodMode)) {
                 basePos = diffYear;
                 maxPos = basePos + Constants.MONTH_LOOK_AFTER;
+            } else {
+                basePos = maxPos = 0;
             }
 
         }
@@ -412,21 +412,22 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
             Date targetDate;
 
             int diff = position - basePos;
-            if (mode == MODE_MONTH) {
+            if (PeriodMode.MONTHLY.equals(periodMode)) {
                 targetDate = calHelper.monthAfter(baseDate, diff);
-            } else if (mode == MODE_WEEK) {
+            } else if (PeriodMode.WEEKLY.equals(periodMode)) {
                 targetDate = calHelper.dateAfter(baseDate, diff * 7);
-            } else if (mode == MODE_DAY) {
+            } else if (PeriodMode.DAILY.equals(periodMode)) {
                 targetDate = calHelper.dateAfter(baseDate, diff);
-            } else {
-                //year
+            } else if (PeriodMode.YEARLY.equals(periodMode)) {
                 targetDate = calHelper.yearAfter(baseDate, diff);
+            } else {
+                targetDate = baseDate;
             }
 
             RecordMgntFragment f = new RecordMgntFragment();
             Bundle b = new Bundle();
             b.putInt(RecordMgntFragment.ARG_POS, position);
-            b.putInt(RecordMgntFragment.ARG_MODE, mode);
+            b.putSerializable(RecordMgntFragment.ARG_PERIOD_MODE, periodMode);
             b.putSerializable(RecordMgntFragment.ARG_TARGET_DATE, targetDate);
             f.setArguments(b);
             return f;
@@ -451,7 +452,7 @@ public class RecordMgntActivity extends ContextsActivity implements EventQueue.E
             //Sometimes the meu will not be visible so for that we need to set their visibility manually in this method
             //So here show action menu according to SDK Levels
 
-            if (RecordMgntActivity.this.mode == MODE_ALL) {
+            if (RecordMgntActivity.this.periodMode == PeriodMode.ALL) {
                 //TODO
             }
 
