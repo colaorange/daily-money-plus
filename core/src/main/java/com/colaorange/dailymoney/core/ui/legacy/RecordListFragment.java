@@ -319,9 +319,9 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             public void onBusyFinish() {
 
                 if (exporter.getErrMsg() == null) {
-                    GUIs.longToast(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
+                    GUIs.alert(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
                 } else {
-                    GUIs.longToast(getContextsActivity(), exporter.getErrMsg());
+                    GUIs.alert(getContextsActivity(), exporter.getErrMsg());
                 }
             }
         });

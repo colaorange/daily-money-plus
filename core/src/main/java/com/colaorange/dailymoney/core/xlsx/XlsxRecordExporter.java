@@ -118,7 +118,6 @@ public class XlsxRecordExporter {
             subjectStyle.setAlignment(HorizontalAlignment.CENTER);
             subjectStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             subjectStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            subjectStyle.setBorderBottom(BorderStyle.MEDIUM);
 
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -194,14 +193,14 @@ public class XlsxRecordExporter {
                         sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(16));
                         break;
                     case 4:
-                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(50));
+                        sheet.setColumnWidth(cellIdx, XlsxUtil.characterToWidth(60));
                         break;
                 }
             }
 
             rowIdx++;
 
-            Map<String, CellStyle> reuseStyle = new LinkedHashMap<>();
+            Map<String, CellStyle> reuse = new LinkedHashMap<>();
             //balances
             for (Record record : recordList) {
                 row = sheet.createRow(rowIdx);
@@ -210,13 +209,13 @@ public class XlsxRecordExporter {
                 int cellIdx = cellStart;
                 cell = row.createCell(cellIdx);
                 cell.setCellValue(XlsxUtil.toAccountDisplay(i18n, accountMap, record.getFrom()));
-                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuseStyle, fieldStyle, record.getFromType()));
+                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, fieldStyle, record.getFromType(), reuse));
 
                 //To(1)
                 cellIdx++;
                 cell = row.createCell(cellIdx);
                 cell.setCellValue(XlsxUtil.toAccountDisplay(i18n, accountMap, record.getTo()));
-                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuseStyle, fieldStyle, record.getToType()));
+                cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, fieldStyle, record.getToType(), reuse));
 
                 //Date(2)
                 cellIdx++;

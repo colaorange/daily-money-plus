@@ -114,7 +114,7 @@ public class XlsxBalanceExporter {
             moneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
 
             CellStyle headerMoneyStyle = workbook.createCellStyle();
-            headerMoneyStyle.setDataFormat(createHelper.createDataFormat().getFormat(format));
+            headerMoneyStyle.setDataFormat(moneyStyle.getDataFormat());
             headerMoneyStyle.setFont(headerFont);
             headerMoneyStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             headerMoneyStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -147,8 +147,6 @@ public class XlsxBalanceExporter {
 
             rowIdx += 2;
 
-            Map<String,CellStyle> reuse = new LinkedHashMap<>();
-
             //balances
             for (Balance balance : balanceList) {
                 row = sheet.createRow(rowIdx);
@@ -159,7 +157,8 @@ public class XlsxBalanceExporter {
                 cell.setCellValue(balance.getName());
 
                 if (balance.getIndent() == 0) {
-                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuse, headerStyle, balance.getType()));
+                    //don't reuse, header and header money has different format
+                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, headerStyle, balance.getType(), null));
                 }
                 if (cellStart + indentLength - cellIdx > 0) {
                     sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, cellIdx, cellStart + indentLength));
@@ -171,7 +170,7 @@ public class XlsxBalanceExporter {
                 cell.setCellValue(balance.getMoney());
 
                 if (balance.getIndent() == 0) {
-                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, reuse, headerMoneyStyle, balance.getType()));
+                    cell.setCellStyle(XlsxUtil.newAccountFillStyle(workbook, headerMoneyStyle, balance.getType(), null));
                 } else {
                     cell.setCellStyle(moneyStyle);
                 }

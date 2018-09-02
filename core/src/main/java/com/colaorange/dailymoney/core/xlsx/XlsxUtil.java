@@ -1,5 +1,7 @@
 package com.colaorange.dailymoney.core.xlsx;
 
+import android.support.annotation.Nullable;
+
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.util.I18N;
@@ -31,8 +33,8 @@ public class XlsxUtil {
     }
 
 
-    public static CellStyle newAccountFillStyle(Workbook workbook, Map<String, CellStyle> reuse, CellStyle accountStyle, String accountType) {
-        CellStyle style = reuse.get(accountType);
+    public static CellStyle newAccountFillStyle(Workbook workbook, CellStyle accountStyle, String accountType, @Nullable Map<String, CellStyle> reuse) {
+        CellStyle style = reuse==null?null:reuse.get(accountType);
         if(style!=null){
             return style;
         }
@@ -63,7 +65,9 @@ public class XlsxUtil {
                 style.setFillForegroundColor(UNKNOW_LIGHT_COLOR);
                 break;
         }
-        reuse.put(accountType, style);
+        if(reuse!=null) {
+            reuse.put(accountType, style);
+        }
         return style;
     }
 
