@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -223,6 +224,9 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
 
         menu.findItem(R.id.menu_slide_hint).setVisible(!preference().checkEver(Constants.Hint.BALANCE_SLIDE, false));
 
+        //poi doesn't work before 5.0 (xml parser error)
+        menu.findItem(R.id.menu_export_excel).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
+
         return true;
     }
 
@@ -243,8 +247,10 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
             return true;
         } else if (item.getItemId() == R.id.menu_go_today) {
             doGoToday();
+            return true;
         } else if (item.getItemId() == R.id.menu_change_mode) {
             doChangeMode();
+            return true;
         } else if (item.getItemId() == R.id.menu_slide_hint) {
             preference().checkEver(Constants.Hint.BALANCE_SLIDE, true);
             GUIs.shortToast(this, i18n().string(R.string.msg_slide_hint));
@@ -255,6 +261,10 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
                     doNext();
                 }
             }, 400);
+            return true;
+        } else if (item.getItemId() == R.id.menu_export_excel) {
+            lookupQueue().publish(new EventQueue.EventBuilder(QEvents.BalanceMgntFrag.ON_EXPORT_EXCEL).withArg(BalanceMgntFragment.ARG_POS,vPager.getCurrentItem()).build());
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -304,11 +314,11 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         intent.putExtra(AccountRecordListActivity.ARG_CONDITION_INFO, balance.getName());
 
         if (fromBeginning) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_ALL);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.ALL);
         } else if (periodMode == PeriodMode.MONTHLY) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_MONTH);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
         } else if (periodMode == PeriodMode.YEARLY) {
-            intent.putExtra(AccountRecordListActivity.ARG_MODE, AccountRecordListActivity.MODE_YEAR);
+            intent.putExtra(AccountRecordListActivity.ARG_PERIOD_MODE, PeriodMode.YEARLY);
         }
 
 
@@ -438,6 +448,7 @@ public class BalanceMgntActivity extends ContextsActivity implements EventQueue.
         intent.putExtra(LineAccountActivity.ARG_TITLE, getTitle());
         startActivity(intent);
     }
+
 
     public class BalancePagerAdapter extends PeriodModePagerAdapter {
 

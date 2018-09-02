@@ -1,7 +1,10 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,21 +15,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
+import com.colaorange.commons.util.Files;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
+import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Misc;
+import com.colaorange.dailymoney.core.xlsx.XlsxRecordExporter;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,15 +49,10 @@ import java.util.Set;
  */
 public class RecordListFragment extends ContextsFragment implements EventQueue.EventListener {
 
-    public static final int MODE_DAY = 0;
-    public static final int MODE_MONTH = 1;
-    public static final int MODE_WEEK = 2;//week could cross month, so has higher value
-    public static final int MODE_YEAR = 3;
-    public static final int MODE_ALL = 4;
+    public static final String ARG_TARGET_DATE = "targetDate";
+    public static final String ARG_PERIOD_MODE = "periodMode";
 
     public static final String ARG_POS = "pos";
-
-    public static final String ARG_MODE = "mode";
 
     public static final String ARG_DISABLE_SELECTION = "disableSelection";
 
@@ -54,7 +60,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
     private TextView vNoDataText;
 
     private int pos;
-    private int mode;
+    private PeriodMode periodMode;
+    private Date targetDate;
     private boolean disableSelection;
 
     private List<RecordRecyclerAdapter.RecordFolk> recyclerDataList;
@@ -72,6 +79,8 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 //    private boolean lightTheme;
 
     private boolean groupRecordByDate;
+
+    private List<Record> recordDataList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,8 +103,15 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         Bundle args = getArguments();
 
         pos = args.getInt(ARG_POS, 0);
-        mode = args.getInt(ARG_MODE, MODE_DAY);
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
         disableSelection = args.getBoolean(ARG_DISABLE_SELECTION, false);
+        targetDate = (Date) args.get(ARG_TARGET_DATE);
+        if (targetDate == null) {
+            targetDate = new Date();
+        }
     }
 
     private void initMembers() {
@@ -111,14 +127,15 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new RecordRecyclerAdapter(activity, recyclerDataList);
         recyclerAdapter.setAccountMap(accountMap);
-        recyclerAdapter.setShowRecordDate(mode >= MODE_YEAR || !groupRecordByDate);
-        recyclerAdapter.setShowRecordDateWeekDay(mode >= MODE_MONTH && !groupRecordByDate);
+        recyclerAdapter.setShowRecordDate(periodMode.getValue() >= PeriodMode.YEARLY.getValue() || !groupRecordByDate);
+        recyclerAdapter.setShowRecordDateWeekDay(periodMode.getValue() >= PeriodMode.MONTHLY.getValue() && !groupRecordByDate);
         recyclerAdapter.setDisableSelection(disableSelection);
         vRecycler = rootView.findViewById(R.id.record_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
         vRecycler.setAdapter(recyclerAdapter);
 
+        recordDataList = new LinkedList<>();
 
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<RecordRecyclerAdapter.RecordFolk>() {
             @Override
@@ -149,6 +166,10 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
             accountMap.put(acc.getId(), acc);
         }
 
+        recordDataList.clear();
+        if (data != null) {
+            recordDataList.addAll(data);
+        }
 
         //refresh account
         recyclerAdapter.setAccountMap(accountMap);
@@ -188,9 +209,9 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
                 boolean diffMonth = diffYear || (lastHeader == null || lastHeader.calendar.get(Calendar.MONTH) != cal.get(Calendar.MONTH));
                 boolean diffDay = diffMonth || (lastHeader == null || lastHeader.calendar.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH));
 
-                boolean showYear = mode == MODE_ALL && diffYear;
-                boolean showMonth = mode > MODE_MONTH && diffMonth;
-                boolean showDay = mode >= MODE_DAY && diffDay;
+                boolean showYear = periodMode.getValue() == PeriodMode.ALL.getValue() && diffYear;
+                boolean showMonth = periodMode.getValue() > PeriodMode.MONTHLY.getValue() && diffMonth;
+                boolean showDay = periodMode.getValue() >= PeriodMode.DAILY.getValue() && diffDay;
                 //is same header
                 if (showYear || showMonth || showDay || lastHeader == null) {
                     //add header
@@ -227,17 +248,87 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
 
     @Override
     public void onEvent(EventQueue.Event event) {
+        Integer pos = event.getArg(ARG_POS);
         switch (event.getName()) {
             case QEvents.RecordListFrag.ON_CLEAR_SELECTION:
                 recyclerAdapter.clearSelection();
                 break;
             case QEvents.RecordListFrag.ON_RELOAD_FRAGMENT:
-                Integer pos = event.getArg(ARG_POS);
                 if (pos != null && pos.intValue() == this.pos) {
                     reloadData((List<Record>) event.getData());
                     return;
                 }
                 break;
+            case QEvents.RecordListFrag.ON_EXPORT_EXCEL:
+                if (pos != null && pos.intValue() == this.pos) {
+                    exportExcel();
+                }
+                break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == Contexts.REQ_EXPORT_EXCEL &&
+                Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    exportExcel();
+                }
+            });
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void doRequestPermission(int code) {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+    }
+
+    private void exportExcel() {
+
+        Contexts contexts = Contexts.instance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
+            doRequestPermission(Contexts.REQ_EXPORT_EXCEL);
+            return;
+        }
+
+        final XlsxRecordExporter exporter = new XlsxRecordExporter(getContextsActivity(), accountMap);
+
+        GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
+
+            File destFile;
+
+            @Override
+            public void run() {
+                Contexts contexts = Contexts.instance();
+
+                File folder = new File(contexts.getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                folder.mkdir();
+
+                String sheetName = getContextsActivity().getTitle().toString();
+                String subject = Misc.toRecordPeriodInfo(periodMode, targetDate, recordDataList.size());
+
+                Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
+
+                String fileName = book.getName() + "-" + i18n.string(R.string.label_record) + "-" + subject + ".xlsx";
+                fileName = Files.normalizeFileName(fileName);
+
+                destFile = new File(folder, fileName);
+
+                exporter.export(sheetName, subject, recordDataList, destFile);
+            }
+
+            @Override
+            public void onBusyFinish() {
+
+                if (exporter.getErrMsg() == null) {
+                    GUIs.alert(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
+                } else {
+                    GUIs.alert(getContextsActivity(), exporter.getErrMsg());
+                }
+            }
+        });
     }
 }

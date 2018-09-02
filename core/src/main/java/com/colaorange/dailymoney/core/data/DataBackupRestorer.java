@@ -25,9 +25,6 @@ public class DataBackupRestorer {
     private static final String DB_PRE = "dm_";
     private static final String DB_POS = ".db";
 
-    private static final String BACKUP_FOLER = "backup";
-    private static final String LAST_FOLER = "last";
-
     private static Contexts contexts() {
         return Contexts.instance();
     }
@@ -111,8 +108,8 @@ public class DataBackupRestorer {
         }
         long now = System.currentTimeMillis();
         try {
-            File backupFolder = new File(ctxs.getWorkingFolder(), BACKUP_FOLER);
-            File lastFolder = r.lastFolder = new File(backupFolder, LAST_FOLER);
+            File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+            File lastFolder = r.lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
 
             if (!lastFolder.exists()) {
                 lastFolder.mkdirs();
@@ -188,8 +185,8 @@ public class DataBackupRestorer {
             return r;
         }
         try {
-            File backupFolder = new File(ctxs.getWorkingFolder(), BACKUP_FOLER);
-            File lastFolder = new File(backupFolder, LAST_FOLER);
+            File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+            File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
             if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
                 lastFolder = ctxs.getWorkingFolder();
             }

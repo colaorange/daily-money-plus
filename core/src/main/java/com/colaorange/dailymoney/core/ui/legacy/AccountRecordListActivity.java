@@ -16,6 +16,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.RecordTemplate;
 import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Account;
@@ -43,11 +44,8 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
     public static final String ARG_START = "start";
     public static final String ARG_END = "end";
 
-    public static final int MODE_MONTH = RecordMgntFragment.MODE_MONTH;
-    public static final int MODE_YEAR = RecordMgntFragment.MODE_YEAR;
-    public static final int MODE_ALL = RecordMgntFragment.MODE_ALL;
 
-    public static final String ARG_MODE = "mode";
+    public static final String ARG_PERIOD_MODE = "periodMode";
     /**
      * accept AccountType, Account or the Account id path
      */
@@ -68,7 +66,7 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
 
     //there is only one, so set is to 0
     private int pos = 0;
-    private int mode;
+    private PeriodMode periodMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,13 +82,16 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
     private void initArgs() {
         i18n = Contexts.instance().getI18n();
 
-        Bundle b = getIntentExtras();
-        startDate = (Date) b.get(ARG_START);
-        endDate = (Date) b.get(ARG_END);
-        condition = b.getSerializable(ARG_CONDITION);
-        mode = b.getInt(ARG_MODE, MODE_MONTH);
+        Bundle args = getIntentExtras();
+        startDate = (Date) args.get(ARG_START);
+        endDate = (Date) args.get(ARG_END);
+        condition = args.getSerializable(ARG_CONDITION);
+        periodMode = (PeriodMode) args.getSerializable(ARG_PERIOD_MODE);
+        if (periodMode == null) {
+            periodMode = PeriodMode.MONTHLY;
+        }
 
-        String title = b.getString(ARG_CONDITION_INFO);
+        String title = args.getString(ARG_CONDITION_INFO);
         if(title!=null) {
             setTitle(title);
         }
@@ -129,7 +130,7 @@ public class AccountRecordListActivity extends ContextsActivity implements Event
             f = new RecordListFragment();
             Bundle b = new Bundle();
             b.putInt(RecordListFragment.ARG_POS, pos);
-            b.putInt(RecordListFragment.ARG_MODE, mode);
+            b.putSerializable(RecordListFragment.ARG_PERIOD_MODE, periodMode);
             f.setArguments(b);
 
             fragmentManager.beginTransaction()

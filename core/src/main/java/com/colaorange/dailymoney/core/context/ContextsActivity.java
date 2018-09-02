@@ -233,17 +233,6 @@ public class ContextsActivity extends AppCompatActivity {
     }
 
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        for (int g : grantResults) {
-            if (g == PackageManager.PERMISSION_GRANTED) {
-                recreate();
-                break;
-            }
-        }
-    }
-
-
     public void trackEvent(String action) {
         Contexts ctxs = Contexts.instance();
         ctxs.trackEvent(Contexts.getTrackerPath(getClass()), action, "", null);

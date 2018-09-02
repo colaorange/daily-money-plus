@@ -48,6 +48,13 @@ public class Contexts {
     //shold't not modify it, code has some assumption.
     public static final int DEFAULT_BOOK_ID = 0;
 
+    public static final String CSV_FOLER_NAME = "csv";
+    public static final String BACKUP_FOLER_NAME = "backup";
+    public static final String EXCEL_FOLER_NAME = "xlsx";
+    public static final String LAST_FOLER_NAME = "last";
+
+    public static final int REQ_EXPORT_EXCEL = 201;
+
     private static Contexts instance;
 
     private ContextsApp contextsApp;

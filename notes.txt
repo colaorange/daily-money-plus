@@ -73,3 +73,6 @@
     https://developer.android.com/guide/topics/ui/drag-drop
 * Chart
     https://blog.csdn.net/u014136472/article/details/50333829
+
+* POI
+    https://stackoverflow.com/questions/24442758/how-to-satisfy-dependencies-for-apache-poi-on-android

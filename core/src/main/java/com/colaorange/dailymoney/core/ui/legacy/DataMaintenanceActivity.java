@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +21,7 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.Logger;
+import com.colaorange.dailymoney.core.util.Misc;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -125,6 +127,16 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         }
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == 0 &&
+                Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            recreate();
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     private void doRequestPermission() {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -180,7 +192,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                     GUIs.alert(DataMaintenanceActivity.this, msg, new GUIs.OnFinishListener() {
                         @Override
                         public boolean onFinish(int which, Object data) {
-                            if(which == GUIs.OK_BUTTON) {
+                            if (which == GUIs.OK_BUTTON) {
                                 restartAppColdly();
                             }
                             return true;
@@ -221,6 +233,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                         public void onBusyError(Throwable t) {
                             GUIs.error(DataMaintenanceActivity.this, t);
                         }
+
                         public void onBusyFinish() {
                             GUIs.alert(DataMaintenanceActivity.this, R.string.msg_rested);
                         }

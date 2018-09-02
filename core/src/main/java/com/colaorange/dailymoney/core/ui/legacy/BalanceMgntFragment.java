@@ -1,6 +1,8 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
-import android.content.Context;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,13 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.colaorange.commons.util.CalendarHelper;
-import com.colaorange.commons.util.Colors;
+import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Formats;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
 import com.colaorange.dailymoney.core.context.EventQueue;
@@ -25,20 +26,22 @@ import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.Balance;
 import com.colaorange.dailymoney.core.data.BalanceHelper;
+import com.colaorange.dailymoney.core.data.Book;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.PeriodInfoFragment;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
-import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Misc;
+import com.colaorange.dailymoney.core.xlsx.XlsxBalanceExporter;
 
+import java.io.File;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -56,26 +59,17 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private boolean fromBeginning = false;
     private int pos;
 
-    private DateFormat monthDateFormat;
-    private DateFormat yearMonthFormat;
-    private DateFormat yearFormat;
-
     private Date targetStartDate;
     private Date targetEndDate;
 
     private List<Balance> recyclerDataList;
     private RecyclerView vRecycler;
     private BalanceRecyclerAdapter recyclerAdapter;
-    private LayoutInflater inflater;
-
-    private GUIs.Dimen textSize;
-    private GUIs.Dimen textSizeMedium;
 
     private View rootView;
 
-    I18N i18n;
-
-    private int decimalLength;
+    private I18N i18n;
+    private int decimalLength = 0;
 
     static Set<PeriodMode> supportPeriod = com.colaorange.commons.util.Collections.asSet(PeriodMode.MONTHLY, PeriodMode.YEARLY);
 
@@ -120,14 +114,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private void initMembers() {
         i18n = i18n();
         ContextsActivity activity = getContextsActivity();
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         Preference pref = preference();
-        monthDateFormat = pref.getMonthDateFormat();//new SimpleDateFormat("MM/dd");
-        yearMonthFormat = pref.getYearMonthFormat();//new SimpleDateFormat("yyyy/MM");
-        yearFormat = pref.getYearFormat();//new SimpleDateFormat("yyyy");
-        textSize = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSize).data);
-        textSizeMedium = GUIs.toDimen(activity.resolveThemeAttr(R.attr.textSizeMedium).data);
 
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new BalanceRecyclerAdapter(activity, recyclerDataList);
@@ -171,7 +159,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
         CalendarHelper cal = calendarHelper();
         targetEndDate = null;
         targetStartDate = null;
-
+        decimalLength = 0;
         switch (periodMode) {
             case YEARLY:
                 targetEndDate = cal.yearEndDate(targetDate);
@@ -245,9 +233,8 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                     all.addAll(other);
                 }
 
-                decimalLength = 0;
                 DecimalFormat df = Formats.getMoneyFormat();
-                for(Balance b: all){
+                for (Balance b : all) {
                     decimalLength = Math.max(decimalLength, Formats.getDecimalLength(df, b.getMoney()));
                 }
             }
@@ -259,6 +246,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
 
                 recyclerDataList.clear();
                 recyclerDataList.addAll(all);
+                recyclerAdapter.setDecimalLength(decimalLength);
                 recyclerAdapter.notifyDataSetChanged();
             }
         });
@@ -293,107 +281,84 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
                 recyclerAdapter.clearSelection();
                 break;
             case QEvents.BalanceMgntFrag.ON_RELOAD_FRAGMENT:
-                reloadData();
+                if (event.getArg(ARG_POS) == null || pos == ((Integer) event.getArg(ARG_POS)).intValue()) {
+                    reloadData();
+                }
+                break;
+            case QEvents.BalanceMgntFrag.ON_EXPORT_EXCEL:
+                if (event.getArg(ARG_POS) == null || pos == ((Integer) event.getArg(ARG_POS)).intValue()) {
+                    exportExcel();
+                }
                 break;
         }
     }
 
-    public class BalanceRecyclerAdapter extends SelectableRecyclerViewAdaptor<Balance, BalanceViewHolder> {
-
-        public BalanceRecyclerAdapter(ContextsActivity activity, List<Balance> data) {
-            super(activity, data);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == Contexts.REQ_EXPORT_EXCEL &&
+                Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            GUIs.post(new Runnable() {
+                @Override
+                public void run() {
+                    exportExcel();
+                }
+            });
         }
-
-        @NonNull
-        @Override
-        public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View viewItem = inflater.inflate(R.layout.balance_mgnt_item, parent, false);
-            return new BalanceViewHolder(this, viewItem);
-        }
-
     }
 
-    public class BalanceViewHolder extends SelectableRecyclerViewAdaptor.SelectableViewHolder<BalanceRecyclerAdapter, Balance> {
+    @TargetApi(Build.VERSION_CODES.M)
+    private void doRequestPermission(int code) {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, code);
+    }
 
-        public BalanceViewHolder(BalanceRecyclerAdapter adapter, View itemView) {
-            super(adapter, itemView);
+    private void exportExcel() {
+
+        Contexts contexts = Contexts.instance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
+            doRequestPermission(Contexts.REQ_EXPORT_EXCEL);
+            return;
         }
 
-        @Override
-        public void bindViewValue(Balance balance) {
-            super.bindViewValue(balance);
+        final XlsxBalanceExporter exporter = new XlsxBalanceExporter(getContextsActivity());
 
+        GUIs.doBusy(getContextsActivity(), new GUIs.BusyAdapter() {
 
-            ContextsActivity activity = getContextsActivity();
+            File destFile;
 
-            Map<AccountType, Integer> textColorMap = activity.getAccountTextColorMap();
-            Map<AccountType, Integer> bgColorMap = activity.getAccountBgColorMap();
-            boolean lightTheme = activity.isLightTheme();
-            float dpRatio = activity.getDpRatio();
+            @Override
+            public void run() {
+                Contexts contexts = Contexts.instance();
 
-            LinearLayout vlayout = itemView.findViewById(R.id.balance_item_layout);
-            TextView vname = itemView.findViewById(R.id.balance_item_name);
-            TextView vmoney = itemView.findViewById(R.id.balance_item_money);
+                File folder = new File(contexts.getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                folder.mkdir();
 
-            AccountType at = AccountType.find(balance.getType());
-            int indent = balance.getIndent();
-            boolean head = indent == 0;
+                String sheetName = getContextsActivity().getTitle().toString();
+                String subject = Misc.toBalancePeriodInfo(periodMode, targetDate, fromBeginning);
 
-            Integer textColor;
+                Book book = contexts.getMasterDataProvider().findBook(contexts.getWorkingBookId());
 
-            vname.setText(balance.getName());
-            vmoney.setText(contexts().toFormattedMoneyString(balance.getMoney(), decimalLength));
+                String fileName = book.getName() + "-" + i18n.string(R.string.label_balance) + "-" + subject + ".xlsx";
+                fileName = Files.normalizeFileName(fileName);
 
-            boolean selected = adaptor.isSelected(balance);
+                destFile = new File(folder, fileName);
 
-            //transparent mask for selecting ripple effect
-            int mask = 0xE0FFFFFF;
-            int hpd = (int) (10 * dpRatio);
-            int vpd = (int) (6 * dpRatio);
-
-            if (head) {
-
-                vpd += 2;
-
-                int bg = mask & activity.resolveThemeAttrResData(R.attr.balanceHeadBgColor);
-                if (selected) {
-                    bg = Colors.lighten(bg, 0.15f);
-                }
-                vlayout.setBackgroundColor(bg);
-                if (!lightTheme) {
-                    textColor = textColorMap.get(at);
-                } else {
-                    textColor = bgColorMap.get(at);
-                }
-
-                vname.setTextSize(textSizeMedium.unit, textSizeMedium.value);
-                vmoney.setTextSize(textSizeMedium.unit, textSizeMedium.value);
-            } else {
-                int bg = mask & activity.resolveThemeAttrResData(R.attr.balanceItemBgColor);
-                if (selected) {
-                    bg = Colors.darken(bg, 0.15f);
-                }
-                vlayout.setBackgroundColor(bg);
-                if (lightTheme) {
-                    textColor = textColorMap.get(at);
-                } else {
-                    textColor = bgColorMap.get(at);
-                }
-                vname.setTextSize(textSize.unit, textSize.value);
-                vmoney.setTextSize(textSize.unit, textSize.value);
+                exporter.export(sheetName, subject, recyclerDataList, destFile);
             }
 
+            @Override
+            public void onBusyFinish() {
 
-            vlayout.setPadding((int) ((1 + indent) * hpd), vpd, hpd, vpd);
-
-
-            vname.setTextColor(textColor);
-            vmoney.setTextColor(textColor);
-
-        }
+                if (exporter.getErrMsg() == null) {
+                    GUIs.alert(getContextsActivity(), i18n.string(R.string.msg_excel_exported, destFile.getAbsoluteFile()));
+                } else {
+                    GUIs.alert(getContextsActivity(), exporter.getErrMsg());
+                }
+            }
+        });
     }
 
-    static public class FragInfo implements Serializable {
+    public static class FragInfo implements Serializable {
         final public int pos;
         final public Date date;
         final public Date startDate;

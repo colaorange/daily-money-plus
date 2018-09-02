@@ -1,6 +1,16 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +33,17 @@ import com.colaorange.dailymoney.core.data.DataCreator;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.util.Logger;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * @author dennis
@@ -50,10 +71,9 @@ public class TestsDesktop extends AbstractDesktop {
         DesktopItem dt = null;
         dt = new DesktopItem(new Runnable() {
             public void run() {
-                Contexts ctx = Contexts.instance();
-                ctx.getMasterDataProvider().reset();
+                testCreateXLS();
             }
-        }, "Reset Master Dataprovider", R.drawable.nav_pg_test);
+        }, "Create XLS", R.drawable.nav_pg_test);
 
         addItem(dt);
 
@@ -136,6 +156,12 @@ public class TestsDesktop extends AbstractDesktop {
 
         addItem(dt);
 
+        addItem(new DesktopItem(new Runnable() {
+            public void run() {
+                Contexts ctx = Contexts.instance();
+                ctx.getMasterDataProvider().reset();
+            }
+        }, "Reset Master Dataprovider", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             @Override
@@ -224,6 +250,117 @@ public class TestsDesktop extends AbstractDesktop {
         addItem(padding);
         addItem(padding);
         addItem(padding);
+    }
+
+    private void testCreateXLS() {
+        List<Map<String,String>> employees = new LinkedList<>();
+        for(int i=0;i<10;i++){
+            Map<String,String> employee = new HashMap<>();
+            employee.put("name","Name "+(i+1));
+            employee.put("birthday","Birthday "+(i+1));
+            employee.put("payment","Payment "+(i+1));
+            employee.put("bonus","Bonus "+(i+1));
+            employees.add(employee);
+        }
+        String[] columns = {"Name",  "Date Of Birth", "Payment", "Bonus"};
+
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+
+//            javax.xml.stream.XMLEventFactory
+
+            is = activity.getAssets().open("test.xlsx");
+
+            File file = new File(Contexts.instance().getWorkingFolder(),"reports");
+            file.mkdir();
+            file = new File(file,"test2.xlsx");
+
+            Workbook workbook = new XSSFWorkbook();
+
+             /* CreationHelper helps us create instances of various things like DataFormat,
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+            CreationHelper createHelper = workbook.getCreationHelper();
+
+            // Create a Sheet
+            Sheet sheet = workbook.createSheet("Employee");
+
+            // Create a Font for styling header cells
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setFontHeightInPoints((short) 14);
+            headerFont.setColor(IndexedColors.RED.getIndex());
+
+            // Create a CellStyle with the font
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+
+            // Create a Row
+            Row headerRow = sheet.createRow(0);
+
+            // Create cells
+            for(int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            // Create Cell Style for formatting Date
+            CellStyle dateCellStyle = workbook.createCellStyle();
+            dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
+
+            // Create Other rows and cells with employees data
+            int rowNum = 1;
+            for(Map<String,String> employee: employees) {
+                Row row = sheet.createRow(rowNum++);
+
+                row.createCell(0)
+                        .setCellValue(employee.get("name"));
+
+                row.createCell(1)
+                        .setCellValue(employee.get("birthday"));
+
+                Cell dateOfBirthCell = row.createCell(2);
+                dateOfBirthCell.setCellValue(employee.get("payment"));
+                dateOfBirthCell.setCellStyle(dateCellStyle);
+
+                row.createCell(3)
+                        .setCellValue(employee.get("bonus"));
+            }
+
+            // Resize all columns to fit the content size
+            for(int i = 0; i < columns.length; i++) {
+//                sheet.autoSizeColumn(i);
+            }
+
+            // Write the output to a file
+            FileOutputStream fileOut = new FileOutputStream(file);
+            workbook.write(fileOut);
+            fileOut.close();
+
+            // Closing the workbook
+            workbook.close();
+
+
+            Logger.i(">>>> write report to "+file.getAbsolutePath());
+        }catch(Exception x){
+            x.printStackTrace();
+        }finally{
+            if(is!=null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+            if(os!=null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                }
+            }
+
+        }
+
     }
 
     protected void testBusy(final long i, final String error) {

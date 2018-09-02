@@ -37,4 +37,9 @@
         android:id="@+id/menu_chart_from_beginning_account_aggregate_line"
         android:title="@string/label_chart_from_beginning_account_aggregate_line"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_export_excel"
+        android:title="@string/label_export_excel"
+        app:showAsAction="never" />
 </menu>

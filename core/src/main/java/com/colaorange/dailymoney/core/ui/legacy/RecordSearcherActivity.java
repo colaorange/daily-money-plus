@@ -22,6 +22,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.EventQueue;
+import com.colaorange.dailymoney.core.context.PeriodMode;
 import com.colaorange.dailymoney.core.context.RecordTemplate;
 import com.colaorange.dailymoney.core.context.RecordTemplateCollection;
 import com.colaorange.dailymoney.core.data.Account;
@@ -337,7 +338,7 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
             listFragment = new RecordListFragment();
             Bundle b = new Bundle();
             b.putInt(RecordListFragment.ARG_POS, pos);
-            b.putInt(RecordListFragment.ARG_MODE, RecordListFragment.MODE_ALL);
+            b.putSerializable(RecordListFragment.ARG_PERIOD_MODE, PeriodMode.ALL);
             listFragment.setArguments(b);
 
             getSupportFragmentManager().beginTransaction()
