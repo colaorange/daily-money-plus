@@ -79,6 +79,14 @@ public class BookMgntActivity extends ContextsActivity {
                 return true;
             }
         });
+
+        recyclerAdapter.setOnLongClickListener(new SelectableRecyclerViewAdaptor.OnLongClickListener<Book>() {
+            @Override
+            public boolean onLongClick(Book pressed) {
+                doSetWorkingBook(pressed);
+                return true;
+            }
+        });
     }
 
     private void doSelectBook(Book book) {

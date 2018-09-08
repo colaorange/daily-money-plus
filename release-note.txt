@@ -1,4 +1,11 @@
 
+== 0.10.6 ==
+=== Features ===
+ #45 Support to active book when long-pressing on a book.
+=== Bugs ===
+ #
+
+====================================================================================================
 == 0.10.5 ==
 === Features ===
  #39 add lavender theme
@@ -7,7 +14,6 @@
 === Bugs ===
  #41 Can't see weekday in android 4.3
 
-====================================================================================================
 == 0.10.4 ==
 === Features ===
  #37 Support to migrate record to a new or another book

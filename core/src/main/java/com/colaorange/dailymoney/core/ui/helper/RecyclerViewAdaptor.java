@@ -17,6 +17,8 @@ public abstract class RecyclerViewAdaptor<T, VH extends RecyclerViewAdaptor.Simp
     protected final ContextsActivity activity;
     protected final List<T> data;
 
+    protected OnLongClickListener<T> onLongClickListener;
+
     public RecyclerViewAdaptor(ContextsActivity activity, List<T> data) {
         this.activity = activity;
         this.data = data;
@@ -52,6 +54,14 @@ public abstract class RecyclerViewAdaptor<T, VH extends RecyclerViewAdaptor.Simp
         notifyDataSetChanged();
     }
 
+    public OnLongClickListener<T> getOnLongClickListener() {
+        return onLongClickListener;
+    }
+
+    public void setOnLongClickListener(OnLongClickListener<T> onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
+    }
+
     @Override
     public int getItemCount() {
         return data.size();
@@ -62,18 +72,32 @@ public abstract class RecyclerViewAdaptor<T, VH extends RecyclerViewAdaptor.Simp
         holder.bindViewValue(get(position));
     }
 
+    public interface OnLongClickListener<T>{
+        public boolean onLongClick(T pressed);
+    }
 
-    public static class SimpleViewHolder<A extends RecyclerViewAdaptor<T, ?>, T> extends RecyclerView.ViewHolder {
+
+    public static class SimpleViewHolder<A extends RecyclerViewAdaptor<T, ?>, T> extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         protected final A adaptor;
 
         public SimpleViewHolder(A adaptor, View itemView) {
             super(itemView);
             this.adaptor = adaptor;
+            itemView.setOnLongClickListener(this);
         }
 
         public void bindViewValue(T item) {
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            if(adaptor.onLongClickListener!=null){
+                int pos = getAdapterPosition();
+                T item = adaptor.get(pos);
+                return adaptor.onLongClickListener.onLongClick(item);
+            }
+            return false;
+        }
     }
 }
