@@ -83,7 +83,8 @@ public class BookMgntActivity extends ContextsActivity {
         recyclerAdapter.setOnLongClickListener(new SelectableRecyclerViewAdaptor.OnLongClickListener<Book>() {
             @Override
             public boolean onLongClick(Book pressed) {
-                doSetWorkingBook(pressed);
+                doSetWorkingBook(pressed, false);
+                finish();
                 return true;
             }
         });
@@ -198,12 +199,17 @@ public class BookMgntActivity extends ContextsActivity {
         GUIs.confirm(this, i18n.string(R.string.qmsg_delete_book, book.getName()), l);
     }
 
-    public void doSetWorkingBook(Book book) {
+    public void doSetWorkingBook(Book book,boolean reload) {
         if (Contexts.instance().getWorkingBookId() == book.getId()) {
             return;
         }
         Contexts.instance().setWorkingBookId(book.getId());
-        reloadData();
+        if(reload) {
+            reloadData();
+        }else{
+            //since working book was changed
+            recyclerAdapter.notifyDataSetChanged();
+        }
     }
 
     public void clearSelection() {
@@ -280,7 +286,7 @@ public class BookMgntActivity extends ContextsActivity {
 //                mode.finish();//Finish action mode
                 return true;
             } else if (item.getItemId() == R.id.menu_set_working) {
-                doSetWorkingBook(actionObj);
+                doSetWorkingBook(actionObj, true);
                 mode.invalidate();
                 return true;
             }
