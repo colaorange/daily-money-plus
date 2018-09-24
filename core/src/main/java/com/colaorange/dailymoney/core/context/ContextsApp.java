@@ -22,8 +22,8 @@ public class ContextsApp extends MultiDexApplication{
     @Override
     public void onCreate(){
         super.onCreate();
-        Logger.d("===============Application Created");
         Contexts.instance().initApplication(this);
+        Logger.d("===============Application Created");
 
     }
     @Override

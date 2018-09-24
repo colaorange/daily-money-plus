@@ -158,7 +158,7 @@ public class FragsRecyclerViewFragment extends ContextsFragment {
                         ft.detach(f);
                         ft.commitNowAllowingStateLoss();
                     } catch (Exception x) {
-                        Logger.w(x.getMessage(), x);
+                        Logger.e(x.getMessage(), x);
                     }
                 }
                 vh.boundFragTag = null;
