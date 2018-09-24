@@ -15,5 +15,22 @@
         android:summary="@string/label_prefs_testsdekstop_sum"
         android:title="@string/label_prefs_testsdekstop" />
 
+    <SwitchPreference
+        android:defaultValue="@string/default_pref_log_on"
+        android:key="@string/pref_log_on"
+        android:summary="@string/label_prefs_log_on_sum"
+        android:title="@string/label_prefs_log_on" />
+
+    <EditTextPreference
+        android:defaultValue="@string/default_pref_log_max_line"
+        android:key="@string/pref_log_max_line"
+        android:numeric="integer"
+        android:summary="@string/label_prefs_log_max_line_sum"
+        android:title="@string/label_prefs_log_max_line" />
+    <Preference
+        android:key="log_viewer"
+        android:persistent="false"
+        android:summary="@string/label_prefs_log_viewer_sum"
+        android:title="@string/title_log_viewer" />
 
 </PreferenceScreen>

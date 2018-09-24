@@ -1,6 +1,10 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 
@@ -8,6 +12,7 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
+import com.colaorange.dailymoney.core.ui.legacy.LogViewerActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
@@ -30,8 +35,9 @@ public class PrefsDeveloperFragment extends ContextsPrefsFragment implements Sha
 
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_csv_encoding)));
 
+        Preference pref;
         try {
-            Preference pref = findPreference(i18n.string(R.string.pref_testsdekstop));
+            pref = findPreference(i18n.string(R.string.pref_testsdekstop));
             if (pref != null) {
                 pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
@@ -51,6 +57,28 @@ public class PrefsDeveloperFragment extends ContextsPrefsFragment implements Sha
             }
         } catch (Exception x) {
             Logger.w(x.getMessage(), x);
+        }
+
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_log_on)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_log_max_line)));
+
+        pref = findPreference("log_viewer");
+        if (pref != null) {
+            //https://stackoverflow.com/questions/4810803/open-facebook-page-from-android-app
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    try {
+                        Intent intent = new Intent(getActivity(), LogViewerActivity.class);
+                        startActivity(intent);
+                        trackEvent(preference.getKey());
+                    } catch (Exception x) {
+                        Logger.w(x.getMessage(), x);
+                        trackEvent(preference.getKey() + "_fail");
+                    }
+                    return true;
+                }
+            });
         }
     }
 

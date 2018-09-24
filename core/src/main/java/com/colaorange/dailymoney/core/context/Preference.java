@@ -107,43 +107,47 @@ public class Preference {
 
     private CalendarHelper calendarHelper;
 
-    int recordListLayout = 2;
-    int maxRecords = -1;//-1 is no limit
-    int firstdayWeek = 1;//sunday
-    int startdayMonth = 1;//1-28
-    int startdayYearMonth = 0;//0-11
-    int startdayYearMonthDay = 1;//1-28
-    boolean testsDesktop = false;
-    boolean backupWithTimestamp = true;
-    String passwordHash = "";
-    boolean allowAnalytics = true;
-    String csvEncoding = "UTF8";
-    boolean hierarchicalBalance = true;
-    String lastbackup = "Unknown";
+    private int recordListLayout = 2;
+    private int maxRecords = -1;//-1 is no limit
+    private int firstdayWeek = 1;//sunday
+    private int startdayMonth = 1;//1-28
+    private int startdayYearMonth = 0;//0-11
+    private int startdayYearMonthDay = 1;//1-28
+    private boolean testsDesktop = false;
+    private boolean backupWithTimestamp = true;
+    private String passwordHash = "";
+    private boolean allowAnalytics = true;
+    private String csvEncoding = "UTF8";
+    private boolean hierarchicalBalance = true;
+    private String lastbackup = "Unknown";
 
-    String dateFormat;
-    String timeFormat;
-    String dateTimeFormat;
-    String monthFormat;
-    String nonDigitalMonthFormat;
-    String monthDateFormat;
-    String yearFormat;
-    String yearMonthFormat;
-    String dayFormat;
-    boolean groupRecordsByDate = true;
+    private String dateFormat;
+    private String timeFormat;
+    private String dateTimeFormat;
+    private String monthFormat;
+    private String nonDigitalMonthFormat;
+    private String monthDateFormat;
+    private String yearFormat;
+    private String yearMonthFormat;
+    private String dayFormat;
+    private boolean groupRecordsByDate = true;
 
-    boolean autoBackup = true;
+    private boolean autoBackup = true;
 
 
-    String lastFromAccount;
-    String lastToAccount;
+    private String lastFromAccount;
+    private String lastToAccount;
 
-    String theme;
+    private String theme;
 
-    String textSize;
+    private String textSize;
 
-    Set<Integer> autoBackupAtHours;
-    Set<Integer> autoBackupWeekDays;
+    private Set<Integer> autoBackupAtHours;
+    private Set<Integer> autoBackupWeekDays;
+
+    private boolean logOn = false;
+    private int logMaxLine = 1000;
+
 
     ContextsApp contextsApp;
 
@@ -215,7 +219,7 @@ public class Preference {
             allowAnalytics = Objects.coerceToBoolean(i18n.string(R.string.default_pref_allow_analytics), allowAnalytics);
             allowAnalytics = prefs.getBoolean(i18n.string(R.string.pref_allow_analytics), allowAnalytics);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
     }
 
@@ -225,18 +229,35 @@ public class Preference {
             csvEncoding = i18n.string(R.string.default_pref_csv_encoding, csvEncoding);
             csvEncoding = prefs.getString(i18n.string(R.string.pref_csv_encoding), csvEncoding);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         try {
             testsDesktop = Objects.coerceToBoolean(i18n.string(R.string.default_pref_testsdekstop), testsDesktop);
             testsDesktop = prefs.getBoolean(i18n.string(R.string.pref_testsdekstop), testsDesktop);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
-        Logger.d("preference : csv encoding {}", csvEncoding);
 
+        try {
+            logOn = Objects.coerceToBoolean(i18n.string(R.string.default_pref_log_on), logOn);
+            logOn = prefs.getBoolean(i18n.string(R.string.pref_log_on), logOn);
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
+
+        try {
+            logMaxLine = Objects.coerceToInteger(i18n.string(R.string.default_pref_log_max_line), logMaxLine);
+            logMaxLine = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_log_max_line), Integer.toString(logMaxLine)));
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
+
+
+        Logger.d("preference : csv encoding {}", csvEncoding);
         Logger.d("preference : open tests desktop {}", testsDesktop);
+        Logger.d("preference : logOn {}", logOn);
+        Logger.d("preference : max log line {}", logMaxLine);
     }
 
     private void reloadDataPref(SharedPreferences prefs, I18N i18n) {
@@ -244,14 +265,14 @@ public class Preference {
             backupWithTimestamp = Objects.coerceToBoolean(i18n.string(R.string.default_pref_backup_with_timestamp), backupWithTimestamp);
             backupWithTimestamp = prefs.getBoolean(i18n.string(R.string.pref_backup_with_timestamp), backupWithTimestamp);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         try {
             autoBackup = Objects.coerceToBoolean(i18n.string(R.string.default_pref_auto_backup), autoBackup);
             autoBackup = prefs.getBoolean(i18n.string(R.string.pref_auto_backup), autoBackup);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         try {
@@ -268,7 +289,7 @@ public class Preference {
             }
             autoBackupWeekDays = set;
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         try {
@@ -285,7 +306,7 @@ public class Preference {
             }
             autoBackupAtHours = set;
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         Logger.d("preference : backup with timestamp {}", backupWithTimestamp);
@@ -322,12 +343,12 @@ public class Preference {
             }
 
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             passwordHash = oldPwdHash == null ? prefs.getString(i18n.string(R.string.pref_password_hash), "") : oldPwdHash;
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         Logger.d("preference : passwordHash {}", Strings.isBlank(passwordHash) ? "NO" : "********");
@@ -339,25 +360,25 @@ public class Preference {
             str = i18n.string(R.string.default_pref_firstday_week);
             firstdayWeek = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_firstday_week), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             str = i18n.string(R.string.default_pref_startday_month);
             startdayMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_month), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             str = i18n.string(R.string.default_pref_startday_year_month);
             startdayYearMonth = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             str = i18n.string(R.string.default_pref_startday_year_month_day);
             startdayYearMonthDay = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_startday_year_month_day), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
 
@@ -373,19 +394,19 @@ public class Preference {
             str = i18n.string(R.string.default_pref_record_list_layout);
             recordListLayout = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_record_list_layout), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             str = i18n.string(R.string.default_pref_max_records);
             maxRecords = Integer.parseInt(prefs.getString(i18n.string(R.string.pref_max_records), str));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         try {
             groupRecordsByDate = Objects.coerceToBoolean(i18n.string(R.string.default_pref_group_records_by_date));
             groupRecordsByDate = prefs.getBoolean(i18n.string(R.string.pref_group_records_by_date), groupRecordsByDate);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
 
         String formatDate = i18n.string(R.string.default_pref_format_date);
@@ -394,7 +415,7 @@ public class Preference {
         try {
             formatDate = prefs.getString(i18n.string(R.string.pref_format_date), formatDate);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         if (!formatDateSet.contains(formatDate)) {
             formatDate = formatDateSet.iterator().next();
@@ -402,7 +423,7 @@ public class Preference {
         try {
             formatTime = prefs.getString(i18n.string(R.string.pref_format_time), formatTime);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         if (!formatTimeSet.contains(formatTime)) {
             formatTime = formatTimeSet.iterator().next();
@@ -410,7 +431,7 @@ public class Preference {
         try {
             formatMonth = prefs.getString(i18n.string(R.string.pref_format_month), formatMonth);
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         if (!formatMonthSet.contains(formatMonth)) {
             formatMonth = formatMonthSet.iterator().next();
@@ -480,7 +501,7 @@ public class Preference {
         try {
             theme = prefs.getString(i18n.string(R.string.pref_theme), i18n.string(R.string.default_pref_theme));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         if (!themeMap.containsKey(theme)) {
             theme = THEME_LEMON;
@@ -489,7 +510,7 @@ public class Preference {
         try {
             textSize = prefs.getString(i18n.string(R.string.pref_text_size), i18n.string(R.string.default_pref_text_size));
         } catch (Exception x) {
-            Logger.e(x.getMessage(), x);
+            Logger.w(x.getMessage(), x);
         }
         if (!textSizeSet.contains(textSize)) {
             textSize = textSizeSet.iterator().next();
@@ -780,6 +801,14 @@ public class Preference {
             }
         }
         return false;
+    }
+
+    public boolean isLogOn(){
+        return logOn;
+    }
+
+    public int getLogMaxLine(){
+        return logMaxLine;
     }
 
     public boolean isDesktopEnabled(int index) {

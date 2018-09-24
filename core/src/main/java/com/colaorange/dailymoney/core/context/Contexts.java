@@ -106,7 +106,6 @@ public class Contexts {
                 appVerCode = pi.versionCode;
             } catch (NameNotFoundException e) {
             }
-            Logger.d(">>initialial application context " + appId + "," + appVerName + "," + appVerCode);
 
             //initial i18n util before any other init
             this.i18n = new I18N(contextsApp);
@@ -117,6 +116,8 @@ public class Contexts {
             initDataProvider();
 
             initTracker();
+
+            Logger.d(">>initialize application context " + appId + "," + appVerName + "," + appVerCode);
             return true;
         } else {
             Logger.w("application context was initialized :" + contextsApp);

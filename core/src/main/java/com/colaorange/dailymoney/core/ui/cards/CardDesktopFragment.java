@@ -273,7 +273,7 @@ public class CardDesktopFragment extends ContextsFragment implements EventQueue.
                         ft.detach(f);
                         ft.commitNowAllowingStateLoss();
                     } catch (Exception x) {
-                        Logger.w(x.getMessage(), x);
+                        Logger.e(x.getMessage(), x);
                     }
                 }
                 vh.boundFragTag = null;

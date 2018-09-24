@@ -80,6 +80,7 @@
         <activity
             android:name=".core.ui.legacy.BalanceMgntActivity"
             android:label="@string/label_balance" />
+        <activity android:name=".core.ui.legacy.LogViewerActivity" android:label="@string/title_log_viewer" />
         <activity
             android:name=".core.ui.chart.PieAccountActivity"/>
         <activity
