@@ -68,93 +68,11 @@ public class TestsDesktop extends AbstractDesktop {
 
         label = i18n.string(R.string.desktop_tests);
 
-        DesktopItem dt = null;
-        dt = new DesktopItem(new Runnable() {
+        addItem(new DesktopItem(new Runnable() {
             public void run() {
-                testCreateXLS();
+               activity.startActivity(new Intent(activity, GoogleDriveActivity.class));
             }
-        }, "Create XLS", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                Preference preference = Contexts.instance().getPreference();
-                for (int i = 0; i < preference.getDesktopSize(); i++) {
-                    preference.removeDesktop(i);
-                }
-            }
-        }, "Remove all card_desktop", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                Contexts ctx = Contexts.instance();
-                I18N i18n = ctx.getI18n();
-                Preference preference = ctx.getPreference();
-                for (int i = 0; i < 10; i++) {
-                    CardDesktop desktop = preference.getDesktop(i);
-                    if (desktop.size() == 0) {
-                        desktop.setTitle("T" + i);
-                        Card card = new Card(CardType.NAV_PAGES, i18n.string(R.string.card_nav_page));
-                        card.withArg(CardFacade.ARG_NAV_PAGES_LIST, Collections.asList(
-                                NavPage.HOW2USE));
-                        desktop.add(card);
-
-                        card = new Card(CardType.INFO_EXPENSE, i18n.string(R.string.card_info_expense));
-                        desktop.add(card);
-                        preference.updateDesktop(i, desktop, true);
-                    }
-                }
-            }
-        }, "Create 10 card_desktop ", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                new DefaultCardDesktopCreator().createForWholeNew(true);
-            }
-        }, "Create Cards for whole new ", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                new DefaultCardDesktopCreator().createForUpgrade(true);
-            }
-        }, "Create Cards for upgrade ", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                Contexts ctx = Contexts.instance();
-                Book book = ctx.getMasterDataProvider().findBook(ctx.getWorkingBookId());
-
-                Intent intent = null;
-                intent = new Intent(activity, BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, false);
-                intent.putExtra(BookEditorActivity.ARG_BOOK, book);
-                activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
-            }
-        }, "Edit selected book", R.drawable.nav_pg_test);
-
-        addItem(dt);
-
-        dt = new DesktopItem(new Runnable() {
-            public void run() {
-                Book book = new Book("test", "$", SymbolPosition.AFTER, "");
-                Intent intent = null;
-                intent = new Intent(activity, BookEditorActivity.class);
-                intent.putExtra(BookEditorActivity.ARG_MODE_CREATE, true);
-                intent.putExtra(BookEditorActivity.ARG_BOOK, book);
-                activity.startActivityForResult(intent, Constants.REQUEST_BOOK_EDITOR_CODE);
-            }
-        }, "Add book", R.drawable.nav_pg_test);
-
-        addItem(dt);
+        }, "Drive Test", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             public void run() {
@@ -170,13 +88,6 @@ public class TestsDesktop extends AbstractDesktop {
                 GUIs.shortToast(activity, "reset data provider");
             }
         }, "rest data provider", R.drawable.nav_pg_test));
-        addItem(new DesktopItem(new Runnable() {
-            @Override
-            public void run() {
-                testFirstDayOfWeek();
-            }
-        }, "first day of week", R.drawable.nav_pg_test) {
-        });
         addItem(new DesktopItem(new Runnable() {
             @Override
             public void run() {
