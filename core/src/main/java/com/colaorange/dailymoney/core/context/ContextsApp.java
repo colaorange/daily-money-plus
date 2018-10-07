@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.colaorange.dailymoney.core.util.Logger;
+import com.colaorange.dailymoney.core.util.Notifications;
 
 /**
  * @author Dennis
@@ -23,6 +24,11 @@ public class ContextsApp extends MultiDexApplication{
     public void onCreate(){
         super.onCreate();
         Contexts.instance().initApplication(this);
+        try {
+            Notifications.initAllChannel(this);
+        }catch(Exception x){
+            Logger.e(x.getMessage(), x);
+        }
         Logger.d("===============Application Created");
 
     }

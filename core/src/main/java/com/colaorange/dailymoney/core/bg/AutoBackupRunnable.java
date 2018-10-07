@@ -99,12 +99,12 @@ public class AutoBackupRunnable implements Runnable {
             String count = "" + (r.getDb() + r.getPref());
             String msg = i18n.string(R.string.msg_db_backuped, count, r.getLastFolder());
 
-            Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.INFO,
-                    i18n.string(R.string.label_backup_data), msg, null, 0);
+            Notifications.send(contexts.getApp(), Notifications.nextGroupId(), msg, i18n.string(R.string.label_backup_data),
+                    Notifications.Channel.BACKUP, Notifications.Level.INFO, null);
         } else {
             Logger.w(r.getErr());
-            Notifications.send(contexts.getApp(), Notifications.Target.SYSTEM_BAR, Notifications.Level.WARN,
-                    i18n.string(R.string.label_backup_data), r.getErr(), null, 0);
+            Notifications.send(contexts.getApp(), Notifications.nextGroupId(), r.getErr(), i18n.string(R.string.label_backup_data),
+                    Notifications.Channel.BACKUP, Notifications.Level.WARN, null);
             contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a-fail", "", null);
         }
 

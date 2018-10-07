@@ -24,16 +24,18 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <data android:scheme="dailymoney"/>
-                <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".core.ui.LocalWebViewActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <!--TODO action-View for google search -->
+                <data android:scheme="dailymoney" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".core.ui.PasswordProtectionActivity"
             android:label="@string/label_pwd_protection" />

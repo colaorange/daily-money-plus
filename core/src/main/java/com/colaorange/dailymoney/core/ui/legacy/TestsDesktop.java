@@ -34,6 +34,7 @@ import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.util.Logger;
+import com.colaorange.dailymoney.core.util.Notifications;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -62,11 +63,23 @@ public class TestsDesktop extends AbstractDesktop {
         return Contexts.instance().getPreference().isTestsDesktop();
     }
 
+    static int notificationCount=0;
+
     @Override
     protected void init() {
         I18N i18n = Contexts.instance().getI18n();
 
         label = i18n.string(R.string.desktop_tests);
+
+        addItem(new DesktopItem(new Runnable() {
+
+            public void run() {
+                Notifications.send(activity, Notifications.nextGroupId(),
+                        "A info message "+Notifications.currGroupId(), "A info title "+Notifications.currGroupId(),
+                        Notifications.Channel.BACKUP,
+                        Notifications.currGroupId()%3==0?Notifications.Level.ERROR:Notifications.Level.WARN, null);
+            }
+        }, "Notification Test", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             public void run() {
