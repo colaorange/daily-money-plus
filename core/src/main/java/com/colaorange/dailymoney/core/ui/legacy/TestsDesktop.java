@@ -85,7 +85,7 @@ public class TestsDesktop extends AbstractDesktop {
             public void run() {
                activity.startActivity(new Intent(activity, GoogleDriveActivity.class));
             }
-        }, "Drive Test", R.drawable.nav_pg_test));
+        }, "GoogleDrive Test", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             public void run() {
