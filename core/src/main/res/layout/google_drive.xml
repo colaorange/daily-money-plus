@@ -36,7 +36,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="?ic_edit"
+                android:drawableLeft="?ic_person"
                 android:gravity="center"
                 android:text="Sign in"
                 android:textSize="?textSize" />
@@ -44,27 +44,26 @@
                 android:id="@+id/request_revoke"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="?ic_edit"
+                android:drawableLeft="?ic_person_outline"
                 android:gravity="center"
                 android:text="Sign out"
+                android:textSize="?textSize" />
+            <Button
+                android:id="@+id/request_backup"
+                android:layout_marginTop="10dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="?ic_save"
+                android:gravity="center"
+                android:text="Backup"
                 android:textSize="?textSize" />
             <Button
                 android:id="@+id/request_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="?ic_arrow_up"
+                android:drawableLeft="?ic_list"
                 android:gravity="center"
-                android:text="List"
-                android:textSize="?textSize" />
-
-            <Button
-                android:id="@+id/request_download"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="?ic_arrow_down"
-                android:gravity="center"
-                android:text="Download"
+                android:text="Restore"
                 android:textSize="?textSize" />
         </LinearLayout>
     </ScrollView>

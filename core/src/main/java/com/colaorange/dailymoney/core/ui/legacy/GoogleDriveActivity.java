@@ -10,14 +10,14 @@ import android.widget.TextView;
 import com.colaorange.commons.util.Streams;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.drive.DriveFile;
@@ -34,10 +34,15 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.Format;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author dennis
@@ -67,7 +72,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     Button btnRequestAuth;
     Button btnRequestRevoke;
     Button btnRequestList;
-    Button btnRequestDownload;
+    Button btnRequestBackup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +90,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
         (btnRequestAuth = findViewById(R.id.request_auth)).setOnClickListener(this);
         (btnRequestRevoke = findViewById(R.id.request_revoke)).setOnClickListener(this);
         (btnRequestList = findViewById(R.id.request_list)).setOnClickListener(this);
-        (btnRequestDownload = findViewById(R.id.request_download)).setOnClickListener(this);
+        (btnRequestBackup = findViewById(R.id.request_backup)).setOnClickListener(this);
     }
 
     @Override
@@ -101,14 +106,14 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             btnRequestAuth.setEnabled(false);
             btnRequestRevoke.setEnabled(true);
             btnRequestList.setEnabled(true);
-            btnRequestDownload.setEnabled(true);
+            btnRequestBackup.setEnabled(true);
 
         } else {
             vAuthInfo.setText("Haven't logged in yet");
             btnRequestAuth.setEnabled(true);
             btnRequestRevoke.setEnabled(false);
             btnRequestList.setEnabled(false);
-            btnRequestDownload.setEnabled(false);
+            btnRequestBackup.setEnabled(false);
         }
     }
 
@@ -120,8 +125,8 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             doRevoke();
         } else if (v.getId() == R.id.request_list) {
             doList();
-        } else if (v.getId() == R.id.request_download) {
-            doDownload();
+        } else if (v.getId() == R.id.request_backup) {
+            doBackup();
         }
     }
 
@@ -219,9 +224,9 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                         long size = data.getFileSize();
                         boolean folder = data.isFolder();
 
-                        if(data.isTrashed()){
+                        if (data.isTrashed()) {
                             //nothing
-                        }else if (folder) {
+                        } else if (folder) {
                             Logger.i(">>>>>>> Folder : {}", title);
                         } else {
                             Logger.i(">>>>>>> File {}, mimeTYpe {}, ext {}, size {}", title, mineType, ext, size);
@@ -238,49 +243,71 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
         });
     }
 
-    private void doDownload() {
-        doCreateFile();
-    }
+    private void doBackup() {
+        GUIs.doBusy(this, new GUIs.IBusyRunnable() {
 
-    private void doCreateFile() {
+            String fileName;
 
-        GUIs.doBusy(this, new Runnable() {
+            @Override
+            public void onBusyFinish() {
+                GUIs.shortToast(getApplicationContext(), "Done, save to google drive as " + fileName);
+            }
+
+            @Override
+            public void onBusyError(Throwable t) {
+                GUIs.errorToast(getApplicationContext(), t);
+            }
+
             public void run() {
                 try {
+                    DataBackupRestorer.Result result = DataBackupRestorer.backup();
+                    if (!result.isSuccess()) {
+                        throw new IllegalStateException("backup fail");
+                    }
 
-                    DriveFolder appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, false);
+                    File lastFolder = result.getLastFolder();
 
+                    DateFormat dateTimeFormat = Contexts.instance().getPreference().getDateTimeFormat();
+                    fileName = Strings.format("DM-{}.zip", dateTimeFormat.format(System.currentTimeMillis()));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ZipOutputStream zipOs = new ZipOutputStream(baos);
+
+
+                    int BUFFER_SIZE = 1024;
+                    int basePathLength = lastFolder.getPath().length() + 1;
+                    File[] fileList = lastFolder.listFiles();
                     InputStream is = null;
-                    try {
-                        DriveFile testFile = gdHelper.writeFile(appFolder, "test4.txt",
-                                new ByteArrayInputStream("Just test 4".getBytes("UTF8")));
+                    for (File file : fileList) {
+                        if (file.isFile()) {
+                            byte data[] = new byte[BUFFER_SIZE];
+                            String unmodifiedFilePath = file.getPath();
+                            String relativePath = unmodifiedFilePath
+                                    .substring(basePathLength);
+                            is = new FileInputStream(unmodifiedFilePath);
 
-                        testFile = gdHelper.writeFile(testFile,
-                                new ByteArrayInputStream("Just test 4-1".getBytes("UTF8")));
+                            ZipEntry entry = new ZipEntry(relativePath);
+                            entry.setTime(file.lastModified()); // to keep modification time after unzipping
+                            zipOs.putNextEntry(entry);
 
+                            Streams.flush(is, zipOs);
 
-                        testFile = gdHelper.renameFile(testFile,"test4-1");
-
-                        ByteArrayOutputStream os = new ByteArrayOutputStream();
-                        gdHelper.readFile(testFile, os);
-
-                        Logger.i(">>>>>>>>>>>>>DONE1 "+new String(os.toByteArray(), "UTF8"));
-
-                        is = gdHelper.readFile(testFile);
-
-                        os = new ByteArrayOutputStream();
-                        Streams.flush(is, os);
-                        is.close();
-
-                        Logger.i(">>>>>>>>>>>>>DONE2 "+new String(os.toByteArray(), "UTF8"));
-                    }finally{
-                        if(is!=null){
                             is.close();
                         }
                     }
 
+                    zipOs.close();
+
+                    byte[] data = baos.toByteArray();
+
+                    DriveFolder appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, false);
+
+                    gdHelper.writeFile(appFolder, fileName, new ByteArrayInputStream(data));
+
+                } catch (RuntimeException e) {
+                    throw e;
                 } catch (Exception e) {
-                    Logger.e(e.getMessage(), e);
+                    throw new RuntimeException(e.getMessage(), e);
                 }
             }
         });
