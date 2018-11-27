@@ -16,6 +16,7 @@ import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -265,12 +268,27 @@ public class GoogleDriveHelper {
     }
 
 
-    public InputStream readFile(DriveFile file) throws ExecutionException, InterruptedException, IOException {
+    public InputStream readFile(DriveFile file) throws ExecutionException, InterruptedException {
         Task<DriveContents> tdc = getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY);
         Tasks.await(tdc);
         DriveContents contents = tdc.getResult();
         InputStream inputStream = contents.getInputStream();
 
         return inputStream;
+    }
+
+    public List<Metadata> listChildren(DriveFolder appFolder) throws ExecutionException, InterruptedException {
+        Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(appFolder,
+                new Query.Builder()
+                        .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                        .build());
+        Tasks.await(tmb);
+        Iterator<Metadata> iter = tmb.getResult().iterator();
+        List<Metadata> childrenList = new LinkedList<>();
+        while (iter.hasNext()) {
+            Metadata data = iter.next();
+            childrenList.add(data);
+        }
+        return childrenList;
     }
 }

@@ -24,22 +24,27 @@
             android:paddingRight="30dp">
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/auth_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="AUTH_ID"
                 android:textSize="?textSize" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
             <Button
                 android:id="@+id/request_auth"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:drawableLeft="?ic_person"
                 android:gravity="center"
                 android:text="Sign in"
                 android:textSize="?textSize" />
+
             <Button
                 android:id="@+id/request_revoke"
                 android:layout_width="fill_parent"
@@ -48,20 +53,36 @@
                 android:gravity="center"
                 android:text="Sign out"
                 android:textSize="?textSize" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
             <Button
                 android:id="@+id/request_backup"
-                android:layout_marginTop="10dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_save"
                 android:gravity="center"
                 android:text="Backup"
                 android:textSize="?textSize" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <Spinner
+                android:id="@+id/file_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <Button
-                android:id="@+id/request_list"
+                android:id="@+id/request_restore"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="?ic_list"
+                android:drawableLeft="?ic_save"
                 android:gravity="center"
                 android:text="Restore"
                 android:textSize="?textSize" />

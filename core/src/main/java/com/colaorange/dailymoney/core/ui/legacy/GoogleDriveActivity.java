@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Streams;
@@ -12,9 +14,12 @@ import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.Account;
+import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -30,17 +35,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.text.Format;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -65,14 +69,20 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     private static final int REQUEST_INTENT_SENDER = 102;
 
     GoogleDriveHelper gdHelper;
+    DriveFolder appFolder;
 
     File workingFolder;
 
     TextView vAuthInfo;
     Button btnRequestAuth;
     Button btnRequestRevoke;
-    Button btnRequestList;
     Button btnRequestBackup;
+    Button btnRequestRestore;
+
+    Spinner vFileList;
+
+    private List<DriveFileInfo> fileList;
+    private RegularSpinnerAdapter<DriveFileInfo> fileListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,8 +99,24 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
         (btnRequestAuth = findViewById(R.id.request_auth)).setOnClickListener(this);
         (btnRequestRevoke = findViewById(R.id.request_revoke)).setOnClickListener(this);
-        (btnRequestList = findViewById(R.id.request_list)).setOnClickListener(this);
         (btnRequestBackup = findViewById(R.id.request_backup)).setOnClickListener(this);
+        (btnRequestRestore = findViewById(R.id.request_restore)).setOnClickListener(this);
+
+
+        vFileList = findViewById(R.id.file_list);
+
+        fileList = new LinkedList<>();
+        fileListAdapter = new RegularSpinnerAdapter<DriveFileInfo>(this, fileList) {
+            @Override
+            public ViewHolder<DriveFileInfo> createViewHolder() {
+                return new FileInfoViewBinder(this);
+            }
+
+            public boolean isSelected(int position) {
+                return vFileList.getSelectedItemPosition() == position;
+            }
+        };
+        vFileList.setAdapter(fileListAdapter);
     }
 
     @Override
@@ -105,16 +131,76 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             vAuthInfo.setText("Logged in as " + gdHelper.getGoogleSignInAccount().getDisplayName());
             btnRequestAuth.setEnabled(false);
             btnRequestRevoke.setEnabled(true);
-            btnRequestList.setEnabled(true);
+            btnRequestRestore.setEnabled(true);
             btnRequestBackup.setEnabled(true);
+            vFileList.setEnabled(true);
 
         } else {
             vAuthInfo.setText("Haven't logged in yet");
             btnRequestAuth.setEnabled(true);
             btnRequestRevoke.setEnabled(false);
-            btnRequestList.setEnabled(false);
+            btnRequestRestore.setEnabled(false);
             btnRequestBackup.setEnabled(false);
+            vFileList.setEnabled(false);
         }
+
+        refreshFileList();
+    }
+
+
+    private DriveFolder getAppFolder() throws ExecutionException, InterruptedException {
+        if (appFolder == null) {
+            appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, true);
+        }
+        return appFolder;
+    }
+
+    private void refreshFileList() {
+        fileList.clear();
+
+        fileList.add(new DriveFileInfo("<<Select a backup file to restore>>", null));
+
+        if (gdHelper != null) {
+            GUIs.doBusy(this, new GUIs.IBusyRunnable() {
+
+                String fileName;
+
+                @Override
+                public void onBusyFinish() {
+                    fileListAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onBusyError(Throwable t) {
+                    fileList.clear();
+                    fileListAdapter.notifyDataSetChanged();
+                    GUIs.errorToast(getApplicationContext(), t);
+                }
+
+                public void run() {
+                    try {
+                        DriveFolder appFolder = getAppFolder();
+
+                        List<Metadata> files = gdHelper.listChildren(appFolder);
+                        for (Metadata data : files) {
+                            if (!data.isFolder() && !data.isTrashed()) {
+                                String title = data.getTitle();
+                                if (title.toLowerCase().endsWith(".zip")) {
+                                    DriveFile file = data.getDriveId().asDriveFile();
+                                    fileList.add(new DriveFileInfo(title, file));
+                                }
+                            }
+                        }
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+            });
+        }
+
+        fileListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -123,8 +209,8 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             doRequestAuth(false);
         } else if (v.getId() == R.id.request_revoke) {
             doRevoke();
-        } else if (v.getId() == R.id.request_list) {
-            doList();
+        } else if (v.getId() == R.id.request_restore) {
+            doRestore();
         } else if (v.getId() == R.id.request_backup) {
             doBackup();
         }
@@ -198,7 +284,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                 });
     }
 
-    private void doList() {
+    private void doRestore() {
 
         GUIs.doBusy(this, new Runnable() {
             public void run() {
@@ -206,7 +292,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                     Logger.i(">>>>>>>>>>>>>1");
                     gdHelper.requestSync();
 
-                    DriveFolder appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, true);
+                    DriveFolder appFolder = getAppFolder();
 
                     Task<MetadataBuffer> tmb = gdHelper.getDriveResourceClient().queryChildren(appFolder, new Query.Builder().build());
                     Logger.i(">>>>>>>>>>>>>5");
@@ -251,6 +337,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             @Override
             public void onBusyFinish() {
                 GUIs.shortToast(getApplicationContext(), "Done, save to google drive as " + fileName);
+                refreshFileList();
             }
 
             @Override
@@ -300,7 +387,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
                     byte[] data = baos.toByteArray();
 
-                    DriveFolder appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, false);
+                    DriveFolder appFolder = getAppFolder();
 
                     gdHelper.writeFile(appFolder, fileName, new ByteArrayInputStream(data));
 
@@ -311,5 +398,29 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                 }
             }
         });
+    }
+
+    static class DriveFileInfo {
+        final String title;
+        final DriveFile file;
+
+        public DriveFileInfo(String title, DriveFile file) {
+            this.title = title;
+            this.file = file;
+        }
+    }
+
+    public class FileInfoViewBinder extends RegularSpinnerAdapter.ViewHolder<DriveFileInfo> {
+
+        public FileInfoViewBinder(RegularSpinnerAdapter adapter) {
+            super(adapter);
+        }
+
+        @Override
+        public void bindViewValue(DriveFileInfo item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
+
+            vtext.setText(item.title);
+
+        }
     }
 }
