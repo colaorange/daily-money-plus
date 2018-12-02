@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.colaorange.commons.util.Streams;
-import com.colaorange.dailymoney.core.ui.legacy.GoogleDriveActivity;
-import com.colaorange.dailymoney.core.util.Logger;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -16,20 +14,16 @@ import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.metadata.SortableMetadataField;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.drive.query.SortOrder;
 import com.google.android.gms.drive.query.SortableField;
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -127,7 +121,7 @@ public class GoogleDriveHelper {
     }
 
 
-    public DriveFolder retriveRoot() throws ExecutionException, InterruptedException {
+    public DriveFolder retrieveRoot() throws ExecutionException, InterruptedException {
         Task<DriveFolder> trf = getDriveResourceClient().getRootFolder();
         Tasks.await(trf);
         return trf.getResult();
@@ -135,7 +129,7 @@ public class GoogleDriveHelper {
 
     public DriveFolder retrieveFolder(DriveFolder parent, String name, boolean create) throws ExecutionException, InterruptedException {
         if (parent == null) {
-            parent = retriveRoot();
+            parent = retrieveRoot();
         }
 
         Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(parent,
@@ -173,7 +167,7 @@ public class GoogleDriveHelper {
 
     public DriveFile retrieveFile(DriveFolder parent, String fileName, boolean create) throws ExecutionException, InterruptedException {
         if (parent == null) {
-            parent = retriveRoot();
+            parent = retrieveRoot();
         }
 
         Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(parent,

@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.colaorange.commons.util.Files;
-import com.colaorange.commons.util.Numbers;
 import com.colaorange.commons.util.Streams;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
@@ -45,12 +44,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -71,7 +68,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
      */
 //    private static final Scope SCOPE_DRIVE = new Scope("https://www.googleapis.com/auth/drive");
 
-    private static final int REQUEST_AUTH = 101;
+    private static final int REQUEST_DRIVE_AUTH = 101;
     private static final int REQUEST_PERMISSION = 201;
 
     GoogleDriveHelper gdHelper;
@@ -254,7 +251,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                     @Override
                     public void onFailure(Exception e) {
                         if (!silentOnly) {
-                            startActivityForResult(GoogleDriveHelper.getSignInIntent(GoogleDriveActivity.this), REQUEST_AUTH);
+                            startActivityForResult(GoogleDriveHelper.getSignInIntent(GoogleDriveActivity.this), REQUEST_DRIVE_AUTH);
                         }
                     }
                 });
@@ -284,7 +281,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent data) {
-        if (requestCode == REQUEST_AUTH) {
+        if (requestCode == REQUEST_DRIVE_AUTH) {
             if (resultCode == RESULT_OK) {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 try {
