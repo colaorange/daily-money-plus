@@ -48,6 +48,7 @@ public class Notifications {
 
     public static final String CHANNEL_ID_DEFAULT = "com.colaorange.dailymoney.default";
     public static final String CHANNEL_ID_BACKUP = "com.colaorange.dailymoney.backup";
+    public static final String CHANNEL_ID_DRIVE = "com.colaorange.dailymoney.drive";
 
     private static final Set<String> channelIdCreated = java.util.Collections.synchronizedSet(new HashSet<String>());
 
@@ -62,6 +63,7 @@ public class Notifications {
 
         initChannel(CHANNEL_ID_DEFAULT, i18n.string(R.string.label_channel_default), manager);
         initChannel(CHANNEL_ID_BACKUP, i18n.string(R.string.label_channel_backup), manager);
+        initChannel(CHANNEL_ID_DRIVE, i18n.string(R.string.label_channel_drive), manager);
     }
 
     public static void send(Context context, int groupId, String msg, @Nullable String title,

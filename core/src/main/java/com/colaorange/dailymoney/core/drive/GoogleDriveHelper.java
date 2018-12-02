@@ -21,9 +21,12 @@ import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.metadata.SortableMetadataField;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
+import com.google.android.gms.drive.query.SortOrder;
+import com.google.android.gms.drive.query.SortableField;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -278,17 +281,31 @@ public class GoogleDriveHelper {
     }
 
     public List<Metadata> listChildren(DriveFolder appFolder) throws ExecutionException, InterruptedException {
+        return listChildren(appFolder, -1);
+    }
+
+    public List<Metadata> listChildren(DriveFolder appFolder, int max) throws ExecutionException, InterruptedException {
         Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(appFolder,
                 new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                        .setSortOrder(new SortOrder.Builder().addSortDescending(SortableField.CREATED_DATE).build())
                         .build());
         Tasks.await(tmb);
         Iterator<Metadata> iter = tmb.getResult().iterator();
         List<Metadata> childrenList = new LinkedList<>();
+        int i = 0;
         while (iter.hasNext()) {
+            if (max >= 0 && i++ >= max) {
+                break;
+            }
             Metadata data = iter.next();
             childrenList.add(data);
         }
         return childrenList;
+    }
+
+    public void deleteFile(DriveFile driveFile) throws ExecutionException, InterruptedException {
+        Task<Void> tv = getDriveResourceClient().delete(driveFile);
+        Tasks.await(tv);
     }
 }

@@ -477,8 +477,12 @@ public class Contexts {
     }
 
     public boolean hasWorkingFolderPermission() {
+        return hasWorkingFolderPermission(getWorkingFolder());
+    }
+
+    public boolean hasWorkingFolderPermission(File workingFolder) {
         try {
-            File touch = new File(getWorkingFolder(), Strings.randomName(10) + ".touch");
+            File touch = new File(workingFolder, Strings.randomName(10) + ".touch");
             Files.saveString("", touch, "utf-8");
             touch.delete();
             return true;
@@ -566,5 +570,9 @@ public class Contexts {
         String CARD = "card-";
 
         String MIGRATE ="migrate-";
+
+        String DRIVE_BACKUP ="drive-backup-";
+        String DRIVE_RESTORE ="drive-restore-";
+        String DRIVE_CLEAN ="drive-clean-";
     }
 }

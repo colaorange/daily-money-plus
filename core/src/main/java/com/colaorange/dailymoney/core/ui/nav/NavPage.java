@@ -17,6 +17,7 @@ public enum NavPage {
     BOOK_MGNT,
     DATA_MAIN,
     PREFS,
+    GOOGLE_DRIVE,
     HOW2USE,
     ABOUT,
     CONTRIBUTOR,

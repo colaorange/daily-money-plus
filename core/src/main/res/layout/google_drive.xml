@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="AUTH_ID"
+                android:text=""
                 android:textSize="?textSize" />
 
             <View
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_person"
                 android:gravity="center"
-                android:text="Sign in"
+                android:text="@string/label_signin"
                 android:textSize="?textSize" />
 
             <Button
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_person_outline"
                 android:gravity="center"
-                android:text="Sign out"
+                android:text="@string/label_signout"
                 android:textSize="?textSize" />
 
             <View
@@ -65,7 +65,21 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="Backup"
+                android:text="@string/label_backup_to_drive"
+                android:textSize="?textSize" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:id="@+id/request_clean"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="?ic_delete_forever"
+                android:gravity="center"
+                android:text="@string/label_clean_drive"
                 android:textSize="?textSize" />
 
             <View
@@ -84,8 +98,10 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="?ic_save"
                 android:gravity="center"
-                android:text="Restore"
+                android:text="@string/label_restore_from_drive"
                 android:textSize="?textSize" />
+
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

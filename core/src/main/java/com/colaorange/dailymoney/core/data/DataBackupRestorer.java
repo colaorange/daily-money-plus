@@ -178,6 +178,16 @@ public class DataBackupRestorer {
     }
 
     public static Result restore() {
+        Contexts ctxs = contexts();
+        File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+        File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
+        if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
+            lastFolder = ctxs.getWorkingFolder();
+        }
+        return restore(lastFolder);
+    }
+
+    public static Result restore(File lastFolder) {
         Result r = new Result();
         Contexts ctxs = contexts();
         if (!contexts().hasWorkingFolderPermission() && !hasBackup()) {
@@ -185,11 +195,6 @@ public class DataBackupRestorer {
             return r;
         }
         try {
-            File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
-            File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
-            if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
-                lastFolder = ctxs.getWorkingFolder();
-            }
             r.lastFolder = lastFolder;
 
             File dbFolder = ctxs.getAppDbFolder();
