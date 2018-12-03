@@ -158,7 +158,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_at_hours)));
 
 
-        pref = (SwitchPreference) findPreference("backup_to_google_drive");
+        pref = (SwitchPreference) findPreference("auto_backup_to_google_drive");
         refreshGoogleDriveSummary(i18n);
 
         ((SwitchPreference)pref).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -200,7 +200,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
     }
 
     private void refreshGoogleDriveSummary(final I18N i18n) {
-        final SwitchPreference drivePref = (SwitchPreference) findPreference("backup_to_google_drive");
+        final SwitchPreference drivePref = (SwitchPreference) findPreference("auto_backup_to_google_drive");
         Task<GoogleDriveHelper> task = GoogleDriveHelper.signIn(getActivity());
         task.addOnSuccessListener(new OnSuccessListener<GoogleDriveHelper>() {
             @Override

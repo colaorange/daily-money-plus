@@ -33,7 +33,7 @@ public class Notifications {
     }
 
     public enum Channel {
-        DEFAULT, BACKUP
+        DEFAULT, BACKUP, DRIVE
     }
 
     public enum Level {
@@ -71,12 +71,15 @@ public class Notifications {
         String channelId;
         channel = channel == null ? Channel.DEFAULT : channel;
         switch (channel) {
-            case DEFAULT:
-                channelId = CHANNEL_ID_DEFAULT;
-                break;
             case BACKUP:
-            default:
                 channelId = CHANNEL_ID_BACKUP;
+                break;
+            case DRIVE:
+                channelId = CHANNEL_ID_DRIVE;
+                break;
+            case DEFAULT:
+            default:
+                channelId = CHANNEL_ID_DEFAULT;
                 break;
         }
 

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -277,10 +278,10 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                     // The ApiException status code indicates the detailed failure reason.
                     // Please refer to the GoogleSignInStatusCodes class reference for more information.
                     Logger.w("signInResult:failed status code=" + e.getStatusCode());
-                    GUIs.alert(this, i18n().string(R.string.msg_login_fail, "status code " + e.getStatusCode()));
+                    GUIs.alert(this, i18n().string(R.string.msg_signin_fail, "status code " + e.getStatusCode()));
                 }
             } else {
-                GUIs.alert(this, i18n().string(R.string.msg_login_fail, "result code " + resultCode));
+                GUIs.alert(this, i18n().string(R.string.msg_signin_fail, "result code " + resultCode));
             }
 
         }
@@ -359,6 +360,8 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
             public void run() {
                 result = new Result();
+                result.fileName = info.title;
+
                 GoogleDriveBackupRestorer.RestoreResult restoreResult = gdBackupRestorer.restore(info.file);
                 if(!restoreResult.isSuccess()){
                     result.err = restoreResult.getErr();
@@ -368,6 +371,11 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                 lastBakcup = preference().getLastBackupTime();
 
                 DataBackupRestorer.Result dbrResult = new DataBackupRestorer().restore(restoreResult.getFolder());
+
+                //clean drive restore folder
+                Files.deepClean(restoreResult.getFolder());
+                restoreResult.getFolder().delete();
+
                 if (!dbrResult.isSuccess()) {
                     result.err = dbrResult.getErr();
                     return;
@@ -429,6 +437,9 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                 File lastFolder = dbrResult.getLastFolder();
 
                 GoogleDriveBackupRestorer.BackupResult backupResult = gdBackupRestorer.backup(lastFolder);
+
+                result.count = backupResult.getCount();
+                result.fileName = backupResult.getFileName();
 
                 trackEvent(TE.DRIVE_BACKUP);
             }

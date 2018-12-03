@@ -68,9 +68,9 @@
             android:title="@string/label_prefs_auto_backup_at_hours" />
         <SwitchPreference
             android:persistent="false"
-            android:key="backup_to_google_drive"
+            android:key="auto_backup_to_google_drive"
             android:summary="@string/label_not_signin"
-            android:title="@string/label_prefs_backup_to_google_drive" />
+            android:title="@string/label_prefs_auto_backup_to_google_drive" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/label_accounting">

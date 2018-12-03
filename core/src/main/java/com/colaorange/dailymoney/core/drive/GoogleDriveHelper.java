@@ -135,6 +135,8 @@ public class GoogleDriveHelper {
         Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(parent,
                 new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.TITLE, name))
+                        .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                        .setSortOrder(new SortOrder.Builder().addSortDescending(SortableField.CREATED_DATE).build())
                         .build());
         Tasks.await(tmb);
 
@@ -144,7 +146,7 @@ public class GoogleDriveHelper {
             Iterator<Metadata> iter = mb.iterator();
             while (iter.hasNext()) {
                 Metadata data = iter.next();
-                if (data.isFolder()) {
+                if (data.isFolder() && !data.isTrashed()) {
                     appFolder = data.getDriveId().asDriveFolder();
                     break;
                 }
@@ -173,6 +175,8 @@ public class GoogleDriveHelper {
         Task<MetadataBuffer> tmb = getDriveResourceClient().queryChildren(parent,
                 new Query.Builder()
                         .addFilter(Filters.eq(SearchableField.TITLE, fileName))
+                        .addFilter(Filters.eq(SearchableField.TRASHED, false))
+                        .setSortOrder(new SortOrder.Builder().addSortDescending(SortableField.CREATED_DATE).build())
                         .build());
         Tasks.await(tmb);
 

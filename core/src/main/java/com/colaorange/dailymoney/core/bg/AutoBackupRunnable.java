@@ -5,10 +5,15 @@ import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.Preference;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
+import com.colaorange.dailymoney.core.drive.GoogleDriveBackupRestorer;
+import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.util.Notifications;
+import com.colaorange.dailymoney.core.util.Threads;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AutoBackupRunnable implements Runnable {
 
     private static AutoBackupRunnable instance;
-
 
     AtomicBoolean running = new AtomicBoolean(false);
 
@@ -54,7 +58,7 @@ public class AutoBackupRunnable implements Runnable {
     }
 
 
-    private void doAutoBackup(Contexts contexts, Preference pref, I18N i18n) throws Exception {
+    private void doAutoBackup(final Contexts contexts, final Preference pref, final I18N i18n) throws Exception {
         Logger.d("start autobackup evaluation");
 
         DateFormat format = new SimpleDateFormat("yyMMddHH");
@@ -89,23 +93,50 @@ public class AutoBackupRunnable implements Runnable {
 
         Logger.d("start to backup");
 
-        contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a", "", null);
+        contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP + "a", "", null);
 
         DataBackupRestorer.Result r = new DataBackupRestorer().backup(canceling);
         if (r.isSuccess()) {
+            final File lastFolder = r.getLastFolder();
             pref.setLastBackupTime(cal.getTime().getTime());
             Logger.d("backup finished");
 
-            String count = "" + (r.getDb() + r.getPref());
-            String msg = i18n.string(R.string.msg_db_backuped, count, r.getLastFolder());
+            String msg = i18n.string(R.string.msg_db_backuped, r.getDb() + r.getPref(), r.getLastFolder());
 
             Notifications.send(contexts.getApp(), Notifications.nextGroupId(), msg, i18n.string(R.string.label_backup_data),
                     Notifications.Channel.BACKUP, Notifications.Level.INFO, null);
+
+            //do drive sync if sing success
+            GoogleDriveHelper.signIn(contexts.getApp()).addOnSuccessListener(new OnSuccessListener<GoogleDriveHelper>() {
+                @Override
+                public void onSuccess(final GoogleDriveHelper helper) {
+                    Runnable job = new Runnable() {
+                        @Override
+                        public void run() {
+                            //must not run in main thread. Tasks.await
+                            GoogleDriveBackupRestorer.BackupResult result = new GoogleDriveBackupRestorer(helper).backup(lastFolder);
+                            if (result.isSuccess()) {
+                                Logger.d("drive-backup finished");
+                                String msg = i18n.string(R.string.msg_db_backuped, result.getCount(), result.getFileName());
+
+                                Notifications.send(contexts.getApp(), Notifications.nextGroupId(), msg, i18n.string(R.string.label_google_drive),
+                                        Notifications.Channel.DRIVE, Notifications.Level.INFO, null);
+                            } else {
+                                Logger.w(result.getErr());
+                                Notifications.send(contexts.getApp(), Notifications.nextGroupId(), result.getErr(), i18n.string(R.string.label_google_drive),
+                                        Notifications.Channel.DRIVE, Notifications.Level.WARN, null);
+                                contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.DRIVE_BACKUP + "a-fail", "", null);
+                            }
+                        }
+                    };
+                    Threads.execute(job);
+                }
+            });
         } else {
             Logger.w(r.getErr());
             Notifications.send(contexts.getApp(), Notifications.nextGroupId(), r.getErr(), i18n.string(R.string.label_backup_data),
                     Notifications.Channel.BACKUP, Notifications.Level.WARN, null);
-            contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a-fail", "", null);
+            contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP + "a-fail", "", null);
         }
 
     }

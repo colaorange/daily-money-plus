@@ -55,7 +55,7 @@ public class GoogleDriveBackupRestorer {
             return err;
         }
 
-        public String getFile() {
+        public String getFileName() {
             return fileName;
         }
     }
@@ -159,7 +159,7 @@ public class GoogleDriveBackupRestorer {
         try {
             File temp = new File(Contexts.instance().getWorkingFolder(), "temp");
             temp.mkdir();
-            tempfolder = new File(temp, Strings.randomName(5));
+            result.folder = tempfolder = new File(temp, Strings.randomName(5));
             tempzip = new File(temp, tempfolder.getName() + ".zip");
             fos = new FileOutputStream(tempzip);
             gdHelper.readFile(driveFile, fos);
@@ -218,10 +218,6 @@ public class GoogleDriveBackupRestorer {
             }
             if (tempzip != null && tempzip.isFile()) {
                 tempzip.delete();
-            }
-            if (tempfolder != null) {
-                Files.deepClean(tempfolder);
-                tempfolder.delete();
             }
         }
 
