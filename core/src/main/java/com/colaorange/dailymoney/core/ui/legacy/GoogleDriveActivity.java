@@ -13,13 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.colaorange.commons.util.Files;
-import com.colaorange.commons.util.Streams;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
-import com.colaorange.dailymoney.core.data.DataBackupRestorer;
+import com.colaorange.dailymoney.core.drive.GoogleDriveBackupRestorer;
 import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
@@ -35,28 +33,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 /**
  * @author dennis
  */
 public class GoogleDriveActivity extends ContextsActivity implements OnClickListener {
-
-    public static final String DRIVE_APP_FOLDER_NAME = "coDailyMoneyBackup";
 
 //    public static final Scope SCOPE_DRIVE_FILE = new Scope("https://www.googleapis.com/auth/drive.file");
 //    public static final Scope SCOPE_DRIVE_APPDATA = new Scope("https://www.googleapis.com/auth/drive.appdata");
@@ -72,7 +57,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     private static final int REQUEST_PERMISSION = 201;
 
     GoogleDriveHelper gdHelper;
-    DriveFolder appFolder;
+    GoogleDriveBackupRestorer gdBackupRestorer;
 
     File workingFolder;
 
@@ -129,12 +114,12 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
         super.onStart();
         //only for 6.0(23+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()) {
-            if(!Contexts.instance().hasWorkingFolderPermission()) {
+            if (!Contexts.instance().hasWorkingFolderPermission()) {
                 doRequestPermission();
-            }else{
+            } else {
                 doRequestAuth(true);
             }
-        }else{
+        } else {
             doRequestAuth(true);
         }
 
@@ -167,10 +152,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
 
     private DriveFolder getAppFolder() throws ExecutionException, InterruptedException {
-        if (appFolder == null) {
-            appFolder = gdHelper.retrieveFolder(null, DRIVE_APP_FOLDER_NAME, true);
-        }
-        return appFolder;
+        return gdBackupRestorer.getAppFolder();
     }
 
     private void refreshFileList() {
@@ -243,6 +225,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             @Override
             public void onSuccess(GoogleDriveHelper helper) {
                 GoogleDriveActivity.this.gdHelper = helper;
+                gdBackupRestorer = new GoogleDriveBackupRestorer(helper);
                 Logger.i("Login in success as {}" + helper.getGoogleSignInAccount().getDisplayName());
                 doRequestSync();
             }
@@ -286,6 +269,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 try {
                     gdHelper = new GoogleDriveHelper(this, task.getResult(ApiException.class));
+                    gdBackupRestorer = new GoogleDriveBackupRestorer(gdHelper);
                     Logger.i("Sign in success on activity result");
                     doRequestSync();
                 } catch (ApiException e) {
@@ -308,6 +292,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             @Override
             public void onSuccess(Void v) {
                 gdHelper = null;
+                gdBackupRestorer = null;
                 refreshUI();
             }
         }).addOnFailureListener(
@@ -315,6 +300,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                     @Override
                     public void onFailure(Exception e) {
                         gdHelper = null;
+                        gdBackupRestorer = null;
                         refreshUI();
                     }
                 });
@@ -332,20 +318,14 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
         final GUIs.IBusyRunnable job = new GUIs.IBusyRunnable() {
 
-            class Result {
-                int count;
-                String err;
-                String fileName;
-            }
-
-            Result result;
+            GoogleDriveBackupRestorer.Result result;
             Long lastBakcup;
 
             @Override
             public void onBusyFinish() {
-                if (result.err == null) {
-                    String count = "" + (result.count);
-                    String msg = i18n().string(R.string.msg_db_restored, count, result.fileName);
+                if (result.isSuccess()) {
+                    String count = Integer.toString(result.getCount());
+                    String msg = i18n().string(R.string.msg_db_restored, count, result.getFileName());
                     if (lastBakcup != null) {
                         preference().setLastBackupTime(lastBakcup);
                     }
@@ -360,7 +340,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                         }
                     });
                 } else {
-                    GUIs.alert(GoogleDriveActivity.this, result.err);
+                    GUIs.alert(GoogleDriveActivity.this, result.getErr());
                 }
 
             }
@@ -371,90 +351,10 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             }
 
             public void run() {
-                result = new Result();
-                FileOutputStream fos = null;
-                FileInputStream fis = null;
-                File tempzip = null;
-                File tempfolder = null;
-                try {
-                    File temp = new File(workingFolder, "temp");
-                    temp.mkdir();
-                    tempfolder = new File(temp, Strings.randomName(5));
-                    tempzip = new File(temp, tempfolder.getName() + ".zip");
-                    fos = new FileOutputStream(tempzip);
-                    gdHelper.readFile(info.file, fos);
-                    fos.close();
-                    fos = null;
+                lastBakcup = preference().getLastBackupTime();
+                result = gdBackupRestorer.restore(info.file);
 
-                    ZipInputStream zipIs = new ZipInputStream(new BufferedInputStream(fis = new FileInputStream(tempzip)));
-
-                    byte[] buffer = new byte[1024];
-                    int count;
-                    ZipEntry entry;
-                    while ((entry = zipIs.getNextEntry()) != null) {
-                        // zapis do souboru
-                        String filename = entry.getName();
-
-                        // Need to create directories if not exists, or
-                        // it will generate an Exception...
-                        File file;
-                        if (entry.isDirectory()) {
-                            file = new File(tempfolder, filename);
-                            file.mkdirs();
-                            continue;
-                        }
-
-                        file = new File(tempfolder, filename);
-                        file.getParentFile().mkdirs();
-
-                        fos = new FileOutputStream(file);
-
-                        while ((count = zipIs.read(buffer)) != -1) {
-                            fos.write(buffer, 0, count);
-                        }
-                        fos.close();
-                        fos = null;
-
-                        zipIs.closeEntry();
-                    }
-
-                    zipIs.close();
-
-                    lastBakcup = preference().getLastBackupTime();
-                    result.fileName = tempfolder.getAbsolutePath();
-                    DataBackupRestorer.Result dbrResult = DataBackupRestorer.restore(tempfolder);
-                    if (!dbrResult.isSuccess()) {
-                        result.err = dbrResult.getErr();
-                        return;
-                    }
-                    result.count = dbrResult.getDb() + dbrResult.getPref();
-
-                    trackEvent(TE.DRIVE_RESTORE);
-                } catch (Exception e) {
-                    result.err = e.getMessage();
-                    Logger.e(e.getMessage(), e);
-                } finally {
-                    if (fos != null) {
-                        try {
-                            fos.close();
-                        } catch (IOException e1) {
-                        }
-                    }
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (IOException e1) {
-                        }
-                    }
-                    if (tempzip != null && tempzip.isFile()) {
-                        tempzip.delete();
-                    }
-                    if (tempfolder != null) {
-                        Files.deepClean(tempfolder);
-                        tempfolder.delete();
-                    }
-                }
-
+                trackEvent(TE.DRIVE_RESTORE);
             }
         };
 
@@ -473,27 +373,19 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     private void doBackup() {
         final GUIs.IBusyRunnable job = new GUIs.IBusyRunnable() {
 
-            class Result {
-                int count;
-                String err;
-                String fileName;
-            }
-
-            Result result;
+            GoogleDriveBackupRestorer.Result result;
 
             @Override
             public void onBusyFinish() {
-                if (result.err == null) {
-                    String msg = i18n().string(R.string.msg_db_backuped, result.count, result.fileName);
+                if (result.isSuccess()) {
+                    String msg = i18n().string(R.string.msg_db_backuped, result.getCount(), result.getFileName());
                     preference().setLastBackupTime(System.currentTimeMillis());
                     GUIs.alert(GoogleDriveActivity.this, msg);
 
                     refreshFileList();
                 } else {
-                    GUIs.alert(GoogleDriveActivity.this, result.err);
+                    GUIs.alert(GoogleDriveActivity.this, result.getErr());
                 }
-
-
             }
 
             @Override
@@ -502,59 +394,9 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             }
 
             public void run() {
-                result = new Result();
-                try {
-                    DataBackupRestorer.Result dbrResult = DataBackupRestorer.backup();
-                    if (!dbrResult.isSuccess()) {
-                        result.err = dbrResult.getErr();
-                        return;
-                    }
-                    result.count = dbrResult.getDb() + dbrResult.getPref();
+                result = gdBackupRestorer.backup();
 
-                    File lastFolder = dbrResult.getLastFolder();
-
-                    DateFormat dateTimeFormat = Contexts.instance().getPreference().getDateTimeFormat();
-                    String fileName = result.fileName = Strings.format("DM-{}.zip", dateTimeFormat.format(System.currentTimeMillis()));
-
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ZipOutputStream zipOs = new ZipOutputStream(baos);
-
-
-                    int BUFFER_SIZE = 1024;
-                    int basePathLength = lastFolder.getPath().length() + 1;
-                    File[] fileList = lastFolder.listFiles();
-                    InputStream is = null;
-                    for (File file : fileList) {
-                        if (file.isFile()) {
-                            byte data[] = new byte[BUFFER_SIZE];
-                            String unmodifiedFilePath = file.getPath();
-                            String relativePath = unmodifiedFilePath
-                                    .substring(basePathLength);
-                            is = new FileInputStream(unmodifiedFilePath);
-
-                            ZipEntry entry = new ZipEntry(relativePath);
-                            entry.setTime(file.lastModified()); // to keep modification time after unzipping
-                            zipOs.putNextEntry(entry);
-
-                            Streams.flush(is, zipOs);
-
-                            is.close();
-                        }
-                    }
-
-                    zipOs.close();
-
-                    byte[] data = baos.toByteArray();
-
-                    DriveFolder appFolder = getAppFolder();
-
-                    gdHelper.writeFile(appFolder, fileName, new ByteArrayInputStream(data));
-
-                    trackEvent(TE.DRIVE_BACKUP);
-                } catch (Exception e) {
-                    Logger.e(e.getMessage(), e);
-                    result.err = e.getMessage();
-                }
+                trackEvent(TE.DRIVE_BACKUP);
             }
         };
 
@@ -631,9 +473,9 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION) {
-            if(Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
+            if (Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
                 recreate();
-            }else{
+            } else {
                 doRequestAuth(true);
                 refreshUI();
             }
@@ -644,7 +486,6 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
     private void doRequestPermission() {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
     }
-
 
 
     static class DriveFileInfo {
