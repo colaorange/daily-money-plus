@@ -2,6 +2,7 @@
 == 0.10.6 ==
 === Features ===
  #45 Support to active book when long-pressing on a book.
+ #3  Support Google Drive auto backup
 === Bugs ===
  #
 
