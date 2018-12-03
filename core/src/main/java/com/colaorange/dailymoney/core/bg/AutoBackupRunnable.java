@@ -91,7 +91,7 @@ public class AutoBackupRunnable implements Runnable {
 
         contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP+"a", "", null);
 
-        DataBackupRestorer.Result r = DataBackupRestorer.backup(canceling);
+        DataBackupRestorer.Result r = new DataBackupRestorer().backup(canceling);
         if (r.isSuccess()) {
             pref.setLastBackupTime(cal.getTime().getTime());
             Logger.d("backup finished");

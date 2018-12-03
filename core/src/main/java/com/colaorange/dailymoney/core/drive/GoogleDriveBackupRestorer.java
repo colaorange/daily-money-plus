@@ -4,7 +4,6 @@ import com.colaorange.commons.util.Files;
 import com.colaorange.commons.util.Streams;
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.context.Contexts;
-import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -38,7 +38,7 @@ public class GoogleDriveBackupRestorer {
         this.gdHelper = gdHelper;
     }
 
-    public static class Result {
+    public static class BackupResult {
         int count;
         String err;
         String fileName;
@@ -55,21 +55,40 @@ public class GoogleDriveBackupRestorer {
             return err;
         }
 
-        public String getFileName() {
+        public String getFile() {
             return fileName;
         }
     }
 
+    public static class RestoreResult {
+        int count;
+        String err;
+        File folder;
 
-    public Result backup() {
-        Result result = new Result();
-        DataBackupRestorer.Result dbrResult = DataBackupRestorer.backup();
-        if (!dbrResult.isSuccess()) {
-            result.err = dbrResult.getErr();
-            return result;
+        public boolean isSuccess() {
+            return err == null;
         }
 
-        File lastFolder = dbrResult.getLastFolder();
+        public int getCount() {
+            return count;
+        }
+
+        public String getErr() {
+            return err;
+        }
+
+        public File getFolder() {
+            return folder;
+        }
+    }
+
+
+    public BackupResult backup(File lastFolder) {
+        return backup(lastFolder, new AtomicBoolean(false));
+    }
+
+    public BackupResult backup(File lastFolder, AtomicBoolean canceling) {
+        BackupResult result = new BackupResult();
 
         DateFormat dateTimeFormat = Contexts.instance().getPreference().getDateTimeFormat();
         String fileName = result.fileName = Strings.format("DM-{}.zip", dateTimeFormat.format(System.currentTimeMillis()));
@@ -100,6 +119,7 @@ public class GoogleDriveBackupRestorer {
                     is.close();
 
                     result.count++;
+                    checkCanceling(canceling);
                 }
             }
 
@@ -109,6 +129,8 @@ public class GoogleDriveBackupRestorer {
             byte[] data = baos.toByteArray();
 
             DriveFolder appFolder = getAppFolder();
+
+            checkCanceling(canceling);
 
             gdHelper.writeFile(appFolder, fileName, new ByteArrayInputStream(data));
         } catch (Exception e) {
@@ -128,8 +150,8 @@ public class GoogleDriveBackupRestorer {
         return appFolder;
     }
 
-    public Result restore(DriveFile driveFile) {
-        Result result = new Result();
+    public RestoreResult restore(DriveFile driveFile) {
+        RestoreResult result = new RestoreResult();
         FileOutputStream fos = null;
         FileInputStream fis = null;
         File tempzip = null;
@@ -174,18 +196,10 @@ public class GoogleDriveBackupRestorer {
                 fos = null;
 
                 zipIs.closeEntry();
+                result.count++;
             }
 
             zipIs.close();
-
-            result.fileName = tempfolder.getAbsolutePath();
-            DataBackupRestorer.Result dbrResult = DataBackupRestorer.restore(tempfolder);
-            if (!dbrResult.isSuccess()) {
-                result.err = dbrResult.getErr();
-                return result;
-            }
-            result.count = dbrResult.getDb() + dbrResult.getPref();
-
         } catch (Exception e) {
             result.err = e.getMessage();
             Logger.e(e.getMessage(), e);
@@ -212,5 +226,11 @@ public class GoogleDriveBackupRestorer {
         }
 
         return result;
+    }
+
+    private static void checkCanceling(AtomicBoolean canceling) {
+        if (canceling!=null && canceling.get()) {
+            throw new RuntimeException("task is canceling, break it");
+        }
     }
 }

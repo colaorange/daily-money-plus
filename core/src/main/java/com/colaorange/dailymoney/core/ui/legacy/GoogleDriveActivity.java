@@ -17,6 +17,7 @@ import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
+import com.colaorange.dailymoney.core.data.DataBackupRestorer;
 import com.colaorange.dailymoney.core.drive.GoogleDriveBackupRestorer;
 import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.ui.GUIs;
@@ -318,14 +319,20 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
         final GUIs.IBusyRunnable job = new GUIs.IBusyRunnable() {
 
-            GoogleDriveBackupRestorer.Result result;
+            class Result{
+                int count;
+                String fileName;
+                String err;
+            }
+
+            Result result;
             Long lastBakcup;
 
             @Override
             public void onBusyFinish() {
-                if (result.isSuccess()) {
-                    String count = Integer.toString(result.getCount());
-                    String msg = i18n().string(R.string.msg_db_restored, count, result.getFileName());
+                if (result.err == null) {
+                    String count = Integer.toString(result.count);
+                    String msg = i18n().string(R.string.msg_db_restored, count, result.fileName);
                     if (lastBakcup != null) {
                         preference().setLastBackupTime(lastBakcup);
                     }
@@ -340,7 +347,7 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
                         }
                     });
                 } else {
-                    GUIs.alert(GoogleDriveActivity.this, result.getErr());
+                    GUIs.alert(GoogleDriveActivity.this, result.err);
                 }
 
             }
@@ -351,8 +358,21 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             }
 
             public void run() {
+                result = new Result();
+                GoogleDriveBackupRestorer.RestoreResult restoreResult = gdBackupRestorer.restore(info.file);
+                if(!restoreResult.isSuccess()){
+                    result.err = restoreResult.getErr();
+                    return;
+                }
+
                 lastBakcup = preference().getLastBackupTime();
-                result = gdBackupRestorer.restore(info.file);
+
+                DataBackupRestorer.Result dbrResult = new DataBackupRestorer().restore(restoreResult.getFolder());
+                if (!dbrResult.isSuccess()) {
+                    result.err = dbrResult.getErr();
+                    return;
+                }
+                result.count = dbrResult.getDb() + dbrResult.getPref();
 
                 trackEvent(TE.DRIVE_RESTORE);
             }
@@ -372,19 +392,24 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
 
     private void doBackup() {
         final GUIs.IBusyRunnable job = new GUIs.IBusyRunnable() {
+            class Result{
+                int count;
+                String fileName;
+                String err;
+            }
 
-            GoogleDriveBackupRestorer.Result result;
+            Result result;
 
             @Override
             public void onBusyFinish() {
-                if (result.isSuccess()) {
-                    String msg = i18n().string(R.string.msg_db_backuped, result.getCount(), result.getFileName());
+                if (result.err == null) {
+                    String msg = i18n().string(R.string.msg_db_backuped, result.count, result.fileName);
                     preference().setLastBackupTime(System.currentTimeMillis());
                     GUIs.alert(GoogleDriveActivity.this, msg);
 
                     refreshFileList();
                 } else {
-                    GUIs.alert(GoogleDriveActivity.this, result.getErr());
+                    GUIs.alert(GoogleDriveActivity.this, result.err);
                 }
             }
 
@@ -394,7 +419,16 @@ public class GoogleDriveActivity extends ContextsActivity implements OnClickList
             }
 
             public void run() {
-                result = gdBackupRestorer.backup();
+                result = new Result();
+
+                DataBackupRestorer.Result dbrResult = new DataBackupRestorer().backup();
+                if (!dbrResult.isSuccess()) {
+                    result.err = dbrResult.getErr();
+                    return;
+                }
+                File lastFolder = dbrResult.getLastFolder();
+
+                GoogleDriveBackupRestorer.BackupResult backupResult = gdBackupRestorer.backup(lastFolder);
 
                 trackEvent(TE.DRIVE_BACKUP);
             }

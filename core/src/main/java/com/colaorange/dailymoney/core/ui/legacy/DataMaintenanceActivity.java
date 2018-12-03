@@ -170,7 +170,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
             @Override
             public void run() {
-                result = DataBackupRestorer.backup();
+                result = new DataBackupRestorer().backup();
                 trackEvent(TE.BACKUP);
             }
         };
@@ -211,7 +211,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             @Override
             public void run() {
                 lastBakcup = preference().getLastBackupTime();
-                result = DataBackupRestorer.restore();
+                result = new DataBackupRestorer().restore();
                 trackEvent(TE.RESTORE);
             }
         };
