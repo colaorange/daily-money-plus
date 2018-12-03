@@ -51,6 +51,7 @@ public class NavMenuHelper {
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.DATA_MAIN), new DoPageListener(NavPage.DATA_MAIN), facade.getPageIcon(NavPage.DATA_MAIN)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.PREFS), new DoPageListener(NavPage.PREFS), facade.getPageIcon(NavPage.PREFS)));
+
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_zone_ring)));
         navMenuList.add(new NavMenuItem(i18n.string(R.string.label_migrate_records), new View.OnClickListener() {
@@ -59,6 +60,8 @@ public class NavMenuHelper {
                 doMigrateRecords();
             }
         }, -1));
+        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.GOOGLE_DRIVE), new DoPageListener(NavPage.GOOGLE_DRIVE), facade.getPageIcon(NavPage.GOOGLE_DRIVE)));
+
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.WHATISNEW), new DoPageListener(NavPage.WHATISNEW), facade.getPageIcon(NavPage.WHATISNEW)));
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.HISTORY), new DoPageListener(NavPage.HISTORY), facade.getPageIcon(NavPage.HISTORY)));

@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Backup & Restore util
  * <p>
+ *
  * @author Dennis
  */
 
@@ -89,17 +90,17 @@ public class DataBackupRestorer {
         }
     }
 
-    private static void checkCanceling(AtomicBoolean canceling){
-        if(canceling.get()){
+    private static void checkCanceling(AtomicBoolean canceling) {
+        if (canceling != null && canceling.get()) {
             throw new RuntimeException("task is canceling, break it");
         }
     }
 
-    public static Result backup() {
+    public Result backup() {
         return backup(new AtomicBoolean(false));
     }
 
-    public static Result backup(AtomicBoolean canceling) {
+    public Result backup(AtomicBoolean canceling) {
         Result r = new Result();
         Contexts ctxs = contexts();
         if (!ctxs.hasWorkingFolderPermission()) {
@@ -177,7 +178,17 @@ public class DataBackupRestorer {
         return r;
     }
 
-    public static Result restore() {
+    public Result restore() {
+        Contexts ctxs = contexts();
+        File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+        File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
+        if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
+            lastFolder = ctxs.getWorkingFolder();
+        }
+        return restore(lastFolder);
+    }
+
+    public Result restore(File lastFolder) {
         Result r = new Result();
         Contexts ctxs = contexts();
         if (!contexts().hasWorkingFolderPermission() && !hasBackup()) {
@@ -185,11 +196,6 @@ public class DataBackupRestorer {
             return r;
         }
         try {
-            File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
-            File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
-            if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
-                lastFolder = ctxs.getWorkingFolder();
-            }
             r.lastFolder = lastFolder;
 
             File dbFolder = ctxs.getAppDbFolder();
@@ -233,7 +239,7 @@ public class DataBackupRestorer {
                 r.pref++;
             }
 
-            for(String f:filesToRemove){
+            for (String f : filesToRemove) {
                 new File(f).delete();
                 Logger.d("delete unnecessary db/pref file " + f);
             }

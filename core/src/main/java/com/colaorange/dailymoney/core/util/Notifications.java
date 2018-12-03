@@ -10,60 +10,101 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Dennis
  */
 public class Notifications {
 
+    private static AtomicInteger commonGroupId = new AtomicInteger(0);
+
+    public static int nextGroupId() {
+        int i = commonGroupId.getAndIncrement();
+        return i;
+    }
+
+    public static int currGroupId() {
+        return commonGroupId.get();
+    }
+
+    public enum Channel {
+        DEFAULT, BACKUP, DRIVE
+    }
+
     public enum Level {
-        INFO, WARN, ERROR
+        INFO, WARN, ERROR;
+
     }
 
-    public enum Target {
-        SYSTEM_BAR, APP_ICON
-    }
-
+    @Deprecated
     public static final String CHANNEL_ID_SYSTEM = "com.colaorange.dailymoney.system";
+    @Deprecated
     public static final String CHANNEL_ID_APP_ICON = "com.colaorange.dailymoney.appicon";
+
+    public static final String CHANNEL_ID_DEFAULT = "com.colaorange.dailymoney.default";
+    public static final String CHANNEL_ID_BACKUP = "com.colaorange.dailymoney.backup";
+    public static final String CHANNEL_ID_DRIVE = "com.colaorange.dailymoney.drive";
 
     private static final Set<String> channelIdCreated = java.util.Collections.synchronizedSet(new HashSet<String>());
 
-    public static void send(Context context, Target target, Level level, String msg, @Nullable String title, @Nullable Intent intent, int groupId) {
+    public static void initAllChannel(Context context) {
+        NotificationManager manager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        I18N i18n = Contexts.instance().getI18n();
+
+        deleteChannel(CHANNEL_ID_SYSTEM, manager);
+        deleteChannel(CHANNEL_ID_APP_ICON, manager);
+
+
+        initChannel(CHANNEL_ID_DEFAULT, i18n.string(R.string.label_channel_default), manager);
+        initChannel(CHANNEL_ID_BACKUP, i18n.string(R.string.label_channel_backup), manager);
+        initChannel(CHANNEL_ID_DRIVE, i18n.string(R.string.label_channel_drive), manager);
+    }
+
+    public static void send(Context context, int groupId, String msg, @Nullable String title,
+                            @Nullable Channel channel, @Nullable Level level, @Nullable Intent intent) {
         String channelId;
-        switch (target) {
-            case APP_ICON:
-                channelId = CHANNEL_ID_APP_ICON;
+        channel = channel == null ? Channel.DEFAULT : channel;
+        switch (channel) {
+            case BACKUP:
+                channelId = CHANNEL_ID_BACKUP;
                 break;
-            case SYSTEM_BAR:
+            case DRIVE:
+                channelId = CHANNEL_ID_DRIVE;
+                break;
+            case DEFAULT:
             default:
-                channelId = CHANNEL_ID_SYSTEM;
+                channelId = CHANNEL_ID_DEFAULT;
                 break;
         }
 
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        initChannel(channelId, manager);
-
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, channelId)
-                        .setContentTitle(msg)
-                        .setContentText(title);
+                        .setContentText(msg)
+                        .setContentTitle(title);
 
         mBuilder.setSmallIcon(R.drawable.ic_notification);
 
+        level = level == null ? Level.INFO : level;
         //TODO different level, icon coloring.
         switch (level) {
             case INFO:
                 break;
             case WARN:
+                mBuilder.setColorized(true);
+                mBuilder.setColor(0xeeffcc00);
                 break;
             case ERROR:
+                mBuilder.setColorized(true);
+                mBuilder.setColor(0xeecc3300);
                 break;
         }
 
@@ -86,7 +127,21 @@ public class Notifications {
         manager.notify(groupId, mBuilder.build());
     }
 
-    private synchronized static void initChannel(String channelId, NotificationManager manager) {
+    private synchronized static void deleteChannel(String channelId, NotificationManager manager){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
+
+        try {
+           manager.deleteNotificationChannel(channelId);
+        } catch (Exception x) {
+            Logger.w(x.getMessage(), x);
+        }
+
+        channelIdCreated.add(channelId);
+    }
+
+    private synchronized static void initChannel(String channelId, String channelName, NotificationManager manager) {
         //api 26, android 8.0 only
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             return;
@@ -97,7 +152,7 @@ public class Notifications {
         }
 
         try {
-            NotificationChannel channel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             manager.createNotificationChannel(channel);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);

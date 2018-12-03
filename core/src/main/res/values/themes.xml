@@ -98,6 +98,9 @@
     <attr name="ic_last_page" format="reference"/>
     <attr name="ic_stars" format="reference"/>
 
+    <attr name="ic_person" format="reference"/>
+    <attr name="ic_person_outline" format="reference"/>
+
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="appbarSize">@dimen/appbarSize</item>
         <item name="appCardbarSize">@dimen/appCardbarSize</item>
@@ -524,6 +527,9 @@
 
         <item name="ic_last_page">@drawable/ic_last_page_light_24dp</item>
         <item name="ic_stars">@drawable/ic_stars_light_24dp</item>
+
+        <item name="ic_person">@drawable/ic_person_light_24dp</item>
+        <item name="ic_person_outline">@drawable/ic_person_outline_light_24dp</item>
     </style>
 
     <style name="darkIconSet">
@@ -581,6 +587,8 @@
         <item name="ic_last_page">@drawable/ic_last_page_dark_24dp</item>
         <item name="ic_stars">@drawable/ic_stars_dark_24dp</item>
 
+        <item name="ic_person">@drawable/ic_person_dark_24dp</item>
+        <item name="ic_person_outline">@drawable/ic_person_outline_dark_24dp</item>
     </style>
 
     <style name="TestAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

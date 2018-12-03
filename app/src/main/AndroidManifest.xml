@@ -24,13 +24,18 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".core.ui.LocalWebViewActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <!--TODO action-View for google search -->
+                <data android:scheme="dailymoney" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".core.ui.PasswordProtectionActivity"
             android:label="@string/label_pwd_protection" />
@@ -45,53 +50,57 @@
             android:name=".core.ui.legacy.RecordMgntActivity"
             android:label="@string/title_recmgnt" />
 
-        <activity android:name=".core.ui.legacy.RecordEditorActivity"/>
+        <activity android:name=".core.ui.legacy.RecordEditorActivity" />
 
-        <activity android:name=".core.ui.legacy.RecordSearcherActivity"
-            android:label="@string/label_search"/>
-        <activity android:name=".core.ui.legacy.RecordMigratorActivity"
-            android:label="@string/label_migrate_records"/>
+        <activity
+            android:name=".core.ui.legacy.RecordSearcherActivity"
+            android:label="@string/label_search" />
+        <activity
+            android:name=".core.ui.legacy.RecordMigratorActivity"
+            android:label="@string/label_migrate_records" />
         <activity
             android:name=".core.ui.legacy.AccountMgntActivity"
             android:label="@string/title_accmgnt" />
         <activity android:name=".core.ui.legacy.AccountEditorActivity" />
-        <activity android:name=".core.ui.legacy.AccountRecordListActivity" android:label="@string/title_reclist" />
+        <activity
+            android:name=".core.ui.legacy.AccountRecordListActivity"
+            android:label="@string/title_reclist" />
         <activity
             android:name=".core.ui.pref.PrefsActivity"
             android:label="@string/title_prefs" />
         <activity
             android:name=".core.ui.pref.PrefsContributionActivity"
-            android:label="@string/label_contribution"/>
+            android:label="@string/label_contribution" />
         <activity
             android:name=".core.ui.pref.PrefsDeveloperActivity"
-            android:label="@string/label_developer"/>
+            android:label="@string/label_developer" />
         <activity
             android:name=".core.ui.pref.PrefsFormatActivity"
-            android:label="@string/label_format"/>
+            android:label="@string/label_format" />
         <activity
             android:name=".core.ui.pref.PrefsRecordActivity"
-            android:label="@string/label_record"/>
+            android:label="@string/label_record" />
         <activity
             android:name=".core.ui.pref.PrefsDesktopActivity"
-            android:label="@string/label_desktop"/>
+            android:label="@string/label_desktop" />
         <activity
             android:name=".core.ui.legacy.DataMaintenanceActivity"
             android:label="@string/title_datamain" />
         <activity
             android:name=".core.ui.legacy.BalanceMgntActivity"
             android:label="@string/label_balance" />
-        <activity android:name=".core.ui.legacy.LogViewerActivity" android:label="@string/title_log_viewer" />
         <activity
-            android:name=".core.ui.chart.PieAccountActivity"/>
-        <activity
-            android:name=".core.ui.chart.LineAccountActivity"/>
-        <activity
-            android:name=".core.ui.chart.LineAccountAggregateActivity"/>
-        <activity
-            android:name=".core.ui.chart.LineFromBeginningAggregateActivity"/>
-        <activity
-            android:name=".core.ui.chart.LineFromBeginningAccountActivity"/>
+            android:name=".core.ui.legacy.LogViewerActivity"
+            android:label="@string/title_log_viewer" />
+        <activity android:name=".core.ui.chart.PieAccountActivity" />
+        <activity android:name=".core.ui.chart.LineAccountActivity" />
+        <activity android:name=".core.ui.chart.LineAccountAggregateActivity" />
+        <activity android:name=".core.ui.chart.LineFromBeginningAggregateActivity" />
+        <activity android:name=".core.ui.chart.LineFromBeginningAccountActivity" />
 
+        <activity
+            android:name=".core.ui.legacy.GoogleDriveActivity"
+            android:label="Google Drive" />
 
         <receiver
             android:name=".core.bg.StartupReceiver"
@@ -115,16 +124,18 @@
 
         <service
             android:name=".core.bg.AutoBackupJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".core.ui.widget.CreateRecordWidget"
-            android:label="@string/nav_pg_add_record" >
+        <receiver
+            android:name=".core.ui.widget.CreateRecordWidget"
+            android:label="@string/nav_pg_add_record">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/widget_create_record" />
         </receiver>
         <!-- ga -->

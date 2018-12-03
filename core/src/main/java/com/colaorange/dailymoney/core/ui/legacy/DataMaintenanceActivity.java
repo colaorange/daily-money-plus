@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.colaorange.dailymoney.core.R;
+import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.CSVImportExporter;
 import com.colaorange.dailymoney.core.data.DataBackupRestorer;
@@ -66,6 +68,9 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         //only for 6.0(23+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()) {
             requestPermissionBtn.setVisibility(View.VISIBLE);
+            if(!Contexts.instance().hasWorkingFolderPermission()) {
+                doRequestPermission();
+            }
         } else {
             requestPermissionBtn.setVisibility(View.GONE);
         }
@@ -91,6 +96,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     private void initMembers() {
         findViewById(R.id.request_permission).setOnClickListener(this);
+
         findViewById(R.id.backup).setOnClickListener(this);
         findViewById(R.id.export_csv).setOnClickListener(this);
         findViewById(R.id.share_csv).setOnClickListener(this);
@@ -126,7 +132,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doClearFolder();
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -165,7 +170,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
             @Override
             public void run() {
-                result = DataBackupRestorer.backup();
+                result = new DataBackupRestorer().backup();
                 trackEvent(TE.BACKUP);
             }
         };
@@ -206,7 +211,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             @Override
             public void run() {
                 lastBakcup = preference().getLastBackupTime();
-                result = DataBackupRestorer.restore();
+                result = new DataBackupRestorer().restore();
                 trackEvent(TE.RESTORE);
             }
         };

@@ -1,17 +1,28 @@
 package com.colaorange.dailymoney.core.ui.pref;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
+import android.preference.SwitchPreference;
 
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsPrefsFragment;
+import com.colaorange.dailymoney.core.drive.GoogleDriveHelper;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.legacy.GoogleDriveActivity;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +36,7 @@ import java.util.Set;
  */
 public class PrefsFragment extends ContextsPrefsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final int REQUEST_DRIVE_AUTH = 101;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -83,7 +95,7 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_text_size)));
     }
 
-    private void initDataPrefs(I18N i18n) {
+    private void initDataPrefs(final I18N i18n) {
         SharedPreferences sprefs = getPreferenceManager().getSharedPreferences();
         Preference pref = findPreference(i18n.string(R.string.pref_auto_backup_weekdays));
         if (pref instanceof MultiSelectListPreference) {
@@ -144,6 +156,74 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
 
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_weekdays)));
         adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_at_hours)));
+
+
+        pref = (SwitchPreference) findPreference("auto_backup_to_google_drive");
+        refreshGoogleDriveSummary(i18n);
+
+        ((SwitchPreference)pref).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (((SwitchPreference)preference).isChecked()) {
+                    //try to sign in
+                    Task<GoogleDriveHelper> task = GoogleDriveHelper.signIn(getActivity());
+                    task.addOnSuccessListener(new OnSuccessListener<GoogleDriveHelper>() {
+                        @Override
+                        public void onSuccess(GoogleDriveHelper helper) {
+                            refreshGoogleDriveSummary(i18n);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            startActivityForResult(GoogleDriveHelper.getSignInIntent(getActivity()), REQUEST_DRIVE_AUTH);
+                        }
+                    });
+
+
+                } else {
+                    //singout
+                    GoogleDriveHelper.revokeAccess(getActivity()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void v) {
+                            refreshGoogleDriveSummary(i18n);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            refreshGoogleDriveSummary(i18n);
+                        }
+                    });
+                }
+                return false;
+            }
+        });
+    }
+
+    private void refreshGoogleDriveSummary(final I18N i18n) {
+        final SwitchPreference drivePref = (SwitchPreference) findPreference("auto_backup_to_google_drive");
+        Task<GoogleDriveHelper> task = GoogleDriveHelper.signIn(getActivity());
+        task.addOnSuccessListener(new OnSuccessListener<GoogleDriveHelper>() {
+            @Override
+            public void onSuccess(GoogleDriveHelper helper) {
+                drivePref.setSummary(i18n.string(R.string.label_signin_as, helper.getGoogleSignInAccount().getDisplayName()));
+                drivePref.setChecked(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                drivePref.setSummary(i18n.string(R.string.label_not_signin));
+                drivePref.setChecked(false);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        if (requestCode == REQUEST_DRIVE_AUTH) {
+            refreshGoogleDriveSummary(Contexts.instance().getI18n());
+        }
+        return;
     }
 
 
