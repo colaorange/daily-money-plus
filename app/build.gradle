@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 181203001
+        versionCode 181208000
         versionName "0.10.6"
 
         multiDexEnabled true
