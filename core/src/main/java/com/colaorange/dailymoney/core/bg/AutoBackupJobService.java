@@ -15,22 +15,24 @@ import java.util.concurrent.Executors;
  * @author Dennis
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class AutoBackupJobService extends JobService{
+public class AutoBackupJobService extends JobService {
 
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    AutoBackupRunnable job;
 
     @Override
     public boolean onStartJob(final JobParameters params) {
-        executorService.execute(new Runnable(){
+        Logger.d(">> AutoBackupJobService onStartJob");
+        job = AutoBackupRunnable.asyncSingletonRun(new AutoBackupRunnable.Callback() {
             @Override
-            public void run() {
-                try {
-                    Logger.d("start autobackup job");
-                    AutoBackupRunnable.singleton().run();
-                }catch(Exception x){
-                    Logger.e(x.getMessage(), x);
-                }
+            public void onFinish(AutoBackupRunnable runnable) {
                 jobFinished(params, false);
+                job = null;
+            }
+
+            @Override
+            public void onError(AutoBackupRunnable runnable, Exception x) {
+                jobFinished(params, false);
+                job = null;
             }
         });
         return true;
@@ -38,7 +40,11 @@ public class AutoBackupJobService extends JobService{
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        AutoBackupRunnable.singleton().cancel();
+        Logger.d(">> AutoBackupJobService onStopJob");
+        if (job != null) {
+            job.cancel();
+            job = null;
+        }
         return false;
     }
 }

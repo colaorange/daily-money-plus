@@ -561,7 +561,7 @@ public class Contexts {
         String IMPORT = "import-";
         String SHARE = "share-";
         String PROTECT = "protect-";
-        String STARTUP = "startup-";
+        String STARTUP = "schedule-";
         String THEME = "theme-";
 
         String CHART = "chart-";

@@ -100,7 +100,7 @@
 
         <activity
             android:name=".core.ui.legacy.GoogleDriveActivity"
-            android:label="Google Drive" />
+            android:label="@string/label_google_drive" />
 
         <receiver
             android:name=".core.bg.StartupReceiver"
@@ -113,12 +113,21 @@
         </receiver>
 
         <receiver
+            android:name=".core.bg.StartupSchedulerReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.colaorange.dailymoney.broadcast.STARTUP_SCHEDULER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".core.bg.TimeTickReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".core.bg.StartupService"
+            android:name=".core.bg.TimeTickStickyService"
             android:enabled="true"
             android:exported="false" />
 

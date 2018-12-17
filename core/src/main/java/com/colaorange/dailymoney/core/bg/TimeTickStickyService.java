@@ -8,13 +8,14 @@ import android.os.IBinder;
 import com.colaorange.dailymoney.core.util.Logger;
 
 /**
+ * the service to stick time ticker
  * @author dennis
  */
-public class StartupService extends Service {
+public class TimeTickStickyService extends Service {
 
     private TimeTickReceiver timeTickReceiver;
 
-    public StartupService() {
+    public TimeTickStickyService() {
     }
 
     @Override
@@ -24,7 +25,7 @@ public class StartupService extends Service {
 
     @Override
     public void onCreate() {
-        Logger.d("startup service onCreate");
+        Logger.d(">> TimeTickStickyService service onCreate");
         if (timeTickReceiver == null) {
             timeTickReceiver = new TimeTickReceiver();
         }
@@ -32,7 +33,7 @@ public class StartupService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Logger.d("startup service onStartCommand");
+        Logger.d(">> TimeTickStickyService onStartCommand");
 
         IntentFilter filter = new IntentFilter();
 
@@ -44,7 +45,7 @@ public class StartupService extends Service {
 
     @Override
     public void onDestroy() {
-        Logger.d("startup service onDestroy");
+        Logger.d(">> TimeTickStickyService onDestroy");
         if (timeTickReceiver != null) {
             unregisterReceiver(timeTickReceiver);
             timeTickReceiver = null;

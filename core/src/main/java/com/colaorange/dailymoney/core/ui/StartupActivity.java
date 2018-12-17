@@ -1,12 +1,10 @@
 package com.colaorange.dailymoney.core.ui;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.colaorange.commons.util.Strings;
 import com.colaorange.dailymoney.core.R;
-import com.colaorange.dailymoney.core.bg.StartupJobSchedulerFacade;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
@@ -25,7 +23,7 @@ import com.colaorange.dailymoney.core.util.Logger;
 @InstanceState
 public class StartupActivity extends ContextsActivity {
 
-    public static final String ARG_FIRST_TIME = "startup.firstTime";
+    public static final String ARG_FIRST_TIME = "schedule.firstTime";
 
     @InstanceState
     private boolean firstTime = false;
@@ -58,16 +56,12 @@ public class StartupActivity extends ContextsActivity {
             firstTime = true;
         }
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Logger.d(">> sending startup broadcast from activity");
-            Intent intent = new Intent();
-            intent.setAction(StartupReceiver.ACTION_STARTUP);
-            sendBroadcast(intent);
-        }else{
-            //android 5+
-            Logger.d(">> trying startup job scheduler from activity ");
-            StartupJobSchedulerFacade.startup(this);
-        }
+        Logger.d(">> StartupActivity.broadcast statup");
+        //to StartupReceiver
+        Intent intent = new Intent();
+        intent.setAction(StartupReceiver.ACTION_STARTUP);
+        sendBroadcast(intent);
+
 
         trackEvent(TE.STARTUP);
         if (!firstTime) {

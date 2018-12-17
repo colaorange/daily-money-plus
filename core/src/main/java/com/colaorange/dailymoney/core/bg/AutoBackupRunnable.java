@@ -1,5 +1,7 @@
 package com.colaorange.dailymoney.core.bg;
 
+import android.support.annotation.Nullable;
+
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -26,40 +30,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AutoBackupRunnable implements Runnable {
 
-    private static AutoBackupRunnable instance;
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-    AtomicBoolean running = new AtomicBoolean(false);
+    static AtomicBoolean singletonRunning = new AtomicBoolean(false);
 
-    AtomicBoolean canceling = new AtomicBoolean(false);
-
-    private AutoBackupRunnable() {
-    }
+    AtomicBoolean instanceCanceling = new AtomicBoolean(false);
 
     @Override
     public void run() {
-        if (!running.compareAndSet(false, true)) {
-            Logger.d("autobackup is still running");
-            return;
-        }
-        canceling.set(false);
-
         try {
             Preference pref = Contexts.instance().getPreference();
             if (!pref.isAutoBackup()) {
+                Logger.d(">> AutoBackupRunnable.run drop by prefs set off");
                 return;
             }
+            Logger.d(">> AutoBackupRunnable.run start to work");
             doAutoBackup(Contexts.instance(), pref, Contexts.instance().getI18n());
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
-        } finally {
-            running.set(false);
-            canceling.set(false);
         }
     }
 
 
     private void doAutoBackup(final Contexts contexts, final Preference pref, final I18N i18n) throws Exception {
-        Logger.d("start autobackup evaluation");
+
 
         DateFormat format = new SimpleDateFormat("yyMMddHH");
 
@@ -76,7 +70,7 @@ public class AutoBackupRunnable implements Runnable {
 
         if (!(autoBackupWeekDays.contains(weekDay) && autoBackupAtHours.contains(hour))) {
             //not in week day & hour.
-            Logger.d("{},{} not in weekday {} and hours {}, skip", weekDay, hour, autoBackupWeekDays, autoBackupAtHours);
+            Logger.d(">> {},{} not in weekday {} and hours {}, skip", weekDay, hour, autoBackupWeekDays, autoBackupAtHours);
             return;
         }
 
@@ -86,20 +80,20 @@ public class AutoBackupRunnable implements Runnable {
             int lastYearDay = lastCal.get(Calendar.DAY_OF_YEAR);
             int lastHour = lastCal.get(Calendar.HOUR_OF_DAY);
             if (lastYearDay == yearDay && lastHour == hour) {
-                Logger.d("{},{} same lastYearDay {} and hour {}, skip", yearDay, hour, lastYearDay, lastHour);
+                Logger.d(">> {},{} same lastYearDay {} and hour {}, skip", yearDay, hour, lastYearDay, lastHour);
                 return;
             }
         }
 
-        Logger.d("start to backup");
+        Logger.d(">> start to backup");
 
         contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP + "a", "", null);
 
-        DataBackupRestorer.Result r = new DataBackupRestorer().backup(canceling);
+        DataBackupRestorer.Result r = new DataBackupRestorer().backup(instanceCanceling);
         if (r.isSuccess()) {
             final File lastFolder = r.getLastFolder();
             pref.setLastBackupTime(cal.getTime().getTime());
-            Logger.d("backup finished");
+            Logger.d(">> backup finished");
 
             String msg = i18n.string(R.string.msg_db_backuped, r.getDb() + r.getPref(), r.getLastFolder());
 
@@ -116,7 +110,7 @@ public class AutoBackupRunnable implements Runnable {
                             //must not run in main thread. Tasks.await
                             GoogleDriveBackupRestorer.BackupResult result = new GoogleDriveBackupRestorer(helper).backup(lastFolder);
                             if (result.isSuccess()) {
-                                Logger.d("drive-backup finished");
+                                Logger.d(">> drive-backup finished");
                                 String msg = i18n.string(R.string.msg_db_backuped, result.getCount(), result.getFileName());
 
                                 Notifications.send(contexts.getApp(), Notifications.nextGroupId(), msg, i18n.string(R.string.label_google_drive),
@@ -142,14 +136,48 @@ public class AutoBackupRunnable implements Runnable {
     }
 
 
-    public static synchronized AutoBackupRunnable singleton() {
-        if (instance == null) {
-            instance = new AutoBackupRunnable();
+    public static AutoBackupRunnable asyncSingletonRun(@Nullable final Callback callback) {
+        final AutoBackupRunnable autoBackupRunnable = new AutoBackupRunnable();
+        if(singletonRunning.compareAndSet(false,true)){
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        try {
+                            Logger.d(">> AutoBackupRunnable asyncSingletonRun start");
+                            autoBackupRunnable.run();
+                            if (callback != null) {
+                                callback.onFinish(autoBackupRunnable);
+                            }
+                        } catch (Exception x) {
+                            Logger.e(x.getMessage(), x);
+                            if (callback != null) {
+                                callback.onError(autoBackupRunnable, x);
+                            }
+                        }
+
+                        Logger.d(">> AutoBackupRunnable asyncSingletonRun finished");
+                    }finally {
+                        singletonRunning.set(false);
+                    }
+                }
+            });
+        }else{
+            Logger.d(">> AutoBackupRunnable asyncSingltonRun is running, drop this one");
         }
-        return instance;
+        return autoBackupRunnable;
+    }
+
+    public interface Callback{
+        void onFinish(AutoBackupRunnable runnable);
+        void onError(AutoBackupRunnable runnable, Exception x);
     }
 
     public void cancel() {
-        canceling.set(true);
+        instanceCanceling.set(true);
+    }
+
+    public boolean isCanceled(){
+        return instanceCanceling.get();
     }
 }
