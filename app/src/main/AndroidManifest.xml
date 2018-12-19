@@ -113,11 +113,11 @@
         </receiver>
 
         <receiver
-            android:name=".core.bg.StartupSchedulerReceiver"
+            android:name=".core.bg.JobSchedulerReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.colaorange.dailymoney.broadcast.STARTUP_SCHEDULER" />
+                <action android:name="com.colaorange.dailymoney.broadcast.STARTUP_JOB_SCHEDULER" />
             </intent-filter>
         </receiver>
 
@@ -136,6 +136,14 @@
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver
+            android:name=".core.bg.AlarmManagerReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.colaorange.dailymoney.broadcast.STARTUP_ALARM_MANAGER" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".core.ui.widget.CreateRecordWidget"

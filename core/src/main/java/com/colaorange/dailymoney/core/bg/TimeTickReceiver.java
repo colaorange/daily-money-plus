@@ -22,7 +22,7 @@ public class TimeTickReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         String action = intent.getAction();
-        Logger.d(">> time ticker onReceive {}", action);
+        Logger.d(">> TimeTickReceiver onReceive {}", action);
 
         if (Intent.ACTION_TIME_TICK.equals(action)) {
             AutoBackupRunnable.asyncSingletonRun(null);

@@ -18,24 +18,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * schedule by event receiver to prevent class loading issue in android 5- env
  */
-public class StartupSchedulerReceiver extends BroadcastReceiver {
+public class JobSchedulerReceiver extends BroadcastReceiver {
 
     public static final int AUTO_BACKUP_JOB_ID = 3001;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Logger.d(">> StartupSchedulerReceiver, receive scheduler event");
+        Logger.d(">> JobSchedulerReceiver, receive scheduler event, going to schedule job-service");
         try {
-            schedule(context);
+            scheduleJobService(context);
         } catch (Exception x) {
             Logger.e(x.getMessage(), x);
-            Contexts.instance().trackEvent("schedule-service", "fail2", null, 0L);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void schedule(Context context) throws Exception {
+    public void scheduleJobService(Context context) throws Exception {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
 
@@ -47,14 +46,19 @@ public class StartupSchedulerReceiver extends BroadcastReceiver {
         //Specified flex for 1 is +1m0s0ms. Clamped to +5m0s0ms
         jb.setPeriodic(10 * Numbers.MINUTE);
         //we are possible sync with google drive
-//            jb.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+        jb.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+//        jb.setMinimumLatency(5000);
+//        jb.setOverrideDeadline(60000);
+//        jb.setRequiresCharging(false);
+//        jb.setRequiresDeviceIdle(false);
+//        jb.setBackoffCriteria(300000, JobInfo.BACKOFF_POLICY_LINEAR);
 
         JobInfo job = jb.build();
         int r = jobScheduler.schedule(job);
 
         if (r != JobScheduler.RESULT_SUCCESS) {
             throw new IllegalStateException("schedule job fail, result " + r);
-        }else{
+        } else {
             Logger.d(">> schedule job {}, {}", job.getId(), job.getIntervalMillis());
         }
     }

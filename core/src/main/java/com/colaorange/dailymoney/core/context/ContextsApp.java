@@ -1,13 +1,12 @@
 package com.colaorange.dailymoney.core.context;
 
-import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.support.multidex.MultiDexApplication;
 
+import com.colaorange.dailymoney.core.bg.AlarmManagerReceiver;
 import com.colaorange.dailymoney.core.bg.StartupReceiver;
-import com.colaorange.dailymoney.core.bg.StartupSchedulerReceiver;
+import com.colaorange.dailymoney.core.bg.JobSchedulerReceiver;
 import com.colaorange.dailymoney.core.util.Logger;
 import com.colaorange.dailymoney.core.util.Notifications;
 
@@ -54,10 +53,14 @@ public class ContextsApp extends MultiDexApplication {
         registerReceiver(new StartupReceiver(), filter);
 
         filter = new IntentFilter();
-        filter.addAction(StartupReceiver.ACTION_STARTUP_SCHEDULER);
-        registerReceiver(new StartupSchedulerReceiver(), filter);
+        filter.addAction(StartupReceiver.ACTION_STARTUP_JOB_SCHEDULER);
+        registerReceiver(new JobSchedulerReceiver(), filter);
 
-        //TimeTickeReceiver is not necessary, it works on old phone.
+        filter = new IntentFilter();
+        filter.addAction(StartupReceiver.ACTION_STARTUP_ALARM_MANAGER);
+        registerReceiver(new AlarmManagerReceiver(), filter);
+
+        //TimeTickReceiver is not necessary, it works on old phone.
     }
 
     @Override

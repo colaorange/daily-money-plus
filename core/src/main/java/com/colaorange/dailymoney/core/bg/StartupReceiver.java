@@ -1,6 +1,8 @@
 package com.colaorange.dailymoney.core.bg;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -13,6 +15,7 @@ import com.colaorange.commons.util.Numbers;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.util.Logger;
 
+import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -28,7 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class StartupReceiver extends BroadcastReceiver {
 
     public static final String ACTION_STARTUP = "com.colaorange.dailymoney.broadcast.STARTUP";
-    public static final String ACTION_STARTUP_SCHEDULER = "com.colaorange.dailymoney.broadcast.STARTUP_SCHEDULER";
+    public static final String ACTION_STARTUP_JOB_SCHEDULER = "com.colaorange.dailymoney.broadcast.STARTUP_JOB_SCHEDULER";
+    public static final String ACTION_STARTUP_ALARM_MANAGER = "com.colaorange.dailymoney.broadcast.STARTUP_ALARM_MANAGER";
 
     private static AtomicBoolean booted = new AtomicBoolean(false);
 
@@ -52,16 +56,26 @@ public class StartupReceiver extends BroadcastReceiver {
                     Logger.e(x.getMessage(), x);
                     Contexts.instance().trackEvent("schedule-service", "fail1", null, 0L);
                 }
-            } else {
-                //android 5+
-                Logger.d(">> StartupReceiver, going to send schedule event");
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                //android 5-5.1, sorry, jbo scheduler can run when doze.
+                Logger.d(">> StartupReceiver, going to send job schedule event");
                 try {
                     Intent schedulerIntent = new Intent();
-                    schedulerIntent.setAction(StartupReceiver.ACTION_STARTUP_SCHEDULER);
+                    schedulerIntent.setAction(StartupReceiver.ACTION_STARTUP_JOB_SCHEDULER);
                     context.sendBroadcast(schedulerIntent);
                 } catch (Exception x) {
                     Logger.e(x.getMessage(), x);
                     Contexts.instance().trackEvent("schedule-service", "fail2", null, 0L);
+                }
+            } else {
+                //android 5.1+
+                Logger.d(">> StartupReceiver, going to set AlertManager");
+
+                try {
+                    AlarmManagerReceiver.alertMe(context, 10000);
+                } catch (Exception x) {
+                    Logger.e(x.getMessage(), x);
+                    Contexts.instance().trackEvent("schedule-service", "fail3", null, 0L);
                 }
             }
 
