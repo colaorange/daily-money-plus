@@ -62,6 +62,12 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
                 book.setSymbolPosition(SymbolPosition.find(c.getInt(i)));
             } else if (n.equals(COL_BOOK_NOTE)) {
                 book.setNote(c.getString(i));
+            } else if (n.equals(COL_BOOK_PRIORITY)) {
+                try {
+                    book.setPriority(c.getInt(i));
+                }catch(Exception x){
+                    //prevent null
+                }
             }
             i++;
         }
@@ -73,6 +79,7 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
         values.put(COL_BOOK_SYMBOL, book.getSymbol());
         values.put(COL_BOOK_SYMBOL_POSITION, book.getSymbolPosition().getType());
         values.put(COL_BOOK_NOTE, book.getNote());
+        values.put(COL_BOOK_PRIORITY, book.getPriority());
     }
 
     @Override
@@ -168,10 +175,10 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
         Collections.sort(result, new Comparator<Book>() {
             @Override
             public int compare(Book o1, Book o2) {
-                if (o1.getId() == Contexts.DEFAULT_BOOK_ID || o2.getId() == Contexts.DEFAULT_BOOK_ID) {
-                    return Integer.valueOf(o1.getId()).compareTo(Integer.valueOf(o2.getId()));
+                if (o1.getPriority() == o2.getPriority()) {
+                    return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
                 }
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                return o1.getPriority() > o2.getPriority() ? 1 : 0;
             }
         });
 

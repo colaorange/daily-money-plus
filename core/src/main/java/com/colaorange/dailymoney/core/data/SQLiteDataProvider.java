@@ -1,11 +1,14 @@
 package com.colaorange.dailymoney.core.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Numbers;
+import com.colaorange.commons.util.Objects;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import android.content.ContentValues;
@@ -77,6 +80,12 @@ public class SQLiteDataProvider implements IDataProvider {
                 acc.setCashAccount(c.getInt(i) == 1);
             } else if (n.equals(COL_ACC_INITVAL)) {
                 acc.setInitialValue(c.getDouble(i));
+            } else if (n.equals(COL_ACC_PRIORITY)) {
+                try {
+                    acc.setPriority(c.getInt(i));
+                }catch(Exception x){
+                    //prevent null
+                }
             }
             i++;
         }
@@ -88,6 +97,7 @@ public class SQLiteDataProvider implements IDataProvider {
         values.put(COL_ACC_TYPE, acc.getType());
         values.put(COL_ACC_CASHACCOUNT, acc.isCashAccount() ? 1 : 0);
         values.put(COL_ACC_INITVAL, acc.getInitialValue());
+        values.put(COL_ACC_PRIORITY, acc.getPriority());
     }
 
     @Override
@@ -114,6 +124,34 @@ public class SQLiteDataProvider implements IDataProvider {
             result.add(acc);
         }
         c.close();
+
+
+        //sort programming
+        if (type == null) {
+            Collections.sort(result, new Comparator<Account>() {
+                @Override
+                public int compare(Account o1, Account o2) {
+                    if(o1.getType().equals(o2.getType())) {
+                        if (o1.getPriority() == o2.getPriority()) {
+                            return o1.getId().compareTo(o2.getId());
+                        }
+                        return o1.getPriority() > o2.getPriority() ? 1 : 0;
+                    }
+                    return o1.getType().compareTo(o2.getType());
+                }
+            });
+        } else {
+            Collections.sort(result, new Comparator<Account>() {
+                @Override
+                public int compare(Account o1, Account o2) {
+                    if (o1.getPriority() == o2.getPriority()) {
+                        return o1.getId().compareTo(o2.getId());
+                    }
+                    return o1.getPriority() > o2.getPriority() ? 1 : 0;
+                }
+            });
+        }
+
         return result;
     }
 

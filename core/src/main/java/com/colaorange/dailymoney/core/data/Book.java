@@ -14,6 +14,8 @@ public class Book implements Serializable {
      */
     SymbolPosition symbolPosition = SymbolPosition.NONE;
     String note = "";
+    private int priority;
+
 
     Book(){}
 
@@ -82,6 +84,14 @@ public class Book implements Serializable {
             return false;
         Book other = (Book) obj;
         return id == other.id;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
 }
