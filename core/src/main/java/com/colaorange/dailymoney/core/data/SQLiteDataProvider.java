@@ -135,7 +135,7 @@ public class SQLiteDataProvider implements IDataProvider {
                         if (o1.getPriority() == o2.getPriority()) {
                             return o1.getId().compareTo(o2.getId());
                         }
-                        return o1.getPriority() > o2.getPriority() ? 1 : 0;
+                        return o1.getPriority() > o2.getPriority() ? 1 : -1;
                     }
                     return o1.getType().compareTo(o2.getType());
                 }
@@ -147,7 +147,7 @@ public class SQLiteDataProvider implements IDataProvider {
                     if (o1.getPriority() == o2.getPriority()) {
                         return o1.getId().compareTo(o2.getId());
                     }
-                    return o1.getPriority() > o2.getPriority() ? 1 : 0;
+                    return o1.getPriority() > o2.getPriority() ? 1 : -1;
                 }
             });
         }

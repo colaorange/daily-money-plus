@@ -6,4 +6,9 @@
         android:icon="?ic_add"
         app:showAsAction="always"
         android:title="@string/act_new"/>
+    <item
+        android:id="@+id/menu_reorder"
+        android:icon="?ic_reorder"
+        app:showAsAction="always"
+        android:title="@string/act_reorder"/>
 </menu>

@@ -10,15 +10,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.colaorange.commons.util.ObjectLabel;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.Contexts;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.data.Book;
 import com.colaorange.dailymoney.core.data.IMasterDataProvider;
 import com.colaorange.dailymoney.core.ui.Constants;
-import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,11 +32,17 @@ import java.util.Set;
 public class BookMgntActivity extends ContextsActivity {
 
     private List<Book> recyclerDataList;
-    private RecyclerView vRecycler;
     private BookRecyclerAdapter recyclerAdapter;
+
+    private List<ObjectLabel<Book>> reorderDataList;
+    private ObjectReorderRecyclerAdapter reorderAdapter;
+
+    private RecyclerView vRecycler;
 
     private ActionMode actionMode;
     private Book actionObj;
+
+    private boolean initOrdering;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,13 +67,22 @@ public class BookMgntActivity extends ContextsActivity {
 
 
     private void initMembers() {
+
         recyclerDataList = new LinkedList<>();
         recyclerAdapter = new BookRecyclerAdapter(this, recyclerDataList);
+
         vRecycler = findViewById(R.id.book_mgnt_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(this));
+
         vRecycler.setAdapter(recyclerAdapter);
 
+        reorderDataList = new LinkedList<>();
+        reorderAdapter = new ObjectReorderRecyclerAdapter(this, new ObjectReorderRecyclerAdapter.ObjectReorderCallback() {
+            public void onMove(int posFrom, int posTo) {
+                doMove(posFrom, posTo);
+            }
+        }, reorderDataList);
 
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Book>() {
             @Override
@@ -137,9 +154,15 @@ public class BookMgntActivity extends ContextsActivity {
             public void onBusyFinish() {
                 //update data
                 recyclerDataList.clear();
-                recyclerDataList.addAll(data);
+
+
+                for (Book book : data) {
+                    recyclerDataList.add(book);
+                    reorderAdapter.add(new ObjectLabel(book, book.getName()));
+                }
 
                 recyclerAdapter.notifyDataSetChanged();
+                reorderAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -199,14 +222,14 @@ public class BookMgntActivity extends ContextsActivity {
         GUIs.confirm(this, i18n.string(R.string.qmsg_delete_book, book.getName()), l);
     }
 
-    public void doSetWorkingBook(Book book,boolean reload) {
+    public void doSetWorkingBook(Book book, boolean reload) {
         if (Contexts.instance().getWorkingBookId() == book.getId()) {
             return;
         }
         Contexts.instance().setWorkingBookId(book.getId());
-        if(reload) {
+        if (reload) {
             reloadData();
-        }else{
+        } else {
             //since working book was changed
             recyclerAdapter.notifyDataSetChanged();
         }
@@ -229,9 +252,76 @@ public class BookMgntActivity extends ContextsActivity {
         if (item.getItemId() == R.id.menu_new) {
             doNewBook();
             return true;
+        } else if (item.getItemId() == R.id.menu_reorder) {
+            doReorderBook();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void doReorderBook() {
+        if (actionMode != null) {
+            actionMode.invalidate();
+            return;
+        }
+
+        actionMode = this.startSupportActionMode(new ReorderActionModeCallback());
+        actionMode.setTitle(i18n().string(R.string.act_reorder));
+
+        vRecycler.setAdapter(reorderAdapter);
+
+        reorderAdapter.attachToRecyclerView(vRecycler);
+    }
+
+
+    private void doMove(int posFrom, int posTo) {
+//        Preference preference = Contexts.instance().getPreference();
+//
+//        trackEvent(Contexts.TE.CHART+"move");
+//
+//        CardDesktop desktop = preference.getDesktop(desktopIndex);
+//        if (pos >= desktop.size()) {
+//            return;
+//        }
+//        desktop.move(pos, posTo);
+//        preference.updateDesktop(desktopIndex, desktop);
+//
+        IMasterDataProvider idp = contexts().getMasterDataProvider();
+
+        if (!initOrdering) {
+
+            int s = recyclerDataList.size();
+            for (int i = 0; i < s; i++) {
+                Book book = recyclerDataList.get(i);
+                if (book.getPriority() != i) {
+                    book.setPriority(i);
+                    idp.updateBook(book.getId(), book);
+                }
+            }
+            
+            initOrdering = true;
+        }
+
+        Book bookFrom = recyclerDataList.get(posFrom);
+        Book bookTo = recyclerDataList.get(posTo);
+        recyclerDataList.set(posFrom, bookTo);
+        recyclerDataList.set(posTo, bookFrom);
+
+        bookTo.setPriority(posFrom);
+        bookFrom.setPriority(posTo);
+
+        idp.updateBook(bookFrom.getId(), bookFrom);
+        idp.updateBook(bookTo.getId(), bookTo);
+
+
+        ObjectLabel objFrom = reorderDataList.get(posFrom);
+        ObjectLabel objTo = reorderDataList.get(posTo);
+        reorderDataList.set(posFrom, objTo);
+        reorderDataList.set(posTo, objFrom);
+
+        reorderAdapter.notifyItemMoved(posFrom, posTo);
+    }
+
 
     private class BookActionModeCallback implements android.support.v7.view.ActionMode.Callback {
 
@@ -301,6 +391,42 @@ public class BookMgntActivity extends ContextsActivity {
             actionMode = null;
             actionObj = null;
             clearSelection();
+        }
+    }
+
+
+    private class ReorderActionModeCallback implements android.support.v7.view.ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.empty_menu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return true;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionObj = null;
+            clearSelection();
+
+            vRecycler.setAdapter(recyclerAdapter);
+            reorderAdapter.detachFromRecyclerView();
         }
     }
 }

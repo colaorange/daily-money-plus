@@ -136,8 +136,8 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
 
     @Override
     public boolean updateBook(int id, Book book) {
-        Book det = findBook(id);
-        if (det == null) {
+        Book bk = findBook(id);
+        if (bk == null) {
             return false;
         }
         //set id, book might have a dirty id from copy or zero
@@ -178,7 +178,7 @@ public class SQLiteMasterDataProvider implements IMasterDataProvider {
                 if (o1.getPriority() == o2.getPriority()) {
                     return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
                 }
-                return o1.getPriority() > o2.getPriority() ? 1 : 0;
+                return o1.getPriority() > o2.getPriority() ? 1 : -1;
             }
         });
 
