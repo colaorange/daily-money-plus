@@ -1,9 +1,7 @@
 package com.colaorange.dailymoney.core.data;
 
 /**
- * 
  * @author dennis
- * 
  */
 public class MasterDataMeta {
 
@@ -14,8 +12,9 @@ public class MasterDataMeta {
     public static final String COL_BOOK_SYMBOL = "sb_";
     public static final String COL_BOOK_SYMBOL_POSITION = "sp_";
     public static final String COL_BOOK_NOTE = "nt_";
-    
+    public static final String COL_BOOK_PRIORITY = "pr_";
 
-    public static final String[] COL_BOOK_ALL = new String[] { COL_BOOK_ID, COL_BOOK_NAME, COL_BOOK_SYMBOL, COL_BOOK_SYMBOL_POSITION,COL_BOOK_NOTE};
+
+    public static final String[] COL_BOOK_ALL = new String[]{COL_BOOK_ID, COL_BOOK_NAME, COL_BOOK_SYMBOL, COL_BOOK_SYMBOL_POSITION, COL_BOOK_NOTE, COL_BOOK_PRIORITY};
 
 }
