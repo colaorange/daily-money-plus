@@ -20,7 +20,6 @@ import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
 import com.colaorange.dailymoney.core.util.I18N;
-import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -154,11 +153,11 @@ public class BookMgntActivity extends ContextsActivity {
             public void onBusyFinish() {
                 //update data
                 recyclerDataList.clear();
-
+                reorderDataList.clear();
 
                 for (Book book : data) {
                     recyclerDataList.add(book);
-                    reorderAdapter.add(new ObjectLabel(book, book.getName()));
+                    reorderDataList.add(new ObjectLabel(book, book.getName()));
                 }
 
                 recyclerAdapter.notifyDataSetChanged();
@@ -262,7 +261,6 @@ public class BookMgntActivity extends ContextsActivity {
     private void doReorderBook() {
         if (actionMode != null) {
             actionMode.invalidate();
-            return;
         }
 
         actionMode = this.startSupportActionMode(new ReorderActionModeCallback());
@@ -271,36 +269,35 @@ public class BookMgntActivity extends ContextsActivity {
         vRecycler.setAdapter(reorderAdapter);
 
         reorderAdapter.attachToRecyclerView(vRecycler);
-    }
-
-
-    private void doMove(int posFrom, int posTo) {
-//        Preference preference = Contexts.instance().getPreference();
-//
-//        trackEvent(Contexts.TE.CHART+"move");
-//
-//        CardDesktop desktop = preference.getDesktop(desktopIndex);
-//        if (pos >= desktop.size()) {
-//            return;
-//        }
-//        desktop.move(pos, posTo);
-//        preference.updateDesktop(desktopIndex, desktop);
-//
-        IMasterDataProvider idp = contexts().getMasterDataProvider();
 
         if (!initOrdering) {
-
+            final List<Book> updateSet = new LinkedList<>();
             int s = recyclerDataList.size();
             for (int i = 0; i < s; i++) {
                 Book book = recyclerDataList.get(i);
                 if (book.getPriority() != i) {
                     book.setPriority(i);
-                    idp.updateBook(book.getId(), book);
+                    updateSet.add(book);
                 }
             }
-            
+            if (updateSet.size() != 0) {
+                GUIs.doBusy(this, new Runnable() {
+                    @Override
+                    public void run() {
+                        IMasterDataProvider idp = contexts().getMasterDataProvider();
+                        for (Book book : updateSet) {
+                            idp.updateBook(book.getId(), book);
+                        }
+                    }
+                });
+            }
             initOrdering = true;
         }
+    }
+
+
+    private void doMove(int posFrom, int posTo) {
+        IMasterDataProvider idp = contexts().getMasterDataProvider();
 
         Book bookFrom = recyclerDataList.get(posFrom);
         Book bookTo = recyclerDataList.get(posTo);
