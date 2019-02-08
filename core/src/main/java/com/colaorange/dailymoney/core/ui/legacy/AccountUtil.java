@@ -2,6 +2,7 @@ package com.colaorange.dailymoney.core.ui.legacy;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,45 +14,77 @@ import com.colaorange.dailymoney.core.data.AccountType;
  */
 public class AccountUtil {
 
-    public static List<AccountIndentNode> toIndentNode(List<Account> accl) {
-        List<AccountIndentNode> better = new ArrayList<AccountIndentNode>();
-        Map<String, AccountIndentNode> tree = new LinkedHashMap<String, AccountIndentNode>();
-        for (Account acc : accl) {
+    public static List<AccountIndentNode> toIndentNode(List<Account> accountList) {
+
+        Map<String, TreeNode> treeMap = new LinkedHashMap<String, TreeNode>();
+
+
+        TreeNode root = new TreeNode();
+        root.children = new LinkedList<>();
+
+        for (Account acc : accountList) {
             String name = acc.getName();
             StringBuilder path = new StringBuilder();
-            AccountIndentNode node = null;
-            String pp = null;
-            String np = null;
+            TreeNode node = null;
+            String parentPath = null;
+            String nodePath = null;
             AccountType type = AccountType.find(acc.getType());
             int indent = 0;
-            for (String t : name.split("\\.")) {
-                if (t.length() == 0) {
+            for (String element : name.split("\\.")) {
+                if (element.length() == 0) {
                     continue;
                 }
-                pp = path.toString();
+                parentPath = path.toString();
                 if (path.length() != 0) {
                     path.append(".");
                 }
-                np = path.append(t).toString();
-                if ((node = tree.get(np)) != null) {
+                nodePath = path.append(element).toString();
+
+                node = treeMap.get(nodePath);
+
+                if (node != null) {
                     indent++;
                     continue;
                 }
-                node = new AccountIndentNode(pp, t, indent, type, null);
+
+                node = new TreeNode();
+
+                node.intentNode = new AccountIndentNode(parentPath, element, indent, type, null);
+                node.children = new LinkedList<>();
+
+
+                TreeNode parentNode = treeMap.get(parentPath);
+                if (parentNode == null) {
+                    parentNode = root;
+                }
+
+                parentNode.children.add(node);
+
                 indent++;
-                tree.put(np, node);
+                treeMap.put(nodePath, node);
             }
+
             if (node != null) {
-                node.account = acc;
+                node.intentNode.account = acc;
             }
         }
 
-        for (String key : tree.keySet()) {
-            AccountIndentNode tn = tree.get(key);
-            better.add(tn);
+        List<AccountIndentNode> list = new LinkedList<>();
+
+        List<TreeNode> stack = new LinkedList();
+        stack.addAll(root.children);
+
+        while (stack.size() > 0) {
+            TreeNode node = stack.get(0);
+            stack.remove(0);
+
+            list.add(node.intentNode);
+            for(TreeNode n: node.children){
+                stack.add(0, n);
+            }
         }
 
-        return better;
+        return list;
     }
 
     public static class AccountIndentNode {
@@ -94,7 +127,10 @@ public class AccountUtil {
         public String getFullPath() {
             return fullpath;
         }
+    }
 
-
+    private static class TreeNode {
+        AccountIndentNode intentNode;
+        List<TreeNode> children;
     }
 }
