@@ -97,65 +97,19 @@ public class PrefsFragment extends ContextsPrefsFragment implements SharedPrefer
 
     private void initDataPrefs(final I18N i18n) {
         SharedPreferences sprefs = getPreferenceManager().getSharedPreferences();
-        Preference pref = findPreference(i18n.string(R.string.pref_auto_backup_weekdays));
-        if (pref instanceof MultiSelectListPreference) {
+        Preference pref = findPreference(i18n.string(R.string.pref_auto_backup_due_days));
+        if (pref instanceof ListPreference) {
             try {
-                Calendar baseTime = Calendar.getInstance();
-                SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-                baseTime.setTime(f.parse("20180107"));//which is sunday, value is 1
-                DateFormat format = new SimpleDateFormat("EEE");
-
-                String[] weekdays = new String[7];
-                for (int i = 0; i < weekdays.length; i++) {
-                    weekdays[i] = format.format(baseTime.getTime());
-                    baseTime.add(Calendar.DAY_OF_MONTH, 1);
-                }
-                ((MultiSelectListPreference) pref).setEntries(weekdays);
-
                 //selected value with default
-                String str = i18n.string(R.string.default_pref_auto_backup_weekdays);
-                Set<String> strs = new LinkedHashSet<>();
-                for (String a : str.split(",")) {
-                    strs.add(a);
-                }
-                strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
-
-                ((MultiSelectListPreference) pref).setValues(strs);
-            } catch (Exception x) {
-                Logger.w(x.getMessage(), x);
-            }
-        }
-        pref = findPreference(i18n.string(R.string.pref_auto_backup_at_hours));
-        if (pref instanceof MultiSelectListPreference) {
-            try {
-                Calendar baseTime = Calendar.getInstance();
-                SimpleDateFormat f = new SimpleDateFormat("yyyyMMdd HH:mm:ss", Locale.ENGLISH);
-                baseTime.setTime(f.parse("20180107 00:00:00"));//which is sunday, value is 1
-                DateFormat format = new SimpleDateFormat("HH");
-
-                String[] weekdays = new String[24];
-                for (int i = 0; i < weekdays.length; i++) {
-                    weekdays[i] = format.format(baseTime.getTime());
-                    baseTime.add(Calendar.HOUR_OF_DAY, 1);
-                }
-                ((MultiSelectListPreference) pref).setEntries(weekdays);
-
-                //selected value with default
-                String str = i18n.string(R.string.default_pref_auto_backup_at_hours);
-                Set<String> strs = new LinkedHashSet<>();
-                for (String a : str.split(",")) {
-                    strs.add(a);
-                }
-                strs = sprefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
-
-                ((MultiSelectListPreference) pref).setValues(strs);
+                String str = i18n.string(R.string.default_pref_auto_backup_due_days);
+                str = sprefs.getString(i18n.string(R.string.pref_auto_backup_due_days), str);
+                ((ListPreference) pref).setValue(str);
             } catch (Exception x) {
                 Logger.w(x.getMessage(), x);
             }
         }
 
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_weekdays)));
-        adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_at_hours)));
+        adjustSummaryValue(findPreference(i18n.string(R.string.pref_auto_backup_due_days)));
 
 
         pref = (SwitchPreference) findPreference("auto_backup_to_google_drive");

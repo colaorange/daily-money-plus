@@ -21,9 +21,7 @@
     <string name="pref_theme" translatable="false">theme</string>
 
     <string name="pref_auto_backup" translatable="false">auto_backup</string>
-    <string name="pref_auto_backup_at_hours" translatable="false">auto_backup_at_hours</string>
-    <string name="pref_auto_backup_weekdays" translatable="false">auto_backup_week_days</string>
-
+    <string name="pref_auto_backup_due_days" translatable="false">auto_backup_due_days</string>
 
     <string name="pref_password" translatable="false">password</string>
     <string name="pref_passwordvd" translatable="false">passwordvd</string>
@@ -49,8 +47,7 @@
     <string name="default_pref_csv_encoding" translatable="false">UTF8</string>
     <string name="default_pref_testsdekstop" translatable="false">false</string>
     <string name="default_pref_auto_backup" translatable="false">true</string>
-    <string name="default_pref_auto_backup_weekdays" translatable="false">1</string>
-    <string name="default_pref_auto_backup_at_hours" translatable="false">2</string>
+    <string name="default_pref_auto_backup_due_days" translatable="false">7</string>
     <string name="default_pref_theme" translatable="false">lemon</string>
     <string name="default_pref_text_size" translatable="false">normal</string>
     <string name="default_pref_group_records_by_date" translatable="false">true</string>

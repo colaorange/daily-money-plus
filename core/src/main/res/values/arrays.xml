@@ -175,17 +175,7 @@
     </string-array>
 
 
-    <string-array name="prefs_auto_backup_weekdays_values" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-    </string-array>
-    <string-array name="prefs_auto_backup_at_hours_values" translatable="false">
-        <item>0</item>
+    <string-array name="prefs_auto_backup_due_days_values" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -209,6 +199,13 @@
         <item>21</item>
         <item>22</item>
         <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
     </string-array>
 
 

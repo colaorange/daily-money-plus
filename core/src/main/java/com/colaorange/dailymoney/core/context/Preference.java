@@ -142,8 +142,7 @@ public class Preference {
 
     private String textSize;
 
-    private Set<Integer> autoBackupAtHours;
-    private Set<Integer> autoBackupWeekDays;
+    private Integer autoBackupDueDays;
 
     private boolean logOn = false;
     private int logMaxLine = 1000;
@@ -276,43 +275,18 @@ public class Preference {
         }
 
         try {
-            String str = i18n.string(R.string.default_pref_auto_backup_weekdays);
-            Set<String> strs = new LinkedHashSet<>();
-            for (String a : str.split(",")) {
-                strs.add(a);
-            }
-            strs = prefs.getStringSet(i18n.string(R.string.pref_auto_backup_weekdays), strs);
+            String str = i18n.string(R.string.default_pref_auto_backup_due_days);
 
-            Set<Integer> set = new LinkedHashSet<>();
-            for (String v : strs) {
-                set.add(Integer.parseInt(v));
-            }
-            autoBackupWeekDays = set;
-        } catch (Exception x) {
-            Logger.w(x.getMessage(), x);
-        }
+            str = prefs.getString(i18n.string(R.string.pref_auto_backup_due_days), str);
 
-        try {
-            String str = i18n.string(R.string.default_pref_auto_backup_at_hours);
-            Set<String> strs = new LinkedHashSet<>();
-            for (String a : str.split(",")) {
-                strs.add(a);
-            }
-            strs = prefs.getStringSet(i18n.string(R.string.pref_auto_backup_at_hours), strs);
-
-            Set<Integer> set = new LinkedHashSet<>();
-            for (String v : strs) {
-                set.add(Integer.parseInt(v));
-            }
-            autoBackupAtHours = set;
+            autoBackupDueDays = Integer.parseInt(str);
         } catch (Exception x) {
             Logger.w(x.getMessage(), x);
         }
 
         Logger.d("preference : backup with timestamp {}", backupWithTimestamp);
         Logger.d("preference : autoBackup {}", autoBackup);
-        Logger.d("preference : autoBackupWeekDays {}", autoBackupWeekDays);
-        Logger.d("preference : autoBackupAtHours {}", autoBackupAtHours);
+        Logger.d("preference : autoBackupDueDays {}", autoBackupDueDays);
     }
 
     private void reloadSecurityPref(SharedPreferences prefs, I18N i18n) {
@@ -705,12 +679,8 @@ public class Preference {
         return autoBackup;
     }
 
-    public Set<Integer> getAutoBackupAtHours() {
-        return java.util.Collections.unmodifiableSet(autoBackupAtHours);
-    }
-
-    public Set<Integer> getAutoBackupWeekDays() {
-        return java.util.Collections.unmodifiableSet(autoBackupWeekDays);
+    public Integer getAutoBackupDueDays() {
+        return autoBackupDueDays;
     }
 
     public static String passwordMD5(String pwd) {

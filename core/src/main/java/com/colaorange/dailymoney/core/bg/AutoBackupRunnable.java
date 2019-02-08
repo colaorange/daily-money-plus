@@ -62,30 +62,24 @@ public class AutoBackupRunnable implements Runnable {
 
         Long lastBackup = pref.getLastBackupTime();
 
-        Set<Integer> autoBackupWeekDays = pref.getAutoBackupWeekDays();
-        Set<Integer> autoBackupAtHours = pref.getAutoBackupAtHours();
-        int yearDay = cal.get(Calendar.DAY_OF_YEAR);
-        int weekDay = cal.get(Calendar.DAY_OF_WEEK);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-
-        if (!(autoBackupWeekDays.contains(weekDay) && autoBackupAtHours.contains(hour))) {
-            //not in week day & hour.
-            Logger.d(">> {},{} not in weekday {} and hours {}, skip", weekDay, hour, autoBackupWeekDays, autoBackupAtHours);
+        Integer dueDays = pref.getAutoBackupDueDays();
+        if (dueDays == null) {
             return;
         }
 
         if (lastBackup != null) {
             //check
             Calendar lastCal = helper.calendar(new Date(lastBackup));
-            int lastYearDay = lastCal.get(Calendar.DAY_OF_YEAR);
-            int lastHour = lastCal.get(Calendar.HOUR_OF_DAY);
-            if (lastYearDay == yearDay && lastHour == hour) {
-                Logger.d(">> {},{} same lastYearDay {} and hour {}, skip", yearDay, hour, lastYearDay, lastHour);
+
+            lastCal.add(Calendar.DATE, dueDays);
+
+            if(lastCal.getTimeInMillis() > System.currentTimeMillis()){
+                Logger.d(">> It is not out of due date {} yet, ignore it", format.format(lastCal.getTime()));
                 return;
             }
         }
 
-        Logger.d(">> start to backup");
+        Logger.d(">> start to auto-backup");
 
         contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP + "a", "", null);
 
@@ -138,7 +132,7 @@ public class AutoBackupRunnable implements Runnable {
 
     public static AutoBackupRunnable asyncSingletonRun(@Nullable final Callback callback) {
         final AutoBackupRunnable autoBackupRunnable = new AutoBackupRunnable();
-        if(singletonRunning.compareAndSet(false,true)){
+        if (singletonRunning.compareAndSet(false, true)) {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -157,19 +151,20 @@ public class AutoBackupRunnable implements Runnable {
                         }
 
                         Logger.d(">> AutoBackupRunnable asyncSingletonRun finished");
-                    }finally {
+                    } finally {
                         singletonRunning.set(false);
                     }
                 }
             });
-        }else{
+        } else {
             Logger.d(">> AutoBackupRunnable asyncSingltonRun is running, drop this one");
         }
         return autoBackupRunnable;
     }
 
-    public interface Callback{
+    public interface Callback {
         void onFinish(AutoBackupRunnable runnable);
+
         void onError(AutoBackupRunnable runnable, Exception x);
     }
 
@@ -177,7 +172,7 @@ public class AutoBackupRunnable implements Runnable {
         instanceCanceling.set(true);
     }
 
-    public boolean isCanceled(){
+    public boolean isCanceled() {
         return instanceCanceling.get();
     }
 }
