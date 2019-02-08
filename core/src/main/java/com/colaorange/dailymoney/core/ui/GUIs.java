@@ -3,6 +3,7 @@ package com.colaorange.dailymoney.core.ui;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -13,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.colaorange.commons.util.Var;
@@ -407,6 +409,23 @@ public class GUIs {
                 listener.onFinish(OK_BUTTON, c.getTime());
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        s[0] = picker;
+        picker.show();
+    }
+
+    public static void openTimePicker(Context context, Date d, final OnFinishListener listener) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        //for event
+        final TimePickerDialog[] s = new TimePickerDialog[1];
+        TimePickerDialog picker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener(){
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                c.set(Calendar.MINUTE, minute);
+                listener.onFinish(OK_BUTTON, c.getTime());
+            }
+        }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
         s[0] = picker;
         picker.show();
     }

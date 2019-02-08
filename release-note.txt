@@ -2,6 +2,7 @@
 == 0.10.7 ==
 === Features ===
  #10 Support to arrange the sort order of book and account
+ #44 Support time field in record
 === Bugs ===
  #
 

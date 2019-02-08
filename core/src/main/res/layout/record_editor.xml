@@ -45,13 +45,31 @@
                 android:textSize="?textSize" />
 
 
-            <EditText
-                android:id="@+id/record_date"
-                style="@style/editorFieldInput"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="false"
-                android:textSize="?textSize" />
+                android:gravity="center|center_horizontal"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/record_date"
+                    style="@style/editorFieldInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:textSize="?textSize"
+                    android:layout_weight="1"
+                    />
+                <EditText
+                    android:id="@+id/record_time"
+                    style="@style/editorFieldLastInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:textSize="?textSize"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 style="@style/editorFieldInput"
@@ -77,6 +95,11 @@
                     android:id="@+id/btn_datepicker"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_date_range" />
+                <ImageButton
+                    android:id="@+id/btn_timepicker"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_clock" />
+
             </LinearLayout>
 
             <TextView

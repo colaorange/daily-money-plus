@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.colaorange.calculator2.Calculator;
 import com.colaorange.commons.util.CalendarHelper;
@@ -26,14 +28,16 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
 import com.colaorange.dailymoney.core.data.Record;
 import com.colaorange.dailymoney.core.ui.Constants;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.RegularSpinnerAdapter;
 import com.colaorange.dailymoney.core.ui.legacy.AccountUtil.AccountIndentNode;
-import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.util.I18N;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,6 +73,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private Record workingRecord;
 
     private DateFormat dateFormat;
+    private DateFormat timeFormat;
+    private DateFormat weekDayFormat;
 
     private boolean archived = false;
 
@@ -82,6 +88,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     private Spinner vToAccount;
 
     private EditText vDate;
+    private EditText vTime;
     private EditText vNote;
     private EditText vMoney;
 
@@ -92,8 +99,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
     //0:usual, 1:last
     private int applyMode = APPLY_USUAL;
 
-    DateFormat weekDayFormat;
-
+    private Date selectedDate;
+    private Date selectedTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,6 +244,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private void initArgs() {
         dateFormat = preference().getDateFormat();
+        timeFormat = preference().getTimeFormatWithoutSecond();
+        weekDayFormat = preference().getWeekDayFormat();// Wed.
 
         Bundle bundle = getIntentExtras();
         modeCreate = bundle.getBoolean(ARG_MODE_CREATE, true);
@@ -249,6 +258,8 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
         workingRecord = clone(record);
 
+        selectedDate = selectedTime = workingRecord.getDate();
+
         if (modeCreate) {
             setTitle(R.string.title_receditor_create);
         } else {
@@ -259,13 +270,15 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
 
     private void initMembers() {
 
-        weekDayFormat = preference().getWeekDayFormat();// Wed.
-
         boolean archived = workingRecord.isArchived();
 
         vDate = findViewById(R.id.record_date);
-        vDate.setText(dateFormat.format(workingRecord.getDate()) + " ( " + weekDayFormat.format(workingRecord.getDate()) + " )");
+        vDate.setText(dateFormat.format(selectedDate) + " ( " + weekDayFormat.format(selectedDate) + " )");
         vDate.setEnabled(!archived);
+
+        vTime = findViewById(R.id.record_time);
+        vTime.setText(timeFormat.format(selectedTime));
+        vTime.setEnabled(!archived);
 
         vMoney = findViewById(R.id.record_money);
         vMoney.setText(workingRecord.getMoney() <= 0 ? "" : Formats.double2String(workingRecord.getMoney()));
@@ -279,6 +292,7 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             findViewById(R.id.btn_next).setOnClickListener(this);
             findViewById(R.id.btn_today).setOnClickListener(this);
             findViewById(R.id.btn_datepicker).setOnClickListener(this);
+            findViewById(R.id.btn_timepicker).setOnClickListener(this);
         }
         findViewById(R.id.btn_cal2).setOnClickListener(this);
 
@@ -448,8 +462,14 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         workingRecord.setTo(acc.getId());
     }
 
-    private void updateDateEditor(Date d) {
+    private void setSelectedDate(Date d) {
+        selectedDate = d;
         vDate.setText(dateFormat.format(d) + " ( " + weekDayFormat.format(d) + " )");
+    }
+
+    private void setSelectedTime(Date d) {
+        selectedTime = d;
+        vTime.setText(timeFormat.format(d));
     }
 
     @Override
@@ -462,36 +482,31 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } else if (v.getId() == R.id.btn_close) {
             doClose();
         } else if (v.getId() == R.id.btn_prev) {
-            try {
-                Date d = dateFormat.parse(vDate.getText().toString());
-                updateDateEditor(cal.yesterday(d));
-            } catch (ParseException e) {
-                Logger.e(e.getMessage(), e);
-            }
+            setSelectedDate(cal.yesterday(selectedDate));
         } else if (v.getId() == R.id.btn_next) {
-            try {
-                Date d = dateFormat.parse(vDate.getText().toString());
-                updateDateEditor(cal.tomorrow(d));
-            } catch (ParseException e) {
-                Logger.e(e.getMessage(), e);
-            }
+            setSelectedDate(cal.tomorrow(selectedDate));
         } else if (v.getId() == R.id.btn_today) {
-            updateDateEditor(cal.today());
+            setSelectedDate(cal.today());
         } else if (v.getId() == R.id.btn_datepicker) {
-            try {
-                Date d = dateFormat.parse(vDate.getText().toString());
-                GUIs.openDatePicker(this, d, new GUIs.OnFinishListener() {
-                    @Override
-                    public boolean onFinish(int which, Object data) {
-                        if(which == GUIs.OK_BUTTON) {
-                            updateDateEditor((Date) data);
-                        }
-                        return true;
+            GUIs.openDatePicker(this, selectedDate, new GUIs.OnFinishListener() {
+                @Override
+                public boolean onFinish(int which, Object data) {
+                    if (which == GUIs.OK_BUTTON) {
+                        setSelectedDate((Date) data);
                     }
-                });
-            } catch (ParseException e) {
-                Logger.e(e.getMessage(), e);
-            }
+                    return true;
+                }
+            });
+        } else if (v.getId() == R.id.btn_timepicker) {
+            GUIs.openTimePicker(this, selectedTime, new GUIs.OnFinishListener() {
+                @Override
+                public boolean onFinish(int which, Object data) {
+                    if (which == GUIs.OK_BUTTON) {
+                        setSelectedTime((Date) data);
+                    }
+                    return true;
+                }
+            });
         } else if (v.getId() == R.id.btn_cal2) {
             doCalculator2();
         }
@@ -551,14 +566,13 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
             return;
         }
 
-        Date date = null;
-        try {
-            date = dateFormat.parse(datestr);
-        } catch (ParseException e) {
-            Logger.e(e.getMessage(), e);
-            GUIs.errorToast(this, e);
-            return;
-        }
+        Calendar dateCal = calendarHelper().calendar(selectedDate);
+        Calendar timeCal = calendarHelper().calendar(selectedTime);
+
+
+        dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+        dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+        Date date = dateCal.getTime();
 
         String moneystr = vMoney.getText().toString();
         if ("".equals(moneystr)) {
@@ -635,5 +649,20 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         setResult(RESULT_OK);
         GUIs.shortToast(this, i18n().string(R.string.msg_created_record, counterCreate));
         finish();
+    }
+
+    private class HourMinuteViewBinder extends RegularSpinnerAdapter.ViewHolder<Integer> {
+
+        public HourMinuteViewBinder(RegularSpinnerAdapter adapter) {
+            super(adapter);
+        }
+
+        @Override
+        public void bindViewValue(Integer item, LinearLayout vlayout, TextView vtext, boolean isDropdown, boolean isSelected) {
+            vtext.setText((item.intValue() < 10 ? "0" : "") + item.toString());
+            if (isDropdown) {
+                vtext.setText("    " + vtext.getText() + "    ");
+            }
+        }
     }
 }

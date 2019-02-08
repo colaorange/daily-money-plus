@@ -11,6 +11,9 @@
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+    <style name="editorFieldLastInput" parent="rowItem">
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
 
     <style name="editorActionBtn">
         <item name="android:layout_width">wrap_content</item>

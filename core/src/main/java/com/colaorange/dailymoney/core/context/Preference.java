@@ -625,6 +625,9 @@ public class Preference {
     public DateFormat getTimeFormat() {
         return new SimpleDateFormat(timeFormat);
     }
+    public DateFormat getTimeFormatWithoutSecond() {
+        return new SimpleDateFormat(timeFormat.replace(":ss",""));
+    }
 
     public DateFormat getDateTimeFormat() {
         return new SimpleDateFormat(dateTimeFormat);

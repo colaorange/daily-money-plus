@@ -255,6 +255,7 @@ public class RecordListFragment extends ContextsFragment implements EventQueue.E
                 break;
             case QEvents.RecordListFrag.ON_RELOAD_FRAGMENT:
                 if (pos != null && pos.intValue() == this.pos) {
+                    recyclerAdapter.clearSelection();
                     reloadData((List<Record>) event.getData());
                     return;
                 }

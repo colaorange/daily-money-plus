@@ -253,16 +253,16 @@ public class SQLiteDataProvider implements IDataProvider {
         }
     }
 
-    private void applyContextValue(Record det, ContentValues values) {
-        values.put(COL_DET_ID, det.getId());
-        values.put(COL_DET_FROM, det.getFrom());
-        values.put(COL_DET_FROM_TYPE, det.getFromType());
-        values.put(COL_DET_TO, det.getTo());
-        values.put(COL_DET_TO_TYPE, det.getToType());
-        values.put(COL_DET_DATE, calHelper.toDayMiddle(det.getDate()).getTime());
-        values.put(COL_DET_MONEY, det.getMoney());
-        values.put(COL_DET_ARCHIVED, det.isArchived() ? 1 : 0);
-        values.put(COL_DET_NOTE, det.getNote());
+    private void applyContextValue(Record record, ContentValues values) {
+        values.put(COL_DET_ID, record.getId());
+        values.put(COL_DET_FROM, record.getFrom());
+        values.put(COL_DET_FROM_TYPE, record.getFromType());
+        values.put(COL_DET_TO, record.getTo());
+        values.put(COL_DET_TO_TYPE, record.getToType());
+        values.put(COL_DET_DATE, record.getDate().getTime());
+        values.put(COL_DET_MONEY, record.getMoney());
+        values.put(COL_DET_ARCHIVED, record.isArchived() ? 1 : 0);
+        values.put(COL_DET_NOTE, record.getNote());
     }
 
     @Override
