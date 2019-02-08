@@ -31,6 +31,7 @@ public class QEvents {
         //activity -> fragment
         String ON_CLEAR_SELECTION = "AccountMgntFrag:onClearSelection";
         String ON_RELOAD_FRAGMENT = "AccountMgntFrag:onReloadFragment";
+        String ON_REORDER_MODE = "AccountMgntFrag:onReOrderMode";
 
         //fragment -> activity
         String ON_SELECT_ACCOUNT = "AccountMgntFrag:onSelectAccount";

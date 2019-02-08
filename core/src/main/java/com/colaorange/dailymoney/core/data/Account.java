@@ -23,6 +23,8 @@ public class Account implements Serializable{
     
     //is cash account;
     private boolean cashAccount;
+
+    private int priority;
     
     Account(){}
     
@@ -105,5 +107,13 @@ public class Account implements Serializable{
         Account acc = new Account(type, name, initialValue);
         acc.setCashAccount(cashAccount);
         return acc;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

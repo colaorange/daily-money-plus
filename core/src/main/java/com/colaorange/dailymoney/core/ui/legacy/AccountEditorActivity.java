@@ -252,6 +252,13 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
                                 AccountType.getDisplay(i18n, namedAcc.getType())));
                 return;
             } else {
+
+                List<Account> existAccounts = idp.listAccount(AccountType.getSupportedType()[vType.getSelectedItemPosition()]);
+                int priority = existAccounts.size() == 0 ? 0 : existAccounts.get(existAccounts.size() - 1).getPriority() + 1;
+
+                workingAccount.setPriority(priority);
+
+
                 try {
                     idp.newAccount(workingAccount);
                     GUIs.shortToast(this, i18n.string(R.string.msg_account_created, name, AccountType.getDisplay(i18n, workingAccount.getType())));

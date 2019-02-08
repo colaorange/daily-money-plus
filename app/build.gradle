@@ -7,8 +7,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         //yy(2)mm(2)dd(2)increment(3)
-        versionCode 181219001
-        versionName "0.10.7-freshly"
+        versionCode 200208000
+        versionName "0.10.7-freshly-200208000"
 
         multiDexEnabled true
 

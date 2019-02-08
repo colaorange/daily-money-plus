@@ -146,12 +146,12 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             findViewById(R.id.title_account).setVisibility(View.GONE);
             vCopyAccount.setVisibility(View.GONE);
             vDefaultAccount.setVisibility(View.GONE);
-        }else{
+        } else {
             //exclusive eahc other when checking
             vCopyAccount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         vDefaultAccount.setChecked(false);
                     }
                 }
@@ -159,7 +159,7 @@ public class BookEditorActivity extends ContextsActivity implements android.view
             vDefaultAccount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
+                    if (isChecked) {
                         vCopyAccount.setChecked(false);
                     }
                 }
@@ -204,6 +204,12 @@ public class BookEditorActivity extends ContextsActivity implements android.view
         IMasterDataProvider imdp = contexts().getMasterDataProvider();
 
         if (modeCreate) {
+
+            List<Book> existBooks = imdp.listAllBook();
+            int priority = existBooks.size() == 0 ? 0 : existBooks.get(existBooks.size() - 1).getPriority() + 1;
+
+            workingBook.setPriority(priority);
+
             imdp.newBook(workingBook);
 
             if (vCopyAccount.isChecked()) {
@@ -222,14 +228,14 @@ public class BookEditorActivity extends ContextsActivity implements android.view
                             Logger.w(e.getMessage(), e);
                         }
                     }
-                }finally{
+                } finally {
                     newidp.close();
                 }
-            }else if(vDefaultAccount.isChecked()){
+            } else if (vDefaultAccount.isChecked()) {
                 IDataProvider newidp = contexts().newDataProvider(workingBook.getId());
                 try {
                     new DataCreator(newidp, i18n()).createDefaultAccount();
-                }finally{
+                } finally {
                     newidp.close();
                 }
 
