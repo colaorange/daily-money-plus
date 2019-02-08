@@ -27,6 +27,7 @@ import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.ui.Constants;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.GUIs;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     private String currentAccountType = null;
 
     private AccountType[] supportedTypes;
+
+    boolean reorderMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +92,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 currentAccountType = supportedTypes[tab.getPosition()].getType();
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
+                clearSelection();
                 refreshTab();
             }
 
@@ -97,7 +100,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             public void onTabUnselected(TabLayout.Tab tab) {
                 //is it possible?
                 currentAccountType = null;
-                lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
+                clearSelection();
 
                 //don't refresh it, there must be a selected.
 //                refreshTab();
@@ -190,6 +193,15 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         lookupQueue().publish(QEvents.AccountMgntFrag.ON_RELOAD_FRAGMENT, null);
     }
 
+    private void clearSelection(){
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
+    }
+
+    private void setReorderMode(boolean enabled) {
+        reorderMode = enabled;
+        lookupQueue().publish(QEvents.AccountMgntFrag.ON_REORDER_MODE, enabled);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -203,8 +215,22 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
         if (item.getItemId() == R.id.menu_new) {
             doNewAccount();
             return true;
+        } else if (item.getItemId() == R.id.menu_reorder) {
+            doReorderAccount();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doReorderAccount() {
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
+
+        actionMode = this.startSupportActionMode(new ReorderActionModeCallback());
+        actionMode.setTitle(i18n().string(R.string.act_reorder));
+
+        setReorderMode(true);
     }
 
     @Override
@@ -288,7 +314,7 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
     }
 
 
-    public static class AccountTypePagerAdapter extends FragmentPagerAdapter {
+    public class AccountTypePagerAdapter extends FragmentPagerAdapter {
         AccountType[] types;
 
         public AccountTypePagerAdapter(FragmentManager fm, AccountType[] types) {
@@ -362,7 +388,42 @@ public class AccountMgntActivity extends ContextsActivity implements EventQueue.
             actionObj = null;
             lookupQueue().publish(new EventQueue.EventBuilder(QEvents.AccountMgntFrag.ON_CLEAR_SELECTION).build());
         }
+    }
 
 
+    private class ReorderActionModeCallback implements android.support.v7.view.ActionMode.Callback {
+
+        //onCreateActionMode(ActionMode, Menu) once on initial creation.
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.empty_menu, menu);//Inflate the menu over action mode
+            return true;
+        }
+
+        //onPrepareActionMode(ActionMode, Menu) after creation and any time the ActionMode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        //onActionItemClicked(ActionMode, MenuItem) any time a contextual action button is clicked.
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return true;
+        }
+
+        //onDestroyActionMode(ActionMode) when the action mode is closed.
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            //When action mode destroyed remove selected selections and set action mode to null
+            //First check current fragment action mode
+            actionMode = null;
+            actionObj = null;
+            setReorderMode(false);
+        }
+    }
+
+    boolean getReorderMode(){
+        return reorderMode;
     }
 }

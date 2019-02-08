@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.colaorange.commons.util.ObjectLabel;
 import com.colaorange.dailymoney.core.R;
 import com.colaorange.dailymoney.core.context.ContextsActivity;
 import com.colaorange.dailymoney.core.context.ContextsFragment;
@@ -17,8 +18,10 @@ import com.colaorange.dailymoney.core.context.EventQueue;
 import com.colaorange.dailymoney.core.data.Account;
 import com.colaorange.dailymoney.core.data.AccountType;
 import com.colaorange.dailymoney.core.data.IDataProvider;
+import com.colaorange.dailymoney.core.ui.GUIs;
 import com.colaorange.dailymoney.core.ui.QEvents;
 import com.colaorange.dailymoney.core.ui.helper.SelectableRecyclerViewAdaptor;
+import com.colaorange.dailymoney.core.util.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,15 +37,20 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
     private AccountType accountType = null;
 
     private List<Account> recyclerDataList;
+    private AccountRecyclerAdapter recyclerAdapter;
+
+    private List<ObjectLabel<Account>> reorderDataList;
+    private ObjectReorderRecyclerAdapter reorderAdapter;
 
     View vNoData;
     private RecyclerView vRecycler;
 
-    private AccountRecyclerAdapter recyclerAdapter;
 
     private LayoutInflater inflater;
 
     private View rootView;
+
+    private boolean initOrdering;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +66,8 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         initArgs();
         initMembers();
         reloadData();
+        //initial after data ready
+        reorderAccount(getReorderMode());
     }
 
 
@@ -65,7 +75,6 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         Bundle args = getArguments();
         String type = args.getString(ARG_ACCOUNT_TYPE);
         accountType = AccountType.find(type);
-
     }
 
     private void initMembers() {
@@ -80,8 +89,17 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         vRecycler = rootView.findViewById(R.id.account_mgnt_recycler);
         vRecycler.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
         vRecycler.setLayoutManager(new LinearLayoutManager(activity));
-        vRecycler.setAdapter(recyclerAdapter);
 
+        //let reorderMode do it.
+//        vRecycler.setAdapter(recyclerAdapter);
+
+
+        reorderDataList = new LinkedList<>();
+        reorderAdapter = new ObjectReorderRecyclerAdapter(getContextsActivity(), new ObjectReorderRecyclerAdapter.ObjectReorderCallback() {
+            public void onMove(int posFrom, int posTo) {
+                doMove(posFrom, posTo);
+            }
+        }, reorderDataList);
 
         recyclerAdapter.setOnSelectListener(new SelectableRecyclerViewAdaptor.OnSelectListener<Account>() {
             @Override
@@ -102,6 +120,7 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         List<Account> data = idp.listAccount(accountType);
 
         recyclerDataList.clear();
+        reorderDataList.clear();
 
         if(data.size()==0){
             vRecycler.setVisibility(View.GONE);
@@ -109,9 +128,13 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
         }else {
             vRecycler.setVisibility(View.VISIBLE);
             vNoData.setVisibility(View.GONE);
-            recyclerDataList.addAll(data);
+            for (Account account : data) {
+                recyclerDataList.add(account);
+                reorderDataList.add(new ObjectLabel(account, account.getName()));
+            }
         }
         recyclerAdapter.notifyDataSetChanged();
+        reorderAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -136,7 +159,73 @@ public class AccountMgntFragment extends ContextsFragment implements EventQueue.
                 recyclerAdapter.clearSelection();
                 reloadData();
                 break;
+            case QEvents.AccountMgntFrag.ON_REORDER_MODE:
+                reorderAccount(getReorderMode());
+                break;
         }
     }
 
+    private void doMove(int posFrom, int posTo) {
+        IDataProvider idp = contexts().getDataProvider();
+
+        Account accountFrom = recyclerDataList.get(posFrom);
+        Account accountkTo = recyclerDataList.get(posTo);
+        recyclerDataList.set(posFrom, accountkTo);
+        recyclerDataList.set(posTo, accountFrom);
+
+        accountkTo.setPriority(posFrom);
+        accountFrom.setPriority(posTo);
+
+        idp.updateAccount(accountFrom.getId(), accountFrom);
+        idp.updateAccount(accountkTo.getId(), accountkTo);
+
+
+        ObjectLabel objFrom = reorderDataList.get(posFrom);
+        ObjectLabel objTo = reorderDataList.get(posTo);
+        reorderDataList.set(posFrom, objTo);
+        reorderDataList.set(posTo, objFrom);
+
+        reorderAdapter.notifyItemMoved(posFrom, posTo);
+    }
+
+    private void reorderAccount(boolean reorderMode) {
+        if(!reorderMode){
+            vRecycler.setAdapter(recyclerAdapter);
+            reorderAdapter.detachFromRecyclerView();
+            return;
+        }
+
+
+        vRecycler.setAdapter(reorderAdapter);
+        reorderAdapter.attachToRecyclerView(vRecycler);
+
+        if (!initOrdering) {
+            final List<Account> updateSet = new LinkedList<>();
+            int s = recyclerDataList.size();
+            for (int i = 0; i < s; i++) {
+                Account account = recyclerDataList.get(i);
+                if (account.getPriority() != i) {
+                    account.setPriority(i);
+                    updateSet.add(account);
+                }
+            }
+            if (updateSet.size() != 0) {
+                GUIs.doBusy(getContext(), new Runnable() {
+                    @Override
+                    public void run() {
+                        IDataProvider idp = contexts().getDataProvider();
+                        for (Account account : updateSet) {
+                            idp.updateAccount(account.getId(), account);
+                        }
+                    }
+                });
+            }
+            initOrdering = true;
+        }
+    }
+
+
+    boolean getReorderMode(){
+        return ((AccountMgntActivity)getContextsActivity()).getReorderMode();
+    }
 }
