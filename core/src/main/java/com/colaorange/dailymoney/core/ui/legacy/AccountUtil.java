@@ -79,7 +79,9 @@ public class AccountUtil {
             stack.remove(0);
 
             list.add(node.intentNode);
-            for(TreeNode n: node.children){
+
+            for (int i = node.children.size() - 1; i >= 0; i--) {
+                TreeNode n = node.children.get(i);
                 stack.add(0, n);
             }
         }
