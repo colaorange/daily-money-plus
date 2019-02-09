@@ -106,6 +106,7 @@ public class Account implements Serializable{
     public Account copy() {
         Account acc = new Account(type, name, initialValue);
         acc.setCashAccount(cashAccount);
+        acc.setPriority(priority);
         return acc;
     }
 

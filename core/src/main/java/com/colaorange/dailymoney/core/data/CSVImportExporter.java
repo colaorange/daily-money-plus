@@ -287,6 +287,7 @@ public class CSVImportExporter {
             accountReader.setTrimWhitespace(true);
             int appver = getAppver(accountReader.getHeaders()[accountReader.getHeaderCount() - 1]);
             idp.deleteAllAccount();
+            int p = 0;
             while (accountReader.readRecord()) {
                 try {
                     String id = accountReader.get("id");
@@ -299,7 +300,7 @@ public class CSVImportExporter {
                     Account acc = new Account(accountReader.get("type"), accountReader.get("name"), Formats.normalizeString2Double(accountReader.get("init")));
                     String cash = accountReader.get("cash");
                     acc.setCashAccount("1".equals(cash));
-
+                    acc.setPriority(p++);
                     idp.newAccountNoCheck(id, acc);
                     r.account++;
                 } catch (Exception x) {
@@ -309,7 +310,7 @@ public class CSVImportExporter {
             }
             accountReader.close();
             accountReader = null;
-            Logger.d("import from {} ver: {}", accounts , appver);
+            Logger.d("import from {} ver: {}", accounts, appver);
 
 
             if (!accountOnly) {

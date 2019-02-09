@@ -58,14 +58,6 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
     private Button btnClose;
     private ImageButton btnCal2;
 
-    /**
-     * clone account without id
-     **/
-    private Account clone(Account account) {
-        Account acc = new Account(account.getType(), account.getName(), account.getInitialValue());
-        acc.setCashAccount(account.isCashAccount());
-        return acc;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +75,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
         if (modeCreate && account == null) {
             account = new Account(AccountType.INCOME.getType(), "", 0D);
         }
-        workingAccount = clone(account);
+        workingAccount = account.copy();
 
         if (modeCreate) {
             setTitle(R.string.title_acceditor_create);
@@ -268,7 +260,7 @@ public class AccountEditorActivity extends ContextsActivity implements android.v
                 }
             }
             setResult(RESULT_OK);
-            workingAccount = clone(workingAccount);
+            workingAccount = workingAccount.copy();
             workingAccount.setName("");
             vName.setText("");
             vName.requestFocus();
