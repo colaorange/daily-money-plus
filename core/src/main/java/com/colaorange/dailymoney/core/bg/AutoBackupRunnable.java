@@ -122,6 +122,9 @@ public class AutoBackupRunnable implements Runnable {
             });
         } else {
             Logger.w(r.getErr());
+            //TODO this is a quick fix for always fail (storage permission?) since 0.10.7 cause noisy notfication
+            pref.setLastBackupTime(cal.getTime().getTime());
+
             Notifications.send(contexts.getApp(), Notifications.nextGroupId(), r.getErr(), i18n.string(R.string.label_backup_data),
                     Notifications.Channel.BACKUP, Notifications.Level.WARN, null);
             contexts.trackEvent(Contexts.getTrackerPath(getClass()), Contexts.TE.BACKUP + "a-fail", "", null);
