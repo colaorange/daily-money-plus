@@ -87,11 +87,6 @@
                     android:src="?ic_arrow_right" />
 
                 <ImageButton
-                    android:id="@+id/btn_today"
-                    style="@style/editorToolIconBtn"
-                    android:src="?ic_today" />
-
-                <ImageButton
                     android:id="@+id/btn_datepicker"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_date_range" />
@@ -99,6 +94,11 @@
                     android:id="@+id/btn_timepicker"
                     style="@style/editorToolIconBtn"
                     android:src="?ic_clock" />
+
+                <ImageButton
+                    android:id="@+id/btn_today"
+                    style="@style/editorToolIconBtn"
+                    android:src="?ic_today" />
 
             </LinearLayout>
 

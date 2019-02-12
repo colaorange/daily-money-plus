@@ -486,7 +486,9 @@ public class RecordEditorActivity extends ContextsActivity implements android.vi
         } else if (v.getId() == R.id.btn_next) {
             setSelectedDate(cal.tomorrow(selectedDate));
         } else if (v.getId() == R.id.btn_today) {
-            setSelectedDate(cal.today());
+            Date today = cal.today();
+            setSelectedDate(today);
+            setSelectedTime(today);
         } else if (v.getId() == R.id.btn_datepicker) {
             GUIs.openDatePicker(this, selectedDate, new GUIs.OnFinishListener() {
                 @Override
