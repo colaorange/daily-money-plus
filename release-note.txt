@@ -1,7 +1,7 @@
 
 == 0.10.8 ==
 === Features ===
- #
+ #50 add summary info the search result
 === Bugs ===
  #
 

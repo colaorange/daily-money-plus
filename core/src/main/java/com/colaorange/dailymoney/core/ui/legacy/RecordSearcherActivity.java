@@ -70,7 +70,7 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
     private EditText vNote;
     private View vSearchHint;
     private View vResultContainer;
-    private RecordListFragment listFragment;
+    private RecordSearcherFragment searcherFragment;
 
     private int cal2RequestorId;
 
@@ -334,15 +334,14 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
         vSearchHint.setVisibility(View.GONE);
         vResultContainer.setVisibility(View.VISIBLE);
 
-        if (listFragment == null) {
-            listFragment = new RecordListFragment();
+        if (searcherFragment == null) {
+            searcherFragment = new RecordSearcherFragment();
             Bundle b = new Bundle();
-            b.putInt(RecordListFragment.ARG_POS, pos);
-            b.putSerializable(RecordListFragment.ARG_PERIOD_MODE, PeriodMode.ALL);
-            listFragment.setArguments(b);
+            b.putInt(RecordSearcherFragment.ARG_POS, pos);
+            searcherFragment.setArguments(b);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frag_container, listFragment)
+                    .add(R.id.frag_container, searcherFragment)
                     .disallowAddToBackStack()
                     .commit();
         }
@@ -505,7 +504,7 @@ public class RecordSearcherActivity extends ContextsActivity implements View.OnC
     }
 
     private void publishReloadData(List<Record> data) {
-        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordListFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordListFragment.ARG_POS, pos).build());
+        lookupQueue().publish(new EventQueue.EventBuilder(QEvents.RecordSearcherFrag.ON_RELOAD_FRAGMENT).withData(data).withArg(RecordSearcherFragment.ARG_POS, pos).build());
     }
 
     private void doEditRecord(Record record) {

@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.colaorange.commons.util.CalendarHelper;
 import com.colaorange.commons.util.Numbers;
-import com.colaorange.commons.util.Objects;
 import com.colaorange.dailymoney.core.util.Logger;
 
 import android.content.ContentValues;
@@ -281,7 +280,7 @@ public class SQLiteDataProvider implements IDataProvider {
     static int detId = 0;
     static boolean detId_set;
 
-    public synchronized int nextDetailId() {
+    public synchronized int nextRecordId() {
         if (!detId_set) {
             SQLiteDatabase db = helper.getReadableDatabase();
             Cursor c = db.rawQuery("SELECT MAX(" + DataMeta.COL_DET_ID + ") FROM " + DataMeta.TB_DET, null);
@@ -296,7 +295,7 @@ public class SQLiteDataProvider implements IDataProvider {
 
     @Override
     public void newRecord(Record record) {
-        int id = nextDetailId();
+        int id = nextRecordId();
         try {
             newRecord(id, record);
         } catch (DuplicateKeyException e) {

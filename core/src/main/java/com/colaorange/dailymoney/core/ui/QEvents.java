@@ -64,6 +64,16 @@ public class QEvents {
 
     }
 
+    public interface RecordSearcherFrag {
+        //activity -> fragment
+        String ON_RELOAD_FRAGMENT = "RecordSearcherFrag:onReloadFragment";
+
+        //fragment -> activity
+        String ON_FRAGMENT_START = "RecordSearcherFrag:onFragmentStart";
+        String ON_FRAGMENT_STOP = "RecordSearcherFrag:onFragmentStop";
+
+    }
+
     public interface RecordListFrag {
         //activity -> fragment
         String ON_CLEAR_SELECTION = "RecordListFrag:onClearSelection";
