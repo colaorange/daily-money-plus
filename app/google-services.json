@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "970956190568",
+    "project_id": "dialy-money-plus",
+    "storage_bucket": "dialy-money-plus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970956190568:android:f252ee3bb4bfcf91841cdd",
+        "android_client_info": {
+          "package_name": "com.colaorange.dailymoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMlVHvaobRm8i5fKICk3ks_STbMDi2h4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

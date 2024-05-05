@@ -14,6 +14,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -34,9 +35,7 @@ import com.colaorange.dailymoney.core.data.SQLiteDataProvider;
 import com.colaorange.dailymoney.core.data.SQLiteMasterDataHelper;
 import com.colaorange.dailymoney.core.data.SQLiteMasterDataProvider;
 import com.colaorange.dailymoney.core.data.SymbolPosition;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Helps me to do some quick access in context/ui thread
@@ -66,10 +65,7 @@ public class Contexts {
     private IMasterDataProvider masterDataProvider;
     private I18N i18n;
 
-    private static final int ANALYTICS_DISPATH_DELAY = 60;// dispatch queue at least 60s
-
-    private GoogleAnalytics sAnalytics;
-    private Tracker sTracker;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private String currencySymbol = "$";
 
@@ -140,20 +136,8 @@ public class Contexts {
     @SuppressLint("MissingPermission")
     private void initTracker() {
         try {
-            if (sTracker == null) {
-                sAnalytics = GoogleAnalytics.getInstance(contextsApp);
-
-                if("true".equalsIgnoreCase(i18n.string(R.string.ga_debug))){
-                    gaDebug = true;
-                }
-
-                if(gaDebug){
-                    sAnalytics.setLocalDispatchPeriod(5);
-                }
-                sTracker = sAnalytics.newTracker(R.xml.ga_tracker);
-                sTracker.setAppId(getAppId());
-                sTracker.setAppName(i18n.string(R.string.app_code));
-                sTracker.setAppVersion(getAppVerName());
+            if (mFirebaseAnalytics == null) {
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(contextsApp);
             }
         } catch (Throwable t) {
             Logger.e(t.getMessage(), t);
@@ -163,11 +147,10 @@ public class Contexts {
     private void cleanTracker() {
         // Stop the tracker when it is no longer needed.
         try {
-            if (sTracker != null) {
+            if (mFirebaseAnalytics != null) {
                 Logger.d("clean google tracker");
                 //just leave it.
-                sTracker = null;
-                sAnalytics = null;
+                mFirebaseAnalytics = null;
             }
         } catch (Throwable t) {
             Logger.e(t.getMessage(), t);
@@ -175,13 +158,20 @@ public class Contexts {
     }
 
     public void trackEvent(final String category, final String action, final String label, final Long value) {
-        if (preference.isAllowAnalytics() && sTracker != null) {
+        if (preference.isAllowAnalytics() && mFirebaseAnalytics != null) {
             try {
                 Logger.d("track event " + category + ", " + action);
-                sTracker.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value == null ? 0 : value.longValue()).build());
-                if(gaDebug){
-                    sAnalytics.dispatchLocalHits();
+                Bundle bundle = new Bundle();
+                if (action != null) {
+                    bundle.putCharSequence("action", action);
                 }
+                if (label != null) {
+                    bundle.putCharSequence("label", label);
+                }
+                if (value != null) {
+                    bundle.putLong("value", value);
+                }
+                mFirebaseAnalytics.logEvent(category, bundle);
             } catch (Throwable t) {
                 Logger.e(t.getMessage(), t);
             }
@@ -452,6 +442,7 @@ public class Contexts {
         Book book = imdp.findBook(preference.getWorkingBookId());
         return SymbolPosition.money2String(money, book.getSymbol(), book.getSymbolPosition());
     }
+
     public String toFormattedMoneyString(Number money, int decimalLength) {
         IMasterDataProvider imdp = getMasterDataProvider();
         Book book = imdp.findBook(preference.getWorkingBookId());
@@ -534,7 +525,6 @@ public class Contexts {
     }
 
 
-
     public interface TE {
         String CREATE_BOOK = "cre-bk-";
         String CREATE_ACCOUNT = "cre-acc-";
@@ -569,10 +559,10 @@ public class Contexts {
 
         String CARD = "card-";
 
-        String MIGRATE ="migrate-";
+        String MIGRATE = "migrate-";
 
-        String DRIVE_BACKUP ="drive-backup-";
-        String DRIVE_RESTORE ="drive-restore-";
-        String DRIVE_CLEAN ="drive-clean-";
+        String DRIVE_BACKUP = "drive-backup-";
+        String DRIVE_RESTORE = "drive-restore-";
+        String DRIVE_CLEAN = "drive-clean-";
     }
 }
