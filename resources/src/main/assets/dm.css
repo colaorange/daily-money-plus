@@ -1,0 +1,65 @@
+@charset "utf-8"
+
+
+* {
+}
+html, body{
+    margin: 0px;
+    padding: 5px;
+    color:#333333;
+    background:#ffffff;
+}
+
+.vote{
+    color: #FF7640;
+    padding: 10px 0;
+}
+
+a:visited,a:hover,a:link {
+    color: #4885ed;
+}
+
+body.doc h2{
+     font-size: 16px;
+}
+body.doc h3{
+	font-size: 14px;
+}
+body.doc blockquote {
+    border-left: 5px solid #333333;
+    margin: 0;
+    padding: 0 5px;	
+    color:#333333;
+}
+
+body.doc blockquote h3 {
+	padding: 0 2px
+    font-size: 14px;
+}
+body.doc blockquote blockquote{
+    border-left: 2px solid #777777;
+    margin: 0;
+    padding: 0 8px;
+    color:#555555;
+}
+
+.subject, .howto{
+    font-size:16px;
+    font-weight: bold;
+}
+
+.income{
+	color: #5ADF82;
+}
+.expense{
+	color: #FF9AB5;
+}
+.asset{
+	color: #F6D174;
+}
+.liability{
+	color: #7A95FF;
+}
+.other{
+	color: #51C0EF;
+}
