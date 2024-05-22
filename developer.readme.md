@@ -3,11 +3,11 @@
 
 ## Junction Link
 
-You have to add folowing junction link to non-in-poject project to build
+You have to add following junction link to non-in-project project to build
 
-* resource, which is in daily-money-android-contribution\resource
+* resource, which is in daily-money-plus-contribution\resource
 
 ### Commands:
 #### Windows 10
 
-    mklink /J resources ..\daily-money-android-contribution\resources
+    mklink /J resources ..\daily-money-plus-contribution\resources
