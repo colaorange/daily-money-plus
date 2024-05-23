@@ -19,7 +19,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * @author Dennis
@@ -57,7 +56,7 @@ public class Preference {
         }
     }
 
-    private static final LinkedHashMap<String,Theme> themeMap = new LinkedHashMap<>();
+    private static final LinkedHashMap<String, Theme> themeMap = new LinkedHashMap<>();
 
     static {
         themeMap.put(THEME_COLA, new Theme(THEME_COLA, R.style.themeCola, R.style.themeCola_body));
@@ -104,6 +103,7 @@ public class Preference {
 
     int workingBookId = Contexts.DEFAULT_BOOK_ID;
 
+    private String v29DocTreeRootUri = "content://com.android.externalstorage.documents/tree/primary%3AbwDailyMoney";
 
     private CalendarHelper calendarHelper;
 
@@ -202,6 +202,12 @@ public class Preference {
 
         if (workingBookId != bookId) {
             workingBookId = bookId;
+        }
+
+        try {
+            v29DocTreeRootUri = prefs.getString(Constants.PREFS_V29_DOC_TREE_ROOT_URI, v29DocTreeRootUri);
+        } catch (Exception x) {
+            Logger.e(x.getMessage(), x);
         }
 
         Logger.d("preference : last backup {}", lastbackup);
@@ -523,6 +529,20 @@ public class Preference {
         }
     }
 
+    public String getV29DocTreeRootUri() {
+        return v29DocTreeRootUri;
+    }
+
+    public void setV29DocTreeRootUri(String uri) {
+        if (uri != null && !v29DocTreeRootUri.equals(uri)) {
+            v29DocTreeRootUri = uri;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextsApp);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Constants.PREFS_V29_DOC_TREE_ROOT_URI, uri);
+            editor.commit();
+        }
+    }
+
     public int getStartdayYearMonth() {
         return startdayYearMonth;
     }
@@ -567,7 +587,7 @@ public class Preference {
         return maxRecords;
     }
 
-    public boolean isGroupRecordsByDate(){
+    public boolean isGroupRecordsByDate() {
         return groupRecordsByDate;
     }
 
@@ -625,8 +645,9 @@ public class Preference {
     public DateFormat getTimeFormat() {
         return new SimpleDateFormat(timeFormat);
     }
+
     public DateFormat getTimeFormatWithoutSecond() {
-        return new SimpleDateFormat(timeFormat.replace(":ss",""));
+        return new SimpleDateFormat(timeFormat.replace(":ss", ""));
     }
 
     public DateFormat getDateTimeFormat() {
@@ -776,11 +797,11 @@ public class Preference {
         return false;
     }
 
-    public boolean isLogOn(){
+    public boolean isLogOn() {
         return logOn;
     }
 
-    public int getLogMaxLine(){
+    public int getLogMaxLine() {
         return logMaxLine;
     }
 

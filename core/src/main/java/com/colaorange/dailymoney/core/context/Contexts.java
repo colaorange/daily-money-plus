@@ -17,6 +17,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.support.v4.provider.DocumentFile;
 import android.text.Html;
 
 import com.colaorange.commons.util.CalendarHelper;
@@ -477,10 +479,10 @@ public class Contexts {
     }
 
     public boolean hasV23WorkingFolderPermission() {
-        return hasV23WorkingFolderPermission(getV23WorkingFolder());
+        return hasWorkingFolderPermission(getV23WorkingFolder());
     }
 
-    public boolean hasV23WorkingFolderPermission(File workingFolder) {
+    public boolean hasWorkingFolderPermission(File workingFolder) {
         try {
             File touch = new File(workingFolder, Strings.randomName(10) + ".touch");
             Files.saveString("", touch, "utf-8");
@@ -497,6 +499,15 @@ public class Contexts {
             f.mkdir();
         }
         return f;
+    }
+
+    public boolean hasDocTreeRootPermission(Uri docTreeRootUri){
+        try {
+            DocumentFile file = DocumentFile.fromTreeUri(contextsApp, docTreeRootUri);
+            return file.isDirectory();
+        }catch(Exception x){
+            return false;
+        }
     }
 
     public File getAppDbFolder() {

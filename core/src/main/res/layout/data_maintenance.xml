@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center">
+
                 <ImageView
                     android:id="@+id/storage_icon"
                     android:layout_width="36dp"
@@ -133,29 +134,6 @@
                 android:gravity="center"
                 android:text="@string/label_reset_working_book"
                 android:textSize="?textSize" />
-
-            <!--TODO should move to developer-->
-
-            <Button
-                android:id="@+id/clear_folder"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:drawableLeft="?ic_settings_backup_restore"
-                android:gravity="center"
-                android:text="@string/label_clear_folder"
-                android:textSize="?textSize"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/create_default"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="?ic_settings_backup_restore"
-                android:gravity="center"
-                android:text="@string/label_create_default"
-                android:textSize="?textSize"
-                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

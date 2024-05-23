@@ -15,6 +15,9 @@ public class Constants {
     public static final String PREFS_LAST_FROM_ACCOUNT = "last_from_account";
     public static final String PREFS_LAST_TO_ACCOUNT = "last_to_account";
 
+    public static final String PREFS_V29_DOC_TREE_ROOT_URI = "v29_doc_tree_root_uri";
+
+
 
     public static final int REQUEST_CALCULATOR_CODE = 1;
     public static final int REQUEST_RECORD_EDITOR_CODE = 2;

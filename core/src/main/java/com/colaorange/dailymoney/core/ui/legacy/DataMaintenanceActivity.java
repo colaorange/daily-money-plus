@@ -1,12 +1,17 @@
 package com.colaorange.dailymoney.core.ui.legacy;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
+import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +41,8 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     String csvEncoding;
 
-    File workingFolder;
+    File v23WorkingFolder;
+    Uri v29DocTreeRootUri;
 
     static final String APPVER = "appver:";
 
@@ -46,7 +52,17 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data_maintenance);
-        workingFolder = contexts().getV23WorkingFolder();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String uri = contexts().getPreference().getV29DocTreeRootUri();
+            System.out.println(">onCreate>>>docTreeRootUri" + uri);
+            try {
+                v29DocTreeRootUri = Uri.parse(uri);
+            } catch (Exception x) {
+                //nothing
+            }
+        } else {
+            v23WorkingFolder = contexts().getV23WorkingFolder();
+        }
 
         vercode = contexts().getAppVerCode();
         csvEncoding = preference().getCSVEncoding();
@@ -65,26 +81,48 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     private void refreshUI() {
 
         Button requestPermissionBtn = findViewById(R.id.request_permission);
-        //only for 6.0(23+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasV23WorkingFolderPermission()) {
-            requestPermissionBtn.setVisibility(View.VISIBLE);
-            if(!Contexts.instance().hasV23WorkingFolderPermission()) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //only for 10(29+)
+            if (!contexts().hasDocTreeRootPermission(v29DocTreeRootUri)) {
+                requestPermissionBtn.setVisibility(View.VISIBLE);
+                doV29RequestPermission();
+            } else {
+                requestPermissionBtn.setVisibility(View.GONE);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //only for 6.0(23+)
+            if (!contexts().hasWorkingFolderPermission(v23WorkingFolder)) {
+                requestPermissionBtn.setVisibility(View.VISIBLE);
                 doV23RequestPermission();
+            } else {
+                requestPermissionBtn.setVisibility(View.GONE);
             }
         } else {
             requestPermissionBtn.setVisibility(View.GONE);
         }
 
-        //working fodler accessibility
+        //working folder accessibility
         TextView vWorkingFolder = findViewById(R.id.working_folder);
         ImageView vIcon = findViewById(R.id.storage_icon);
         //test accessibility
-        if (contexts().hasV23WorkingFolderPermission()) {
-            vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_info));
-            vWorkingFolder.setText(workingFolder.getAbsolutePath());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (contexts().hasDocTreeRootPermission(v29DocTreeRootUri)) {
+                vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_info));
+                vWorkingFolder.setText(v29DocTreeRootUri.toString());
+            } else {
+                vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_warning));
+                vWorkingFolder.setText(i18n().string(R.string.msg_working_folder_no_access, v29DocTreeRootUri.toString()));
+            }
         } else {
-            vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_warning));
-            vWorkingFolder.setText(i18n().string(R.string.msg_working_folder_no_access, workingFolder.getAbsolutePath()));
+            if (contexts().hasV23WorkingFolderPermission()) {
+                vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_info));
+                vWorkingFolder.setText(v23WorkingFolder.getAbsolutePath());
+            } else {
+                vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_warning));
+                vWorkingFolder.setText(i18n().string(R.string.msg_working_folder_no_access, v23WorkingFolder.getAbsolutePath()));
+            }
         }
 
         TextView lastBackupText = findViewById(R.id.lastbackup);
@@ -106,8 +144,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         //TODO move to developer
         findViewById(R.id.reset).setOnClickListener(this);
-        findViewById(R.id.clear_folder).setOnClickListener(this);
-        findViewById(R.id.create_default).setOnClickListener(this);
     }
 
     @Override
@@ -126,17 +162,13 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
             doRestore();
         } else if (v.getId() == R.id.reset) {
             doReset();
-        } else if (v.getId() == R.id.create_default) {
-            doCreateDefault();
-        } else if (v.getId() == R.id.clear_folder) {
-            doClearFolder();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == 0 &&
+        if (requestCode == Build.VERSION_CODES.M &&
                 Misc.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, permissions, grantResults)) {
             recreate();
         }
@@ -144,7 +176,40 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
     @TargetApi(Build.VERSION_CODES.M)
     private void doV23RequestPermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Build.VERSION_CODES.M);
+    }
+
+
+    @SuppressLint("WrongConstant")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == Build.VERSION_CODES.Q && resultCode == Activity.RESULT_OK) {
+            Uri uri = resultData.getData();
+            if (uri != null) {
+                contexts().getPreference().setV29DocTreeRootUri(uri.toString());
+
+                final int takeFlags = resultData.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                }
+
+                recreate();
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.Q)
+    private void doV29RequestPermission() {
+        System.out.println(">doV29RequestPermission>>>" + v29DocTreeRootUri);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+
+        // Optionally, specify a URI for the directory that should be opened in
+        // the system file picker when it loads.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, v29DocTreeRootUri);
+
+        startActivityForResult(intent, Build.VERSION_CODES.Q);
     }
 
     private void doBackup() {
@@ -252,64 +317,6 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
                             }
                         }
                     };
-                    GUIs.doBusy(DataMaintenanceActivity.this, job);
-                }
-                return true;
-            }
-        });
-    }
-
-    private void doClearFolder() {
-        //TODO move to devlope
-        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-            @Override
-            public void onBusyFinish() {
-                GUIs.alert(DataMaintenanceActivity.this, i18n().string(R.string.msg_folder_cleared, workingFolder));
-            }
-
-            @Override
-            public void run() {
-                for (File f : workingFolder.listFiles()) {
-                    String fnm = f.getName().toLowerCase();
-                    //don't delete sub folder
-                    if (f.isFile()) {
-                        f.delete();
-                    }
-                }
-            }
-        };
-
-        GUIs.confirm(this, i18n().string(R.string.qmsg_clear_folder, workingFolder), new GUIs.OnFinishListener() {
-            @Override
-            public boolean onFinish(int which, Object data) {
-                if (which == GUIs.OK_BUTTON) {
-                    GUIs.doBusy(DataMaintenanceActivity.this, job);
-                }
-                return true;
-            }
-        });
-
-    }
-
-    private void doCreateDefault() {
-
-        final GUIs.IBusyRunnable job = new GUIs.BusyAdapter() {
-            @Override
-            public void onBusyFinish() {
-                GUIs.alert(DataMaintenanceActivity.this, R.string.msg_default_created);
-            }
-
-            @Override
-            public void run() {
-                IDataProvider idp = contexts().getDataProvider();
-                new DataCreator(idp, i18n()).createDefaultAccount();
-            }
-        };
-
-        GUIs.confirm(this, i18n().string(R.string.qmsg_create_default), new GUIs.OnFinishListener() {
-            @Override
-            public boolean onFinish(int which, Object data) {
-                if (which == GUIs.OK_BUTTON) {
                     GUIs.doBusy(DataMaintenanceActivity.this, job);
                 }
                 return true;
