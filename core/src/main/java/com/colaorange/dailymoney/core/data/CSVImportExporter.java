@@ -112,7 +112,7 @@ public class CSVImportExporter {
         } else {
             long now = System.currentTimeMillis();
 
-            File csvFolder = new File(contexts().getWorkingFolder(), Contexts.CSV_FOLER_NAME);
+            File csvFolder = new File(contexts().getV23WorkingFolder(), Contexts.CSV_FOLER_NAME);
             File lastFolder = r.lastFolder = new File(csvFolder, Contexts.LAST_FOLER_NAME);
 
             if (!lastFolder.exists()) {
@@ -246,10 +246,10 @@ public class CSVImportExporter {
             accountOnly = true;
         }
 
-        File csvFolder = new File(contexts().getWorkingFolder(), "csv");
+        File csvFolder = new File(contexts().getV23WorkingFolder(), "csv");
         File lastFolder = new File(csvFolder, "last");
         if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
-            lastFolder = contexts().getWorkingFolder();
+            lastFolder = contexts().getV23WorkingFolder();
         }
         r.lastFolder = lastFolder;
 

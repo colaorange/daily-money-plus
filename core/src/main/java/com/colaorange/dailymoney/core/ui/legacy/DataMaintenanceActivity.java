@@ -46,7 +46,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data_maintenance);
-        workingFolder = contexts().getWorkingFolder();
+        workingFolder = contexts().getV23WorkingFolder();
 
         vercode = contexts().getAppVerCode();
         csvEncoding = preference().getCSVEncoding();
@@ -66,10 +66,10 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
 
         Button requestPermissionBtn = findViewById(R.id.request_permission);
         //only for 6.0(23+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasWorkingFolderPermission()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts().hasV23WorkingFolderPermission()) {
             requestPermissionBtn.setVisibility(View.VISIBLE);
-            if(!Contexts.instance().hasWorkingFolderPermission()) {
-                doRequestPermission();
+            if(!Contexts.instance().hasV23WorkingFolderPermission()) {
+                doV23RequestPermission();
             }
         } else {
             requestPermissionBtn.setVisibility(View.GONE);
@@ -79,7 +79,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
         TextView vWorkingFolder = findViewById(R.id.working_folder);
         ImageView vIcon = findViewById(R.id.storage_icon);
         //test accessibility
-        if (contexts().hasWorkingFolderPermission()) {
+        if (contexts().hasV23WorkingFolderPermission()) {
             vIcon.setImageResource(resolveThemeAttrResId(R.attr.ic_info));
             vWorkingFolder.setText(workingFolder.getAbsolutePath());
         } else {
@@ -113,7 +113,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.request_permission) {
-            doRequestPermission();
+            doV23RequestPermission();
         } else if (v.getId() == R.id.import_csv) {
             doImportCSV();
         } else if (v.getId() == R.id.export_csv) {
@@ -143,7 +143,7 @@ public class DataMaintenanceActivity extends ContextsActivity implements OnClick
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void doRequestPermission() {
+    private void doV23RequestPermission() {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
     }
 

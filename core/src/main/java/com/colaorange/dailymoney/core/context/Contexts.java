@@ -459,7 +459,7 @@ public class Contexts {
     }
 
 
-    private File getStorageFolder() {
+    private File getV23StorageFolder() {
         File f = null;
 
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -476,11 +476,11 @@ public class Contexts {
         return f;
     }
 
-    public boolean hasWorkingFolderPermission() {
-        return hasWorkingFolderPermission(getWorkingFolder());
+    public boolean hasV23WorkingFolderPermission() {
+        return hasV23WorkingFolderPermission(getV23WorkingFolder());
     }
 
-    public boolean hasWorkingFolderPermission(File workingFolder) {
+    public boolean hasV23WorkingFolderPermission(File workingFolder) {
         try {
             File touch = new File(workingFolder, Strings.randomName(10) + ".touch");
             Files.saveString("", touch, "utf-8");
@@ -491,8 +491,8 @@ public class Contexts {
         }
     }
 
-    public File getWorkingFolder() {
-        File f = new File(getStorageFolder(), "bwDailyMoney");
+    public File getV23WorkingFolder() {
+        File f = new File(getV23StorageFolder(), "bwDailyMoney");
         if (!f.exists()) {
             f.mkdir();
         }

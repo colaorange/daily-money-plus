@@ -315,7 +315,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
     private void exportExcel() {
 
         Contexts contexts = Contexts.instance();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasWorkingFolderPermission()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !contexts.hasV23WorkingFolderPermission()) {
             doRequestPermission(Contexts.REQ_EXPORT_EXCEL);
             return;
         }
@@ -330,7 +330,7 @@ public class BalanceMgntFragment extends ContextsFragment implements EventQueue.
             public void run() {
                 Contexts contexts = Contexts.instance();
 
-                File folder = new File(contexts.getWorkingFolder(), Contexts.EXCEL_FOLER_NAME);
+                File folder = new File(contexts.getV23WorkingFolder(), Contexts.EXCEL_FOLER_NAME);
                 folder.mkdir();
 
                 String sheetName = getContextsActivity().getTitle().toString();

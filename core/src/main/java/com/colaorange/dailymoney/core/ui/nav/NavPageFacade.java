@@ -11,7 +11,6 @@ import com.colaorange.dailymoney.core.ui.legacy.AccountMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.BalanceMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.BookMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.DataMaintenanceActivity;
-import com.colaorange.dailymoney.core.ui.legacy.GoogleDriveActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordEditorActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordMgntActivity;
 import com.colaorange.dailymoney.core.ui.legacy.RecordSearcherActivity;
@@ -64,8 +63,6 @@ public class NavPageFacade {
                 return R.drawable.nav_pg_balance_from_beginning_month;
             case RECORD_SEARCHER:
                 return R.drawable.nav_pg_search;
-            case GOOGLE_DRIVE:
-                return R.drawable.nav_pg_google_drive;
             case ABOUT:
             case CONTRIBUTOR:
             case WHATISNEW:
@@ -154,9 +151,6 @@ public class NavPageFacade {
                 intent.putExtra(BalanceMgntActivity.ARG_FROM_BEGINNING, true);
                 intent.putExtra(BalanceMgntActivity.ARG_PERIOD_MODE, PeriodMode.MONTHLY);
                 break;
-            case GOOGLE_DRIVE:
-                intent = new Intent(activity, GoogleDriveActivity.class);
-                break;
             default:
                 Logger.w("Unknow page {}", page);
         }
@@ -204,8 +198,6 @@ public class NavPageFacade {
                 return i18n.string(R.string.label_history);
             case RECORD_SEARCHER:
                 return i18n.string(R.string.label_search);
-            case GOOGLE_DRIVE:
-                return i18n.string(R.string.label_google_drive);
             default:
                 return i18n.string(R.string.label_unknown);
         }

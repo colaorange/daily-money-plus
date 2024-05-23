@@ -60,8 +60,8 @@ public class DataBackupRestorer {
 
     public static boolean hasBackup() {
         try {
-            if (contexts().hasWorkingFolderPermission()) {
-                List<String> dbs = Arrays.asList(contexts().getWorkingFolder().list());
+            if (contexts().hasV23WorkingFolderPermission()) {
+                List<String> dbs = Arrays.asList(contexts().getV23WorkingFolder().list());
                 return dbs.contains(DB);
             } else {
                 return false;
@@ -103,13 +103,13 @@ public class DataBackupRestorer {
     public Result backup(AtomicBoolean canceling) {
         Result r = new Result();
         Contexts ctxs = contexts();
-        if (!ctxs.hasWorkingFolderPermission()) {
-            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, ctxs.getWorkingFolder());
+        if (!ctxs.hasV23WorkingFolderPermission()) {
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, ctxs.getV23WorkingFolder());
             return r;
         }
         long now = System.currentTimeMillis();
         try {
-            File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+            File backupFolder = new File(ctxs.getV23WorkingFolder(), Contexts.BACKUP_FOLER_NAME);
             File lastFolder = r.lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
 
             if (!lastFolder.exists()) {
@@ -180,10 +180,10 @@ public class DataBackupRestorer {
 
     public Result restore() {
         Contexts ctxs = contexts();
-        File backupFolder = new File(ctxs.getWorkingFolder(), Contexts.BACKUP_FOLER_NAME);
+        File backupFolder = new File(ctxs.getV23WorkingFolder(), Contexts.BACKUP_FOLER_NAME);
         File lastFolder = new File(backupFolder, Contexts.LAST_FOLER_NAME);
         if (!(lastFolder.exists() && lastFolder.isDirectory() && lastFolder.listFiles().length > 0)) {
-            lastFolder = ctxs.getWorkingFolder();
+            lastFolder = ctxs.getV23WorkingFolder();
         }
         return restore(lastFolder);
     }
@@ -191,8 +191,8 @@ public class DataBackupRestorer {
     public Result restore(File lastFolder) {
         Result r = new Result();
         Contexts ctxs = contexts();
-        if (!contexts().hasWorkingFolderPermission() && !hasBackup()) {
-            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, contexts().getWorkingFolder());
+        if (!contexts().hasV23WorkingFolderPermission() && !hasBackup()) {
+            r.err = ctxs.getI18n().string(R.string.msg_working_folder_no_access, contexts().getV23WorkingFolder());
             return r;
         }
         try {

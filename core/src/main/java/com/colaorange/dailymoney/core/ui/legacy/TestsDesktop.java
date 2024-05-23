@@ -81,11 +81,6 @@ public class TestsDesktop extends AbstractDesktop {
             }
         }, "Notification Test", R.drawable.nav_pg_test));
 
-        addItem(new DesktopItem(new Runnable() {
-            public void run() {
-               activity.startActivity(new Intent(activity, GoogleDriveActivity.class));
-            }
-        }, "GoogleDrive Test", R.drawable.nav_pg_test));
 
         addItem(new DesktopItem(new Runnable() {
             public void run() {
@@ -196,7 +191,7 @@ public class TestsDesktop extends AbstractDesktop {
 
             is = activity.getAssets().open("test.xlsx");
 
-            File file = new File(Contexts.instance().getWorkingFolder(),"reports");
+            File file = new File(Contexts.instance().getV23WorkingFolder(),"reports");
             file.mkdir();
             file = new File(file,"test2.xlsx");
 

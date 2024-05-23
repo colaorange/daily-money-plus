@@ -53,14 +53,12 @@ public class NavMenuHelper {
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.PREFS), new DoPageListener(NavPage.PREFS), facade.getPageIcon(NavPage.PREFS)));
 
         navMenuList.add(new NavMenuDivider());
-        navMenuList.add(new NavMenuHeader(i18n.string(R.string.label_zone_ring)));
         navMenuList.add(new NavMenuItem(i18n.string(R.string.label_migrate_records), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doMigrateRecords();
             }
         }, -1));
-        navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.GOOGLE_DRIVE), new DoPageListener(NavPage.GOOGLE_DRIVE), facade.getPageIcon(NavPage.GOOGLE_DRIVE)));
 
         navMenuList.add(new NavMenuDivider());
         navMenuList.add(new NavMenuItem(facade.getPageText(NavPage.WHATISNEW), new DoPageListener(NavPage.WHATISNEW), facade.getPageIcon(NavPage.WHATISNEW)));
