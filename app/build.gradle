@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdk 34
     defaultConfig {
         applicationId "com.colaorange.dailymoney"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         //yy(2)mm(2)dd(2)increment(3)
         versionCode 200303000
         versionName "0.10.8-freshly"
